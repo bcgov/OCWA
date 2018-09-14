@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1  Tusd/Minio/Azure Demo
+  p Welcome to Tusd/Minio/Azure Demo
+  form(method="POST")
+    input(type="file", name="test", id="test")
+
+  div#progressBar(style="border: 1px solid; height: 60px;")
+    div#progress(style="color: blue; background-color: blue; height: 60px; width:0px")
+
+
+  script(src="/lib/tus.min.js")
+  script(src="/js/demo.js")

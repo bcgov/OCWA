@@ -1,0 +1,20 @@
+{
+
+  "apiPort": 3000,
+  "wsPort": 3001,
+  "logLevel": "info",
+  "morganLogType": "dev",
+
+  "database": {
+    "host": "localhost",
+    "username": "commentApi",
+    "password": "dev",
+    "dbName": "commentApi"
+  },
+
+  "jwtSecret": "superSecretHere",
+  "user":{
+      "idField": "Email"
+  }
+
+}
