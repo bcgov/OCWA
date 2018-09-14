@@ -1,5 +1,5 @@
 # General Ignore
-bin/
+#bin/
 .idea
 .DS_Store
 
