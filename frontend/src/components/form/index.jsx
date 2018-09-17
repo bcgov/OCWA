@@ -38,6 +38,7 @@ class Form extends React.Component {
           onFocus={this.toggleEditor}
         >
           <Editor
+            allowCodeBlocks
             shouldFocus
             appearance="comment"
             contentTransformerProvider={schema =>

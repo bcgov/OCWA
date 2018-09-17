@@ -33,6 +33,7 @@
     "@atlaskit/date": "^0.1.2",
     "@atlaskit/editor-core": "^80.4.4",
     "@atlaskit/editor-wikimarkup-transformer": "^2.0.27",
+    "@atlaskit/flag": "^9.0.10",
     "@atlaskit/media-card": "^34.0.4",
     "@atlaskit/media-core": "^23.2.0",
     "@atlaskit/page": "^8.0.5",
