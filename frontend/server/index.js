@@ -19,7 +19,7 @@ app.use(webpackHotMiddleware(compiler));
 
 app.listen(port, error => {
   if (!error) {
-    console.log(`SRE is running on port: ${port}...`); // eslint-disable-line
+    console.log(`OWCA is running on port: ${port}...`); // eslint-disable-line
   }
 });
 

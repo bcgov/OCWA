@@ -1,4 +1,5 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const config = require('config');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
@@ -7,7 +8,7 @@ const DIST_PATH = path.resolve(__dirname, 'dist');
 
 module.exports = {
   devtool: 'source-map',
-  entry: ['@babel/polyfill', './src/index.js'],
+  entry: ['webpack-hot-middleware/client', '@babel/polyfill', './src/index.js'],
   output: {
     filename: 'main.js',
     path: DIST_PATH,
@@ -17,7 +18,6 @@ module.exports = {
   devServer: {
     contentBase: DIST_PATH,
     compress: true,
-    hot: true,
     host: '0.0.0.0',
     publicPath: '/',
   },
@@ -36,17 +36,19 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(['dist']),
+    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      title: 'Request App Hello World',
+      title: 'OCWA [DEMO]',
       template: path.join(__dirname, 'src/templates/main.html'),
     }),
-    new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
       title: 'Request App Hello World',
       template: path.join(__dirname, 'src/templates/main.html'),
     }),
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.EnvironmentPlugin({
+      TOKEN: config.get('jwt'),
+    }),
   ],
   stats: {
     colors: true,
