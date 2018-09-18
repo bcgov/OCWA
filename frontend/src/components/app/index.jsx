@@ -2,10 +2,13 @@ import React from 'react';
 import ky from 'ky';
 import Flag from '@atlaskit/flag';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
+import union from 'lodash/union';
+import unionBy from 'lodash/unionBy';
 import '@atlaskit/css-reset';
 
 import Comment from '../comment/index.jsx';
 import Form from '../form/index.jsx';
+const ID = '5ba173d0c203bf001be809d7';
 
 class App extends React.Component {
   state = {
@@ -21,6 +24,7 @@ class App extends React.Component {
       process.env.TOKEN
     ));
     socket.onmessage = this.onMessage;
+    socket.onopen = this.onSocketOpen;
   }
 
   componentWillUnmount() {
@@ -29,7 +33,7 @@ class App extends React.Component {
 
   fetch = async () => {
     this.setState({ loading: true });
-    const url = '/v1/comment/5ba17703c203bf001be809d';
+    const url = `/v1/comment/${ID}`;
     const json = await ky
       .get(url, {
         headers: {
@@ -38,14 +42,21 @@ class App extends React.Component {
       })
       .json();
 
-    console.log(json);
-    this.setState({ loading: false, data: json });
+    this.setState({
+      data: unionBy(this.state.data, json, '_id'),
+      loading: false,
+    });
+  };
+
+  onSocketOpen = event => {
+    console.log('[SOCKET] connected');
   };
 
   onMessage = event => {
     const json = JSON.parse(event.data);
+    console.log('NEW MESSAGE', json);
     this.setState({
-      data: [...this.state.data, json],
+      data: union(this.state.data, [json]),
     });
   };
 
@@ -55,14 +66,15 @@ class App extends React.Component {
     });
 
     try {
-      const json = await ky.post('/v1/comment/5ba17703c203bf001be809d', {
+      const json = await ky.post(`/v1/comment/${ID}`, {
         json: {
-          name: value,
+          comment: value,
         },
         headers: {
           Authorization: `Bearer ${process.env.TOKEN}`,
         },
       });
+      this.fetch();
     } catch (e) {
       this.setState({
         error: true,
@@ -81,7 +93,7 @@ class App extends React.Component {
               <GridColumn medium={2} />
               <GridColumn medium={8}>
                 <h2>OWCA Demo</h2>
-                <p>
+                <p style={{ marginBottom: 30 }}>
                   For demonstration purposes only. Connects to the forum API.
                 </p>
               </GridColumn>
