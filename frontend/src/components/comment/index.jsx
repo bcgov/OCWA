@@ -10,7 +10,7 @@ const adfEncoder = new ADFEncoder(schema => new WikiMarkupTransformer(schema));
 export default class extends React.Component {
   renderContent = () => {
     const { data } = this.props;
-    const document = adfEncoder.encode(data.value);
+    const document = adfEncoder.encode(data.comment);
 
     return <ReactRenderer document={document} />;
   };
@@ -28,14 +28,14 @@ export default class extends React.Component {
         }}
       >
         <Comment
-          author="Joshua R Jones"
+          author={data.author_user}
           content={this.renderContent()}
           type="reviewer"
           time={
             <CommentTime>
               <Date
                 color="white"
-                value={data.createdAt}
+                value={data.created_ts}
                 format="MMM DD, YYYY h:mA"
               />
             </CommentTime>

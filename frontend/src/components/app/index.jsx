@@ -29,16 +29,16 @@ class App extends React.Component {
 
   fetch = async () => {
     this.setState({ loading: true });
-    const url = 'http://localhost:3000/api/v1/comments';
+    const url = '/v1/comment/5ba17703c203bf001be809d';
     const json = await ky
       .get(url, {
-        mode: 'cors',
         headers: {
           Authorization: `Bearer ${process.env.TOKEN}`,
         },
       })
       .json();
 
+    console.log(json);
     this.setState({ loading: false, data: json });
   };
 
@@ -55,21 +55,13 @@ class App extends React.Component {
     });
 
     try {
-      const json = await ky.post(
-        'http://localhost:3000/api/v1/comments/:topicId',
-        {
-          json: {
-            body: value,
-            user: { id: 1 },
-          },
-          headers: {
-            Authorization: `Bearer ${process.env.TOKEN}`,
-          },
-        }
-      );
-
-      this.setState({
-        data: [...this.state.data, json],
+      const json = await ky.post('/v1/comment/5ba17703c203bf001be809d', {
+        json: {
+          name: value,
+        },
+        headers: {
+          Authorization: `Bearer ${process.env.TOKEN}`,
+        },
       });
     } catch (e) {
       this.setState({
@@ -104,7 +96,7 @@ class App extends React.Component {
                     title="There was an error"
                   />
                 )}
-                {data.map(d => <Comment key={d.id} data={d} />)}
+                {data.map(d => <Comment key={d._id} data={d} />)}
                 <Form onSave={this.onSave} />
               </GridColumn>
             </Grid>
