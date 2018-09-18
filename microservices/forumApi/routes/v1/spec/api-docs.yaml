@@ -315,7 +315,7 @@ components:
       required:
         - comment
       properties:
-        name:
+        comment:
           type: string
           description: comment body
     PermissionPost:

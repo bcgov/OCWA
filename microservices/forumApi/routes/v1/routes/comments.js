@@ -74,7 +74,7 @@ router.post("/:topicId", function(req, res, next){
                 return;
             }
             var messages = require('../messages/messages');
-            messages.sendCommentMessage(comment);
+            messages.sendCommentMessage(topicId, comment);
 
             res.json({message: "written successfully"});
         });
