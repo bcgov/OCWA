@@ -1,14 +1,20 @@
-const express = require('express');
 const config = require('config');
+const express = require('express');
+const proxy = require('http-proxy-middleware');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
+const webpackConfig = require('../webpack.config.js');
+
 const app = express();
 const port = config.get('port');
-const webpackConfig = require('../webpack.config.js');
 const compiler = webpack(webpackConfig);
+const forumProxy = proxy('/v1', {
+  target: 'http://localhost:3000',
+});
 
+// Webpack Configuration (dev and hot reload)
 app.use(
   webpackDevMiddleware(compiler, {
     noInfo: true,
@@ -16,6 +22,9 @@ app.use(
   })
 );
 app.use(webpackHotMiddleware(compiler));
+
+// Set up some proxy action
+app.use('/v1', forumProxy);
 
 app.listen(port, error => {
   if (!error) {
