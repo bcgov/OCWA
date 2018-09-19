@@ -31,7 +31,7 @@ model.getAll = function(query, limit, page, user, callback){
                                     {$or: [
                                         {user_ids: user.id},
                                         {user_ids: "*"},
-                                        {$in: ["$group_id", user.groups]},
+                                        {$in: ["$group_id", user.Groups]},
                                         {group_ids: "*"}
                                     ]},
                                     {$eq: ["$allow", true]}
