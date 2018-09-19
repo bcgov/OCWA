@@ -32,7 +32,7 @@ function checkCommentPermissions(user, topicId, commentId, sock, cb){
         var q = new mongoose.Query();
         q.and([
             { $or: [{comment_id: commentId}, {comment_id: '*'}] },
-            { $or: [{user_id: user.id}, {user_id: '*'}, {group_id: {$in: user.Groups}}, {group_id: "*"}]},
+            { $or: [{user_id: user.id}, {user_id: '*'}, {group_ids: {$in: user.Groups}}, {group_ids: "*"}]},
             { allow: false }
         ]);
 
