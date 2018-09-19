@@ -4,6 +4,7 @@ import Flag from '@atlaskit/flag';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import union from 'lodash/union';
 import unionBy from 'lodash/unionBy';
+import { akColorN40 } from '@atlaskit/util-shared-styles';
 import '@atlaskit/css-reset';
 
 import Comment from '../comment/index.jsx';
@@ -19,12 +20,9 @@ class App extends React.Component {
 
   componentDidMount() {
     this.fetch();
-    const socket = (this.socket = new WebSocket(
-      'ws://localhost:3001',
-      process.env.TOKEN
-    ));
-    socket.onmessage = this.onMessage;
-    socket.onopen = this.onSocketOpen;
+    this.socket = new WebSocket('ws://localhost:3001', process.env.TOKEN);
+    this.socket.onmessage = this.onMessage;
+    this.socket.onopen = this.onSocketOpen;
   }
 
   componentWillUnmount() {
@@ -54,10 +52,12 @@ class App extends React.Component {
 
   onMessage = event => {
     const json = JSON.parse(event.data);
-    console.log('NEW MESSAGE', json);
-    this.setState({
-      data: union(this.state.data, [json]),
-    });
+
+    if (json) {
+      this.setState({
+        data: union(this.state.data, [json.comment]),
+      });
+    }
   };
 
   onSave = async value => {
@@ -74,13 +74,26 @@ class App extends React.Component {
           Authorization: `Bearer ${process.env.TOKEN}`,
         },
       });
-      this.fetch();
+      // this.fetch();
     } catch (e) {
       this.setState({
         error: true,
       });
     }
   };
+
+  renderEmpty = () => (
+    <div
+      style={{
+        padding: 20,
+        borderRadius: 4,
+        border: `1px solid ${akColorN40}`,
+      }}
+    >
+      <h5>No comments yet</h5>
+      <p>Be the first to start the discussion.</p>
+    </div>
+  );
 
   render() {
     const { data, error, loading, isExpanded } = this.state;
@@ -109,6 +122,7 @@ class App extends React.Component {
                   />
                 )}
                 {data.map(d => <Comment key={d._id} data={d} />)}
+                {data.length === 0 && this.renderEmpty()}
                 <Form onSave={this.onSave} />
               </GridColumn>
             </Grid>
