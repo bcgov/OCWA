@@ -25,7 +25,10 @@ class App extends React.Component {
 
   componentDidMount() {
     this.fetch();
-    this.socket = new WebSocket('ws://localhost:3001', process.env.TOKEN);
+    this.socket = new WebSocket(
+      `ws://${process.env.API_HOST}:3001`,
+      process.env.TOKEN
+    );
     this.socket.onmessage = this.onMessage;
     this.socket.onopen = this.onSocketOpen;
   }
