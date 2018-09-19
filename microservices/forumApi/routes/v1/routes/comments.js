@@ -53,7 +53,7 @@ router.post("/:topicId", function(req, res, next){
     var db = require('../db/db');
 
     var comment = new db.Comment;
-    topicId = req.params.topicId;
+    var topicId = req.params.topicId;
     comment.topic_id = topicId;
     comment.comment = req.body.comment;
     comment.author_user = req.user.id;
@@ -74,7 +74,8 @@ router.post("/:topicId", function(req, res, next){
                 return;
             }
             var messages = require('../messages/messages');
-            messages.sendCommentMessage(topicId, comment);
+            log.debug("comment saved triggering websocket");
+            messages.sendCommentMessage(topicId, result);
 
             res.json({message: "written successfully"});
         });
