@@ -11,7 +11,7 @@ services:
 before_script:
 - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
 - sleep 15
-- cp config/test.json.example config/text.json
+- cp config/test.json.example config/test.json
 - mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
 
 before_install:
