@@ -1,21 +1,25 @@
 sudo: required
 language: node_js
+node_js:
+  - "node"
+
 services:
 - docker
 - mongodb
 
 before_script:
-- cd microservices/forumApi
+- cd /home/travis/build/bcgov/OCWA/microservices/forumApi
 - sleep 15
 - cp config/test.json.example config/text.json
 - mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
 
 before_install:
+- cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+- npm install
 
 script:
-- cd microservices/forumApi
+- cd /home/travis/build/bcgov/OCWA/microservices/forumApi
 - docker build -t bcgov/ocwa_forum_api .
-- npm install
 - npm test
 
 deploy:
