@@ -9,7 +9,6 @@ before_script:
 - cp config/test.json.example config/text.json
 - mongo --eval 'use forumDb; db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
 before_install:
-- cd microservices/forumApi
 - docker build -t bcgov/ocwa_forum_api .
 script:
 - npm install
