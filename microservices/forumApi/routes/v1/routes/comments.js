@@ -77,7 +77,7 @@ router.post("/:topicId", function(req, res, next){
             log.debug("comment saved triggering websocket");
             messages.sendCommentMessage(topicId, result);
 
-            res.json({message: "written successfully"});
+            res.json({message: "Successfully written"});
         });
     });
 
