@@ -7,6 +7,7 @@ services:
   - mongodb
 
 before_script:
+  - cd microservices/forumApi
   - sleep 15
   - cp config/test.json.example config/text.json
   - mongo --eval 'use forumDb; db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
@@ -18,7 +19,3 @@ script:
   - npm install
   - npm test
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-
-
-on:
-  branch: master
