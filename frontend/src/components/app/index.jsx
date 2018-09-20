@@ -2,6 +2,8 @@ import React from 'react';
 import ky from 'ky';
 import Flag from '@atlaskit/flag';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
+import head from 'lodash/head';
+import get from 'lodash/get';
 import union from 'lodash/union';
 import unionBy from 'lodash/unionBy';
 import { akColorN40 } from '@atlaskit/util-shared-styles';
@@ -9,18 +11,24 @@ import '@atlaskit/css-reset';
 
 import Comment from '../comment/index.jsx';
 import Form from '../form/index.jsx';
-const ID = '5ba173d0c203bf001be809d7';
+const headers = {
+  Authorization: `Bearer ${process.env.TOKEN}`,
+};
 
 class App extends React.Component {
   state = {
     data: [],
     error: false,
     loading: false,
+    topic: null,
   };
 
   componentDidMount() {
     this.fetch();
-    this.socket = new WebSocket('ws://localhost:3001', process.env.TOKEN);
+    this.socket = new WebSocket(
+      `ws://${process.env.API_HOST}:3001`,
+      process.env.TOKEN
+    );
     this.socket.onmessage = this.onMessage;
     this.socket.onopen = this.onSocketOpen;
   }
@@ -31,24 +39,20 @@ class App extends React.Component {
 
   fetch = async () => {
     this.setState({ loading: true });
-    const url = `/v1/comment/${ID}`;
-    const json = await ky
-      .get(url, {
-        headers: {
-          Authorization: `Bearer ${process.env.TOKEN}`,
-        },
-      })
+    const topics = await ky.get('/v1', { headers }).json();
+    const topic = head(topics); // Just for demo purposes
+    const comments = await ky
+      .get(`/v1/comment/${topic._id}`, { headers })
       .json();
 
     this.setState({
-      data: unionBy(this.state.data, json, '_id'),
+      data: unionBy(this.state.data, comments, '_id'),
       loading: false,
+      topic,
     });
   };
 
-  onSocketOpen = event => {
-    console.log('[SOCKET] connected');
-  };
+  onSocketOpen = event => console.log('[SOCKET] connected');
 
   onMessage = event => {
     const json = JSON.parse(event.data);
@@ -61,20 +65,17 @@ class App extends React.Component {
   };
 
   onSave = async value => {
-    this.setState({
-      error: false,
-    });
+    const { topic } = this.state;
+
+    this.setState({ error: false });
 
     try {
-      const json = await ky.post(`/v1/comment/${ID}`, {
+      const json = await ky.post(`/v1/comment/${topic._id}`, {
+        headers,
         json: {
           comment: value,
         },
-        headers: {
-          Authorization: `Bearer ${process.env.TOKEN}`,
-        },
       });
-      // this.fetch();
     } catch (e) {
       this.setState({
         error: true,
@@ -96,7 +97,7 @@ class App extends React.Component {
   );
 
   render() {
-    const { data, error, loading, isExpanded } = this.state;
+    const { data, error, loading, isExpanded, topic } = this.state;
 
     return (
       <main>
@@ -105,7 +106,7 @@ class App extends React.Component {
             <Grid layout="fluid">
               <GridColumn medium={2} />
               <GridColumn medium={8}>
-                <h2>OWCA Demo</h2>
+                <h2>{get(topic, 'name', 'loading...')}</h2>
                 <p style={{ marginBottom: 30 }}>
                   For demonstration purposes only. Connects to the forum API.
                 </p>
