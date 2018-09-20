@@ -2,15 +2,39 @@
 
 A Babel 7 ready React single page application that uses Webpack for development.
 
-### For local development
+You will need a JWT from (http://jwtbuilder.jamiekurtz.com/)[http://jwtbuilder.jamiekurtz.com/].
 
+Make sure instead of `Roles` you assign `Groups`, e.g.
+
+```
+{
+    "iss": "Online JWT Builder",
+    "iat": 1536875344,
+    "exp": 1568411344,
+    "aud": "www.example.com",
+    "sub": "username@example.com",
+    "GivenName": "User",
+    "Surname": "Name",
+    "Email": "username@example.com",
+    "Groups": [
+        "Manager",
+        "Project Administrator"
+    ]
+}
+```
+
+### For local development
+Create a `config/default.json` from the `config/default.json.example` file and fill
+in the values for jwt and jwtSecret
 `$ yarn install`
 `$ yarn start`
 
 ### For Docker environment
-
+You will need to
 `$ docker build .`
-`$ docker run -p 8000:8000 <DOCKER_IMAGE>`
+```
+$ docker run -e JWT=<YOUR_API_TOKEN> -e JWT_SECRET=<YOUR_API_SECRET> -e API_HOST=localhost -e USER_ID_FIELD=Email -e PORT=8000 -p 8000:8000 <DOCKER_IMAGE>
+```
 
 ### NOTES
 
