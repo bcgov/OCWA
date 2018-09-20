@@ -8,7 +8,29 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
     var db = require('../db/db');
 
-    db.Permission.find({}, function(err, results){
+    var mongoose = require('mongoose');
+    var q = new mongoose.Query();
+
+    var operand = (typeof(req.query.operand) !== "undefined") ? req.query.operand : "and";
+
+    if (typeof(req.query.topic_id) !== "undefined"){
+        q[operand]([{topic_id: req.query.topic_id}]);
+    }
+
+    if (typeof(req.query.comment_id) !== "undefined"){
+        q[operand]([{comment_id: req.query.topic_id}]);
+    }
+
+    if (typeof(req.query.user_id) !== "undefined"){
+        q[operand]([{user_id: req.query.user_id}]);
+    }
+
+    if (typeof(req.query.group_ids) !== "undefined"){
+        var groups = req.query.group_ids.split(",");
+        q[operand]([{group_ids: { $in: groups }}]);
+    }
+
+    db.Permission.find(q, function(err, results){
         var log = require('npmlog');
         if (err){
             log.error("Error finding ", err);
@@ -17,8 +39,6 @@ router.get('/', function(req, res, next) {
         }
         res.json(results);
     });
-
-
 });
 
 //Create new permission? NOTE THIS DOES NOT VALIDATE given topic or comment ids.
@@ -45,6 +65,7 @@ router.post("/", function(req, res, next){
     permission.save(function(saveErr, saveRes){
         if (saveErr){
             res.json({error: saveErr.message});
+            return;
         }
         res.json({message: "Successfully written"});
     });
