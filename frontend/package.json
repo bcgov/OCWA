@@ -4,7 +4,7 @@
   "main": "src/index.js",
   "license": "MIT",
   "scripts": {
-    "start": "NODE_ENV=development nodemon server/index.js"
+    "start": "NODE_ENV=development node server/index.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",

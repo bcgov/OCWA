@@ -11,7 +11,7 @@ const app = express();
 const port = config.get('port');
 const compiler = webpack(webpackConfig);
 const forumProxy = proxy('/v1', {
-  target: 'http://localhost:3000',
+  target: `http://${process.env.API_HOST}:3000`,
 });
 
 // Webpack Configuration (dev and hot reload)
@@ -19,6 +19,7 @@ app.use(
   webpackDevMiddleware(compiler, {
     noInfo: true,
     publicPath: webpackConfig.output.publicPath,
+    host: '0.0.0.0',
   })
 );
 app.use(webpackHotMiddleware(compiler));
