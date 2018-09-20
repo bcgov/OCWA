@@ -3,19 +3,25 @@ language: node_js
 services:
 - docker
 - mongodb
+
 before_script:
 - cd microservices/forumApi
 - sleep 15
 - cp config/test.json.example config/text.json
 - mongo --eval 'use forumDb; db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
+
 before_install:
-- docker build -t bcgov/ocwa_forum_api .
+
 script:
+- cd microservices/forumApi
+- docker build -t bcgov/ocwa_forum_api .
 - npm install
 - npm test
+
 deploy:
   provider: script
   script: bash docker_push
+
 env:
   matrix:
   - secure: TsBkt0h9c9CQ+ZnA4CAVlWxCoTRV4Bn7Z0y8XvR99NlnfrUhSGWzi78wJ6W8oAqOawqDk5jnG3qIKXaaO1ZaiT8n3YFLhtAQzh+gy1B96GOJd6Yjmep7AxiWgW+g0Nm+V0vkGA/dwuUjothmnvLcsqK2+hmrknvTI+oe6xrNrOv4GAx9j3NJVfmhJmhBtnI+p8uqgqtn7aqrZZqW/jhwh10taRaIvvsMZ4FEZy8M9JI6cRfakQT656U9KGbXsC7XdnEf+G/N2qOq/MWucByBo98jCnuL5JvGzgZCSkywlShK8kPUuIREGfLv1RuSOOwlz95AA700Bf/SKGmqu58wAp8XOKWAtMTpf2o7WFXpb/Ghy6ysk5AGO6RSsFOTEh2EAdF42ExRy+N8mqDYdr9Vj+qWeVHXVR9vjtjbCLeHxl16sO0K/BzQ3gjCYLXQEC6mH3xfu6kDvQvdq20fKpXPeLvX+HI0ALokkL7RFaqjcEu8R+9zZAUIqCCTKs0Z3/CmrUd2H7MD7j30gFuR2RynSpGb8l476szAuLv1wk6L+gc4g+uG5pFPsBYaBp9mNJMHrOcBQfSFY9T4n/sY4z+2Bo7qC8g8JuLOtVsVcjZ0Ut0r0xASvEg87jlgdHy/NaAySmuZclheuqsqVqsKQOx38AgOSg9N0gX2i2jnq2ZkS+4=
