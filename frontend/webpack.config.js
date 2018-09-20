@@ -48,7 +48,7 @@ module.exports = {
     }),
     new webpack.EnvironmentPlugin({
       TOKEN: config.get('jwt'),
-      API_HOST: process.env.API_HOST || 'localhost',
+      API_HOST: config.get('host'),
     }),
   ],
   stats: {

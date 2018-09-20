@@ -5,13 +5,14 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
-const webpackConfig = require('../webpack.config.js');
+const webpackConfig = require('../webpack.config');
 
 const app = express();
 const port = config.get('port');
+const host = config.get('host');
 const compiler = webpack(webpackConfig);
 const forumProxy = proxy('/v1', {
-  target: `http://${process.env.API_HOST}:3000`,
+  target: `http://${host}:3000`,
 });
 
 // Webpack Configuration (dev and hot reload)
