@@ -17,6 +17,6 @@ RUN npm install
 COPY . .
 RUN chmod +x entrypoint.sh
 
-EXPOSE ${API_PORT}
-EXPOSE ${WS_PORT}
+EXPOSE 3000
+EXPOSE 3001
 ENTRYPOINT ["./entrypoint.sh"]
