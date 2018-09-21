@@ -17,10 +17,15 @@ router.use('/api-docs', function(req, res){
     res.send(docs.getDocHTML("v1"));
 });
 
+
+//permissions
+router.use('/permission', permissionRouter);
+
 //topics
 router.use('/', auth.authenticate('jwt', {session: false}), topicRouter);
+
 //comments
 router.use('/comment', auth.authenticate('jwt', {session: false}), commentRouter);
-router.use('/permission', auth.authenticate('jwt', {session: false}), permissionRouter);
+
 
 module.exports = router;

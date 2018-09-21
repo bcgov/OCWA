@@ -1,0 +1,8 @@
+{
+  "port": 8000,
+  "wsPort": 3001,
+  "jwtSecret": "superSecretHere",
+  "user":{
+    "idField": "Email"
+  }
+}
