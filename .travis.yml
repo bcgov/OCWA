@@ -28,8 +28,8 @@ script:
 deploy:
   provider: script
   script: bash docker_push
-#  on:
-#    branch: master
+  on:
+    branch: master
 
 env:
   global:

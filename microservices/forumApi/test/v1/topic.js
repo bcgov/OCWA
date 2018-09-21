@@ -36,7 +36,6 @@ describe("Topics", function() {
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    console.log(res.body);
                     res.body.length.should.be.eql(0);
                     done();
                 });
