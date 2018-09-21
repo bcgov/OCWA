@@ -1,4 +1,6 @@
-# Repo for Output Checker Workflow App
+# Repo for Output Checker Workflow App 
+[![Build Status](https://travis-ci.org/bcgov/OCWA.svg?branch=master)](https://travis-ci.org/bcgov/OCWA)
+
 OCWA (pronounced "aqua")
 
 ## Notes
