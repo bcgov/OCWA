@@ -15,7 +15,10 @@ var wss = websockets.init();
 log.level = config.get('logLevel');
 log.addLevel('debug', 2900, { fg: 'green' });
 
-app.use(logger(config.get('morganLogType')));
+if (process.env.NODE_ENV !== 'test') {
+    app.use(logger(config.get('morganLogType')));
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
