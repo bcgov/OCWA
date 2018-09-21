@@ -1,8 +1,8 @@
 {
 
   "logLevel": "silent",
-  "jwtSecret": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJmb3J1bSIsImlhdCI6MTUzNzQ3NzcyMywiZXhwIjoyNTMzOTM0Nzc3MjMsImF1ZCI6Ind3dy5mb3J1bUFwaS5jb20iLCJzdWIiOiJmb3J1bSIsIkdpdmVuTmFtZSI6IkZvcnVtIiwiU3VybmFtZSI6IkFwaSIsIkVtYWlsIjoiZm9ydW1AYXBpLmNvbSIsIkdyb3VwcyI6WyJNYW5hZ2VyIiwiUHJvamVjdCBBZG1pbmlzdHJhdG9yIl19.cd01j0dmgvd98d6X9OfPJxWVISiSDxmkALh2N6cu9ws",
-  "testJWT": "testJWT",
+  "jwtSecret": "jwtSecret",
+  "testJWT": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJmb3J1bSIsImlhdCI6MTUzNzQ3NzcyMywiZXhwIjoyNTMzOTM0Nzc3MjMsImF1ZCI6Ind3dy5mb3J1bUFwaS5jb20iLCJzdWIiOiJmb3J1bSIsIkdpdmVuTmFtZSI6IkZvcnVtIiwiU3VybmFtZSI6IkFwaSIsIkVtYWlsIjoiZm9ydW1AYXBpLmNvbSIsIkdyb3VwcyI6WyJNYW5hZ2VyIiwiUHJvamVjdCBBZG1pbmlzdHJhdG9yIl19.cd01j0dmgvd98d6X9OfPJxWVISiSDxmkALh2N6cu9ws",
   "database": {
     "host": "localhost",
     "username": "forumUser",
