@@ -9,7 +9,6 @@ services:
 jobs:
   include:
     - stage: "Forum Api"
-      script: skip
       before_script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - cp config/test.json.example config/test.json
@@ -34,7 +33,6 @@ jobs:
         on:
           branch: master
     - stage: "Front End"
-      script: skip
       deploy:
         provider: script
         script: bash docker_push
