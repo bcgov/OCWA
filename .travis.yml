@@ -33,6 +33,7 @@ jobs:
         on:
           branch: master
     - stage: "Front End"
+      script: skip
       deploy:
         provider: script
         script: bash docker_push
