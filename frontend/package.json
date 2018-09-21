@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "NODE_ENV=development nodemon server/index.js",
-    "start:prod": "NODE_ENV=development node server/index.js"
+    "start:prod": "NODE_ENV=production node server/index.js",
+    "build": "webpack --config webpack.prod.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -25,7 +26,8 @@
     "webpack-cli": "^3.1.0",
     "webpack-dev-middleware": "^3.3.0",
     "webpack-dev-server": "^3.1.8",
-    "webpack-hot-middleware": "^2.24.0"
+    "webpack-hot-middleware": "^2.24.0",
+    "webpack-merge": "^4.1.4"
   },
   "dependencies": {
     "@atlaskit/button": "^9.0.8",
