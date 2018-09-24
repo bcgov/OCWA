@@ -34,6 +34,7 @@ module.exports = {
     new webpack.EnvironmentPlugin({
       TOKEN: config.get('jwt'),
       API_HOST: config.get('host'),
+      SOCKET: config.get('socketHost'),
     }),
   ],
   stats: {

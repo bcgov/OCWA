@@ -26,7 +26,7 @@ class App extends React.Component {
   componentDidMount() {
     this.fetch();
     this.socket = new WebSocket(
-      `ws://${process.env.API_HOST}:3001`,
+      `ws://${process.env.SOCKET}:3001`,
       process.env.TOKEN
     );
     this.socket.onmessage = this.onMessage;
