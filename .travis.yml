@@ -47,9 +47,9 @@ jobs:
         - cd /home/travis/build/bcgov/OCWA/frontend
       before_install:
         - npm install -g yarn --cache-min 999999999
-        - yarn install
       install:
         - yarn
+        - yarn install jest-cli
 
       deploy:
         provider: script
