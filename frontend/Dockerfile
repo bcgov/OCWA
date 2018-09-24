@@ -4,6 +4,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 ENV NODE_ENV production
+ENV NPM_CONFIG_PRODUCTION false
 
 COPY package.json /usr/src/app
 COPY yarn.lock /usr/src/app
