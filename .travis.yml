@@ -23,7 +23,7 @@ jobs:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm install
 
-      script:
+      before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm test
 
@@ -34,7 +34,7 @@ jobs:
           branch: master
 
     - stage: "Front End"
-      script:
+      before_deploy:
         - cd /home/travis/build/bcgov/OCWA/frontend
 
       deploy:
