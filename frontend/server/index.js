@@ -5,26 +5,29 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
-const webpackConfig = require('../webpack.config');
+const webpackConfig = require('../webpack.dev');
 
 const app = express();
 const port = config.get('port');
 const host = config.get('host');
-const compiler = webpack(webpackConfig);
 const forumProxy = proxy('/v1', {
   target: `http://${host}:3000`,
 });
 
-// Webpack Configuration (dev and hot reload)
-app.use(
-  webpackDevMiddleware(compiler, {
-    noInfo: true,
-    publicPath: webpackConfig.output.publicPath,
-    host: '0.0.0.0',
-  })
-);
-app.use(webpackHotMiddleware(compiler));
+if (process.env.NODE_ENV === 'development') {
+  const compiler = webpack(webpackConfig);
+  // Webpack Configuration (dev and hot reload)
+  app.use(
+    webpackDevMiddleware(compiler, {
+      noInfo: true,
+      publicPath: webpackConfig.output.publicPath,
+      host: '0.0.0.0',
+    })
+  );
+  app.use(webpackHotMiddleware(compiler));
+}
 
+app.use(express.static('dist'));
 // Set up some proxy action
 app.use('/v1', forumProxy);
 
