@@ -36,6 +36,8 @@ jobs:
     - stage: "Front End"
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/frontend
+      before_script:
+        - cd /home/travis/build/bcgov/OCWA/frontend
 
       deploy:
         provider: script
