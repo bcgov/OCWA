@@ -6,7 +6,7 @@ cd /home/travis/build/bcgov/OCWA/microservices/forumApi
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
-docker build -t bcgov/ocwa_forum_api .
+docker build -t bcgovimages/ocwa_forum_api .
 echo "dockerfile built pushing now";
-docker push bcgov/ocwa_forum_api
+docker push bcgovimages/ocwa_forum_api
 echo "push done successfully";
