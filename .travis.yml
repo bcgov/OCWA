@@ -6,33 +6,59 @@ node_js:
 services:
 - docker
 
-before_script:
-- cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-- sleep 15
-- cp config/test.json.example config/test.json
-- cp config/default.json.example config/default.json
-- wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
-- tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
-- mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
-- ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
-- ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
 
-before_install:
-- cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-- npm install
+jobs:
+  include:
+    - stage: "Forum Api"
+      before_script:
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+        - cp config/test.json.example config/test.json
+        - cp config/default.json.example config/default.json
+        - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+        - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+        - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
 
-script:
-- cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-- npm test
+      before_install:
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+        - npm install
 
-deploy:
-  provider: script
-  script: bash docker_push
-  on:
-    branch: master
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+        - npm test
+
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          branch: master
+
+    - stage: "Front End"
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/frontend
+      before_script:
+        - cd /home/travis/build/bcgov/OCWA/frontend
+      before_install:
+        - npm install -g yarn --cache-min 999999999
+      install:
+        - yarn
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          branch: master
+
 
 env:
   global:
+  - CXX=g++-4.8
   - MONGODB=4.1.1
   - secure: TsBkt0h9c9CQ+ZnA4CAVlWxCoTRV4Bn7Z0y8XvR99NlnfrUhSGWzi78wJ6W8oAqOawqDk5jnG3qIKXaaO1ZaiT8n3YFLhtAQzh+gy1B96GOJd6Yjmep7AxiWgW+g0Nm+V0vkGA/dwuUjothmnvLcsqK2+hmrknvTI+oe6xrNrOv4GAx9j3NJVfmhJmhBtnI+p8uqgqtn7aqrZZqW/jhwh10taRaIvvsMZ4FEZy8M9JI6cRfakQT656U9KGbXsC7XdnEf+G/N2qOq/MWucByBo98jCnuL5JvGzgZCSkywlShK8kPUuIREGfLv1RuSOOwlz95AA700Bf/SKGmqu58wAp8XOKWAtMTpf2o7WFXpb/Ghy6ysk5AGO6RSsFOTEh2EAdF42ExRy+N8mqDYdr9Vj+qWeVHXVR9vjtjbCLeHxl16sO0K/BzQ3gjCYLXQEC6mH3xfu6kDvQvdq20fKpXPeLvX+HI0ALokkL7RFaqjcEu8R+9zZAUIqCCTKs0Z3/CmrUd2H7MD7j30gFuR2RynSpGb8l476szAuLv1wk6L+gc4g+uG5pFPsBYaBp9mNJMHrOcBQfSFY9T4n/sY4z+2Bo7qC8g8JuLOtVsVcjZ0Ut0r0xASvEg87jlgdHy/NaAySmuZclheuqsqVqsKQOx38AgOSg9N0gX2i2jnq2ZkS+4=
   - secure: pVjFIgT/w+sZPIP9g2sSP7OWlfnspGbQaCsQesDUniVcEIJGRTxURuA4RfeJeG8D6zAggsVRiAgcpb8/IU0gx32vdSOE7f10rnWYyf/YzpX9gEMsacEAi6QeCutZBSxz0dbUx2tVNP4qnAMBw/F+iG9msxVrJDIYr1M/+E1KHpknImN/ZaM4Yx34od+efpBudrb5rAtsUTUS8Jfdo4cnQBMFGO/nVb/VD3AATIZ4+tMeduVG0W2bORcuOR+iPXMiAHRFdaTLXR23oDnJZSPMWOAJC+hhHM6D1E5armU+utmfE58q5d64aeffgqcwZnVMHkhkJ6aNCnNojYJ/dKZOAKLklDO3IVd6k/TnRvVreZw68OlLj71b668ArknoIBvgwPZ0UOwPguVzNFGT+WBNlNW1uePmtO2sc5HO23fnK8P9HMqx09Q/HwWpEEOOvUpR4vpixPETRmZHA2lsccyr4lY5gExVqSHBslXHxz00So0x1lXDADU4f1Ma54h2P1++b3Dk0tjLlRCXeiiuV4i89C8Vz37ZplbYf1Aw60504o4LZC9rGJK5uf4OMm/IZF5DjnbH87MFtwKxKNnSL5KqCRGzksdt2R23rcRvAxp9o1YP4qC7POQ5ocr3By/ciNwzApFa2d7KfSDojjIgIU/oK9mKNk5tyQAeQb+CRylkeNk=

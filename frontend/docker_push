@@ -1,12 +1,12 @@
 #!/bin/bash
 
 #make sure in the right directory
-cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+cd /home/travis/build/bcgov/OCWA/frontend
 
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
-docker build -t bcgovimages/ocwa_forum_api .
+docker build -t bcgovimages/ocwa_frontend .
 echo "dockerfile built pushing now";
-docker push bcgovimages/ocwa_forum_api
+docker push bcgovimages/ocwa_frontend
 echo "push done successfully";
