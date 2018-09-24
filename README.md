@@ -1,4 +1,6 @@
-# Repo for Output Checker Workflow App
+# Repo for Output Checker Workflow App 
+[![Build Status](https://travis-ci.org/bcgov/OCWA.svg?branch=master)](https://travis-ci.org/bcgov/OCWA)
+
 OCWA (pronounced "aqua")
 
 ## Notes
@@ -11,4 +13,5 @@ Policy Api: 3004
 Storage Api (Minio): 9000
 Storage Api (Tusd): 1080
 
-Front end: 8000```
+Front end: 8000
+```
