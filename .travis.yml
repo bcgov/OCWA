@@ -49,7 +49,7 @@ jobs:
         - npm install -g yarn --cache-min 999999999
       install:
         - yarn
-        - yarn install jest-cli
+        - yarn add jest-cli
 
       deploy:
         provider: script
