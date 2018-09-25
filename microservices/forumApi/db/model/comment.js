@@ -25,7 +25,7 @@ model.getAll = function(query, limit, page, user, callback){
                         $expr: {
                             $and: [
                                 {$or: [
-                                    {$eq: ["$comment_id", "$$topicId"] },
+                                    {$eq: ["$comment_id", "commentId"] },
                                     {$eq: ["$comment_id", "*"] }
                                 ]},
                                 {$eq: ["$allow", true]}
