@@ -1,0 +1,29 @@
+{
+  "name": "forumApi",
+  "author": "Brandon Sharratt",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "mocha --exit --timeout 10000"
+  },
+  "dependencies": {
+    "config": "^2.0.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "^2.6.9",
+    "express": "~4.16.0",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.2.17",
+    "morgan": "^1.9.1",
+    "ms": "^2.1.1",
+    "npmlog": "^4.1.2",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^4.2.0",
+    "mocha": "^5.2.0"
+  }
+}

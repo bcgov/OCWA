@@ -19,11 +19,11 @@ replacing image id with the image id from docker build and the configuration val
 
 
 ## Helm
-For both below helm commands make a copy of values.yaml within the helm directory
+For both below helm commands make a copy of values.yaml within the helm/forum-api directory
 and modify it to contain the values specific for your deployment.
 
 ## Helm install (Kubernetes)
-helm install --name ocwa-forum-api --namespace ocwa ./helm/ -f ./helm/config.yaml
+helm install --name ocwa-forum-api --namespace ocwa ./helm/forum-api -f ./helm/forum-api/config.yaml
 
 ## Helm update (Kubernetes)
-helm upgrade --name ocwa-forum-api ./helm  -f ./helm/config.yaml
+helm upgrade --name ocwa-forum-api ./helm/forum-api  -f ./helm/forum-api/config.yaml
