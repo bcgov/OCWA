@@ -68,6 +68,7 @@ jobs:
         - cp config/test.json.example config/test.json
         - NODE_ENV=test npm start &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+        - sleep 15
         - npm test
 
       deploy:
