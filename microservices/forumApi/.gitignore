@@ -6,6 +6,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+helm/config.yaml
+
 # Runtime data
 pids
 *.pid

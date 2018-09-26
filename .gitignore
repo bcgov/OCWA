@@ -3,6 +3,7 @@
 .idea
 .DS_Store
 
+helm/config.yaml
 
 # Golang Ignore
 
