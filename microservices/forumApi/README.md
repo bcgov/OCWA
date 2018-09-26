@@ -18,5 +18,12 @@ docker run -e API_PORT=$apiport -e WS_PORT=$wsport -e JWT_SECRET=MySecret -e LOG
 replacing image id with the image id from docker build and the configuration values as necessary
 
 
+## Helm
+For both below helm commands make a copy of values.yaml within the helm directory
+and modify it to contain the values specific for your deployment.
+
 ## Helm install (Kubernetes)
-Coming Soon...
+helm install --name ocwa-forum-api --namespace ocwa ./helm/ -f ./helm/config.yaml
+
+## Helm update (Kubernetes)
+helm upgrade --name ocwa-forum-api ./helm  -f ./helm/config.yaml
