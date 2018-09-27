@@ -56,8 +56,8 @@ jobs:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       install:
         ##GEVENT is a pain on linux
-        - sudo apt-get update && python3-gevent
-        - sudo pip3 install gevent
+        - sudo pip install --upgrade setuptools pip
+        - sudo easy_install gevent
         - sudo pip3 install -U -e .
 
       before_deploy:
