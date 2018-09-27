@@ -57,6 +57,7 @@ jobs:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       install:
         - sudo pip3 install setuptools
+        - sudo pip install -U pip
         - sudo python3 setup.py install
 
       before_deploy:
