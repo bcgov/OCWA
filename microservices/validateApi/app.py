@@ -15,7 +15,7 @@ def create_app(test_config=None):
     app = Flask(__name__, template_folder=templFolder)
 
     if test_config is None:
-        conf = config.Config()
+        conf = Config()
         app.config.update(conf.conf.data)
     else:
         # load the test config if passed in
