@@ -15,9 +15,11 @@ addons:
 
 jobs:
   include:
-    - stage: "Node Apis"
+    - stage: "Forum Api"
       before_script:
-        #Base
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+        - cp config/test.json.example config/test.json
+        - cp config/default.json.example config/default.json
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
         - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
         - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
@@ -30,43 +32,48 @@ jobs:
         # Installig pip deps
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
-        #Forum Api
-        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - cp config/test.json.example config/test.json
-        - cp config/default.json.example config/default.json
-
-        #Request Api
-        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-        - cp config/test.json.example config/test.json
-        - cp config/default.json.example config/default.json
-
       before_install:
-        #Forum Api
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm install
 
-        #Request Api
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+        - npm test
+        - helm lint helm/forum-api
+
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          branch: master
+
+    - stage: "Request Api"
+      before_script:
+        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+        - cp config/test.json.example config/test.json
+        - cp config/default.json.example config/default.json
+        - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+        - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+        - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
+
+      before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - npm install
 
       before_deploy:
-        #Forum Api
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - npm test
-        - helm lint helm/forum-api
-        #Request Api
+        - cp config/default.json.example config/default.json
+        - cp config/test.json.example config/test.json
+        - NODE_ENV=test npm start &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+        - sleep 15
         - npm test
 
       deploy:
         provider: script
-        script: cd /home/travis/build/bcgov/OCWA/microservices/forumApi; bash docker_push
-        on:
-          branch: master
-
-      deploy:
-        provider: script
-        script: cd /home/travis/build/bcgov/OCWA/microservices/requestApi; bash docker_push
+        script: bash docker_push
         on:
           branch: master
 
