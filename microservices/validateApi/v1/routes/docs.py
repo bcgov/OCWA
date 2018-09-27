@@ -19,7 +19,7 @@ def openapi_yaml() -> object:
     Returns the source OpenAPI file for the specified version in yaml
     :return: OpenAPI yaml file
     """
-    return send_from_directory('v1/spec/', f'v1.yaml')
+    return send_from_directory('v1/spec/', 'v1.yaml')
 
 
 @docs.route('/docs.json', methods=['GET'])
@@ -28,7 +28,7 @@ def openapi_json() -> object:
     Returns the source OpenAPI file for the specified version in json
     :return: OpenAPI json file
     """
-    path = os.path.join(os.path.dirname(__file__), 'v1/spec', f'v1.yaml')
+    path = os.path.join(os.path.dirname(__file__), 'v1/spec', 'v1.yaml')
     file = open(path, 'r')
     docs = yaml.load(file)
     return jsonify(docs)
