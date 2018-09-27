@@ -22,7 +22,7 @@ setup(
     install_requires=[
         'boto3',
         'flask',
-        'flask-compress',
+
         'gevent',
         'pyyaml',
         'mongoengine',
