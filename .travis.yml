@@ -57,7 +57,7 @@ jobs:
       install:
         ##GEVENT is a pain on linux
         - sudo pip3 install --upgrade setuptools pip
-        - sudo easy_install-3.6 gevent
+        - sudo which python3
         - sudo pip3 install -U -e .
 
       before_deploy:
