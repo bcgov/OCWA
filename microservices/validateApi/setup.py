@@ -15,6 +15,7 @@ setup(
     version='0.1',
     description="OCWA Validate API",
     long_description=read('README.md'),
+    license='Apache 2.0',
 
     packages=find_packages(),
     include_package_data=True,
@@ -37,6 +38,5 @@ setup(
         'pytest-cov',
         'pycodestyle',
         'pylint'
-    ],
-    license='Apache 2.0'
+    ]
 )
