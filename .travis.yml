@@ -58,6 +58,7 @@ jobs:
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       install:
+        - sudo pip3 install gevent
         - sudo pip3 install -U -e .
 
       before_deploy:
