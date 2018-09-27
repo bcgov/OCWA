@@ -64,8 +64,6 @@ jobs:
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - npm install
-
-      before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - cp config/default.json.example config/default.json
         - cp config/test.json.example config/test.json
@@ -73,6 +71,8 @@ jobs:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
+
+      script: echo "Testing performed in a different step"
 
       deploy:
         provider: script
