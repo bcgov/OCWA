@@ -1,6 +1,7 @@
 import http
 import logging
 import config
+import os
 
 from flask import Flask, g, jsonify, make_response, url_for, Response
 from flask_compress import Compress
@@ -10,7 +11,8 @@ def create_app(test_config=None):
 
     log = logging.getLogger(__name__)
 
-    app = Flask(__name__)
+    templFolder = os.path.abspath('../templates')
+    app = Flask(__name__, template_folder=templFolder)
 
     if test_config is None:
         conf = config.Config()
