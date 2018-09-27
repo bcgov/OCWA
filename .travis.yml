@@ -50,25 +50,6 @@ jobs:
         on:
           branch: master
 
-    - stage: "Validation Api"
-      before_install:
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-      install:
-        ##GEVENT is a pain on linux
-        - sudo pip3 install --upgrade setuptools
-        - sudo which python3
-        - sudo pip3 install -U -e .
-
-      before_deploy:
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - pytest
-
-      deploy:
-        provider: script
-        script: bash docker_push
-        on:
-          branch: master
-
     - stage: "Request Api"
       before_script:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
@@ -92,6 +73,24 @@ jobs:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
+
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          branch: master
+
+
+    - stage: "Validation Api"
+      before_install:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+      install:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - sudo pip3 install -r requirements.txt
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - pytest
 
       deploy:
         provider: script
