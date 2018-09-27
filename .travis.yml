@@ -14,7 +14,6 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-      - python3
       - python3-pip
 
 jobs:
@@ -56,7 +55,7 @@ jobs:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       install:
         ##GEVENT is a pain on linux
-        - sudo pip3 install --upgrade setuptools pip
+        - sudo pip3 install --upgrade setuptools
         - sudo which python3
         - sudo pip3 install -U -e .
 
