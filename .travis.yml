@@ -56,8 +56,8 @@ jobs:
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       install:
-        - pip3 install --upgrade setuptools pip
-        - pip3 install -U -e .
+        - sudo pip3 install --upgrade setuptools pip
+        - sudo pip3 install -U -e .
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
