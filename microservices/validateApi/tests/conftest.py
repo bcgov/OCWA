@@ -1,12 +1,7 @@
-import os
-import tempfile
-
 import pytest
 
-from config import Config
-from app import create_app
+from microservices.validateApi import create_app
 
-from pytest_mock import mocker 
 from mongoengine import connect
 
 from db.db import Db
