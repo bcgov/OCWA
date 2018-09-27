@@ -35,6 +35,7 @@ describe("Requests", function() {
                 .get('/v1/')
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
+                    console.log("GET v1",res.body);
                     res.should.have.status(200);
                     res.body.length.should.be.eql(0);
                     done();
@@ -89,6 +90,7 @@ describe("Requests", function() {
                     confidentiality: "none"
                 })
                 .end(function (err, res) {
+                    console.log("POST v1",res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
