@@ -1,4 +1,7 @@
-from http import HTTPStatus
+try:  # Python 3.5+
+    from http import HTTPStatus as HTTPStatus
+except ImportError:
+    from http import client as HTTPStatus
 import logging
 import config
 import os
