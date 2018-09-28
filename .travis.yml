@@ -64,6 +64,7 @@ jobs:
         - cp config/default.json.example config/default.json
         - npm install
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+        - npm install
         - cp config/default.json.example config/default.json
         - cp config/test.json.example config/test.json
         - NODE_ENV=test npm start &
