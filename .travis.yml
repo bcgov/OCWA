@@ -51,12 +51,10 @@ jobs:
           branch: master
 
     - stage: "Request Api"
-      before_script:
+      before_install:
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
         - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
         - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
-
-      before_install:
         - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
         - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
