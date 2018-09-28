@@ -1,10 +1,15 @@
+const bodyParser = require('body-parser');
 const config = require('config');
 const express = require('express');
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
 const proxy = require('http-proxy-middleware');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
+require('./auth');
+const authRoute = require('./routes/auth');
 const webpackConfig = require('../webpack.dev');
 
 const app = express();
@@ -27,7 +32,12 @@ if (process.env.NODE_ENV === 'development') {
   app.use(webpackHotMiddleware(compiler));
 }
 
+// Express config
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('dist'));
+app.use('/auth', authRoute);
+
 // Set up some proxy action
 app.use('/v1', forumProxy);
 

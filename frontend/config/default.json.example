@@ -2,7 +2,6 @@
   "port": 8000,
   "wsPort": 3001,
   "jwtSecret": "JWT_SECRET_HERE",
-  "jwt": "JWT_TOKEN_HERE",
   "host": "GENERATED",
   "socketHost": "localhost",
   "user":{

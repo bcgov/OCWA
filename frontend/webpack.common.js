@@ -32,7 +32,6 @@ module.exports = {
       template: path.join(__dirname, 'src/templates/main.html'),
     }),
     new webpack.EnvironmentPlugin({
-      TOKEN: config.get('jwt'),
       API_HOST: config.get('host'),
       SOCKET: config.get('socketHost'),
     }),
