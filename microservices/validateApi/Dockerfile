@@ -20,4 +20,6 @@ COPY . .
 
 COPY config/default.json.template config/default.json
 
+EXPOSE 3003
+
 ENTRYPOINT ["python", "./wsgi.py"]
