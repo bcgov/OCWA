@@ -20,7 +20,7 @@ router.post('/', function(req, res, next) {
           return next(err);
         }
         const token = jwt.sign(user, config.get('jwtSecret'), {
-          expiresIn: '1h',
+          expiresIn: '1y',
         });
 
         return res.json({ user, token });

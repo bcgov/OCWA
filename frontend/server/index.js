@@ -17,6 +17,24 @@ const port = config.get('port');
 const host = config.get('host');
 const forumProxy = proxy('/v1', {
   target: `http://${host}:3000`,
+  // Need to doctor the proxy request due to some issues with body-parser.
+  onProxyReq(proxyReq, req, res) {
+    const contentType = proxyReq.getHeader('Content-Type');
+    let bodyData;
+
+    if (!req.body || !Object.keys(req.body).length) {
+      return;
+    }
+
+    if (contentType === 'application/json') {
+      bodyData = JSON.stringify(req.body);
+    }
+
+    if (bodyData) {
+      proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+      proxyReq.write(bodyData);
+    }
+  },
 });
 
 if (process.env.NODE_ENV === 'development') {
