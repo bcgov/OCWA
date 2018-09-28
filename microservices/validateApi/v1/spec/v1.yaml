@@ -8,7 +8,7 @@ info:
     # OCWA Validate API
     This is the documentation for the OCWA Validate API.
 servers:
-  - url: 'http://localhost:5000/v1'
+  - url: '/v1'
 tags:
   - name: Status
     description: API status
