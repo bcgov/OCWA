@@ -3,9 +3,9 @@
   "database": {
     "host": "localhost",
     "port": 27017,
-    "username": "commentApi",
-    "password": "dev",
-    "dbName": "commentApi"
+    "username": "forumUser",
+    "password": "forumPass",
+    "dbName": "forumDb"
   },
   "storage": {
       "endpoint": "http://minio:9000",
