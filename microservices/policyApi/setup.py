@@ -9,11 +9,11 @@ def read(filename):
 
 
 setup(
-    name='validate',
+    name='policy',
     author='Brandon Sharratt',
     author_email='',
     version='0.1',
-    description="OCWA Validate API",
+    description="OCWA Policy API",
     long_description=read('README.md'),
     license='Apache 2.0',
 
