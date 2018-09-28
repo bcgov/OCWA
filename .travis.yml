@@ -91,6 +91,8 @@ jobs:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - pytest
 
+      script: echo "Testing performed in a different step"
+
       deploy:
         provider: script
         script: bash docker_push
