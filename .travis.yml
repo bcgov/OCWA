@@ -14,6 +14,7 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+      - python3-pip
 
 jobs:
   include:
