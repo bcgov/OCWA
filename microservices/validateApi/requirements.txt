@@ -1,4 +1,5 @@
 ply==3.10
+munch==2.3.2
 boto3==1.9.12
 flask==1.0.2
 flask-compress==1.4.0
