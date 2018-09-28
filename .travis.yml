@@ -79,6 +79,26 @@ jobs:
           branch: master
 
 
+    - stage: "Policy Api"
+      install:
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - cp config/default.json.template config/default.json
+        - pytest
+
+      script: echo "Testing performed in a different step"
+
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          branch: master
+
+
     - stage: "Validation Api"
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi

@@ -1,0 +1,215 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: OCWA Policy API
+  license:
+    name: Apache 2.0
+  description: |-
+    # OCWA Policy API
+    This is the documentation for the OCWA Policy API.
+servers:
+  - url: '/v1'
+tags:
+  - name: Status
+    description: API status
+
+paths:
+  /status:
+    get:
+      summary: Return overall API status
+      description: Returns the overall API status
+      tags:
+        - Status
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/status'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+  '/':
+    get:
+      summary: Get the policy
+      description: Returns the policy
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getPolicy'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+    post:
+      summary: (Over)write the policy
+      description: >-
+        Creates the policy if it doesn't already exist, otherwise it overwrites the existing policy
+      responses:
+        '201':
+          description: Wrote Policy
+        '202':
+          description: Accepted existing file
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+  '/{ruleName}':
+    parameters:
+      - $ref: '#/components/parameters/ruleName'
+    get:
+      summary: Get a specific rule by name
+      description: Returns the contents of that specific rule
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ruleObject'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+    post:
+      summary: Over(write) a specific rule
+      description: >-
+        Write a rule to the corresponding name, if one already exists it will be replaced, otherwise it will be created
+      responses:
+        '201':
+          description: Created new rule
+        '202':
+          description: Accepted existing file
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+components:
+  parameters:
+    ruleName:
+      name: ruleName
+      in: path
+      description: The rule name
+      required: true
+      schema:
+        type: string
+        pattern: '^[a-fA-F0-9]+$'
+        example: testRule
+  responses:
+    401Unauthorized:
+      description: Unauthorized
+    404NotFound:
+      description: Not Found
+    500InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/errorResponse'
+  schemas:
+    errorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: Something exploded
+        code:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Error code
+          example: 42
+    status:
+      type: object
+      properties:
+        endpoint_load:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Number of calls in progress
+          example: 0
+        operational:
+          type: boolean
+          description: Policy API functional
+          example: true
+        policy_endpoint:
+          $ref: '#/components/schemas/statusEndpointState'
+        storage_endpoint:
+          $ref: '#/components/schemas/statusEndpointState'
+    statusEndpointState:
+      type: object
+      properties:
+        endpoint:
+          type: string
+          format: url
+          description: Endpoint URL
+          example: 'http://example.endpoint/v1'
+        name:
+          type: string
+          description: Endpoint Name
+          example: Example Endpoint
+        status:
+          type: boolean
+          description: Endpoint Reachability
+          example: true
+    policyArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/ruleObject'
+    ruleObject:
+      type: object
+      properties:
+        _id.$oid:
+          type: string
+          description: Rule Object Id
+          pattern: '^[a-fA-F0-9]{24}$'
+          example: ff4c5d676443a37cc86ea7e0
+        name:
+          type: string
+          description: Rule Name
+          pattern: '^[a-zA-Z0-9]+$'
+          example: ruleName
+        source:
+          type: string
+          description: The code to execute on the file.
+          example: ${file.size}<500
+        mandatory:
+          type: boolean
+          description: Indicates if a file must pass this rule for a submission to be valid
+          example: true
+    getPolicy:
+      type: object
+      properties:
+        results:
+          $ref: '#/components/schemas/policyArray'
+
+
+  securitySchemes:
+    jwtAuth:
+      type: jwt
+      in: header
+      name: Authorization
+security:
+  - jwtAuth: []
