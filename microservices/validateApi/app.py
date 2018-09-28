@@ -1,4 +1,4 @@
-import http
+from http import HTTPStatus
 import logging
 import config
 import os
@@ -47,22 +47,22 @@ def create_app(test_config=None):
         return response
 
 
-    @app.errorhandler(http.HTTPStatus.NOT_FOUND)
+    @app.errorhandler(HTTPStatus.NOT_FOUND)
     def not_found(param):
         content = jsonify({
             "error": "Not Found",
-            "code": http.HTTPStatus.NOT_FOUND
+            "code": HTTPStatus.NOT_FOUND
         })
-        return make_response(content, http.HTTPStatus.NOT_FOUND)
+        return make_response(content, HTTPStatus.NOT_FOUND)
 
 
-    @app.errorhandler(http.HTTPStatus.INTERNAL_SERVER_ERROR)
+    @app.errorhandler(HTTPStatus.INTERNAL_SERVER_ERROR)
     def internal_server_error(error):
         content = jsonify({
             "error": "{error}",
-            "code": http.HTTPStatus.INTERNAL_SERVER_ERROR
+            "code": HTTPStatus.INTERNAL_SERVER_ERROR
         })
-        return make_response(content, http.HTTPStatus.INTERNAL_SERVER_ERROR)
+        return make_response(content, HTTPStatus.INTERNAL_SERVER_ERROR)
 
 
     @app.route('/', methods=['GET'], strict_slashes=False)

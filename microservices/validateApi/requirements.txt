@@ -1,6 +1,5 @@
 ply==3.10
 munch==2.3.2
-request==1.0.2
 boto3==1.9.12
 flask==1.0.2
 flask-compress==1.4.0
@@ -16,4 +15,3 @@ pytest-mock==1.10.0
 mongomock==3.12.0
 pycodestyle==2.4.0
 pylint==1.7.2
-http==0.2
