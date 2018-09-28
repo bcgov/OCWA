@@ -52,9 +52,6 @@ jobs:
 
     - stage: "Request Api"
       before_script:
-        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-        - cp config/test.json.example config/test.json
-        - cp config/default.json.example config/default.json
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
         - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
         - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
@@ -63,6 +60,8 @@ jobs:
 
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+        - cp config/test.json.example config/test.json
+        - cp config/default.json.example config/default.json
         - npm install
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - cp config/default.json.example config/default.json
