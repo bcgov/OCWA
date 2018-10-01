@@ -1,9 +1,4 @@
 sudo: required
-language: node_js
-node_js:
-  - "node"
-python:
-  - "3.6"
 
 services:
 - docker
@@ -14,11 +9,12 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-      - python3-pip
-
-jobs:
+matrix:
   include:
-    - stage: "Policy Api"
+    - name: "Policy Api"
+      language: python
+      python:
+        - "3.6"
       install:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
@@ -38,8 +34,10 @@ jobs:
         on:
           branch: master
 
-
-    - stage: "Validation Api"
+    - name: "Validation Api"
+      language: python
+      python:
+        - "3.6"
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       install:
@@ -61,7 +59,11 @@ jobs:
         on:
           branch: master
 
-    - stage: "Forum Api"
+
+    - name: "Forum Api"
+      language: node_js
+      node_js:
+        - "node"
       before_script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - cp config/test.json.example config/test.json
@@ -93,7 +95,7 @@ jobs:
         on:
           branch: master
 
-    - stage: "Request Api"
+    - name: "Request Api"
       before_install:
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
         - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
@@ -121,7 +123,7 @@ jobs:
         on:
           branch: master
 
-    - stage: "Front End"
+    - name: "Front End"
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/frontend
       before_script:
@@ -137,6 +139,7 @@ jobs:
         script: bash docker_push
         on:
           branch: master
+
 
 
 env:
