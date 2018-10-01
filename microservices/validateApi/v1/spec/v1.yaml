@@ -1,0 +1,268 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: OCWA Validate API
+  license:
+    name: Apache 2.0
+  description: |-
+    # OCWA Validate API
+    This is the documentation for the OCWA Validate API.
+servers:
+  - url: '/v1'
+tags:
+  - name: Status
+    description: API status
+  - name: Validate Policy
+    description: Policy Validation operations
+  - name: Validate Rule
+    description: Rule Validation operations
+paths:
+  /status:
+    get:
+      summary: Return overall API status
+      description: Returns the overall API status
+      tags:
+        - Status
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/status'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+  '/validate/{fileId}':
+    parameters:
+      - $ref: '#/components/parameters/fileId'
+    get:
+      summary: Find validation result
+      description: Returns the result of file
+      tags:
+        - Validate Policy
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validatePolicy'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+    put:
+      summary: Validate a file
+      description: >-
+        Requests the file to be validated. By default, only mandatory policies
+        will be executed. Only policies without results will be executed.
+      tags:
+        - Validate Policy
+      responses:
+        '201':
+          description: Created new file
+        '202':
+          description: Accepted existing file
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+  '/validate/{fileId}/{ruleId}':
+    parameters:
+      - $ref: '#/components/parameters/fileId'
+      - $ref: '#/components/parameters/ruleId'
+    get:
+      summary: Find validation result from specific rule
+      description: Returns the result of file under the specific rule.
+      tags:
+        - Validate Rule
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validateObject'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+    put:
+      summary: Validate a file with specific rule
+      description: >-
+        Requests the file to be validated under the specific rule. The specific
+        rule will be tested on the file if and only if it has not been executed
+        before.
+      tags:
+        - Validate Rule
+      responses:
+        '201':
+          description: Created new file
+        '202':
+          description: Accepted existing file
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorResponse'
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+components:
+  parameters:
+    fileId:
+      name: fileId
+      in: path
+      description: The file Object ID
+      required: true
+      schema:
+        type: string
+        pattern: '^[a-fA-F0-9]{24}$'
+        example: ff4c5d676443a37cc86ea7e0
+    ruleId:
+      name: ruleId
+      in: path
+      description: The rule Object ID
+      required: true
+      schema:
+        type: string
+        pattern: '^[a-fA-F0-9]{24}$'
+        example: 9fe294e84f2b6462e779257e
+  responses:
+    401Unauthorized:
+      description: Unauthorized
+    404NotFound:
+      description: Not Found
+    500InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/errorResponse'
+  schemas:
+    errorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: Something exploded
+        code:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Error code
+          example: 42
+    status:
+      type: object
+      properties:
+        endpoint_load:
+          type: integer
+          format: int32
+          minimum: 0
+          description: Number of validations in progress
+          example: 0
+        operational:
+          type: boolean
+          description: Validation API functional
+          example: true
+        policy_endpoint:
+          $ref: '#/components/schemas/statusEndpointState'
+        storage_endpoint:
+          $ref: '#/components/schemas/statusEndpointState'
+    statusEndpointState:
+      type: object
+      properties:
+        endpoint:
+          type: string
+          format: url
+          description: Endpoint URL
+          example: 'http://example.endpoint/v1'
+        name:
+          type: string
+          description: Endpoint Name
+          example: Example Endpoint
+        status:
+          type: boolean
+          description: Endpoint Reachability
+          example: true
+    validateArray:
+      type: array
+      items:
+        $ref: '#/components/schemas/validateObject'
+    validateObject:
+      type: object
+      properties:
+        file_id:
+          type: string
+          description: File Object ID
+          pattern: '^[a-fA-F0-9]{24}$'
+          example: ff4c5d676443a37cc86ea7e0
+        file_name:
+          type: string
+          description: Filename
+          pattern: '^[a-zA-Z0-9\s\-\_]+\.[a-zA-Z0-9]+$'
+          example: party_parrot.csv
+        message:
+          type: string
+          description: Result Details
+          example: File Size Exceeded
+        rule_id:
+          type: string
+          description: Rule Object ID
+          pattern: '^[a-fA-F0-9]{24}$'
+          example: 9fe294e84f2b6462e779257e
+        rule_name:
+          type: string
+          description: Rule Name
+          pattern: ^.+$
+          example: File Size Limit
+        state:
+          $ref: '#/components/schemas/validateState'
+    validatePolicy:
+      type: object
+      properties:
+        file_id:
+          type: string
+          description: File Object ID
+          pattern: '^[a-fA-F0-9]{24}$'
+          example: ff4c5d676443a37cc86ea7e0
+        file_name:
+          type: string
+          description: Filename
+          pattern: '^[a-zA-Z0-9\s_-]+\.[a-zA-Z0-9]+$'
+          example: party_parrot.csv
+        results:
+          $ref: '#/components/schemas/validateArray'
+        state:
+          $ref: '#/components/schemas/validateState'
+    validateState:
+      type: integer
+      enum:
+        - 0
+        - 1
+        - 2
+      format: int32
+      description: 'Validation Result State. 0 = pass, 1 = fail, 2 = pending.'
+      example: 1
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+security:
+  - apiKeyAuth: []
