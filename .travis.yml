@@ -3,67 +3,18 @@ sudo: required
 services:
 - docker
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
 matrix:
   include:
-    - name: "Policy Api"
-      language: python
-      python:
-        - "3.6"
-      install:
-        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - sudo pip3 install -U setuptools
-        - sudo pip3 install -r requirements.txt
-
-      before_deploy:
-        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - cp config/default.json.template config/default.json
-        - sudo pip3 install -e .
-        - sudo pytest
-
-      script: echo "Testing performed in a different step"
-
-      deploy:
-        provider: script
-        script: bash docker_push
-        on:
-          branch: master
-
-    - name: "Validation Api"
-      language: python
-      python:
-        - "3.6"
-      before_install:
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-      install:
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - sudo pip3 install -U setuptools
-        - sudo pip3 install -r requirements.txt
-
-      before_deploy:
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - cp config/default.json.template config/default.json
-        - sudo pip3 install -e .
-        - sudo pytest
-
-      script: echo "Testing performed in a different step"
-
-      deploy:
-        provider: script
-        script: bash docker_push
-        on:
-          branch: master
-
-
     - name: "Forum Api"
       language: node_js
       node_js:
         - "node"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.8
       before_script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - cp config/test.json.example config/test.json
@@ -96,6 +47,12 @@ matrix:
           branch: master
 
     - name: "Request Api"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.8
       before_install:
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
         - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
@@ -114,6 +71,66 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
+
+      script: echo "Testing performed in a different step"
+
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          branch: master
+
+    - name: "Policy Api"
+      language: python
+      python:
+        - "3.6"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - python3-pip
+      install:
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - sudo pytest
+
+      script: echo "Testing performed in a different step"
+
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          branch: master
+
+    - name: "Validation Api"
+      language: python
+      python:
+        - "3.6"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - python3-pip
+      before_install:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+      install:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - sudo pytest
 
       script: echo "Testing performed in a different step"
 
