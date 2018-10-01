@@ -20,24 +20,28 @@ model.getAll = function(query, limit, page, user, callback){
             $lookup:{
                 from: "permissions",
                 let: { commentId: "$_id" },
-                pipeline: [{
-                    $match: {
+                pipeline: [
+                    {$match: {
                         $expr: {
                             $and: [
                                 {$or: [
-                                    {$eq: ["$comment_id", "commentId"] },
+                                    {$eq: ["$comment_id", "$$commentId"] },
                                     {$eq: ["$comment_id", "*"] }
                                 ]},
-                                {$or: [
-                                    {user_ids: user.id},
-                                    {user_ids: "*"},
-                                    {$in: ["$group_ids", user.Groups]},
-                                    {group_ids: "*"}
-                                ]},
-                                {$eq: ["$allow", false]}
+                                {$eq: ["$allow", true]}
                             ]
                         }
                     }},
+                    {
+                        $match: {
+                            $or: [
+                                {user_ids: user.id},
+                                {user_ids: "*"},
+                                {group_ids: "*"},
+                                {group_ids: {$in: user.groups}}
+                            ]
+                        }
+                    },
                     {$sort: {priority: 1}}
                 ],
                 as: "permissions"

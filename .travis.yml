@@ -2,6 +2,8 @@ sudo: required
 language: node_js
 node_js:
   - "node"
+python:
+  - "3.6"
 
 services:
 - docker
@@ -12,6 +14,7 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+      - python3-pip
 
 jobs:
   include:
@@ -25,6 +28,12 @@ jobs:
         - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
         - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
         - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
@@ -33,6 +42,78 @@ jobs:
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm test
+        - helm lint helm/forum-api
+
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          branch: master
+
+    - stage: "Request Api"
+      before_install:
+        - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+        - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+        - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
+        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+        - cp config/test.json.example config/test.json
+        - cp config/default.json.example config/default.json
+        - npm install
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+        - npm install
+        - cp config/default.json.example config/default.json
+        - cp config/test.json.example config/test.json
+        - NODE_ENV=test npm start &
+        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+        - sleep 15
+        - npm test
+
+      script: echo "Testing performed in a different step"
+
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          branch: master
+
+
+    - stage: "Policy Api"
+      install:
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install '.[test]'
+        - sudo pytest
+
+      script: echo "Testing performed in a different step"
+
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          branch: master
+
+
+    - stage: "Validation Api"
+      before_install:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+      install:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - cp config/default.json.template config/default.json
+        - sudo pytest
+
+      script: echo "Testing performed in a different step"
 
       deploy:
         provider: script
@@ -60,6 +141,12 @@ jobs:
 
 env:
   global:
+  - HELM_URL=https://storage.googleapis.com/kubernetes-helm
+  - HELM_TGZ=helm-v2.4.1-linux-amd64.tar.gz
+  - TARGET_BR=gh-pages
+  - REPO_DIR=/home/travis/build/kubenow/helm-charts
+  - GH_URL=https://kubenow.github.io/helm-charts
+  - YAMLLINT_VERSION=1.8.1
   - CXX=g++-4.8
   - MONGODB=4.1.1
   - secure: TsBkt0h9c9CQ+ZnA4CAVlWxCoTRV4Bn7Z0y8XvR99NlnfrUhSGWzi78wJ6W8oAqOawqDk5jnG3qIKXaaO1ZaiT8n3YFLhtAQzh+gy1B96GOJd6Yjmep7AxiWgW+g0Nm+V0vkGA/dwuUjothmnvLcsqK2+hmrknvTI+oe6xrNrOv4GAx9j3NJVfmhJmhBtnI+p8uqgqtn7aqrZZqW/jhwh10taRaIvvsMZ4FEZy8M9JI6cRfakQT656U9KGbXsC7XdnEf+G/N2qOq/MWucByBo98jCnuL5JvGzgZCSkywlShK8kPUuIREGfLv1RuSOOwlz95AA700Bf/SKGmqu58wAp8XOKWAtMTpf2o7WFXpb/Ghy6ysk5AGO6RSsFOTEh2EAdF42ExRy+N8mqDYdr9Vj+qWeVHXVR9vjtjbCLeHxl16sO0K/BzQ3gjCYLXQEC6mH3xfu6kDvQvdq20fKpXPeLvX+HI0ALokkL7RFaqjcEu8R+9zZAUIqCCTKs0Z3/CmrUd2H7MD7j30gFuR2RynSpGb8l476szAuLv1wk6L+gc4g+uG5pFPsBYaBp9mNJMHrOcBQfSFY9T4n/sY4z+2Bo7qC8g8JuLOtVsVcjZ0Ut0r0xASvEg87jlgdHy/NaAySmuZclheuqsqVqsKQOx38AgOSg9N0gX2i2jnq2ZkS+4=
