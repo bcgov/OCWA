@@ -106,7 +106,7 @@ class App extends React.Component {
 
   openSocket = () => {
     const { token } = this.state;
-    this.socket = new WebSocket(`ws://${process.env.SOCKET}:3001`, token);
+    this.socket = new WebSocket(`ws://${process.env.FORUM_SOCKET}`, token);
     this.socket.onmessage = this.onMessage;
     this.socket.onopen = this.onSocketOpen;
   };

@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 const config = require('config');
 const express = require('express');
+const isEmpty = require('lodash/isEmpty');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const proxy = require('http-proxy-middleware');
@@ -14,15 +15,15 @@ const webpackConfig = require('../webpack.dev');
 
 const app = express();
 const port = config.get('port');
-const host = config.get('host');
+const forumApiHost = config.get('forumApiHost');
 const forumProxy = proxy('/v1', {
-  target: `http://${host}:3000`,
+  target: `http://${forumApiHost}`,
   // Need to doctor the proxy request due to some issues with body-parser.
   onProxyReq(proxyReq, req, res) {
     const contentType = proxyReq.getHeader('Content-Type');
     let bodyData;
 
-    if (!req.body || !Object.keys(req.body).length) {
+    if (isEmpty(req.body) || !Object.keys(req.body).length) {
       return;
     }
 
