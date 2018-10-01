@@ -15,7 +15,7 @@ def test_get_validate_rule_result(client, mocker, mockdb):
 
     response = client.get('/v1/validate/file_1/rule_1')
 
-    resp = json.loads(response.data)
+    resp = json.loads(response.data.decode('utf-8'))
 
     assert len(resp) == 1
     assert resp[0]['file_id'] == "file_1"
@@ -59,5 +59,5 @@ def test_put_validate_rule_new(client, mocker, mockdb):
 
     response = client.get('/v1/validate/file_1')
     print(response.data)
-    resp = json.loads(response.data)
+    resp = json.loads(response.data.decode('utf-8'))
     assert resp[0]['state'] == 2
