@@ -1,0 +1,24 @@
+{
+    "apiPort": 3002,
+    "logLevel": "info",
+    "morganLogType": "dev",
+
+    "database": {
+      "host": "localhost",
+      "username": "dbUser",
+      "password": "dbPass",
+      "dbName": "dbName"
+    },
+
+    "forumApi": "http://localhost:3000",
+    "validationApi": "http://localhost:3003",
+    "validationApiSecret": "api-secret",
+
+    "jwtSecret": "jwtsecret",
+
+    "outputCheckerGroup": "oc",
+
+    "user":{
+      "idField": "Email"
+    }
+}

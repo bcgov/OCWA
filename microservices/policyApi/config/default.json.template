@@ -1,0 +1,17 @@
+{
+  "apiPort": 3004,
+
+  "database": {
+    "host": "localhost",
+    "port": 27017,
+    "username": "forumUser",
+    "password": "forumPass",
+    "dbName": "forumDB"
+  },
+
+  "apiSecret": "MySecret",
+
+  "user":{
+      "idField": "Email"
+    }
+}

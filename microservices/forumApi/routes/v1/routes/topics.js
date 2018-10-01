@@ -66,7 +66,7 @@ router.post("/", function(req, res, next){
                 if (saveErr){
                     res.json({error: "No such parent topic"});
                 }
-                res.json({message: "Successfully written"});
+                res.json({message: "Successfully written", _id: saveRes._id});
             });
         });
     }else{
@@ -77,7 +77,7 @@ router.post("/", function(req, res, next){
             }
             var messages = require('../messages/messages');
             messages.sendTopicMessage(topic);
-            res.json({message: "Successfully written"});
+            res.json({message: "Successfully written", _id: saveRes._id});
         });
     }
 });
