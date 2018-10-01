@@ -32,8 +32,8 @@ module.exports = {
       template: path.join(__dirname, 'src/templates/main.html'),
     }),
     new webpack.EnvironmentPlugin({
-      API_HOST: config.get('host'),
-      SOCKET: config.get('socketHost'),
+      FORUM_API_HOST: config.get('forumApiHost'),
+      FORUM_SOCKET: config.get('forumSocket'),
     }),
   ],
   stats: {

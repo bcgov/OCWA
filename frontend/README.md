@@ -34,7 +34,8 @@ You will need to
 `$ docker build .`
 ```
 $ hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
-$ docker run -e JWT_SECRET=<YOUR_API_SECRET> -e HOST=docker -e SOCKET_HOST=localhost -e USER_ID_FIELD=Email -e PORT=8000 --add-host=docker:$hostip -p 8000:8000 <DOCKER_IMAGE>
+$ port=8000
+$ docker run -e JWT_SECRET=<YOUR_API_SECRET> -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e FORUM_SOCKET_HOST=$hostip:3001 -e USER_ID_FIELD=Email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
 ```
 
 ### NOTES
