@@ -14,7 +14,7 @@ from pytest_mock import mocker
 def test_get_validate_policy_result_with_record(client, mockdb):
     response = client.get('/v1/validate/file_1')
     print(response)
-    resp = json.loads(response.data)
+    resp = json.loads(response.data.decode('utf-8'))
     assert len(resp) == 1
     assert resp[0]['file_id'] == "file_1"
     assert resp[0]['rule_id'] == "rule_1"
@@ -24,7 +24,7 @@ def test_get_validate_policy_result_with_record(client, mockdb):
 def test_get_validate_policy_result_with_no_record(client, mockdb):
     response = client.get('/v1/validate/file_not_there')
     print(response)
-    resp = json.loads(response.data)
+    resp = json.loads(response.data.decode('utf-8'))
     assert len(resp) == 0
 
 
