@@ -42,3 +42,7 @@ npm start
 ```
 
 Then browse to http://127.0.0.1:3000 and upload a file by selecting one in the file input
+
+## Helm
+Minio Chart - Official - https://github.com/helm/charts/tree/master/stable/minio
+Tus - Unofficial - Coming soon...

@@ -3,6 +3,8 @@
 .idea
 .DS_Store
 
+# Helm Ignore
+helm/policy-api/config.yaml
 
 # Golang Ignore
 
