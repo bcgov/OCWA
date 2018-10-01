@@ -1,0 +1,20 @@
+{{- if .Values.createDatabase -}}
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "ocwaForumApi.fullname" . }}-mongo-pvc
+  labels:
+      app: {{ template "ocwaForumApi.name" . }}-mongo
+      chart: {{ template "ocwaForumApi.chart" . }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: default
+  resources:
+    requests:
+      storage: 5Gi
+
+{{- end }}

@@ -18,29 +18,33 @@ model.getAll = function(query, limit, page, user, callback){
     db.Topic.aggregate([
         {
             $lookup:{
-                    from: "permissions",
-                    let: { topicId: "$_id" },
-                    pipeline: [{
+                from: "permissions",
+                let: { topicId: "$_id"},
+                pipeline: [
+                    {$match: {
+                        $expr: {
+                            $and: [
+                                {$or: [
+                                    {$eq: ["$topic_id", "$$topicId"] },
+                                    {$eq: ["$topic_id", "*"] }
+                                ]},
+                                {$eq: ["$allow", true]}
+                            ]
+                        }
+                    }},
+                    {
                         $match: {
-                            $expr: {
-                                $and: [
-                                    {$or: [
-                                        {$eq: ["$topic_id", "$$topicId"] },
-                                        {$eq: ["$topic_id", "*"] }
-                                    ]},
-                                    {$or: [
-                                        {user_ids: user.id},
-                                        {user_ids: "*"},
-                                        {$in: ["$group_ids", user.Groups]},
-                                        {group_ids: "*"}
-                                    ]},
-                                    {$eq: ["$allow", true]}
-                                ]
-                            }
-                        }},
-                        {$sort: {priority: 1}}
-                    ],
-                    as: "permissions"
+                            $or: [
+                                {user_ids: user.id},
+                                {user_ids: "*"},
+                                {group_ids: "*"},
+                                {group_ids: {$in: user.groups}}
+                            ]
+                        }
+                    },
+                    {$sort: {priority: 1}}
+                ],
+                as: "permissions"
             }
         },
         {
@@ -49,7 +53,7 @@ model.getAll = function(query, limit, page, user, callback){
             },
         },
         {
-            $project: {"permissions": 0}
+             $project: {"permissions": 0}
         }
     ]).limit(limit).skip(skip).exec(callback);
 };
