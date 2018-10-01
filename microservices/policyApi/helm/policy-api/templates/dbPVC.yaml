@@ -1,0 +1,20 @@
+{{- if .Values.createDatabase -}}
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "ocwaPolicyApi.fullname" . }}-mongo-pvc
+  labels:
+      app: {{ template "ocwaPolicyApi.name" . }}-mongo
+      chart: {{ template "ocwaPolicyApi.chart" . }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: default
+  resources:
+    requests:
+      storage: 5Gi
+
+{{- end }}

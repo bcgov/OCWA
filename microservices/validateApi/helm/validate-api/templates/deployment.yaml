@@ -1,0 +1,80 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "ocwaValidateApi.fullname" . }}
+  labels:
+    app: {{ template "ocwaValidateApi.name" . }}
+    chart: {{ template "ocwaValidateApi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ocwaValidateApi.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ocwaValidateApi.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: API_PORT
+              value: "{{ .Values.apiPort }}"
+            - name: LOG_LEVEL
+              value: {{ .Values.logLevel }}
+            - name: DB_HOST
+              value: {{ .Values.database.host }}
+            - name: DB_USERNAME
+              value: {{ .Values.database.username }}
+            - name: DB_PASSWORD
+              value: {{ .Values.database.password }}
+            - name: DB_PORT
+              value: {{ .Values.database.port }}
+            - name: DB_NAME
+              value: {{ .Values.database.dbName }}
+            - name: STORAGE_HOST
+              value: {{ .Values.storage.host }}
+            - name: STORAGE_BUCKET
+              value: {{ .Values.storage.bucket }}
+            - name: STORAGE_ACCESS_KEY
+              value: {{ .Values.storage.key }}
+            - name: STORAGE_ACCESS_SECRET
+              value: {{ .Values.storage.secret }}
+            - name: POLICY_URL
+              value: {{ .Values.policyApi }}
+            - name: API_SECRET
+              value: {{ .Values.apiSecret }}
+            - name: USER_ID_FIELD
+              value: {{ .Values.user.idField }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.apiPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /v1/api-docs
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /v1/api-docs
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

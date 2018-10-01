@@ -53,6 +53,14 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.8
+      before_script:
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+
       before_install:
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
         - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
@@ -71,6 +79,7 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
+        - helm lint
 
       script: echo "Testing performed in a different step"
 
@@ -90,6 +99,14 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - python3-pip
+      before_script:
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+
       install:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
@@ -100,6 +117,7 @@ matrix:
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo pytest
+        - helm lint
 
       script: echo "Testing performed in a different step"
 
@@ -119,6 +137,14 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - python3-pip
+      before_script:
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       install:
@@ -131,6 +157,7 @@ matrix:
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo pytest
+        - helm lint
 
       script: echo "Testing performed in a different step"
 

@@ -1,0 +1,59 @@
+{{- if .Values.createDatabase -}}
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "ocwaRequestApi.fullname" . }}-mongo
+  labels:
+    app: {{ template "ocwaRequestApi.name" . }}-mongo
+    chart: {{ template "ocwaRequestApi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ocwaRequestApi.name" . }}-mongo
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ocwaRequestApi.name" . }}-mongo
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ template "ocwaRequestApi.fullname" . }}-mongo-pvc
+      containers:
+        - name: "mongo"
+          image: mongo:4.1
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: root
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: root
+            - name: MONGO_INITDB_DATABASE
+              value: {{.Values.database.dbName}}
+          volumeMounts:
+            - name: data
+              mountPath: /docker-entrypoint-initdb.d
+          ports:
+            - name: mongo
+              containerPort: 27017
+              protocol: TCP
+      initContainers:
+        - name: "init-mongo"
+          image: mongo:4.1
+          command: ['sh', '-c', 'echo ''db.createUser({user:"{{.Values.database.username}}", pwd:"{{.Values.database.password}}", roles:["readWrite"]});'' > /docker-entrypoint-initdb.d/init.js; cat /docker-entrypoint-initdb.d/init.js']
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: root
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: root
+            - name: MONGO_INITDB_DATABASE
+              value: {{.Values.database.dbName}}
+          volumeMounts:
+            - name: data
+              mountPath: /docker-entrypoint-initdb.d
+{{- end}}
