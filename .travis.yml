@@ -141,6 +141,15 @@ matrix:
           branch: master
 
     - name: "Front End"
+      language: node_js
+      node_js:
+        - "node"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.8
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/frontend
       before_script:
