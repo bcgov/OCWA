@@ -1,0 +1,56 @@
+# Default values for ocwaForumApi.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: bcgovimages/ocwa_forum_api
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+  websocketPort: 3001
+
+ingress:
+  enabled: false
+  annotations: {}
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+
+##Configuration for OCWA Forum Api
+apiPort: 3000
+wsPort: 3001
+logLevel: error
+database:
+  host: ocwa-forum-api-mongo.ocwa
+  username: forumApi
+  password: password
+  dbName: forumApi
+
+jwtSecret: "ssh this is a secret"
+user:
+  idField: Email
+
+createDatabase: true
+
+
+resources: {}
+  # If you want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
