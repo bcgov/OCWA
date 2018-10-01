@@ -38,7 +38,7 @@ if interrupted due to a connection drop or whatever reason.
 [README](/frontend/README.md)
 The front end is written using ReactJs. It implements the apis.
 
-##Contributing
+## Contributing
 If you update apis that changes the signature at all, it is required to be under a new release (ie /v2 instead of /v1). The APIs are written specifically to make this easy.
 You must pass the travis ci builds to be able to submit a pull request that is pullable.
 

@@ -88,6 +88,7 @@ jobs:
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
         - sudo pytest
 
       script: echo "Testing performed in a different step"
@@ -110,7 +111,7 @@ jobs:
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - cp config/default.json.template config/default.json
-        - sudo pip3 install '.[test]'
+        - sudo pip3 install -e .
         - sudo pytest
 
       script: echo "Testing performed in a different step"
