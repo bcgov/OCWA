@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ocwaStorageApi.fullname" . }}
+  labels:
+    app: {{ template "ocwaStorageApi.name" . }}
+    chart: {{ template "ocwaStorageApi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.tusPort }}
+      targetPort: tusd
+      protocol: TCP
+      name: tusd
+    - port: {{ .Values.service.minioPort }}
+      targetPort: minio
+      protocol: TCP
+      name: minio
+  selector:
+    app: {{ template "ocwaStorageApi.name" . }}
+    release: {{ .Release.Name }}
