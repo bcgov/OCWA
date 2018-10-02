@@ -1,17 +1,30 @@
-# Default values for ocwaPolicyApi.
+# Default values for ocwaStorageApi.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
+access_key: key
+access_secret: secret
+
 image:
-  repository: bcgovimages/ocwa_policy_api
-  tag: latest
   pullPolicy: Always
+
+tus:
+  image: tusproject/tusd
+  tag: latest
+  bucket: bucket
+  region: us-east-1 // likely irrelevant
+
+minio:
+  image: minio/minio
+  tag: latest
+  gatewayType: azure
 
 service:
   type: ClusterIP
-  port: 80
+  tusPort: 80
+  minioPort: 9000
 
 ingress:
   enabled: false
@@ -20,22 +33,6 @@ ingress:
   hosts:
     - chart-example.local
   tls: []
-
-##Configuration for OCWA Policy Api
-apiPort: 3004
-logLevel: error
-database:
-  host: ocwa-forum-api-mongo.ocwa
-  port: 27017
-  username: forumApi
-  password: password
-  dbName: forumApi
-
-apiSecret: "ssh this is a secret"
-user:
-  idField: Email
-
-createDatabase: false
 
 
 resources: {}
