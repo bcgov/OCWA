@@ -1,8 +1,11 @@
+try:  # Python 3.5+
+    from http import HTTPStatus as HTTPStatus
+except ImportError:
+    from http import client as HTTPStatus
 from flask import Blueprint, jsonify
 from v1.db.db import Db
 from config import Config
 import requests
-import http
 import hcl
 from v1.validator.validator import Validator
 
@@ -57,7 +60,7 @@ def validate_policy(fileId: str) -> object:
             v.startValidate()
             
 
-    return jsonify({"message": "Successful"}), http.HTTPStatus.CREATED
+    return jsonify({"message": "Successful"}), HTTPStatus.CREATED
 
 
 @validate.route('/<string:fileId>/<string:ruleId>',
@@ -86,7 +89,7 @@ def validate_rule(fileId: str, ruleId: str) -> object:
     db = Db()
     results = db.Results.objects(file_id=fileId, rule_id=ruleId)
     if len(results) == 0:
-        return jsonify({"error": "Can't rerun a rule that hasn't been bulk run"}), http.HTTPStatus.BAD_REQUEST
+        return jsonify({"error": "Can't rerun a rule that hasn't been bulk run"}), HTTPStatus.BAD_REQUEST
 
     if len(results) == 1:
         result = results[0]
@@ -99,12 +102,12 @@ def validate_rule(fileId: str, ruleId: str) -> object:
             v = Validator(policy[result.rule_id], result)
             v.startValidate()
 
-            return jsonify({"message": "Successful"}), http.HTTPStatus.OK
+            return jsonify({"message": "Successful"}), HTTPStatus.OK
         else:
-            return jsonify({"error": "Rule not found in policy"}), http.HTTPStatus.INTERNAL_SERVER_ERROR
+            return jsonify({"error": "Rule not found in policy"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-    return jsonify({"error": "Couldn't decide on the rule to replace"}), http.HTTPStatus.INTERNAL_SERVER_ERROR
+    return jsonify({"error": "Couldn't decide on the rule to replace"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def getPolicies():
