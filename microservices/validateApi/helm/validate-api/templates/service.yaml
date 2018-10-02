@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ocwaValidateApi.fullname" . }}
+  labels:
+    app: {{ template "ocwaValidateApi.name" . }}
+    chart: {{ template "ocwaValidateApi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "ocwaValidateApi.name" . }}
+    release: {{ .Release.Name }}

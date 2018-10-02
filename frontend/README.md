@@ -38,6 +38,22 @@ $ port=8000
 $ docker run -e JWT_SECRET=<YOUR_API_SECRET> -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e FORUM_SOCKET_HOST=$hostip:3001 -e USER_ID_FIELD=Email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
 ```
 
+## Testing
+To run the tests run
+```
+yarn test
+```
+
+## Helm
+For both below helm commands make a copy of values.yaml within the helm/ocwa-frontend directory
+and modify it to contain the values specific for your deployment.
+
+### Helm install (Kubernetes)
+helm install --name ocwa-frontend --namespace ocwa ./helm/ocwa-frontend -f ./helm/ocwa-frontend/config.yaml
+
+### Helm update (Kubernetes)
+helm upgrade --name ocwa-frontend ./helm/ocwa-frontend  -f ./helm/ocwa-frontend/config.yaml
+
 ### NOTES
 
 This is a proof-of-concept "Hello World" app and is not at all considered production ready.
