@@ -61,7 +61,7 @@ matrix:
         # Installig pip deps
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
-      before_install:
+      before_deploy:
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
         - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
         - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
@@ -137,6 +137,13 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - python3-pip
+      before_script:
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
@@ -146,12 +153,6 @@ matrix:
         - sudo pip3 install -r requirements.txt
 
       before_deploy:
-        - wget -q ${HELM_URL}/${HELM_TGZ}
-        - tar xzfv ${HELM_TGZ}
-        - PATH=`pwd`/linux-amd64/:$PATH
-        - helm init --client-only
-        # Installig pip deps
-        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
@@ -180,11 +181,18 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/frontend
       before_script:
         - cd /home/travis/build/bcgov/OCWA/frontend
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
       before_install:
         - npm install -g yarn --cache-min 999999999
       install:
         - cd /home/travis/build/bcgov/OCWA/frontend
         - yarn
+        - helm lint
 
       deploy:
         provider: script
