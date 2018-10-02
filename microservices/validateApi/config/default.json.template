@@ -12,7 +12,7 @@
       "bucket": "temp",
       "access_key": "accesskey",
       "secret_key": "secretkey"
-  }
+  },
 
   "policyApi": "http://localhost:3004",
 
