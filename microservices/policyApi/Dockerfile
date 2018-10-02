@@ -18,7 +18,7 @@ WORKDIR /app
 
 COPY . .
 
-COPY config/default.json.template config/default.json
+RUN chmod +x entrypoint.sh
 
 EXPOSE 3004
 
