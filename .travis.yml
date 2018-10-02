@@ -35,7 +35,7 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm install
 
-      before_deploy:
+      script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm test
         - helm lint helm/forum-api
@@ -61,7 +61,7 @@ matrix:
         # Installig pip deps
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
-      before_deploy:
+      script:
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
         - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
         - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
@@ -79,9 +79,7 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
-        - helm lint
-
-      script: echo "Testing performed in a different step"
+        - helm lint helm/request-api
 
       deploy:
         provider: script
@@ -105,7 +103,7 @@ matrix:
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
 
-      before_deploy:
+      script:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
@@ -116,9 +114,7 @@ matrix:
         - helm init --client-only
         # Installig pip deps
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
-        - helm lint
-
-      script: echo "Testing performed in a different step"
+        - helm lint helm/policy-api
 
       deploy:
         provider: script
@@ -151,14 +147,12 @@ matrix:
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
 
-      before_deploy:
+      script:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo pytest
-        - helm lint
-
-      script: echo "Testing performed in a different step"
+        - helm lint helm/validate-api
 
       deploy:
         provider: script
@@ -176,8 +170,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.8
-      before_deploy:
-        - cd /home/travis/build/bcgov/OCWA/frontend
+
       before_script:
         - cd /home/travis/build/bcgov/OCWA/frontend
         - wget -q ${HELM_URL}/${HELM_TGZ}
@@ -188,10 +181,11 @@ matrix:
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
       before_install:
         - npm install -g yarn --cache-min 999999999
-      before_deploy:
+
+      script:
         - cd /home/travis/build/bcgov/OCWA/frontend
-        - yarn
-        - helm lint
+        - yarn test
+        - helm lint helm/ocwa-frontend
 
       deploy:
         provider: script
