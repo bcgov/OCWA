@@ -99,13 +99,6 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - python3-pip
-      before_script:
-        - wget -q ${HELM_URL}/${HELM_TGZ}
-        - tar xzfv ${HELM_TGZ}
-        - PATH=`pwd`/linux-amd64/:$PATH
-        - helm init --client-only
-        # Installig pip deps
-        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
       install:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
@@ -117,6 +110,12 @@ matrix:
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo pytest
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
         - helm lint
 
       script: echo "Testing performed in a different step"
