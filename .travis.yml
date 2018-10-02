@@ -35,10 +35,13 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm install
 
-      before_deploy:
+      script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm test
         - helm lint helm/forum-api
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
 
       deploy:
         provider: script
@@ -53,7 +56,15 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.8
-      before_install:
+      before_script:
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+
+      script:
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
         - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
         - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
@@ -71,8 +82,10 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
+        - helm lint helm/request-api
 
-      script: echo "Testing performed in a different step"
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
 
       deploy:
         provider: script
@@ -90,18 +103,27 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - python3-pip
+
       install:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
 
-      before_deploy:
+      script:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo pytest
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+        - helm lint helm/policy-api
 
-      script: echo "Testing performed in a different step"
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
 
       deploy:
         provider: script
@@ -119,6 +141,14 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - python3-pip
+      before_script:
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       install:
@@ -126,13 +156,15 @@ matrix:
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
 
-      before_deploy:
+      script:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo pytest
+        - helm lint helm/validate-api
 
-      script: echo "Testing performed in a different step"
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
 
       deploy:
         provider: script
@@ -150,15 +182,26 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.8
-      before_deploy:
-        - cd /home/travis/build/bcgov/OCWA/frontend
+
       before_script:
         - cd /home/travis/build/bcgov/OCWA/frontend
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
       before_install:
         - npm install -g yarn --cache-min 999999999
-      install:
+
+      script:
         - cd /home/travis/build/bcgov/OCWA/frontend
         - yarn
+        - npm test
+        - helm lint helm/ocwa-frontend
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/frontend
 
       deploy:
         provider: script

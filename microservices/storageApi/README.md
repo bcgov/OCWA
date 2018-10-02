@@ -42,3 +42,13 @@ npm start
 ```
 
 Then browse to http://127.0.0.1:3000 and upload a file by selecting one in the file input
+
+## Helm
+For both below helm commands make a copy of values.yaml within the helm/storage-api directory
+and modify it to contain the values specific for your deployment.
+
+### Helm install (Kubernetes)
+helm install --name ocwa-storage-api --namespace ocwa ./helm/storage-api -f ./helm/storage-api/config.yaml
+
+### Helm update (Kubernetes)
+helm upgrade --name ocwa-storage-api ./helm/storage-api  -f ./helm/storage-api/config.yaml

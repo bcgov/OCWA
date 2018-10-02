@@ -6,15 +6,11 @@ Validates outputs based on policies
 # Running
 
 ````
-docker build --tag oc_verifyapi .
+docker build --tag ocwa_validate_api .
 
 --
 
-docker run -vi -p 3003:3003 --name ocv oc_verifyapi
-
-OR
-
-docker run -vi -p 3003:3003 --name ocv -v `pwd`:/app oc_verifyapi
+docker run -e POLICY_URL=PolicyApiUrl -e STORAGE_HOST=MyS3StyleHost -e STORAGE_BUCKET=MyS3StyleBucket -e STORAGE_ACCESS_KEY=MyS3AccessKey -e STORAGE_ACCESS_SECRET=MyS3AccessSecret -e API_SECRET=MySecret -e LOG_LEVEL=info -e DB_USERNAME=mongoUser -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e DB_PORT=27017 -e USER_ID_FIELD=Email  -e DB_HOST=docker --add-host=docker:$hostip -p LOCALPORT:3003 ocwa_validate_api
 
 ````
 

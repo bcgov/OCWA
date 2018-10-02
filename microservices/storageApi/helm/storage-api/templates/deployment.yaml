@@ -1,0 +1,83 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "ocwaStorageApi.fullname" . }}
+  labels:
+    app: {{ template "ocwaStorageApi.name" . }}
+    chart: {{ template "ocwaStorageApi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ocwaStorageApi.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ocwaStorageApi.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ template "ocwaStorageApi.name" . }}-minio
+          image: "{{ .Values.minio.image }}:{{ .Values.minio.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["minio"]
+          args: ["gateway", "{{ .Values.minio.gatewayType }}"]
+          env:
+            - name: MINIO_ACCESS_KEY
+              value: "{{ .Values.access_key }}"
+            - name: MINIO_SECRET_KEY
+              value: "{{ .Values.access_secret }}"
+          ports:
+            - name: minio
+              containerPort: 9000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: minio
+          readinessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: minio
+
+        - name: {{ template "ocwaStorageApi.name" . }}-tusd
+          image: "{{ .Values.tus.image }}:{{ .Values.tus.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/go/bin/tusd"]
+          args: ["--hooks-dir", "/srv/tusd-hooks", "-s3-endpoint", '{{ template "ocwaStorageApi.fullname" . }}.{{ .Release.Namespace }}:{{ .Values.service.minioPort }}', "-s3-bucket", "{{ .Values.tus.bucket }}"]
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              value: "{{ .Values.access_key }}"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "{{ .Values.access_secret }}"
+            - name: AWS_REGION
+              value: "{{ .Values.tus.region }}"
+          ports:
+            - name: tusd
+              containerPort: 1080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: tusd
+          readinessProbe:
+            httpGet:
+              path: /
+              port: tusd
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
