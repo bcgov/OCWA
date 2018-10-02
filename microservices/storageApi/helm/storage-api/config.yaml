@@ -1,0 +1,7 @@
+
+access_key: brandontestsa2
+access_secret: "82zzWy6uZLIYhB0UMWNLxZMzIt7r7C/XxLGp/0kQp9oL/EIxByEJeThbbI9m8n/NLdeNGzGYyjw4LqL6qIpcBQ=="
+
+tus:
+  bucket: data
+  region: us-east-1
