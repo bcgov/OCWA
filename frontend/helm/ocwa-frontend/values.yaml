@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: bcgovimages/ocwa_request_api
+  repository: bcgovimages/ocwa_frontend
   tag: latest
   pullPolicy: Always
 
@@ -23,7 +23,7 @@ ingress:
   tls: []
 
 ##Configuration for OCWA Policy Api
-port: 3004
+port: 8000
 logLevel: error
 
 host: "serverHostedOnHere"

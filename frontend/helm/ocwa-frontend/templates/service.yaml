@@ -14,10 +14,6 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
-    - port: {{ .Values.service.websocketPort }}
-      targetPort: websocket
-      protocol: TCP
-      name: websocket
   selector:
     app: {{ template "ocwaFrontend.name" . }}
     release: {{ .Release.Name }}

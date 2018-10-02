@@ -31,21 +31,26 @@ spec:
             - name: JWT
               value: {{ .Values.jwt }}
             - name: JWT_SECRET
-              value: {{ .Values.user.jwtSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaFrontend.fullname" . }}-secrets
+                  key: jwtSecret
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
           ports:
             - name: http
-              containerPort: {{ .Values.apiPort }}
+              containerPort: {{ .Values.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /v1/api-docs
+              path: /
               port: http
+            initialDelaySeconds: 120
           readinessProbe:
             httpGet:
-              path: /v1/api-docs
+              path: /
               port: http
+            initialDelaySeconds: 120
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}

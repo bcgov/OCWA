@@ -40,6 +40,9 @@ matrix:
         - npm test
         - helm lint helm/forum-api
 
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+
       deploy:
         provider: script
         script: bash docker_push
@@ -81,6 +84,9 @@ matrix:
         - npm test
         - helm lint helm/request-api
 
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+
       deploy:
         provider: script
         script: bash docker_push
@@ -115,6 +121,9 @@ matrix:
         # Installig pip deps
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
         - helm lint helm/policy-api
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
 
       deploy:
         provider: script
@@ -154,6 +163,9 @@ matrix:
         - sudo pytest
         - helm lint helm/validate-api
 
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+
       deploy:
         provider: script
         script: bash docker_push
@@ -186,6 +198,9 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/frontend
         - yarn test
         - helm lint helm/ocwa-frontend
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/frontend
 
       deploy:
         provider: script
