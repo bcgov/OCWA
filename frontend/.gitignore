@@ -6,6 +6,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+#Helm
+helm/ocwa-frontend/config.yaml
+
 # Runtime data
 pids
 *.pid
