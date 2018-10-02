@@ -196,7 +196,7 @@ matrix:
 
       script:
         - cd /home/travis/build/bcgov/OCWA/frontend
-        - yarn test
+        - npm test
         - helm lint helm/ocwa-frontend
 
       before_deploy:
