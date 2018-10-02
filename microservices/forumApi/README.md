@@ -25,3 +25,9 @@ helm install --name ocwa-forum-api --namespace ocwa ./helm/forum-api -f ./helm/f
 
 ### Helm update (Kubernetes)
 helm upgrade --name ocwa-forum-api ./helm/forum-api  -f ./helm/forum-api/config.yaml
+
+## Test
+
+```
+$ npm test
+```
