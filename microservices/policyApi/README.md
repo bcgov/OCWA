@@ -22,13 +22,14 @@ docker run -e API_SECRET=MySecret -e LOG_LEVEL=info -e DB_USERNAME=mongoUser -e 
 replacing the configuration values as necessary and LOCALPORT with the local port you want to have the service on
 
 ## Helm
-Coming Soon...
+For both below helm commands make a copy of values.yaml within the helm/policy-api directory
+and modify it to contain the values specific for your deployment.
 
 ### Helm install (Kubernetes)
-Coming Soon...
+helm install --name ocwa-policy-api --namespace ocwa ./helm/policy-api -f ./helm/policy-api/config.yaml
 
 ### Helm update (Kubernetes)
-Coming Soon...
+helm upgrade --name ocwa-policy-api ./helm/policy-api  -f ./helm/policy-api/config.yaml
 
 # Test
 
