@@ -3,8 +3,6 @@
 .idea
 .DS_Store
 
-helm/config.yaml
-
 # Golang Ignore
 
 # Binaries for programs and plugins

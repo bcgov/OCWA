@@ -2,8 +2,8 @@
 
 mkdir -p ./config
 printf "{\n" > ./config/default.json
-printf "\"apiPort\": ${API_PORT},\n" >> ./config/default.json
-printf "\"wsPort\": ${WS_PORT},\n" >> ./config/default.json
+printf "\"apiPort\": 3000,\n" >> ./config/default.json
+printf "\"wsPort\": 3001,\n" >> ./config/default.json
 printf "\"logLevel\": \"${LOG_LEVEL}\",\n" >> ./config/default.json
 printf "\"morganLogType\": \"dev\",\n" >> ./config/default.json
 printf "\"database\": {\n" >> ./config/default.json
