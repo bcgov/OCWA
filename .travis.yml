@@ -16,8 +16,18 @@ addons:
       - g++-4.8
       - python3-pip
 
+addons:
+  sonarcloud:
+    organization: "ajc_bcgov"
+    token:
+      secure: ote5rgyonLdUF9TbbnnUQdRVkZ9DvJIN3JzjHK86cYpyixbcNgDijAlt5NLVgKTfY4a88/6urYCgCbIKt3rRldHd1v9Hc8co9oTl+FiKQ43Q0VboO/7F//p6ELpndTE4NegkWC/WlNcOoVHg+H4M/2cnO/0nEx1StnKLYyb44R4a0b/auHWmd7fV1iTmSHk/z9IbXv+75tjB9ywsGnO8iMGra9d32X1T+NrN9PKik84zpypLVnDJNpCIt8n53W5gksXPjcXWz9hGkgnuChVVzktrQBO0YnZQmiwz9a0aqcK6u/SrTGrSYrbdM9R62L8ehO5NMB3Wj/S0hZ3HrjTFqOiGkhKiVzEvjB5+lKfSK//nPRbln6AaFpBsC3MB10KLveZ23LcrpBCYSEbO6EMvAecQ77pE4VxJOC+NEloCagFljUQRPxu4TOgI/UqRIsj+IYzKyZU1sy1cen6MJf/a10rmnP7I1wGC8wjONtXcAYBV33Yveod0m8YaeCE+56nn9N80sptSbcKuPqB4D/V1L/olhxmn72iO9ZD0/RA3Ds0+BQkK64b1y9PH4XbAYVmvmsy8x/L6l68yz6Ul70DMHD9qgleHFFJRQY/PBn3TLRpjcR55k8c7WfLFjgP+BQSOJ9R/dQE3ArvLRi2TGUThik8BOKebi2/dZXJTRGqXgT8=
+
 jobs:
   include:
+    - stage: "Scan"
+      script:
+        - sonar-scanner
+
     - stage: "Forum Api"
       before_script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
