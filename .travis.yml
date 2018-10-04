@@ -1,20 +1,7 @@
 sudo: required
-language: node_js
-node_js:
-  - "node"
-python:
-  - "3.6"
 
 services:
 - docker
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - g++-4.8
-      - python3-pip
 
 addons:
   sonarcloud:
@@ -22,13 +9,22 @@ addons:
     token:
       secure: ote5rgyonLdUF9TbbnnUQdRVkZ9DvJIN3JzjHK86cYpyixbcNgDijAlt5NLVgKTfY4a88/6urYCgCbIKt3rRldHd1v9Hc8co9oTl+FiKQ43Q0VboO/7F//p6ELpndTE4NegkWC/WlNcOoVHg+H4M/2cnO/0nEx1StnKLYyb44R4a0b/auHWmd7fV1iTmSHk/z9IbXv+75tjB9ywsGnO8iMGra9d32X1T+NrN9PKik84zpypLVnDJNpCIt8n53W5gksXPjcXWz9hGkgnuChVVzktrQBO0YnZQmiwz9a0aqcK6u/SrTGrSYrbdM9R62L8ehO5NMB3Wj/S0hZ3HrjTFqOiGkhKiVzEvjB5+lKfSK//nPRbln6AaFpBsC3MB10KLveZ23LcrpBCYSEbO6EMvAecQ77pE4VxJOC+NEloCagFljUQRPxu4TOgI/UqRIsj+IYzKyZU1sy1cen6MJf/a10rmnP7I1wGC8wjONtXcAYBV33Yveod0m8YaeCE+56nn9N80sptSbcKuPqB4D/V1L/olhxmn72iO9ZD0/RA3Ds0+BQkK64b1y9PH4XbAYVmvmsy8x/L6l68yz6Ul70DMHD9qgleHFFJRQY/PBn3TLRpjcR55k8c7WfLFjgP+BQSOJ9R/dQE3ArvLRi2TGUThik8BOKebi2/dZXJTRGqXgT8=
 
-jobs:
+matrix:
   include:
-    - stage: "Scan"
+    - name: "Scan"
       script:
         - sonar-scanner
 
-    - stage: "Forum Api"
+    - name: "Forum Api"
+      language: node_js
+      node_js:
+        - "node"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.8
       before_script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - cp config/test.json.example config/test.json
@@ -49,10 +45,13 @@ jobs:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm install
 
-      before_deploy:
+      script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm test
         - helm lint helm/forum-api
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
 
       deploy:
         provider: script
@@ -60,8 +59,22 @@ jobs:
         on:
           branch: master
 
-    - stage: "Request Api"
-      before_install:
+    - name: "Request Api"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.8
+      before_script:
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+
+      script:
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
         - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
         - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
@@ -79,8 +92,10 @@ jobs:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
+        - helm lint helm/request-api
 
-      script: echo "Testing performed in a different step"
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
 
       deploy:
         provider: script
@@ -88,20 +103,37 @@ jobs:
         on:
           branch: master
 
+    - name: "Policy Api"
+      language: python
+      python:
+        - "3.6"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - python3-pip
 
-    - stage: "Policy Api"
       install:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
 
-      before_deploy:
+      script:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - cp config/default.json.template config/default.json
-        - sudo pip3 install '.[test]'
+        - sudo pip3 install -e .
         - sudo pytest
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+        - helm lint helm/policy-api
 
-      script: echo "Testing performed in a different step"
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
 
       deploy:
         provider: script
@@ -109,8 +141,24 @@ jobs:
         on:
           branch: master
 
+    - name: "Validation Api"
+      language: python
+      python:
+        - "3.6"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - python3-pip
+      before_script:
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
-    - stage: "Validation Api"
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       install:
@@ -118,12 +166,15 @@ jobs:
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
 
-      before_deploy:
+      script:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
         - sudo pytest
+        - helm lint helm/validate-api
 
-      script: echo "Testing performed in a different step"
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
 
       deploy:
         provider: script
@@ -131,22 +182,43 @@ jobs:
         on:
           branch: master
 
-    - stage: "Front End"
-      before_deploy:
-        - cd /home/travis/build/bcgov/OCWA/frontend
+    - name: "Front End"
+      language: node_js
+      node_js:
+        - "node"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.8
+
       before_script:
         - cd /home/travis/build/bcgov/OCWA/frontend
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
       before_install:
         - npm install -g yarn --cache-min 999999999
-      install:
+
+      script:
         - cd /home/travis/build/bcgov/OCWA/frontend
         - yarn
+        - npm test
+        - helm lint helm/ocwa-frontend
+
+      before_deploy:
+        - cd /home/travis/build/bcgov/OCWA/frontend
 
       deploy:
         provider: script
         script: bash docker_push
         on:
           branch: master
+
 
 
 env:

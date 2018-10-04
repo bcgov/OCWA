@@ -4,7 +4,7 @@ except ImportError:
     from http import client as HTTPStatus
 import logging
 
-import .config
+import config
 
 import os
 
