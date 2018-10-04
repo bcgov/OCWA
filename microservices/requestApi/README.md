@@ -19,3 +19,9 @@ replacing image id with the image id from docker build and the configuration val
 
 ##Helm install (Kubernetes)
 Coming Soon...
+
+## Test
+
+```
+$ npm test
+```

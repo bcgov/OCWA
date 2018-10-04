@@ -1,0 +1,21 @@
+{{- if .Values.createDatabase -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ocwaRequestApi.fullname" . }}-mongo
+  labels:
+    app: {{ template "ocwaRequestApi.name" . }}-mongo
+    chart: {{ template "ocwaRequestApi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 27017
+      targetPort: mongo
+      protocol: TCP
+      name: mongo
+  selector:
+    app: {{ template "ocwaRequestApi.name" . }}-mongo
+    release: {{ .Release.Name }}
+{{- end }}
