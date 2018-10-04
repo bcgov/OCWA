@@ -168,6 +168,7 @@ matrix:
         - sudo pip3 install -e .
         - sudo pytest
         - sudo coverage run --branch --source=db,v1,validator -m pytest
+        - sonar-scanner -Dsonar.projectKey=ocwa -Dsonar.sources=db,v1,validator
         - helm lint helm/validate-api
 
       before_deploy:
