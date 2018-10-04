@@ -11,10 +11,6 @@ addons:
 
 matrix:
   include:
-    - name: "Scan"
-      script:
-        - sonar-scanner
-
     - name: "Forum Api"
       language: node_js
       node_js:
@@ -171,6 +167,7 @@ matrix:
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo pytest
+        - sudo coverage run --branch --source=db,v1,validator -m pytest
         - helm lint helm/validate-api
 
       before_deploy:
@@ -219,6 +216,10 @@ matrix:
         on:
           branch: master
 
+    - name: "Scan"
+      script:
+        - cd /home/travis/build/bcgov/OCWA
+        - sonar-scanner
 
 
 env:
