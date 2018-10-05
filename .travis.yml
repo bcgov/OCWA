@@ -171,10 +171,10 @@ matrix:
         - sudo pytest
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - helm lint helm/validate-api
+        - bash docker_quayio_push
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - bash docker_quayio_push
 
       deploy:
         provider: script
