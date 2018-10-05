@@ -1,92 +1,60 @@
 const config = require('config');
-const faker = require('faker');
 const passport = require('passport');
-const { Strategy, ExtractJwt } = require('passport-jwt');
-const LocalStrategy = require('passport-local').Strategy;
+const OpenIDConnectStrategy = require('passport-openidconnect');
 
-const JWTStrategy = Strategy; // avoid confusion about what does what below
-const fields = {
-  usernameField: 'email',
-  passwordField: 'password',
-};
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-// used to deserialize the user
-passport.deserializeUser(function(id, done) {
-  done(err, {
-    id,
-  });
-});
-
-// Signup
 passport.use(
-  'signup',
-  new LocalStrategy(fields, (email, password, done) => {
-    //Save the information provided by the user to the the database
-    const user = {
-      Email: faker.internet.email(),
-      GivenName: faker.name.firstName(),
-      Surname: faker.name.lastName(),
-      Groups: ['Manager', 'Project Administrator'],
-    };
-    //Send the user information to the next middleware
-    return done(null, user);
-  })
-);
-
-// Login
-passport.use(
-  'login',
-  new LocalStrategy(fields, async (email, password, done) => {
-    try {
-      const email = faker.internet.email();
-      return done(
-        null,
-        {
-          iss: 'Online JWT Builder',
-          iat: Math.floor(Date.now() / 1000) - 30,
-          aud: 'www.example.com',
-          sub: email,
-          Email: email,
-          GivenName: faker.name.firstName(),
-          Surname: faker.name.lastName(),
-          Groups: ['Manager', 'Project Administrator'],
-        },
-        {
-          message: 'Logged In Successfully',
-        }
-      );
-    } catch (error) {
-      return done(error);
-    }
-  })
-);
-
-// JWT
-passport.use(
-  new JWTStrategy(
+  new OpenIDConnectStrategy(
     {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: config.get('jwtSecret'),
+      issuer: config.get('auth.issuer'),
+      authorizationURL: config.get('auth.authorizationEndpoint'),
+      tokenURL: config.get('auth.tokenEndpoint'),
+      clientID: config.get('auth.clientID'),
+      callbackURL: config.get('auth.callbackURL'),
+      clientSecret: config.get('auth.clientSecret'),
+      userInfoURL: config.get('auth.userInfoURL'),
+      passReqToCallback: true,
+      scope: config.get('auth.scope'),
     },
-    function(jwtPayload, done) {
-      const userConf = config.get('user');
+    (
+      req,
+      iss,
+      sub,
+      profile,
+      jwtClaims,
+      accessToken,
+      refreshToken,
+      params,
+      verified
+    ) => {
       const user = {
-        jwt: jwtPayload,
-        email: jwtPayload.Email,
-        firstName: jwtPayload.GivenName,
-        lastName: jwtPayload.Surname,
-        name: `${jwtPayload.GivenName} ${jwtPayload.Surname}`,
-        groups: jwtPayload.Groups,
-        id: jwtPayload[userConf.idField],
+        id: profile.id,
+        displayName: profile.displayName,
+        username: jwtClaims.preferred_username,
+        email: jwtClaims.email,
+        accessToken,
+        expires: jwtClaims.exp,
+        authTime: jwtClaims.auth_time,
       };
 
-      done(null, user);
+      req.user = user;
+
+      return verified(null, user);
     }
   )
 );
 
-module.exports = passport;
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((obj, done) => {
+  done(null, obj);
+});
+
+exports.checkAuth = (req, res, done) => {
+  if (!req.user || !req.isAuthenticated || !req.isAuthenticated()) {
+    res.redirect('/login');
+  }
+
+  done();
+};

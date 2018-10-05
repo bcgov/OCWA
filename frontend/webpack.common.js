@@ -12,6 +12,9 @@ module.exports = {
     path: DIST_PATH,
     publicPath: '/',
   },
+  resolve: {
+    extensions: ['.js', '.jsx', '.css'],
+  },
   module: {
     rules: [
       {
@@ -26,6 +29,7 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.NamedModulesPlugin(),
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
       title: 'OCWA [DEMO]',
