@@ -3,6 +3,12 @@ sudo: required
 services:
 - docker
 
+addons:
+  sonarcloud:
+    organization: "ajc_bcgov"
+    token:
+      secure: yoqO9/QRJlT4mcpgQ4RMSg6h97PRnql70EVCcPaBr6nGNaxSmea8K1AxdqFZcC5PMrj+i4oRFrIQIEmOPeJAzh+5wvygXhwsavXR2S0LcTcScXZQQ8ZWXw9exYl5ELt3Ee6BUF4TIGnR3iztp6VGm9mv992Pi7NqYwdIN9z1rVodb/rH3vlBRzxIH6p+eo4cs/rpUatFNDjRnCVvHxDWy2reC43r3Vf61jGR3FFALcah/PrIUDVemY9wqbdqA78HGB97o5UU6Jgwk2qmvUXTxJcyN+7dSi0bhr8SHEGN1TTr7TmOOxFIKy+fPs9krCF8Ll4CruAXu1YLaTRD6Ilxb4U5yUJgjANnsYbR7klD/DC4pwRx1L90cCVbgsNRzrsq+Qvn57bdSoyHGFCSWqQdkW6EG9xcqogMP6y9/DBcgb4SYIMNLjaoqSgunSmDFTFgidHBTcLN6e4mvM89FRDY64i+DINp9gginqHak/LxhNct6LTREx8bcoOA4J28eHY02Cwrtu2pful7uOonZD49XrGW+OfOAQY2c1b91hNJUK+tWPh0B/0CgWyKNize3WclV3pBedFDYzbzeni3TkqoN7Na22xQTl95mrV9vZ7VQpIft0Jlf+OFS+I8s3G2W/Wp/Rhk9tXfxcEa6yvDwxFMv3QsQrs7No3yTRNFw6U3QWs=
+
 matrix:
   include:
     - name: "Forum Api"
@@ -136,10 +142,6 @@ matrix:
       python:
         - "3.6"
       addons:
-        sonarcloud:
-          organization: "ajc_bcgov"
-          token:
-            secure: yoqO9/QRJlT4mcpgQ4RMSg6h97PRnql70EVCcPaBr6nGNaxSmea8K1AxdqFZcC5PMrj+i4oRFrIQIEmOPeJAzh+5wvygXhwsavXR2S0LcTcScXZQQ8ZWXw9exYl5ELt3Ee6BUF4TIGnR3iztp6VGm9mv992Pi7NqYwdIN9z1rVodb/rH3vlBRzxIH6p+eo4cs/rpUatFNDjRnCVvHxDWy2reC43r3Vf61jGR3FFALcah/PrIUDVemY9wqbdqA78HGB97o5UU6Jgwk2qmvUXTxJcyN+7dSi0bhr8SHEGN1TTr7TmOOxFIKy+fPs9krCF8Ll4CruAXu1YLaTRD6Ilxb4U5yUJgjANnsYbR7klD/DC4pwRx1L90cCVbgsNRzrsq+Qvn57bdSoyHGFCSWqQdkW6EG9xcqogMP6y9/DBcgb4SYIMNLjaoqSgunSmDFTFgidHBTcLN6e4mvM89FRDY64i+DINp9gginqHak/LxhNct6LTREx8bcoOA4J28eHY02Cwrtu2pful7uOonZD49XrGW+OfOAQY2c1b91hNJUK+tWPh0B/0CgWyKNize3WclV3pBedFDYzbzeni3TkqoN7Na22xQTl95mrV9vZ7VQpIft0Jlf+OFS+I8s3G2W/Wp/Rhk9tXfxcEa6yvDwxFMv3QsQrs7No3yTRNFw6U3QWs=
         apt:
           sources:
             - ubuntu-toolchain-r-test
@@ -166,8 +168,11 @@ matrix:
         - sudo pip3 install -e .
         - sudo pytest
         - sudo coverage run --branch --source=db,v1,validator -m pytest
-        - sudo sonar-scanner -Dsonar.projectKey=ocwa -Dsonar.sources=db,v1,validator
         - helm lint helm/validate-api
+
+      script:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - sudo sonar-scanner -Dsonar.projectKey=ocwa -Dsonar.sources=db,v1,validator
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
@@ -215,7 +220,11 @@ matrix:
         on:
           branch: master
 
-
+    - name: "Scan"
+      script:
+        - cd /home/travis/build/bcgov/OCWA
+        - sonar-scanner
+        
 env:
   global:
   - HELM_URL=https://storage.googleapis.com/kubernetes-helm
