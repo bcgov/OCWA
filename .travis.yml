@@ -245,9 +245,6 @@ matrix:
         - sudo pip3 install -e .
         - sudo pytest
         - sudo coverage run --branch --source=db,v1,validator -m pytest
-        - helm lint helm/validate-api
-
-      script:
         - cd /home/travis/build/bcgov/OCWA
         - sonar-scanner -Dsonar.login=$SONAR_TOKEN
 
