@@ -47,6 +47,7 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm test
         - helm lint helm/forum-api
+        - bash docker_quayio_push
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
@@ -91,6 +92,7 @@ matrix:
         - sleep 15
         - npm test
         - helm lint helm/request-api
+        - bash docker_quayio_push
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
@@ -129,6 +131,7 @@ matrix:
         # Installig pip deps
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
         - helm lint helm/policy-api
+        - bash docker_quayio_push
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
@@ -208,6 +211,7 @@ matrix:
         - yarn
         - npm test
         - helm lint helm/ocwa-frontend
+        - bash docker_quayio_push
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/frontend
