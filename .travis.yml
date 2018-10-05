@@ -281,11 +281,11 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/frontend
         - yarn
         - npm test
-        - sudo coverage run --branch --source=src -m pytest
-        - sudo coverage xml
+        #- sudo coverage run --branch --source=src -m pytest
+        #- sudo coverage xml
         
-        - cd /home/travis/build/bcgov/OCWA
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+        #- cd /home/travis/build/bcgov/OCWA
+        #- sonar-scanner -Dsonar.login=$SONAR_TOKEN
 
 env:
   global:
