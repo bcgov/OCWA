@@ -211,7 +211,7 @@ matrix:
         - yarn
         - npm test
         - helm lint helm/ocwa-frontend
-        - bash docker_quayio_push
+        - bash docker_quayio_push ocwa_frontend
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/frontend
