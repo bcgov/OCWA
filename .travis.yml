@@ -235,8 +235,10 @@ matrix:
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
       install:
-        - cd /home/travis/build/bcgov/OCWA/microservices
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -r requirements.txt
 
       script:
