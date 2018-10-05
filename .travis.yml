@@ -169,7 +169,6 @@ matrix:
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo pytest
-        - sudo coverage run --branch --source=db,v1,validator -m pytest
         - helm lint helm/validate-api
         - bash docker_quayio_push
 
@@ -219,7 +218,7 @@ matrix:
         on:
           branch: master
 
-    - name: "Scan"
+    - name: "Scan - Python (Policy and Validation)"
       python:
         - "3.6"
       addons:
@@ -236,7 +235,7 @@ matrix:
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
       install:
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - cd /home/travis/build/bcgov/OCWA/microservices
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
 
@@ -246,9 +245,44 @@ matrix:
         - sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - sudo coverage xml
-        - cat coverage.xml
+
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - sudo coverage run --branch --source=db,v1 -m pytest
+        - sudo coverage xml
+        
         - cd /home/travis/build/bcgov/OCWA
-        - pwd && ls -al
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+
+    - name: "Scan - NodeJS"
+      language: node_js
+      node_js:
+        - "node"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.8
+
+      before_script:
+        - cd /home/travis/build/bcgov/OCWA
+        - wget -q https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
+        - unzip sonar-scanner-cli-3.2.0.1227-linux.zip
+        - PATH=`pwd`/sonar-scanner-3.2.0.1227-linux/bin:$PATH
+
+        before_install:
+        - npm install -g yarn --cache-min 999999999
+
+      script:
+        - cd /home/travis/build/bcgov/OCWA/frontend
+        - yarn
+        - npm test
+        - coverage run --branch --source=src -m pytest
+        - coverage xml
+        
+        - cd /home/travis/build/bcgov/OCWA
         - sonar-scanner -Dsonar.login=$SONAR_TOKEN
 
 env:
