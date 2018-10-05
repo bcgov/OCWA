@@ -14,40 +14,40 @@ class ValidatorTest(unittest.TestCase):
         print('tearDown: Reset instance variables')
 
     def test_evaluate_source_simple(self):
-        result, message = validator.evaluateSource("True", {})
+        result, message = validator.evaluate_source("True", {})
         assert result == True
         assert message == ""
 
     def test_evaluate_source_syntax_error(self):
-        result, message = validator.evaluateSource("$${file.size}<100", {"size":10})
+        result, message = validator.evaluate_source("$${file.size}<100", {"size":10})
         assert result == False
         assert message == "invalid syntax (<string>, line 1)"
 
 
     def test_evaluate_source_file_size_valid(self):
-        result, message = validator.evaluateSource("${file.size}<100", {"size":10})
+        result, message = validator.evaluate_source("${file.size}<100", {"size":10})
         assert result == True
         assert message == ""
 
     def test_evaluate_source_file_size_invalid(self):
-        result, message = validator.evaluateSource("${file.size}<100", {"size":1000})
+        result, message = validator.evaluate_source("${file.size}<100", {"size":1000})
         assert result == False
         assert message == ""
 
-    @mock.patch('validator.validator.readFile')
+    @mock.patch('validator.validator.read_file')
     def test_read_file_and_evaluate_with_attributes_file_good(self, mock_readfile):
 
         mock_readfile.return_value = ({}, {"size":10})
-        result, message = validator.readFileAndEvaluate("${file.size}<100", {"file_id":"1234"})
+        result, message = validator.read_file_and_evaluate("${file.size}<100", {"file_id":"1234"})
         assert result == True
         assert message == ""
 
 
-    @mock.patch('validator.validator.readFile')
+    @mock.patch('validator.validator.read_file')
     def test_read_file_and_evaluate_with_attributes_file_too_large(self, mock_readfile):
 
         mock_readfile.return_value = ({}, {"size":1000})
-        result, message = validator.readFileAndEvaluate("${file.size}<100", {"file_id":"1234"})
+        result, message = validator.read_file_and_evaluate("${file.size}<100", {"file_id":"1234"})
         assert result == False
         assert message == ""
 
@@ -55,7 +55,7 @@ class ValidatorTest(unittest.TestCase):
         return
 
     @mock.patch('db.models.results.Results.save')
-    @mock.patch('validator.validator.readFile')
+    @mock.patch('validator.validator.read_file')
     def test_validate_with_valid_file_size_rule(self, mock_readfile, mock_results_save):
 
         results = Results()
