@@ -246,8 +246,10 @@ matrix:
         - sudo pytest
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - sudo coverage xml -i
+        - pwd && ls -al
         - cd /home/travis/build/bcgov/OCWA
-        - sudo sonar-scanner -Dsonar.login=$SONAR_TOKEN
+        - pwd && ls -al
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN
 
 env:
   global:
