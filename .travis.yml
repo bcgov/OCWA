@@ -1,4 +1,6 @@
+dist: trusty
 sudo: required
+language: python
 
 services:
 - docker
@@ -170,10 +172,6 @@ matrix:
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - helm lint helm/validate-api
 
-      script:
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - sudo sonar-scanner -Dsonar.projectKey=ocwa -Dsonar.sources=db,v1,validator
-
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
 
@@ -221,10 +219,34 @@ matrix:
           branch: master
 
     - name: "Scan"
+      python:
+        - "3.6"
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - python3-pip
+      before_script:
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+
+      install:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+
+      script:
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - sudo pytest
+        - sudo coverage run --branch --source=db,v1,validator -m pytest
+        - helm lint helm/validate-api
+
       script:
         - cd /home/travis/build/bcgov/OCWA
         - sonar-scanner
-        
+
 env:
   global:
   - HELM_URL=https://storage.googleapis.com/kubernetes-helm
