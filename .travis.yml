@@ -218,7 +218,7 @@ matrix:
         on:
           branch: master
 
-    - name: "Scan - Python (Policy and Validation)"
+    - name: "Scan Python Policy and Validation"
       python:
         - "3.6"
       addons:
