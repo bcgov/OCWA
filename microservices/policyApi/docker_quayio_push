@@ -6,7 +6,7 @@ cd /home/travis/build/bcgov/OCWA/microservices/validateApi
 
 echo "$QUAYIO_PASSWORD" | docker login -u "$QUAYIO_USERNAME" --password-stdin quay.io
 echo "logged in, building now";
-docker build -t quay.io/ikethecoder/ocwa_validate_api .
+docker build -t quay.io/ikethecoder/ocwa_policy_api .
 echo "dockerfile built pushing now";
-docker push quay.io/ikethecoder/ocwa_validate_api
+docker push quay.io/ikethecoder/ocwa_policy_api
 echo "push done successfully";
