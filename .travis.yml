@@ -228,6 +228,10 @@ matrix:
           packages:
             - python3-pip
       before_script:
+        - cd /home/travis/build/bcgov/OCWA
+        - wget -q https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
+        - unzip sonar-scanner-cli-3.2.0.1227-linux.zip
+        - PATH=`pwd`/sonar-scanner-3.2.0.1227-linux/bin:$PATH
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
       install:
