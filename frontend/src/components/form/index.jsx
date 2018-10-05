@@ -13,9 +13,9 @@ class Form extends React.Component {
   };
 
   toggleEditor = () => {
-    this.setState({
-      isExpanded: !this.state.isExpanded,
-    });
+    this.setState(state => ({
+      isExpanded: !state.isExpanded,
+    }));
   };
 
   onSave = async () => {
