@@ -272,7 +272,7 @@ matrix:
         - unzip sonar-scanner-cli-3.2.0.1227-linux.zip
         - PATH=`pwd`/sonar-scanner-3.2.0.1227-linux/bin:$PATH
 
-        before_install:
+      before_install:
         - npm install -g yarn --cache-min 999999999
 
       script:
