@@ -8,5 +8,5 @@ echo "$QUAYIO_PASSWORD" | docker login -u "$QUAYIO_USERNAME" --password-stdin
 echo "logged in, building now";
 docker build -t quay.io/ikethecoder/ocwa_validate_api .
 echo "dockerfile built pushing now";
-docker push qay.io/ikethecoder/ocwa_validate_api
+docker push quay.io/ikethecoder/ocwa_validate_api
 echo "push done successfully";
