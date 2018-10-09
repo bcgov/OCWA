@@ -10,7 +10,7 @@ import sys
 from gevent.pywsgi import WSGIServer
 # from server import app
 from timeit import default_timer as timer
-from microservices.validateApi import create_app
+from app import create_app
 
 app = create_app()
 

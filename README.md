@@ -38,6 +38,19 @@ if interrupted due to a connection drop or whatever reason.
 [README](/frontend/README.md)
 The front end is written using ReactJs. It implements the apis.
 
+## Helm
+There is a helm chart in this top level. It deploys all of OCWA in one convenient package.
+For both below helm commands make a copy of values.yaml within the helm/ocwa directory
+and modify it to contain the values specific for your deployment.
+
+### Helm install (Kubernetes)
+helm dep up ./helm/ocwa
+helm install --name ocwa --namespace ocwa ./helm/ocwa -f ./helm/ocwa/config.yaml
+
+### Helm update (Kubernetes)
+helm dep up ./helm/ocwa
+helm upgrade --name ocwa ./helm/ocwa  -f ./helm/ocwa/config.yaml
+
 ## Contributing
 If you update apis that changes the signature at all, it is required to be under a new release (ie /v2 instead of /v1). The APIs are written specifically to make this easy.
 You must pass the travis ci builds to be able to submit a pull request that is pullable.
