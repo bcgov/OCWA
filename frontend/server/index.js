@@ -11,6 +11,7 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
+require('./auth');
 const authRoute = require('./routes/auth');
 const webpackConfig = require('../webpack.dev');
 
