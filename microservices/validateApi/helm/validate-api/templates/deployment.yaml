@@ -35,7 +35,7 @@ spec:
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
+                  name: {{ template "ocwaValidateApi.fullname" . }}-secrets
                   key: dbPassword
             - name: DB_PORT
               value: "{{ .Values.database.port }}"
@@ -48,19 +48,19 @@ spec:
             - name: STORAGE_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
+                  name: {{ template "ocwaValidateApi.fullname" . }}-secrets
                   key: storageKey
             - name: STORAGE_ACCESS_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
+                  name: {{ template "ocwaValidateApi.fullname" . }}-secrets
                   key: storageSecret
             - name: POLICY_URL
               value: {{ .Values.policyApi }}
             - name: API_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
+                  name: {{ template "ocwaValidateApi.fullname" . }}-secrets
                   key: apiSecret
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
