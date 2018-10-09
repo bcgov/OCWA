@@ -222,7 +222,7 @@ matrix:
         on:
           branch: master
 
-    - name: "Scan Python Policy and Validation"
+    - name: "Scan - Python"
       python:
         - "3.6"
       addons:
@@ -259,7 +259,10 @@ matrix:
         - sudo coverage xml
 
         - cd /home/travis/build/bcgov/OCWA
+        - ls -liah
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+        - ls -liah `pwd`/${SONAR_APP}-${SONAR_VERSION}
+        - ls -liah `pwd`/${SONAR_APP}-${SONAR_VERSION}/bin
         - sonar-scanner -Dsonar.login=$SONAR_TOKEN
 
     - name: "Scan - NodeJS"
