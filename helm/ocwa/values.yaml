@@ -186,6 +186,47 @@ request-api:
 
   affinity: {}
 
+##Storage Api
+storage-api:
+  replicaCount: 1
+
+  access_key: key
+  access_secret: secret
+
+  image:
+    pullPolicy: Always
+
+  tus:
+    image: tusproject/tusd
+    tag: latest
+    bucket: bucket
+    region: us-east-1 #likely irrelevant
+
+  minio:
+    image: minio/minio
+    tag: latest
+    gatewayType: azure
+
+  service:
+    type: ClusterIP
+    tusPort: 80
+    minioPort: 9000
+
+  ingress:
+    enabled: false
+    annotations: {}
+    path: /
+    hosts:
+      - chart-example.local
+    tls: []
+
+
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+
 
 #Validate Api
 validate-api:
