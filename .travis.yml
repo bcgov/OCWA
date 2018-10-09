@@ -209,6 +209,20 @@ matrix:
         on:
           branch: master
 
+    - name: "OCWA Master Helm Chart"
+      language: node_js
+      node_js:
+        - "node"
+      script:
+        - cd /home/travis/build/bcgov/OCWA
+        - wget -q ${HELM_URL}/${HELM_TGZ}
+        - tar xzfv ${HELM_TGZ}
+        - PATH=`pwd`/linux-amd64/:$PATH
+        - helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+        - cd /home/travis/build/bcgov/OCWA
+        - helm lint helm/ocwa
 
 
 env:

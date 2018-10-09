@@ -12,7 +12,6 @@ image:
 service:
   type: ClusterIP
   port: 80
-  websocketPort: 3001
 
 ingress:
   enabled: false
@@ -22,8 +21,8 @@ ingress:
     - chart-example.local
   tls: []
 
-##Configuration for OCWA Policy Api
-apiPort: 3004
+##Configuration for OCWA Request Api
+apiPort: 3002
 logLevel: error
 database:
   host: ocwa-forum-api-mongo.ocwa
