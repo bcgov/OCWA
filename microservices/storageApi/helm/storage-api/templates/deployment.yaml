@@ -27,9 +27,15 @@ spec:
           args: ["gateway", "{{ .Values.minio.gatewayType }}"]
           env:
             - name: MINIO_ACCESS_KEY
-              value: "{{ .Values.access_key }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaStorageApi.fullname" . }}-secrets
+                  key: access_key
             - name: MINIO_SECRET_KEY
-              value: "{{ .Values.access_secret }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaStorageApi.fullname" . }}-secrets
+                  key: access_secret
           ports:
             - name: minio
               containerPort: 9000
@@ -50,9 +56,15 @@ spec:
           args: ["--hooks-dir", "/srv/tusd-hooks", "-s3-endpoint", '{{ template "ocwaStorageApi.fullname" . }}.{{ .Release.Namespace }}:{{ .Values.service.minioPort }}', "-s3-bucket", "{{ .Values.tus.bucket }}"]
           env:
             - name: AWS_ACCESS_KEY_ID
-              value: "{{ .Values.access_key }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaStorageApi.fullname" . }}-secrets
+                  key: access_key
             - name: AWS_SECRET_ACCESS_KEY
-              value: "{{ .Values.access_secret }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaStorageApi.fullname" . }}-secrets
+                  key: access_secret
             - name: AWS_REGION
               value: "{{ .Values.tus.region }}"
           ports:
