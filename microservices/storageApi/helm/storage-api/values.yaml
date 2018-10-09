@@ -14,7 +14,7 @@ tus:
   image: tusproject/tusd
   tag: latest
   bucket: bucket
-  region: us-east-1 // likely irrelevant
+  region: us-east-1 #likely irrelevant
 
 minio:
   image: minio/minio

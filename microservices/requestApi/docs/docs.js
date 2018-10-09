@@ -4,7 +4,7 @@ docs.getDocHTML = function(version){
     var html = '<!DOCTYPE html>\n' +
         '<html>\n' +
         '  <head>\n' +
-        '    <title>Forum API - Documentation '+version+'</title>\n' +
+        '    <title>Request API - Documentation '+version+'</title>\n' +
         '    <!-- needed for adaptive design -->\n' +
         '    <meta charset="utf-8"/>\n' +
         '    <meta name="viewport" content="width=device-width, initial-scale=1">\n' +
