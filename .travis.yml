@@ -259,6 +259,7 @@ matrix:
         - sudo coverage xml
 
         - cd /home/travis/build/bcgov/OCWA
+        - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
         - sonar-scanner -Dsonar.login=$SONAR_TOKEN
 
     - name: "Scan - NodeJS"
@@ -289,6 +290,7 @@ matrix:
         #- sudo coverage xml
         
         #- cd /home/travis/build/bcgov/OCWA
+        #- PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
         #- sonar-scanner -Dsonar.login=$SONAR_TOKEN
 
     - name: "OCWA Master Helm Chart"
