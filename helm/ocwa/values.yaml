@@ -22,14 +22,23 @@ ocwa-frontend:
       - chart-example.local
     tls: []
 
-  ##Configuration for OCWA Policy Api
   port: 8000
   logLevel: error
 
   host: "serverHostedOnHere"
 
-  jwtSecret: "ssh this is a secret"
-  jwt: "eyJWTHERE"
+  cookieSecret: "COOKIE_SECRET_HERE"
+  forumApiHost: "ocwa-forum-api-mongo.ocwa:80"
+  forumSocket: "ocwa-forum-api-mongo.ocwa:3001"
+  auth:
+    authorizationEndpoint: "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/auth"
+    callbackURL: "http://localhost:8000/auth"
+    clientID: "outputchecker"
+    clientSecret: "CLIENT_SECRET_HERE"
+    issuer: "https://auth.bgddi.com/auth/realms/ocwa"
+    scope: "openid offline_access"
+    tokenEndpoint: "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/token"
+    userInfoURL: "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/userinfo"
   user:
     idField: Email
 
@@ -41,6 +50,7 @@ ocwa-frontend:
   tolerations: []
 
   affinity: {}
+
 
 
 #Forum Api configuration
