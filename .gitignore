@@ -3,6 +3,9 @@
 .idea
 .DS_Store
 
+#Helm
+helm/ocwa/charts/*
+
 # Golang Ignore
 
 # Binaries for programs and plugins
