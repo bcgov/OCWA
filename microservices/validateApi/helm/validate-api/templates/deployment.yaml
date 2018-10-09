@@ -35,7 +35,7 @@ spec:
             - name: DB_PASSWORD
               value: {{ .Values.database.password }}
             - name: DB_PORT
-              value: {{ .Values.database.port }}
+              value: "{{ .Values.database.port }}"
             - name: DB_NAME
               value: {{ .Values.database.dbName }}
             - name: STORAGE_HOST

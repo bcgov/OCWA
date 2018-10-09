@@ -45,7 +45,7 @@ spec:
             - name: VALIDATION_API_KEY
               value: {{ .Values.user.validationApiSecret }}
             - name: JWT_SECRET
-              value: {{ .Values.user.jwtSecret }}
+              value: {{ .Values.jwtSecret }}
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
           ports:
