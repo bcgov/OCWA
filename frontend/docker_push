@@ -6,7 +6,8 @@ cd /home/travis/build/bcgov/OCWA/frontend
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
-docker build -t bcgovimages/ocwa_frontend .
+docker build -t bcgovimages/ocwa_frontend:latest -t bcgovimages/ocwa_frontend:$TRAVIS_COMMIT .
 echo "dockerfile built pushing now";
-docker push bcgovimages/ocwa_frontend
+docker push bcgovimages/ocwa_frontend:latest
+docker push bcgovimages/ocwa_frontend:$TRAVIS_COMMIT
 echo "push done successfully";
