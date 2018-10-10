@@ -234,7 +234,7 @@ matrix:
       before_script:
         - cd /home/travis/build/bcgov/OCWA
         - wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
-        - unzip ${SONAR_APP}-${SONAR_VERSION}.zip
+        - unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
@@ -259,10 +259,7 @@ matrix:
         - sudo coverage xml
 
         - cd /home/travis/build/bcgov/OCWA
-        - ls -liah
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - ls -liah `pwd`/${SONAR_APP}-${SONAR_VERSION}
-        - ls -liah `pwd`/${SONAR_APP}-${SONAR_VERSION}/bin
         - sonar-scanner -Dsonar.login=$SONAR_TOKEN
 
     - name: "Scan - NodeJS"
@@ -279,7 +276,7 @@ matrix:
       before_script:
         - cd /home/travis/build/bcgov/OCWA
         - wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
-        - unzip ${SONAR_APP}-${SONAR_VERSION}.zip
+        - unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
 
       before_install:
