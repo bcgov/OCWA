@@ -15,7 +15,7 @@ validate = Blueprint('validate', 'validate')
                 methods=['GET'], strict_slashes=False)
 def test() -> object:
     v = Validator(hcl.loads("rule \"test\"{\nsource=\"${file.size}<100\"\n}"), {})
-    v.startValidate()
+    v.start_validate()
     return jsonify({"message": "Successful"})
 
 @validate.route('/<string:fileId>',
@@ -40,7 +40,7 @@ def validate_policy(fileId: str) -> object:
     :return: JSON of submission state
     """
 
-    policy = getPolicies()
+    policy = get_policies()
 
     db=Db()
 
@@ -57,7 +57,7 @@ def validate_policy(fileId: str) -> object:
 
             result.save()
             v = Validator(policy[key], result)
-            v.startValidate()
+            v.start_validate()
             
 
     return jsonify({"message": "Successful"}), HTTPStatus.CREATED
@@ -96,11 +96,11 @@ def validate_rule(fileId: str, ruleId: str) -> object:
         result.state = 2
         result.save()
 
-        policy = getPolicy(None)
+        policy = get_policy(None)
 
         if result.rule_id in policy.keys():
             v = Validator(policy[result.rule_id], result)
-            v.startValidate()
+            v.start_validate()
 
             return jsonify({"message": "Successful"}), HTTPStatus.OK
         else:
@@ -110,18 +110,18 @@ def validate_rule(fileId: str, ruleId: str) -> object:
     return jsonify({"error": "Couldn't decide on the rule to replace"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-def getPolicies():
+def get_policies():
     conf = Config().data
-    policyApi = conf['policyApi']
+    policy_api_url = conf['policyApi']
 
-    response = requests.get(policyApi)
+    response = requests.get(policy_api_url)
 
     return response.json()
 
-def getPolicy(policyId):
+def get_policy(policy_id):
     conf = Config().data
-    policyApi = conf['policyApi']
+    policy_api_url = conf['policyApi']
 
-    response = requests.get(policyApi + "/" + policyId)
+    response = requests.get(policy_api_url + "/" + policy_id)
 
     return response.json()

@@ -30,10 +30,10 @@ def test_get_validate_policy_result_with_no_record(client, mockdb):
 
 
 def test_put_validate_policy_with_no_previous_result(client, mocker, mockdb):
-    mock_get_policy = mocker.patch('v1.routes.validate.getPolicies')
+    mock_get_policy = mocker.patch('v1.routes.validate.get_policies')
     mock_get_policy.return_value = {"rule_1":{"Name":"Great rule 1","Source":""},"rule_2":{"Name":"Great rule 2","Source":""}}
 
-    mock_validator_validate = mocker.patch('v1.validator.validator.Validator.startValidate')
+    mock_validator_validate = mocker.patch('v1.validator.validator.Validator.start_validate')
 
     countBefore = mockdb.Results.objects.count()
 
@@ -44,10 +44,10 @@ def test_put_validate_policy_with_no_previous_result(client, mocker, mockdb):
     assert countAfter - countBefore == 2
 
 def test_put_validate_policy_with_previous_result(client, mocker, mockdb):
-    mock_get_policy = mocker.patch('v1.routes.validate.getPolicies')
+    mock_get_policy = mocker.patch('v1.routes.validate.get_policies')
     mock_get_policy.return_value = {"rule_1":"b"}
 
-    mock_validator_validate = mocker.patch('v1.validator.validator.Validator.startValidate')
+    mock_validator_validate = mocker.patch('v1.validator.validator.Validator.start_validate')
 
     countBefore = mockdb.Results.objects.count()
 
@@ -58,10 +58,10 @@ def test_put_validate_policy_with_previous_result(client, mocker, mockdb):
     assert countAfter - countBefore == 0
 
 def test_put_validate_policy_with_previous_result_and_new_rule(client, mocker, mockdb):
-    mock_get_policy = mocker.patch('v1.routes.validate.getPolicies')
+    mock_get_policy = mocker.patch('v1.routes.validate.get_policies')
     mock_get_policy.return_value = {"rule_1":{},"rule_NEW":{}}
 
-    mock_validator_validate = mocker.patch('v1.validator.validator.Validator.startValidate')
+    mock_validator_validate = mocker.patch('v1.validator.validator.Validator.start_validate')
 
     countBefore = mockdb.Results.objects.count()
 

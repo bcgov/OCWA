@@ -18,7 +18,7 @@ class Validator:
         self.rule = rule
         self.result = result
 
-    def startValidate(self):
+    def start_validate(self):
         print("Starting validation process")
         self.proc = Process(target=validate, args=(self.rule, self.result))
         self.proc.start()
@@ -26,7 +26,7 @@ class Validator:
 
 def validate(rule, resultObj):
 
-    result, message = readFileAndEvaluate(rule['Source'], resultObj)
+    result, message = read_file_and_evaluate(rule['Source'], resultObj)
     print("Running validation process for " + rule['Name'] + " got result " + str(result) + " and message " + message)
     if result:
         resultObj.state = 0
@@ -37,13 +37,13 @@ def validate(rule, resultObj):
     resultObj.save()
 
 
-def readFileAndEvaluate(source, result):
-    fileResp, fileAttributes = readFile(result['file_id'])
-    return evaluateSource(source, fileAttributes)
+def read_file_and_evaluate(source, result):
+    file_resp, file_attributes = read_file(result['file_id'])
+    return evaluate_source(source, file_attributes)
 
 
-def evaluateSource(source, fileAttributes):
-    munchifiedAttributes = munchify(fileAttributes)
+def evaluate_source(source, file_attributes):
+    munchified_attributes = munchify(file_attributes)
 
     source = source.replace("${file.", "{0.")
 
@@ -51,7 +51,7 @@ def evaluateSource(source, fileAttributes):
     message = ""
 
     try:
-        source = source.format(munchifiedAttributes)
+        source = source.format(munchified_attributes)
         result = eval(source)
     except (Exception, NameError) as e:
         print(e)
@@ -59,7 +59,7 @@ def evaluateSource(source, fileAttributes):
 
     return result, message
 
-def readFile(file_id):
+def read_file(file_id):
 
     config = Config().conf.data
     endpoint = config['storage']['endpoint']

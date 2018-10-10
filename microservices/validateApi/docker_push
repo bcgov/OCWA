@@ -6,7 +6,8 @@ cd /home/travis/build/bcgov/OCWA/microservices/validateApi
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
-docker build -t bcgovimages/ocwa_validate_api .
+docker build -t bcgovimages/ocwa_validate_api:latest -t bcgovimages/ocwa_validate_api:$TRAVIS_COMMIT .
 echo "dockerfile built pushing now";
-docker push bcgovimages/ocwa_validate_api
+docker push bcgovimages/ocwa_validate_api:latest
+docker push bcgovimages/ocwa_validate_api:$TRAVIS_COMMIT
 echo "push done successfully";

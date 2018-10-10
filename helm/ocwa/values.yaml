@@ -1,0 +1,294 @@
+# Default values for ocwa.
+
+#Frontend configuration
+ocwa-frontend:
+  replicaCount: 1
+
+  image:
+    repository: bcgovimages/ocwa_frontend
+    tag: latest
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    port: 80
+    websocketPort: 3001
+
+  ingress:
+    enabled: false
+    annotations: {}
+    path: /
+    hosts:
+      - chart-example.local
+    tls: []
+
+  port: 8000
+  logLevel: error
+
+  host: "serverHostedOnHere"
+
+  cookieSecret: "COOKIE_SECRET_HERE"
+  forumApiHost: "ocwa-forum-api-mongo.ocwa:80"
+  forumSocket: "ocwa-forum-api-mongo.ocwa:3001"
+  auth:
+    authorizationEndpoint: "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/auth"
+    callbackURL: "http://localhost:8000/auth"
+    clientID: "outputchecker"
+    clientSecret: "CLIENT_SECRET_HERE"
+    issuer: "https://auth.bgddi.com/auth/realms/ocwa"
+    scope: "openid offline_access"
+    tokenEndpoint: "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/token"
+    userInfoURL: "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/userinfo"
+  user:
+    idField: Email
+
+
+  resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+
+
+#Forum Api configuration
+forum-api:
+  replicaCount: 1
+
+  image:
+    repository: bcgovimages/ocwa_forum_api
+    tag: latest
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    port: 80
+    websocketPort: 3001
+
+  ingress:
+    enabled: false
+    annotations: {}
+    path: /
+    hosts:
+      - chart-example.local
+    tls: []
+
+  apiPort: 3000
+  wsPort: 3001
+  logLevel: error
+  database:
+    host: ocwa-forum-api-mongo.ocwa
+    username: forumApi
+    password: password
+    dbName: forumApi
+
+  jwtSecret: "ssh this is a secret"
+  user:
+    idField: Email
+
+  createDatabase: true
+
+
+  resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+
+#Policy Api configuration
+policy-api:
+  replicaCount: 1
+
+  image:
+    repository: bcgovimages/ocwa_policy_api
+    tag: latest
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+    annotations: {}
+    path: /
+    hosts:
+      - chart-example.local
+    tls: []
+
+  apiPort: 3004
+  logLevel: error
+  database:
+    host: ocwa-forum-api-mongo.ocwa
+    port: 27017
+    username: forumApi
+    password: password
+    dbName: forumApi
+
+  apiSecret: "ssh this is a secret"
+  user:
+    idField: Email
+
+  createDatabase: false
+
+
+  resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+
+#Request Api configuration
+request-api:
+  replicaCount: 1
+
+  image:
+    repository: bcgovimages/ocwa_request_api
+    tag: latest
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+    annotations: {}
+    path: /
+    hosts:
+      - chart-example.local
+    tls: []
+
+  apiPort: 3002
+  logLevel: error
+  database:
+    host: ocwa-forum-api-mongo.ocwa
+    username: forumApi
+    password: password
+    dbName: forumApi
+
+  jwtSecret: "ssh this is a secret"
+  user:
+    idField: Email
+
+  forumApi: ocwa-forum-api.ocwa
+  forumApiSecret: none
+
+  validationApi: ocwa-validation-api.ocwa
+  validationApiSecret: validateApiSecret
+
+  createDatabase: false
+
+
+  resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+##Storage Api
+storage-api:
+  replicaCount: 1
+
+  access_key: key
+  access_secret: secret
+
+  image:
+    pullPolicy: Always
+
+  tus:
+    image: tusproject/tusd
+    tag: latest
+    bucket: bucket
+    region: us-east-1 #likely irrelevant
+
+  minio:
+    image: minio/minio
+    tag: latest
+    gatewayType: azure
+
+  service:
+    type: ClusterIP
+    tusPort: 80
+    minioPort: 9000
+
+  ingress:
+    enabled: false
+    annotations: {}
+    path: /
+    hosts:
+      - chart-example.local
+    tls: []
+
+
+  resources: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+
+
+#Validate Api
+validate-api:
+  replicaCount: 1
+
+  image:
+    repository: bcgovimages/ocwa_validate_api
+    tag: latest
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+    annotations: {}
+    path: /
+    hosts:
+      - chart-example.local
+    tls: []
+
+  apiPort: 3003
+  logLevel: error
+  database:
+    host: ocwa-forum-api-mongo.ocwa
+    port: 27017
+    username: forumApi
+    password: password
+    dbName: forumApi
+
+  storage:
+    host: ocwa-storage-api.ocwa:9000
+    bucket: data
+    key: myAccessKey
+    secret: mySecretKey
+
+
+  policyApi: ocwa-policy-api.ocwa
+
+
+  apiSecret: "ssh this is a secret"
+  user:
+    idField: Email
+
+  createDatabase: false
+
+
+  resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}

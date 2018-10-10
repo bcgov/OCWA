@@ -1,0 +1,12 @@
+{
+  "extends": ["airbnb", "prettier", "plugin:jest/recommended"],
+  "plugins": ["jest"],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
+  }
+}

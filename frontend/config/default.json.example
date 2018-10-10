@@ -1,7 +1,20 @@
 {
   "port": 8000,
   "wsPort": 3001,
-  "jwtSecret": "superSecretHere",
+  "cookieSecret": "COOKIE_SECRET_HERE",
+  "host": "localhost",
+  "forumApiHost": "localhost:3000",
+  "forumSocket": "localhost:3001",
+  "auth": {
+    "authorizationEndpoint": "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/auth",
+    "callbackURL": "http://localhost:8000/auth",
+    "clientID": "outputchecker",
+    "clientSecret": "CLIENT_SECRET_HERE",
+    "issuer": "https://auth.bgddi.com/auth/realms/ocwa",
+    "scope": "openid offline_access",
+    "tokenEndpoint": "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/token",
+    "userInfoURL": "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/userinfo"
+  },
   "user":{
     "idField": "Email"
   }

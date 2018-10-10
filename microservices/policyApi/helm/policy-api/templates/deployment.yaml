@@ -33,13 +33,19 @@ spec:
             - name: DB_USERNAME
               value: {{ .Values.database.username }}
             - name: DB_PASSWORD
-              value: {{ .Values.database.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaPolicyApi.fullname" . }}-secrets
+                  key: dbPassword
             - name: DB_PORT
               value: "{{ .Values.database.port }}"
             - name: DB_NAME
               value: {{ .Values.database.dbName }}
             - name: API_SECRET
-              value: {{ .Values.apSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaPolicyApi.fullname" . }}-secrets
+                  key: apiSecret
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
           ports:
