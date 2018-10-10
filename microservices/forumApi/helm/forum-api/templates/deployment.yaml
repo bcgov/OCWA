@@ -35,11 +35,17 @@ spec:
             - name: DB_USERNAME
               value: {{ .Values.database.username }}
             - name: DB_PASSWORD
-              value: {{ .Values.database.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
+                  key: dbPassword
             - name: DB_NAME
               value: {{ .Values.database.dbName }}
             - name: JWT_SECRET
-              value: {{ .Values.jwtSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
+                  key: jwtSecret
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
           ports:

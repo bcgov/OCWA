@@ -18,6 +18,16 @@ http://localhost:3003/v1/api-docs
 
 curl -v http://localhost:3003/v1/validate
 
+## Helm
+For both below helm commands make a copy of values.yaml within the helm/validate-api directory
+and modify it to contain the values specific for your deployment.
+
+### Helm install (Kubernetes)
+helm install --name ocwa-validate-api --namespace ocwa ./helm/validate-api -f ./helm/validate-api/config.yaml
+
+### Helm update (Kubernetes)
+helm upgrade --name ocwa-validate-api ./helm/validate-api  -f ./helm/validate-api/config.yaml
+
 # Test
 
 ```

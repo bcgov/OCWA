@@ -28,8 +28,17 @@ spec:
               value: "{{ .Values.port }}"
             - name: HOST
               value: {{ .Values.host }}
-            - name: JWT
-              value: {{ .Values.jwt }}
+            - name: AUTH_CALLBACK_URL
+              value: "{{ .Values.auth.callbackURL }}"
+            - name: FORUM_API_HOST
+              value: "{{ .Values.forumApiHost }}"
+            - name: FORUM_SOCKET_HOST
+              value: "{{ .Values.forumSocket }}"
+            - name: COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaFrontend.fullname" . }}-secrets
+                  key: cookieSecret
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:

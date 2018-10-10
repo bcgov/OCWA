@@ -6,7 +6,8 @@ cd /home/travis/build/bcgov/OCWA/microservices/requestApi
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
-docker build -t bcgovimages/ocwa_request_api .
+docker build -t bcgovimages/ocwa_request_api:latest -t bcgovimages/ocwa_request_api:$TRAVIS_COMMIT .
 echo "dockerfile built pushing now";
-docker push bcgovimages/ocwa_request_api
+docker push bcgovimages/ocwa_request_api:latest
+docker push bcgovimages/ocwa_request_api:$TRAVIS_COMMIT
 echo "push done successfully";

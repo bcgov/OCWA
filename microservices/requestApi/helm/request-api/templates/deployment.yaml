@@ -33,19 +33,31 @@ spec:
             - name: DB_USERNAME
               value: {{ .Values.database.username }}
             - name: DB_PASSWORD
-              value: {{ .Values.database.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaRequestApi.fullname" . }}-secrets
+                  key: dbPassword
             - name: DB_NAME
               value: {{ .Values.database.dbName }}
             - name: FORUM_API
               value: {{ .Values.forumApi }}
             - name: FORUM_API_KEY
-              value: {{ .Values.user.forumApiSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaRequestApi.fullname" . }}-secrets
+                  key: forumApiSecret
             - name: VALIDATION_API
               value: {{ .Values.user.validationApi }}
             - name: VALIDATION_API_KEY
-              value: {{ .Values.user.validationApiSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaRequestApi.fullname" . }}-secrets
+                  key: validationApiSecret
             - name: JWT_SECRET
-              value: {{ .Values.user.jwtSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaRequestApi.fullname" . }}-secrets
+                  key: jwtSecret
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
           ports:

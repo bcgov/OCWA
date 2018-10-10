@@ -17,8 +17,15 @@ docker run -e API_PORT=$apiport -e JWT_SECRET=MySecret -e LOG_LEVEL=info -e FORU
 replacing image id with the image id from docker build and the configuration values as necessary
 
 
-##Helm install (Kubernetes)
-Coming Soon...
+## Helm
+For both below helm commands make a copy of values.yaml within the helm/request-api directory
+and modify it to contain the values specific for your deployment.
+
+### Helm install (Kubernetes)
+helm install --name ocwa-request-api --namespace ocwa ./helm/request-api -f ./helm/request-api/config.yaml
+
+### Helm update (Kubernetes)
+helm upgrade --name ocwa-request-api ./helm/request-api  -f ./helm/request-api/config.yaml
 
 ## Test
 

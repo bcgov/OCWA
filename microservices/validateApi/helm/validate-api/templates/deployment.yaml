@@ -33,9 +33,12 @@ spec:
             - name: DB_USERNAME
               value: {{ .Values.database.username }}
             - name: DB_PASSWORD
-              value: {{ .Values.database.password }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaValidateApi.fullname" . }}-secrets
+                  key: dbPassword
             - name: DB_PORT
-              value: {{ .Values.database.port }}
+              value: "{{ .Values.database.port }}"
             - name: DB_NAME
               value: {{ .Values.database.dbName }}
             - name: STORAGE_HOST
@@ -43,13 +46,22 @@ spec:
             - name: STORAGE_BUCKET
               value: {{ .Values.storage.bucket }}
             - name: STORAGE_ACCESS_KEY
-              value: {{ .Values.storage.key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaValidateApi.fullname" . }}-secrets
+                  key: storageKey
             - name: STORAGE_ACCESS_SECRET
-              value: {{ .Values.storage.secret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaValidateApi.fullname" . }}-secrets
+                  key: storageSecret
             - name: POLICY_URL
               value: {{ .Values.policyApi }}
             - name: API_SECRET
-              value: {{ .Values.apiSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaValidateApi.fullname" . }}-secrets
+                  key: apiSecret
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
           ports:

@@ -12,6 +12,9 @@ module.exports = {
     path: DIST_PATH,
     publicPath: '/',
   },
+  resolve: {
+    extensions: ['.js', '.jsx', '.css'],
+  },
   module: {
     rules: [
       {
@@ -26,14 +29,15 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.NamedModulesPlugin(),
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
       title: 'OCWA [DEMO]',
       template: path.join(__dirname, 'src/templates/main.html'),
     }),
     new webpack.EnvironmentPlugin({
-      TOKEN: config.get('jwt'),
-      API_HOST: config.get('host'),
+      FORUM_API_HOST: config.get('forumApiHost'),
+      FORUM_SOCKET: config.get('forumSocket'),
     }),
   ],
   stats: {
