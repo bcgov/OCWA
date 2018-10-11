@@ -54,12 +54,12 @@ spec:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 120
+            initialDelaySeconds: 150
           readinessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 120
+            initialDelaySeconds: 150
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
