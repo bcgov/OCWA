@@ -35,7 +35,7 @@ auth:
   authorizationEndpoint: "openid.auth.endpoint"
   callbackURL: "chart-example.local/auth"
   clientID: "outputchecker"
-  clientSecret: "CLIENT_SECRET_HERE"
+  clientSecret: "ssh this is a secret"
   issuer: "openid.auth.issuer"
   scope: "openid offline_access"
   tokenEndpoint: "openid.auth.tokenEndpoint"
