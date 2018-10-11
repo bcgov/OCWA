@@ -45,17 +45,12 @@ spec:
       initContainers:
         - name: "init-mongo"
           image: mongo:4.1
-          command: ['sh', '-c', 'echo ''db.createUser({user:"{{.Values.database.username}}", pwd:"$DB_PASSWORD", roles:["readWrite"]});'' > /docker-entrypoint-initdb.d/init.js; cat /docker-entrypoint-initdb.d/init.js']
+          command: ['sh', '-c', 'echo ''db.createUser({user:"{{.Values.database.username}}", pwd:"{{.Values.database.password}}", roles:["readWrite"]});'' > /docker-entrypoint-initdb.d/init.js']
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               value: root
             - name: MONGO_INITDB_ROOT_PASSWORD
               value: root
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
-                  key: dbPassword
             - name: MONGO_INITDB_DATABASE
               value: {{.Values.database.dbName}}
           volumeMounts:
