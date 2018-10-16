@@ -70,7 +70,7 @@ def test_v1_rules_replace_policy(client, mockdb):
     assert count == 3
 
 
-    rules = mockdb.Rules.objects()
+    rules = mockdb.Rules.objects().order_by('name')
     assert rules[0].name == 'new_rule_1'
     assert rules[1].name == 'new_rule_2'
     assert rules[2].name == 'new_rule_3'
