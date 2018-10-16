@@ -56,16 +56,26 @@ router.post("/", function(req, res, next){
     log.debug("Creating topic: ", topic);
 
     if (topic.parent_id !== null){
-        db.Topic.findOne({id: topic.parent_id}, function(err, result){
-            log.debug("Topic find one", res, err);
-            if (err || result==null){
+        db.Topic.getAll({_id: topic.parent_id}, 1, 1, req.user, function(err, resList){
+            log.debug("Topic find one", resList, err);
+            if (err || resList==null || resList.length === 0){
                 res.json({error: "No such parent topic"});
                 return;
             }
+            var result = resList[0];
+
+            if ((typeof(result.parent_id) !== "undefined") && (result.parent_id !== null)){
+                res.json({error: "Currently the api only supports nesting 1 topic level"});
+                return;
+            }
+
             topic.save(function(saveErr, saveRes){
                 if (saveErr){
-                    res.json({error: "No such parent topic"});
+                    res.json({error: saveErr.message});
+                    return;
                 }
+                var messages = require('../messages/messages');
+                messages.sendTopicMessage(topic);
                 res.json({message: "Successfully written", _id: saveRes._id});
             });
         });
