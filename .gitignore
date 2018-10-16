@@ -5,6 +5,7 @@
 
 #Helm
 helm/ocwa/charts/*
+helm/ocwa/config.yaml
 
 # Golang Ignore
 
