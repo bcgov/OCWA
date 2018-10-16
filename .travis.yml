@@ -274,10 +274,20 @@ matrix:
             - g++-4.8
 
       before_script:
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+        - cp config/test.json.example config/test.json
+        - cp config/default.json.example config/default.json
+        - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+        - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+        - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
+
         - cd /home/travis/build/bcgov/OCWA
         - wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
         - unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+
 
       before_install:
         - npm install -g yarn --cache-min 999999999
