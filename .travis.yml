@@ -283,13 +283,14 @@ matrix:
         - npm install -g yarn --cache-min 999999999
 
       script:
-        - cd /home/travis/build/bcgov/OCWA/frontend
+        - cd /home/travis/build/bcgov/OCWA/forumApi
         - yarn
         - npm test
 
         - cd /home/travis/build/bcgov/OCWA
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
         - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+
         #- sudo coverage run --branch --source=src -m pytest
         #- sudo coverage xml
         
