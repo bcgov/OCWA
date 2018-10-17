@@ -13,13 +13,27 @@ module.exports = {
     publicPath: '/',
   },
   resolve: {
+    alias: {
+      '@src': path.resolve(__dirname, 'src'),
+    },
     extensions: ['.js', '.jsx', '.css'],
+    modules: ['node_modules', 'src'],
   },
   module: {
     rules: [
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 2,
+              localIdentName: '[path][name]_[local]--[hash:base64:8]',
+            },
+          },
+        ],
       },
       {
         test: /\.jsx?$/,
