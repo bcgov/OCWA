@@ -10,6 +10,7 @@ module.exports = merge(common, {
   devServer: {
     contentBase: common.output.path,
     compress: true,
+    historyApiFallback: true,
     host: '0.0.0.0',
     publicPath: '/',
   },
