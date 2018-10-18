@@ -20,10 +20,10 @@ def create_app(test_config=None):
 
     conf = config.Config()
     if test_config is None:
-        app.config.update(conf.conf.data)
+        app.config.update(conf.data)
     else:
         # load the test config if passed in
-        app.config.update(conf.conf.data)
+        app.config.update(conf.data)
         app.config.update(test_config)
 
     ##Routes##
