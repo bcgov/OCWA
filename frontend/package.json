@@ -47,6 +47,8 @@
     "@atlaskit/date": "^0.1.2",
     "@atlaskit/editor-core": "^80.4.4",
     "@atlaskit/editor-wikimarkup-transformer": "^2.0.27",
+    "@atlaskit/field-text": "^7.0.12",
+    "@atlaskit/field-text-area": "^4.0.10",
     "@atlaskit/flag": "^9.0.10",
     "@atlaskit/form": "^4.0.9",
     "@atlaskit/media-card": "^34.0.4",

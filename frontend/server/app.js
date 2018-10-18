@@ -95,13 +95,4 @@ app.get('/login', passport.authenticate('openidconnect'));
 // Set up some proxy action
 app.use('/v1', forumProxy);
 
-app.use((err, req, res) => {
-  // render the error page
-  res.status(err.status || 500);
-  res.json({
-    message: err.message,
-    error: err,
-  });
-});
-
 module.exports = app;

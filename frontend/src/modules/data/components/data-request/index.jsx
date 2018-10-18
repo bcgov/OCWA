@@ -3,9 +3,9 @@ import * as React from 'react';
 function withDataRequest(Component) {
   return class extends React.Component {
     componentDidMount() {
-      const { fetch, requestConfig } = this.props;
+      const { fetch, fetchStatus, requestConfig } = this.props;
 
-      if (fetch) {
+      if (fetch && fetchStatus !== 'loaded') {
         fetch(requestConfig);
       }
     }

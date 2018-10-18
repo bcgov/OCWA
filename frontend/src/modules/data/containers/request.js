@@ -9,7 +9,6 @@ const mapStateToProps = (request, state, props) => {
 
   return {
     fetchStatus: get(state, `data.fetchStatus.${requestConfig.query}`, 'idle'),
-    data: get(state, `data.entities.${requestConfig.query}`),
     requestConfig,
   };
 };

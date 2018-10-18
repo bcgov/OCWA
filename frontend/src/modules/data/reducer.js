@@ -1,5 +1,34 @@
 import { combineReducers } from 'redux';
+import isArray from 'lodash/isArray';
 import merge from 'lodash/merge';
+
+function handleFetchStatus(state, action) {
+  let loadedFetchStatus = {};
+
+  if (isArray(action.payload.result)) {
+    const ids = action.payload.result.reduce(
+      (prev, id) => ({
+        ...prev,
+        [id]: 'loaded',
+      }),
+      {}
+    );
+    loadedFetchStatus = {
+      [action.meta.dataType]: {
+        [action.meta.id]: 'loaded',
+        ...ids,
+      },
+    };
+  } else {
+    loadedFetchStatus = {
+      [action.meta.dataType]: {
+        [action.meta.id]: 'loaded',
+      },
+    };
+  }
+
+  return merge({}, state, loadedFetchStatus);
+}
 
 const entities = (state = {}, action) => {
   switch (action.type) {
@@ -23,11 +52,7 @@ const fetchStatus = (state = initialFetchStatusState, action) => {
       });
 
     case 'data/get/success':
-      return merge({}, state, {
-        [action.meta.dataType]: {
-          [action.meta.id]: 'loaded',
-        },
-      });
+      return handleFetchStatus(state, action);
 
     case 'data/get/failed':
       return merge({}, state, {
