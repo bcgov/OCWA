@@ -40,8 +40,6 @@ forumApiSecret: none
 validationApi: ocwa-validation-api.ocwa
 validationApiSecret: validateApiSecret
 
-createDatabase: false
-
 
 resources: {}
   # If you want to specify resources, uncomment the following

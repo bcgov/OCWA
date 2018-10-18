@@ -45,8 +45,6 @@ apiSecret: "ssh this is a secret"
 user:
   idField: Email
 
-createDatabase: false
-
 
 resources: {}
   # If you want to specify resources, uncomment the following

@@ -4,12 +4,11 @@ import os
 import pytest
 import unittest
 import tempfile
+from config import Config
 
 
 def test_status(client):
-    response = client.get('/v1/status')
+    config = Config()
+    response = client.get('/v1/status', headers=[('x-api-key', config.data['apiSecret'])])
+    print(response)
     assert response.data == b'{"status":"ok"}\n'
-
-def test_get_validate(client):
-    response = client.get('/v1/validate')
-    assert response.data == b'{"message":"Successful"}\n'
