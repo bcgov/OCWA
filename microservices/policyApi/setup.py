@@ -44,7 +44,8 @@ setup(
         'pyyaml',
         'mongoengine',
         'pyhcl',
-        'requests'
+        'requests',
+        'flask-jwt-simple',
     ],
     setup_requires=[
     ],
@@ -52,6 +53,8 @@ setup(
         'mocker',
         'pytest',
         'pytest-cov',
+        'pytest-mock',
+        'mongomock',
         'pycodestyle',
         'pylint'
     ],

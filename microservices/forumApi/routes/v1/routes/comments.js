@@ -8,7 +8,7 @@ var router = express.Router();
 router.get('/:topicId', function(req, res, next) {
     var logger = require('npmlog');
     var db = require('../db/db');
-    topicId = req.params.topicId;
+    var topicId = req.params.topicId;
 
     var limit = 100;
     if (typeof(req.query.limit) !== "undefined"){
@@ -26,7 +26,11 @@ router.get('/:topicId', function(req, res, next) {
         page = 1;
     }
 
-    db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(err, topicRes){
+    var topic = new db.Topic;
+    topic._id = topicId;
+
+    db.Topic.getAll({_id: topic._id}, 1, 1, req.user, function(err, topicRes){
+
         if ((!topicRes) || (topicRes.length <= 0) ){
             logger.error("User ", req.user.id, " tried to access a topic that either doesn't exist or don't have access to");
         }
@@ -60,8 +64,11 @@ router.post("/:topicId", function(req, res, next){
 
     var log = require('npmlog');
 
+    var topic = new db.Topic;
+    topic._id = topicId;
+
     log.debug("finding topic", topicId);
-    db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(err, topicRes){
+    db.Topic.getAll({_id: topic._id}, 1, 1, req.user, function(err, topicRes){
         log.debug("Topic find one", topicRes, err);
         if (err || !topicRes){
             res.json({message: "Invalid Topic"});

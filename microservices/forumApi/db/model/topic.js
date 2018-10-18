@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const topicSchema = new Schema({
     name: {type: Schema.Types.String, required: true, unique: true},
-    parent_id: {type: Schema.Types.ObjectId, ref: 'topic', default: null},
+    parent_id: {type: Schema.Types.ObjectId, ref: 'topic', default: null, index: true},
     contributors: {type: [Schema.Types.String], required: true}
 });
 
@@ -19,13 +19,14 @@ model.getAll = function(query, limit, page, user, callback){
         {
             $lookup:{
                 from: "permissions",
-                let: { topicId: "$_id"},
+                let: { topicId: "$_id", parent: "$parent_id"},
                 pipeline: [
                     {$match: {
                         $expr: {
                             $and: [
                                 {$or: [
                                     {$eq: ["$topic_id", "$$topicId"] },
+                                    {$eq: ["$topic_id", "$$parent"] },
                                     {$eq: ["$topic_id", "*"] }
                                 ]},
                                 {$eq: ["$allow", true]}
@@ -54,7 +55,11 @@ model.getAll = function(query, limit, page, user, callback){
         },
         {
              $project: {"permissions": 0}
+        },
+        {
+            $match: query
         }
+
     ]).limit(limit).skip(skip).exec(callback);
 };
 
