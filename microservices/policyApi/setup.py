@@ -44,7 +44,8 @@ setup(
         'pyyaml',
         'mongoengine',
         'pyhcl',
-        'requests'
+        'requests',
+        'flask-jwt-simple',
     ],
     setup_requires=[
     ],
