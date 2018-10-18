@@ -3,7 +3,6 @@ from flask import request, abort, Response
 from config import Config
 from flask_jwt_simple import JWTManager
 from flask_jwt_simple.view_decorators import _decode_jwt_from_headers
-import flask_jwt_simple
 
 def jwt_config(app):
     config = Config()
