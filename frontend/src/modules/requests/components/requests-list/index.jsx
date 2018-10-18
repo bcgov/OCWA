@@ -7,7 +7,7 @@ function RequestsList({ data }) {
       <header>All Requests</header>
       <div>
         {data.map(d => (
-          <Link key={d.id} to="/requests/123">
+          <Link key={d.id} to={`/requests/${d.id}`}>
             {d.name}
           </Link>
         ))}

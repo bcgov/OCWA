@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import get from 'lodash/get';
 
 import RequestsList from '../components/requests-list';
 import withRequest from '@src/modules/data/containers/request';
@@ -14,8 +15,12 @@ const makeRequest = () => ({
 });
 
 const mapStateToProps = (state, props) => {
-  console.log(props.data);
-  return {};
+  const entities = get(state, 'data.entities.requests', {});
+  const ids = Object.keys(entities);
+
+  return {
+    data: ids.map(id => entities[id]),
+  };
 };
 
 export default withRequest(makeRequest, connect(mapStateToProps)(RequestsList));
