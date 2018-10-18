@@ -1,10 +1,4 @@
 
-import os
-#import server
-import pytest
-import unittest
-import tempfile
-
 
 def test_index(client):
     response = client.get('/')
