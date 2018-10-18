@@ -10,12 +10,12 @@
   },
 
   "apiSecret": "MySecret",
-  "jwtSecret": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1Mzk4ODI5OTksImV4cCI6MjUwODcxMjc0OTk5LCJhdWQiOiJodHRwOi8vbG9jYWxob3N0Iiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJHcm91cHMiOlsiTWFuYWdlciIsIlByb2plY3QgQWRtaW5pc3RyYXRvciIsImFkbWluIl19.bqyyPGkZmA7hAutgfqo0gZ_X6TuiAIwavlT6LL5E-tk",
+  "jwtSecret": "jwtSecret",
   "jwtAudience": "http://localhost",
   "jwt_access_group": "admin",
   "jwt_group": "Groups",
 
-  "testJWT": "eyJwtHere",
+  "testJWT": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1Mzk4ODI5OTksImV4cCI6MjUwODcxMjc0OTk5LCJhdWQiOiJodHRwOi8vbG9jYWxob3N0Iiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJHcm91cHMiOlsiTWFuYWdlciIsIlByb2plY3QgQWRtaW5pc3RyYXRvciIsImFkbWluIl19.bqyyPGkZmA7hAutgfqo0gZ_X6TuiAIwavlT6LL5E-tk",
 
   "user":{
       "idField": "Email"
