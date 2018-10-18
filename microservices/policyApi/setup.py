@@ -53,6 +53,8 @@ setup(
         'mocker',
         'pytest',
         'pytest-cov',
+        'pytest-mock',
+        'mongomock',
         'pycodestyle',
         'pylint'
     ],
