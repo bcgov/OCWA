@@ -1,5 +1,6 @@
 {
   "apiPort": 3003,
+
   "database": {
     "host": "localhost",
     "port": 27017,
@@ -7,6 +8,7 @@
     "password": "forumPass",
     "dbName": "forumDb"
   },
+
   "storage": {
       "endpoint": "http://minio:9000",
       "bucket": "temp",

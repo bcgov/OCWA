@@ -31,7 +31,7 @@ def mockdb(mocker):
 def app():
     """Create and configure a new app instance for each test."""
 
-    app = create_app({"database":{}})
+    app = create_app({"database": {}, "apiSecret": "testSecret"})
 
     yield app
 

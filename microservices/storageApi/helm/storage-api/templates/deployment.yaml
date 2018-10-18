@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "ocwaStorageApi.fullname" . }}
@@ -19,12 +19,18 @@ spec:
         app: {{ template "ocwaStorageApi.name" . }}
         release: {{ .Release.Name }}
     spec:
+      volumes:
+      - name: minio-config
+        emptyDir: {}
       containers:
         - name: {{ template "ocwaStorageApi.name" . }}-minio
           image: "{{ .Values.minio.image }}:{{ .Values.minio.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["minio"]
           args: ["gateway", "{{ .Values.minio.gatewayType }}"]
+          volumeMounts:
+          - mountPath: /.minio
+            name: minio-config
           env:
             - name: MINIO_ACCESS_KEY
               valueFrom:

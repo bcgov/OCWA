@@ -54,6 +54,9 @@ model.getAll = function(query, limit, page, user, callback){
         },
         {
             $project: {"permissions": 0}
+        },
+        {
+            $match: query
         }
     ]).limit(limit).skip(skip).exec(callback);
 };

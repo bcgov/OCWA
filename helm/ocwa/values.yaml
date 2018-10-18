@@ -28,17 +28,17 @@ ocwa-frontend:
   host: "serverHostedOnHere"
 
   cookieSecret: "COOKIE_SECRET_HERE"
-  forumApiHost: "ocwa-forum-api-mongo.ocwa:80"
-  forumSocket: "ocwa-forum-api-mongo.ocwa:3001"
+  forumApiHost: "ocwa-forum-api.ocwa"
+  forumSocket: "ocwa-forum-api.ocwa:3001"
   auth:
-    authorizationEndpoint: "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/auth"
-    callbackURL: "http://localhost:8000/auth"
+    authorizationEndpoint: "openid.auth.endpoint"
+    callbackURL: "chart-example.local/auth"
     clientID: "outputchecker"
     clientSecret: "CLIENT_SECRET_HERE"
-    issuer: "https://auth.bgddi.com/auth/realms/ocwa"
+    issuer: "openid.auth.issuer"
     scope: "openid offline_access"
-    tokenEndpoint: "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/token"
-    userInfoURL: "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/userinfo"
+    tokenEndpoint: "openid.auth.tokenEndpoint"
+    userInfoURL: "openid.userinfo.url"
   user:
     idField: Email
 
@@ -50,7 +50,6 @@ ocwa-frontend:
   tolerations: []
 
   affinity: {}
-
 
 
 #Forum Api configuration
@@ -89,7 +88,21 @@ forum-api:
     idField: Email
 
   createDatabase: true
+  storageClassName: default
+  dbPod:
+    persistence: /data/db
+    adminEnv: MONGO_INITDB_ROOT_USERNAME
+    admin: root
+    passEnv: MONGO_INITDB_ROOT_PASSWORD
+    pass: root
+    dbEnv: MONGO_INITDB_DATABASE
+    addAdminPassEnv: false
+    adminPassEnv: MONGODB_ADMIN_PASSWORD
+    initDb: true
 
+  mongoImage:
+    repository: mongo
+    tag: 4.1
 
   resources: {}
 
@@ -131,6 +144,10 @@ policy-api:
     dbName: forumApi
 
   apiSecret: "ssh this is a secret"
+  jwtSecret: "jwtSecret"
+  jwtAudience: "http://localhost"
+  jwt_access_group": "admin"
+  jwt_group: "Groups"
   user:
     idField: Email
 
