@@ -1,3 +1,4 @@
-config/*.json
+config/*
 Dockerfile
+node_modules/
 helm/*
