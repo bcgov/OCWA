@@ -13,6 +13,7 @@ router.get(
 
 // Return the session for the
 router.get('/session', (req, res) => {
+  console.log(test);
   if (req.isAuthenticated()) {
     res.json({
       token: req.user.accessToken,

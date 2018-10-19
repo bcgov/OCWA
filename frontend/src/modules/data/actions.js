@@ -6,7 +6,7 @@ export const fetchData = request => ({
   payload: request.get,
 });
 
-export const createData = (request, payload) => ({
+export const createData = payload => ({
   type: 'data/post',
   payload,
 });

@@ -3,8 +3,8 @@ const config = require('config');
 const express = require('express');
 const history = require('connect-history-api-fallback');
 const isEmpty = require('lodash/isEmpty');
+const isFunction = require('lodash/isFunction');
 const passport = require('passport');
-const path = require('path');
 const proxy = require('http-proxy-middleware');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -94,5 +94,21 @@ app.get('/login', passport.authenticate('openidconnect'));
 
 // Set up some proxy action
 app.use('/v1', forumProxy);
+
+app.use((err, req, res) => {
+  // set locals, only providing error in development
+  res.locals = res.locals || {};
+  res.locals.message = err.message;
+  res.locals.error = isDevelopment ? err : {};
+
+  // render the error page
+  if (isFunction(res.status)) {
+    res.status(err.status || 500);
+    res.json({
+      message: err.message,
+      error: err,
+    });
+  }
+});
 
 module.exports = app;
