@@ -88,7 +88,21 @@ forum-api:
     idField: Email
 
   createDatabase: true
+  storageClassName: default
+  dbPod:
+    persistence: /data/db
+    adminEnv: MONGO_INITDB_ROOT_USERNAME
+    admin: root
+    passEnv: MONGO_INITDB_ROOT_PASSWORD
+    pass: root
+    dbEnv: MONGO_INITDB_DATABASE
+    addAdminPassEnv: false
+    adminPassEnv: MONGODB_ADMIN_PASSWORD
+    initDb: true
 
+  mongoImage:
+    repository: mongo
+    tag: 4.1
 
   resources: {}
 
@@ -130,6 +144,10 @@ policy-api:
     dbName: forumApi
 
   apiSecret: "ssh this is a secret"
+  jwtSecret: "jwtSecret"
+  jwtAudience: "http://localhost"
+  jwt_access_group": "admin"
+  jwt_group: "Groups"
   user:
     idField: Email
 
