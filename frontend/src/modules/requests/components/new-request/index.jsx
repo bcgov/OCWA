@@ -11,22 +11,52 @@ class NewRequest extends React.Component {
   state = {
     open: false,
     isTermsAccepted: false,
+    name: '',
+    tags: '',
+    purpose: '',
+    variableDescriptions: '',
+    selectionCriteria: '',
+    steps: '',
+    freq: '',
+    confidentiality: '',
   };
 
   onSubmit = event => {
-    event.preventDefault();
+    const { onCreate } = this.props;
+    const { open, isTermsSelected, ...payload } = this.state;
     const form = this.formRef.validate();
-    console.log(form);
+    event.preventDefault();
 
     if (!form.isInvalid) {
-      console.log('process!');
+      onCreate(payload);
+      this.setState({ open: false });
     }
+  };
+
+  reset = () => {
+    this.setState({
+      isTermsAccepted: false,
+      name: '',
+      tags: '',
+      purpose: '',
+      variableDescriptions: '',
+      selectionCriteria: '',
+      steps: '',
+      freq: '',
+      confidentiality: '',
+    });
   };
 
   onToggleDialog = () => {
     this.setState(({ open }) => ({
       open: !open,
     }));
+  };
+
+  onChange = key => event => {
+    this.setState({
+      [key]: event.target.value,
+    });
   };
 
   onTermsChange = () => {
@@ -47,7 +77,18 @@ class NewRequest extends React.Component {
   );
 
   render() {
-    const { open, isTermsAccepted } = this.state;
+    const {
+      open,
+      isTermsAccepted,
+      name,
+      tags,
+      purpose,
+      variableDescriptions,
+      selectionCriteria,
+      steps,
+      freq,
+      confidentiality,
+    } = this.state;
 
     return (
       <React.Fragment>
@@ -59,6 +100,7 @@ class NewRequest extends React.Component {
             <Modal
               footer={this.renderFooter}
               heading="Initiate a New Request"
+              onCloseComplete={this.reset}
               width="x-large"
             >
               <Form
@@ -67,12 +109,18 @@ class NewRequest extends React.Component {
                   this.formRef = form;
                 }}
               >
-                <Field isRequired label="Request Name">
+                <Field
+                  validateOnChange
+                  validateOnBlur
+                  isRequired
+                  label="Request Name"
+                >
                   <FieldText
                     shouldFitContainer
                     name="name"
                     id="name"
-                    value=""
+                    value={name}
+                    onChange={this.onChange('name')}
                   />
                 </Field>
                 <FormSection
@@ -81,7 +129,12 @@ class NewRequest extends React.Component {
                   description="These fields aren't required but are recommended"
                 >
                   <Field label="Purpose" helperText="Purpose of the request">
-                    <FieldTextArea shouldFitContainer name="purpose" value="" />
+                    <FieldTextArea
+                      shouldFitContainer
+                      name="purpose"
+                      value=""
+                      onChange={this.onChange('purpose')}
+                    />
                   </Field>
                   <Field
                     label="Variable Descriptions"
@@ -90,7 +143,8 @@ class NewRequest extends React.Component {
                     <FieldTextArea
                       shouldFitContainer
                       name="variableDescriptions"
-                      value=""
+                      value={variableDescriptions}
+                      onChange={this.onChange('variableDescriptions')}
                     />
                   </Field>
                   <Field
@@ -99,8 +153,9 @@ class NewRequest extends React.Component {
                   >
                     <FieldTextArea
                       shouldFitContainer
-                      name="selectionCriteria"
-                      value=""
+                      name="selectioncriteria"
+                      value={variableDescriptions}
+                      onChange={this.onChange('variableDescriptions')}
                     />
                   </Field>
                   <Field label="Steps" helperText="Annotation of steps taken">
@@ -110,7 +165,12 @@ class NewRequest extends React.Component {
                     label="Frequency"
                     helperText="Weighted results and unweighted frequencies"
                   >
-                    <FieldTextArea shouldFitContainer name="freq" value="" />
+                    <FieldTextArea
+                      shouldFitContainer
+                      name="freq"
+                      value={freq}
+                      onChange={this.onChange('freq')}
+                    />
                   </Field>
                   <Field
                     label="Confidentiality"
@@ -119,7 +179,8 @@ class NewRequest extends React.Component {
                     <FieldTextArea
                       shouldFitContainer
                       name="confidentiality"
-                      value=""
+                      value={confidentiality}
+                      onChange={this.onChange('confidentiality')}
                     />
                   </Field>
                 </FormSection>

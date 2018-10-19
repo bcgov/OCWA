@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import get from 'lodash/get';
+import withRequest from '@src/modules/data/containers/request';
 
 import RequestsList from '../components/requests-list';
-import withRequest from '@src/modules/data/containers/request';
 import { requestsListSchema } from '../schemas';
 
 const makeRequest = () => ({

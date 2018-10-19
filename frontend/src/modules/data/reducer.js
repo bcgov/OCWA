@@ -44,6 +44,20 @@ const initialFetchStatusState = {};
 
 const fetchStatus = (state = initialFetchStatusState, action) => {
   switch (action.type) {
+    case 'data/post/requested':
+      return merge({}, state, {
+        [action.meta.dataType]: {
+          [action.meta.id]: 'creating',
+        },
+      });
+
+    case 'data/post/reset':
+      return merge({}, state, {
+        [action.meta.dataType]: {
+          [action.meta.id]: 'idle',
+        },
+      });
+
     case 'data/get/requested':
       return merge({}, state, {
         [action.meta.dataType]: {
@@ -55,6 +69,7 @@ const fetchStatus = (state = initialFetchStatusState, action) => {
       return handleFetchStatus(state, action);
 
     case 'data/get/failed':
+    case 'data/post/failed':
       return merge({}, state, {
         [action.meta.dataType]: {
           [action.meta.id]: 'failed',

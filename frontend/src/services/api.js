@@ -1,20 +1,39 @@
 import ky from 'ky';
-import { camelizeKeys } from 'humps';
 
 import { getSession } from './auth';
 
 export const get = async (url, options) => {
   try {
     const token = await getSession();
-    const json = await ky(url, {
-      ...options,
-      method: 'get',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).json();
+    const json = await ky
+      .get(url, {
+        ...options,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .json();
 
-    return camelizeKeys(json);
+    return json;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+export const post = async (url, options) => {
+  try {
+    const token = await getSession();
+    const json = await ky
+      .post(url, {
+        ...options,
+        json: options.payload,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .json();
+
+    return json;
   } catch (err) {
     throw new Error(err);
   }
@@ -22,4 +41,5 @@ export const get = async (url, options) => {
 
 export default {
   get,
+  post,
 };
