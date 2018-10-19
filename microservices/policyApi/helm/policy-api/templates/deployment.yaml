@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "ocwaPolicyApi.fullname" . }}
@@ -46,6 +46,17 @@ spec:
                 secretKeyRef:
                   name: {{ template "ocwaPolicyApi.fullname" . }}-secrets
                   key: apiSecret
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaPolicyApi.fullname" . }}-secrets
+                  key: jwtSecret
+            - name: JWT_AUD
+              value: {{ .Values.jwtAudience }}
+            - name: JWT_ACCESS_GROUP
+              value: {{ .Values.jwt_access_group }}
+            - name: JWT_GROUP
+              value: {{ .Values.jwt_group }}
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
           ports:

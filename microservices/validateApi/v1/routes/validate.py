@@ -8,18 +8,23 @@ from config import Config
 import requests
 import hcl
 from v1.validator.validator import Validator
+from v1.auth.auth import auth
 
 validate = Blueprint('validate', 'validate')
 
+
+
 @validate.route("/",
                 methods=['GET'], strict_slashes=False)
+@auth
 def test() -> object:
-    v = Validator(hcl.loads("rule \"test\"{\nsource=\"${file.size}<100\"\n}"), {})
-    v.start_validate()
-    return jsonify({"message": "Successful"})
+    rule = hcl.loads("rule \"test\"{\nSource=\"${file.size}<100\"\n}")
+    return jsonify({"message": rule})
+
 
 @validate.route('/<string:fileId>',
            methods=['GET'], strict_slashes=False)
+@auth
 def validate_policy_result(fileId: str) -> object:
     """
     Returns the result of file
@@ -33,6 +38,7 @@ def validate_policy_result(fileId: str) -> object:
 
 @validate.route('/<string:fileId>',
            methods=['PUT'], strict_slashes=False)
+@auth
 def validate_policy(fileId: str) -> object:
     """
     Validates a file
@@ -65,6 +71,7 @@ def validate_policy(fileId: str) -> object:
 
 @validate.route('/<string:fileId>/<string:ruleId>',
            methods=['GET'], strict_slashes=False)
+@auth
 def validate_rule_result(fileId: str, ruleId: str) -> object:
     """
     Returns the result of file with specific rule
@@ -76,8 +83,10 @@ def validate_rule_result(fileId: str, ruleId: str) -> object:
     return db.Results.objects(file_id=fileId, rule_id=ruleId).to_json()
 
 
+
 @validate.route('/<string:fileId>/<string:ruleId>',
            methods=['PUT'], strict_slashes=False)
+@auth
 def validate_rule(fileId: str, ruleId: str) -> object:
     """
     Validates a file with specific rule

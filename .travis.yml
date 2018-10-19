@@ -56,7 +56,8 @@ matrix:
         provider: script
         script: bash docker_push
         on:
-          branch: master
+          all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^master|develop$
 
     - name: "Request Api"
       addons:
@@ -101,7 +102,8 @@ matrix:
         provider: script
         script: bash docker_push
         on:
-          branch: master
+          all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^master|develop$
 
     - name: "Policy Api"
       language: python
@@ -140,7 +142,8 @@ matrix:
         provider: script
         script: bash docker_push
         on:
-          branch: master
+          all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^master|develop$
 
     - name: "Validation Api"
       language: python
@@ -182,7 +185,8 @@ matrix:
         provider: script
         script: bash docker_push
         on:
-          branch: master
+          all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^master|develop$
 
     - name: "Front End"
       language: node_js
@@ -220,7 +224,8 @@ matrix:
         provider: script
         script: bash docker_push
         on:
-          branch: master
+          all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^master|develop$
 
     - name: "Scan - Python"
       python:

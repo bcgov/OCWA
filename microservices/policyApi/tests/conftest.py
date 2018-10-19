@@ -1,7 +1,7 @@
 import pytest
 import os
 import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app import create_app
 
 from mongoengine import connect
@@ -31,7 +31,7 @@ def mockdb(mocker):
 def app():
     """Create and configure a new app instance for each test."""
 
-    app = create_app({"database":{}})
+    app = create_app({"database": {}})
 
     yield app
 
