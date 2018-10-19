@@ -3,7 +3,8 @@ munch==2.3.2
 boto3==1.9.12
 flask==1.0.2
 flask-compress==1.4.0
-gevent==1.3.5
+gevent==1.3.7
+greenlet==0.4.15
 pyyaml==3.13
 mongoengine==0.15.3
 pyhcl==0.3.10

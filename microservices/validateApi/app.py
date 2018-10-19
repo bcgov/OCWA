@@ -13,8 +13,7 @@ import v1.v1 as v1
 def create_app(test_config=None):
     log = logging.getLogger(__name__)
 
-    templFolder = os.path.abspath('../templates')
-    app = Flask(__name__, template_folder=templFolder)
+    app = Flask(__name__)
 
     conf = config.Config()
     if test_config is None:
