@@ -22,5 +22,5 @@ printf "\"idField\": \"${USER_ID_FIELD}\"\n" >> ./config/default.json
 printf "}\n" >> ./config/default.json
 printf "}" >> ./config/default.json
 
-yarn build
+npm run-script build
 yarn start:prod

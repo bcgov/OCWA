@@ -12,7 +12,6 @@ ocwa-frontend:
   service:
     type: ClusterIP
     port: 80
-    websocketPort: 3001
 
   ingress:
     enabled: false
@@ -104,7 +103,13 @@ forum-api:
     repository: mongo
     tag: 4.1
 
-  resources: {}
+  resources:
+    limits:
+      cpu: 500m
+      memory: 1024MiB
+    requests:
+      cpu: 500m
+      memory: 1024MiB
 
   nodeSelector: {}
 
