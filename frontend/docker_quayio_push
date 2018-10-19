@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #make sure in the right directory
-cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+cd /home/travis/build/bcgov/OCWA/frontend
 
 QUAYIO_REPO=$1
 
