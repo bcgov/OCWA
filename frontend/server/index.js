@@ -87,19 +87,19 @@ app.get('/login', passport.authenticate('openidconnect'));
 // Set up some proxy action
 app.use('/v1', forumProxy);
 
-app.use((err, req, res) => {
-  // set locals, only providing error in development
-  res.locals = {};
-  res.locals.message = err.message;
-  res.locals.error = isDevelopment ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.json({
-    message: err.message,
-    error: err,
-  });
-});
+// app.use((err, req, res) => {
+//   // set locals, only providing error in development
+//   res.locals = {};
+//   res.locals.message = err.message;
+//   res.locals.error = isDevelopment ? err : {};
+//
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.json({
+//     message: err.message,
+//     error: err,
+//   });
+// });
 
 app.listen(port, error => {
   if (!error) {
