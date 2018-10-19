@@ -6,6 +6,8 @@ import boto3
 from config import Config
 from munch import munchify
 #import re #uncomment if we use the regular expression method
+from io import StringIO
+import sys
 
 class Validator:
 
@@ -38,7 +40,7 @@ def validate(rule, resultObj):
 
 
 def read_file_and_evaluate(source, result):
-    file_resp, file_attributes = read_file(result['file_id'])
+    file_resp, file_attributes = read_file(result['file_id'], not(source.find('${file.content}') == -1))
     return evaluate_source(source, file_attributes)
 
 
@@ -52,14 +54,18 @@ def evaluate_source(source, file_attributes):
 
     try:
         source = source.format(munchified_attributes)
-        result = eval(source)
+        old_stdout = sys.stdout
+        redirected_stdout = sys.stdout = StringIO()
+        exec(source)
+        sys.stdout = old_stdout
+        result = redirected_stdout.getvalue().lower() in ("yes", "true", "t", "1", "yes\n", "true\n", "t\n", "1\n")
     except (Exception, NameError) as e:
         print(e)
         message = str(e)
 
     return result, message
 
-def read_file(file_id):
+def read_file(file_id, deep_read=False):
 
     config = Config().conf.data
     endpoint = config['storage']['endpoint']
@@ -74,7 +80,7 @@ def read_file(file_id):
 
     file = {}
     try:
-        fileResp = conn.get_object(Bucket=bucket, key=file_id)
+        fileResp = conn.get_object(Bucket=bucket, Key=file_id)
 
         for key, val in fileResp['ResponseMetadata'].items():
             file[key] = val
@@ -84,6 +90,11 @@ def read_file(file_id):
 
         if "content-length" in fileResp['ResponseMetadata']['HTTPHeaders']:
             file["size"] = fileResp['ResponseMetadata']['HTTPHeaders']['content-length']
+
+        file['content'] = ""
+        if deep_read:
+            file['content'] = fileResp['Body'].read()
+
 
     except (Exception) as e:
         print("Failed to get file")
