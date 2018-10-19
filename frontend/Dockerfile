@@ -10,6 +10,7 @@ COPY package.json /usr/src/app
 COPY yarn.lock /usr/src/app
 RUN yarn install
 COPY . /usr/src/app
+RUN echo "{}" > /usr/src/app/config/production.json
 RUN chmod +x entrypoint.sh
 
 EXPOSE 8000
