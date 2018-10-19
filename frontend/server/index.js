@@ -89,6 +89,7 @@ app.use('/v1', forumProxy);
 
 app.use((err, req, res) => {
   // set locals, only providing error in development
+  res.locals = {};
   res.locals.message = err.message;
   res.locals.error = isDevelopment ? err : {};
 
