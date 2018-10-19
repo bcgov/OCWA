@@ -6,8 +6,18 @@ cd /home/travis/build/bcgov/OCWA/microservices/forumApi
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
-docker build -t bcgovimages/ocwa_forum_api:latest -t bcgovimages/ocwa_forum_api:$TRAVIS_COMMIT .
-echo "dockerfile built pushing now";
-docker push bcgovimages/ocwa_forum_api:latest
-docker push bcgovimages/ocwa_forum_api:$TRAVIS_COMMIT
-echo "push done successfully";
+
+if [ $TRAVIS_BRANCH == "master" ]; then
+    docker build -t bcgovimages/ocwa_forum_api:latest -t bcgovimages/ocwa_forum_api:$TRAVIS_COMMIT .
+    echo "dockerfile built pushing now";
+    docker push bcgovimages/ocwa_forum_api:latest
+    docker push bcgovimages/ocwa_forum_api:$TRAVIS_COMMIT
+    echo "latest and $TRAVIS_COMMIT pushed successfully";
+fi
+
+if [ $TRAVIS_BRANCH == "develop" ]; then
+    docker build -t bcgovimages/ocwa_forum_api:edge .;
+    echo "dockerfile built pushing now";
+    docker push bcgovimages/ocwa_forum_api:edge;
+    echo "edge (develop) pushed successfully";
+fi
