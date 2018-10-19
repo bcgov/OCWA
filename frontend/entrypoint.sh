@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 mkdir -p ./config
 printf "{\n" > ./config/default.json
@@ -22,5 +22,4 @@ printf "\"idField\": \"${USER_ID_FIELD}\"\n" >> ./config/default.json
 printf "}\n" >> ./config/default.json
 printf "}" >> ./config/default.json
 
-npm run-script build
 yarn start:prod
