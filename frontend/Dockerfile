@@ -17,7 +17,8 @@ COPY . /usr/src/app
 RUN echo "{}" > /usr/src/app/config/production.json
 RUN chmod +x entrypoint.sh
 
-RUN yarn build
+#Commenting out for now, compiling pushes environment variables
+#RUN yarn build
 
 EXPOSE 8000
 ENTRYPOINT ["./entrypoint.sh"]

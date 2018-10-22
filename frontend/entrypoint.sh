@@ -22,4 +22,7 @@ printf "\"idField\": \"${USER_ID_FIELD}\"\n" >> ./config/default.json
 printf "}\n" >> ./config/default.json
 printf "}" >> ./config/default.json
 
-yarn start:prod
+
+#Do not start prod version for now as its a mess
+##yarn start:prod
+yarn start
