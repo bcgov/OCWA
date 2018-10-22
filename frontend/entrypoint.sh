@@ -8,14 +8,14 @@ printf "\"forumApiHost\": \"${FORUM_API_HOST}\",\n" >> ./config/default.json
 printf "\"forumSocket\": \"${FORUM_SOCKET_HOST}\",\n" >> ./config/default.json
 printf "\"cookieSecret\": \"${COOKIE_SECRET}\",\n" >> ./config/default.json
 printf "\"auth\": {\n" >> ./config/default.json
-printf "\"authorizationEndpoint\": \"https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/auth\",\n" >> ./config/default.json
+printf "\"authorizationEndpoint\": \"${AUTH_ENDPOINT}\",\n" >> ./config/default.json
 printf "\"callbackURL\": \"${AUTH_CALLBACK_URL}\",\n" >> ./config/default.json
-printf "\"clientID\": \"outputchecker\",\n" >> ./config/default.json
+printf "\"clientID\": \"${AUTH_CLIENT}\",\n" >> ./config/default.json
 printf "\"clientSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
-printf "\"issuer\": \"https://auth.bgddi.com/auth/realms/ocwa\",\n" >> ./config/default.json
-printf "\"scope\": \"openid offline_access\",\n" >> ./config/default.json
-printf "\"tokenEndpoint\": \"https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/token\",\n" >> ./config/default.json
-printf "\"userInfoURL\": \"https://auth.bgddi.com/auth/realms/ocwa/protocol/openidconnect/userinfo\"\n" >> ./config/default.json
+printf "\"issuer\": \"${AUTH_ISSUER}\",\n" >> ./config/default.json
+printf "\"scope\": \"${AUTH_SCOPES}\",\n" >> ./config/default.json
+printf "\"tokenEndpoint\": \"${TOKEN_ENDPOINT}\",\n" >> ./config/default.json
+printf "\"userInfoURL\": \"${USER_INFO_ENDPOINT}\"\n" >> ./config/default.json
 printf "},\n" >> ./config/default.json
 printf "\"user\": {\n" >> ./config/default.json
 printf "\"idField\": \"${USER_ID_FIELD}\"\n" >> ./config/default.json

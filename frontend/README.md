@@ -35,7 +35,7 @@ You will need to
 ```
 $ hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
 $ port=8000
-$ docker run -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e AUTH_CALLBACK_URL=http://localhost:8000/auth -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e FORUM_SOCKET_HOST=$hostip:3001 -e USER_ID_FIELD=Email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
+$ docker run -e TOKEN_ENDPONT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_SCOPES="openid offline_access" -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e AUTH_CALLBACK_URL=http://localhost:8000/auth -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e FORUM_SOCKET_HOST=$hostip:3001 -e USER_ID_FIELD=Email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
 ```
 
 ## Testing
