@@ -35,10 +35,10 @@ module.exports = {
       title: 'OCWA [DEMO]',
       template: path.join(__dirname, 'src/templates/main.html'),
     }),
-    new webpack.EnvironmentPlugin({
-      FORUM_API_HOST: config.get('forumApiHost'),
-      FORUM_SOCKET: config.get('forumSocket'),
-    }),
+    // new webpack.EnvironmentPlugin({
+    //   FORUM_API_HOST: config.get('forumApiHost'),
+    //   FORUM_SOCKET: config.get('forumSocket'),
+    // }),
   ],
   stats: {
     colors: true,
