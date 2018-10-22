@@ -46,6 +46,7 @@
     "@atlaskit/comment": "^6.0.14",
     "@atlaskit/css-reset": "^3.0.1",
     "@atlaskit/date": "^0.1.2",
+    "@atlaskit/dynamic-table": "^10.0.15",
     "@atlaskit/editor-core": "^87.0.4",
     "@atlaskit/editor-wikimarkup-transformer": "^2.0.27",
     "@atlaskit/field-text": "^7.0.12",
@@ -85,6 +86,7 @@
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.0",
     "redux-saga": "^0.16.2",
-    "styled-components": "^3.4.6"
+    "styled-components": "^3.4.6",
+    "tus-js-client": "^1.5.1"
   }
 }
