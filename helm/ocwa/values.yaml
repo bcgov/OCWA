@@ -103,13 +103,7 @@ forum-api:
     repository: mongo
     tag: 4.1
 
-  resources:
-    limits:
-      cpu: 500m
-      memory: 1024MiB
-    requests:
-      cpu: 500m
-      memory: 1024MiB
+  resources: {}
 
   nodeSelector: {}
 
