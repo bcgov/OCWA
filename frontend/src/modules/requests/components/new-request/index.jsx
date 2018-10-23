@@ -7,9 +7,13 @@ import FieldTextArea from '@atlaskit/field-text-area';
 import Form, { Field, FormSection, Validator } from '@atlaskit/form';
 import Modal, { ModalFooter, ModalTransition } from '@atlaskit/modal-dialog';
 
+import FileUploader from './file-uploader';
+
 class NewRequest extends React.Component {
   state = {
     open: false,
+    step: 1,
+    files: [],
     isTermsAccepted: false,
     name: '',
     tags: '',
@@ -36,6 +40,8 @@ class NewRequest extends React.Component {
   reset = () => {
     this.setState({
       isTermsAccepted: false,
+      files: [],
+      step: 1,
       name: '',
       tags: '',
       purpose: '',
@@ -65,16 +71,64 @@ class NewRequest extends React.Component {
     }));
   };
 
-  renderFooter = () => (
-    <ModalFooter>
-      <Button appearance="subtle" onClick={this.onToggleDialog}>
-        Cancel
-      </Button>
-      <Button appearance="primary" onClick={this.onSubmit}>
-        Submit
-      </Button>
-    </ModalFooter>
-  );
+  onUploadSuccess = file => {
+    this.setState(state => ({
+      files: [...state.files, file],
+    }));
+  };
+
+  onChangeStep = step => () => {
+    this.setState({
+      step,
+    });
+  };
+
+  renderFooter = () => {
+    const { files, step } = this.state;
+    let buttonElements = [];
+
+    if (step === 1) {
+      buttonElements = [
+        <Button
+          key="step1Btn1"
+          appearance="subtle"
+          onClick={this.onToggleDialog}
+        >
+          Cancel
+        </Button>,
+        <Button
+          key="step1Btn2"
+          isDisabled={files.length <= 0}
+          appearance="primary"
+          onClick={this.onChangeStep(2)}
+        >
+          Next Step
+        </Button>,
+      ];
+    } else if (step === 2) {
+      buttonElements = [
+        <Button
+          key="step2Btn1"
+          appearance="subtle"
+          onClick={this.onToggleDialog}
+        >
+          Cancel
+        </Button>,
+        <Button
+          key="step2Btn2"
+          appearance="primary"
+          onClick={this.onChangeStep(1)}
+        >
+          Previous Step
+        </Button>,
+        <Button key="step2Btn3" appearance="primary" onClick={this.onSubmit}>
+          Submit
+        </Button>,
+      ];
+    }
+
+    return <ModalFooter>{buttonElements}</ModalFooter>;
+  };
 
   render() {
     const {
@@ -85,6 +139,7 @@ class NewRequest extends React.Component {
       purpose,
       variableDescriptions,
       selectionCriteria,
+      step,
       steps,
       freq,
       confidentiality,
@@ -99,113 +154,123 @@ class NewRequest extends React.Component {
           {open && (
             <Modal
               footer={this.renderFooter}
-              heading="Initiate a New Request"
+              heading={<div>{`Initiate a New Request (Step ${step}/2)`}</div>}
               onCloseComplete={this.reset}
               width="x-large"
             >
-              <Form
-                onSubmit={this.onSubmit}
-                ref={form => {
-                  this.formRef = form;
-                }}
-              >
-                <Field
-                  validateOnChange
-                  validateOnBlur
-                  isRequired
-                  label="Request Name"
+              {step === 1 && (
+                <FileUploader onUploadSuccess={this.onUploadSuccess} />
+              )}
+              {step === 2 && (
+                <Form
+                  onSubmit={this.onSubmit}
+                  ref={form => {
+                    this.formRef = form;
+                  }}
                 >
-                  <FieldText
-                    shouldFitContainer
-                    name="name"
-                    id="name"
-                    value={name}
-                    onChange={this.onChange('name')}
-                  />
-                </Field>
-                <FormSection
-                  name="additional"
-                  title="Additional Information"
-                  description="These fields aren't required but are recommended"
-                >
-                  <Field label="Purpose" helperText="Purpose of the request">
-                    <FieldTextArea
-                      shouldFitContainer
-                      name="purpose"
-                      value=""
-                      onChange={this.onChange('purpose')}
-                    />
-                  </Field>
-                  <Field
-                    label="Variable Descriptions"
-                    helperText="Description of variables in the request"
-                  >
-                    <FieldTextArea
-                      shouldFitContainer
-                      name="variableDescriptions"
-                      value={variableDescriptions}
-                      onChange={this.onChange('variableDescriptions')}
-                    />
-                  </Field>
-                  <Field
-                    label="Selection Criteria"
-                    helperText="Selection criteria and sample size description for the request"
-                  >
-                    <FieldTextArea
-                      shouldFitContainer
-                      name="selectioncriteria"
-                      value={variableDescriptions}
-                      onChange={this.onChange('variableDescriptions')}
-                    />
-                  </Field>
-                  <Field label="Steps" helperText="Annotation of steps taken">
-                    <FieldTextArea shouldFitContainer name="steps" value="" />
-                  </Field>
-                  <Field
-                    label="Frequency"
-                    helperText="Weighted results and unweighted frequencies"
-                  >
-                    <FieldTextArea
-                      shouldFitContainer
-                      name="freq"
-                      value={freq}
-                      onChange={this.onChange('freq')}
-                    />
-                  </Field>
-                  <Field
-                    label="Confidentiality"
-                    helperText="Confidentiality disclosure to describe how it's upheld when criteria isn't met"
-                  >
-                    <FieldTextArea
-                      shouldFitContainer
-                      name="confidentiality"
-                      value={confidentiality}
-                      onChange={this.onChange('confidentiality')}
-                    />
-                  </Field>
-                </FormSection>
-                <FormSection>
                   <Field
                     validateOnChange
+                    validateOnBlur
                     isRequired
-                    validators={[
-                      <Validator
-                        func={() => isTermsAccepted}
-                        invalid="You must check this box to submit your request."
-                      />,
-                    ]}
+                    label="Request Name"
                   >
-                    <Checkbox
-                      isChecked={isTermsAccepted}
-                      onChange={this.onTermsChange}
-                      label="By checking this box I affirm that requested output is safe for release and protects the confidentiality of data, to the best of the authorized user’s knowledge"
-                      value="isAffirmed"
-                      id="affirmation-checkbox"
-                      name="affirmation-checkbox"
+                    <FieldText
+                      shouldFitContainer
+                      name="name"
+                      id="name"
+                      value={name}
+                      onChange={this.onChange('name')}
                     />
                   </Field>
-                </FormSection>
-              </Form>
+                  <FormSection
+                    name="additional"
+                    title="Additional Information"
+                    description="These fields aren't required but are recommended"
+                  >
+                    <Field label="Purpose" helperText="Purpose of the request">
+                      <FieldTextArea
+                        shouldFitContainer
+                        name="purpose"
+                        value=""
+                        onChange={this.onChange('purpose')}
+                      />
+                    </Field>
+                    <Field
+                      label="Variable Descriptions"
+                      helperText="Description of variables in the request"
+                    >
+                      <FieldTextArea
+                        shouldFitContainer
+                        name="variableDescriptions"
+                        value={variableDescriptions}
+                        onChange={this.onChange('variableDescriptions')}
+                      />
+                    </Field>
+                    <Field
+                      label="Selection Criteria"
+                      helperText="Selection criteria and sample size description for the request"
+                    >
+                      <FieldTextArea
+                        shouldFitContainer
+                        name="selectioncriteria"
+                        value={variableDescriptions}
+                        onChange={this.onChange('selectionCriteria')}
+                      />
+                    </Field>
+                    <Field label="Steps" helperText="Annotation of steps taken">
+                      <FieldTextArea
+                        shouldFitContainer
+                        name="steps"
+                        value={steps}
+                        onChange={this.onChange('steps')}
+                      />
+                    </Field>
+                    <Field
+                      label="Frequency"
+                      helperText="Weighted results and unweighted frequencies"
+                    >
+                      <FieldTextArea
+                        shouldFitContainer
+                        name="freq"
+                        value={freq}
+                        onChange={this.onChange('freq')}
+                      />
+                    </Field>
+                    <Field
+                      label="Confidentiality"
+                      helperText="Confidentiality disclosure to describe how it's upheld when criteria isn't met"
+                    >
+                      <FieldTextArea
+                        shouldFitContainer
+                        name="confidentiality"
+                        value={confidentiality}
+                        onChange={this.onChange('confidentiality')}
+                      />
+                    </Field>
+                  </FormSection>
+                  <FormSection>
+                    <Field
+                      validateOnChange
+                      isRequired
+                      validators={[
+                        <Validator
+                          func={() => isTermsAccepted}
+                          invalid="You must check this box to submit your request."
+                        />,
+                      ]}
+                    >
+                      <Checkbox
+                        isChecked={isTermsAccepted}
+                        onChange={this.onTermsChange}
+                        label="By checking this box I affirm that requested output is safe for release and protects the confidentiality of data, to the best of the authorized user’s knowledge"
+                        value="isAffirmed"
+                        id="affirmation-checkbox"
+                        name="affirmation-checkbox"
+                      />
+                    </Field>
+                  </FormSection>
+                </Form>
+              )}
             </Modal>
           )}
         </ModalTransition>
