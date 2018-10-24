@@ -1,20 +1,19 @@
 import * as React from 'react';
 import cx from 'classnames';
 import tus from 'tus-js-client';
+import Spinner from '@atlaskit/spinner';
 
 import * as styles from './styles.css';
 
 class FileUploader extends React.Component {
   state = {
     isDragging: false,
+    isUploading: false,
     error: null,
+    progress: 0,
   };
 
   upload = file => {
-    const { onUploadSuccess } = this.props;
-    this.setState({
-      error: null,
-    });
     const upload = new tus.Upload(file, {
       endpoint: 'http://localhost:1080/files/',
       retryDelays: [0, 1000, 3000, 5000],
@@ -22,16 +21,49 @@ class FileUploader extends React.Component {
         filename: file.name,
         filetype: file.type,
       },
-      onError: error => this.setState({ error }),
-      onProgress: (bytesUploaded, bytesTotal) => {
-        const percentage = (bytesUploaded / bytesTotal * 100).toFixed(2);
-        console.log(bytesUploaded, bytesTotal, `${percentage} %`);
-      },
-      onSuccess: () => onUploadSuccess(upload),
+      onError: this.onError,
+      onProgress: this.onProgress,
+      onSuccess: this.onSuccess.bind(null, file),
     });
 
     // Start the upload
-    upload.start();
+    this.setState(
+      {
+        error: null,
+        progress: 0,
+        isUploading: true,
+      },
+      () => upload.start()
+    );
+  };
+
+  onError = error => {
+    this.setState({ error, isUploading: false, progress: 0 });
+
+    setTimeout(() => {
+      this.setState({
+        error: null,
+        progress: 0,
+      });
+    }, 5000);
+  };
+
+  onProgress = (bytesUploaded, bytesTotal) => {
+    const progress = (bytesUploaded / bytesTotal * 100).toFixed(2);
+    this.setState({ progress });
+  };
+
+  onSuccess = file => {
+    const { onUploadSuccess } = this.props;
+    this.setState(
+      {
+        isUploading: false,
+        progress: 100,
+      },
+      () => {
+        onUploadSuccess(file);
+      }
+    );
   };
 
   onDragLeave = event => {
@@ -41,24 +73,27 @@ class FileUploader extends React.Component {
 
   onDragOver = event => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
+    event.dataTransfer.dropEffect = 'copy';
 
     this.setState({ isDragging: true });
   };
 
   onDrop = event => {
+    const { isUploading } = this.state;
     const { files } = event.dataTransfer;
     event.preventDefault();
 
-    this.setState({
-      isDragging: false,
-    });
+    if (!isUploading) {
+      this.setState({
+        isDragging: false,
+      });
 
-    this.upload(files[0]);
+      this.upload(files[0]);
+    }
   };
 
   render() {
-    const { isDragging, error } = this.state;
+    const { isDragging, isUploading, error, progress } = this.state;
     const isError = Boolean(error);
 
     return (
@@ -71,8 +106,18 @@ class FileUploader extends React.Component {
           onDragOver={this.onDragOver}
           onDrop={this.onDrop}
         >
-          {isError && <div>Failed To Upload</div>}
-          {isDragging ? 'Drop' : 'Drag'} files here
+          <div className={styles.uploadText}>
+            {isError && <div>Failed To Upload</div>}
+            {isUploading && (
+              <div>
+                <Spinner size="medium" />
+                <p>{`${progress}% Uploaded`}</p>
+              </div>
+            )}
+            {!isUploading && (
+              <div>{isDragging ? 'Drop' : 'Drag'} files here</div>
+            )}
+          </div>
         </div>
       </div>
     );

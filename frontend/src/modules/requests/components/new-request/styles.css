@@ -16,3 +16,7 @@
 .dropZoneDragOver {
   border-color: #777;
 }
+
+.uploadText {
+  text-align: center;
+}
