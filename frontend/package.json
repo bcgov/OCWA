@@ -59,6 +59,7 @@
     "@atlaskit/page": "^8.0.5",
     "@atlaskit/renderer": "^22.1.0",
     "@atlaskit/smart-card": "8.4.0",
+    "@atlaskit/spinner": "^9.0.10",
     "@atlaskit/util-shared-styles": "^3.0.0",
     "@babel/polyfill": "^7.0.0",
     "body-parser": "^1.18.3",
