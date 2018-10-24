@@ -43,6 +43,11 @@ spec:
               value: "{{ .Values.auth.callbackURL }}"
             - name: AUTH_CLIENT
               value: "{{ .Values.auth.clientID }}"
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaFrontend.fullname" . }}-secrets
+                  key: clientSecret
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
