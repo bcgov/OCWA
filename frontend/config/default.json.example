@@ -2,6 +2,7 @@
   "port": 8000,
   "wsPort": 3001,
   "cookieSecret": "COOKIE_SECRET_HERE",
+  "jwtSecret": "JWT_SECRET_HERE"
   "host": "localhost",
   "forumApiHost": "localhost:3000",
   "forumSocket": "localhost:3001",
