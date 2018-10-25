@@ -1,7 +1,6 @@
 import * as React from 'react';
-import Button from '@atlaskit/button';
+import Button, { ButtonGroup } from '@atlaskit/button';
 import { Checkbox } from '@atlaskit/checkbox';
-import isEmpty from 'lodash/isEmpty';
 import FieldText from '@atlaskit/field-text';
 import FieldTextArea from '@atlaskit/field-text-area';
 import Form, { Field, FormSection, Validator } from '@atlaskit/form';
@@ -98,8 +97,8 @@ class NewRequest extends React.Component {
         </Button>,
         <Button
           key="step1Btn2"
-          isDisabled={files.length <= 0}
           appearance="primary"
+          isDisabled={!files.length}
           onClick={this.onChangeStep(2)}
         >
           Next Step
@@ -114,16 +113,20 @@ class NewRequest extends React.Component {
         >
           Cancel
         </Button>,
-        <Button
-          key="step2Btn2"
-          appearance="primary"
-          onClick={this.onChangeStep(1)}
-        >
-          Previous Step
-        </Button>,
-        <Button key="step2Btn3" appearance="primary" onClick={this.onSubmit}>
-          Submit
-        </Button>,
+        <div key={0} style={{ flex: 1 }} />,
+        <ButtonGroup key={2}>
+          <Button
+            key="step2Btn2"
+            appearance="primary"
+            onClick={this.onChangeStep(1)}
+            style={{ marginRight: 4 }}
+          >
+            Previous Step
+          </Button>
+          <Button key="step2Btn3" appearance="primary" onClick={this.onSubmit}>
+            Submit
+          </Button>
+        </ButtonGroup>,
       ];
     }
 
@@ -191,7 +194,7 @@ class NewRequest extends React.Component {
                       <FieldTextArea
                         shouldFitContainer
                         name="purpose"
-                        value=""
+                        value={purpose}
                         onChange={this.onChange('purpose')}
                       />
                     </Field>
@@ -212,8 +215,8 @@ class NewRequest extends React.Component {
                     >
                       <FieldTextArea
                         shouldFitContainer
-                        name="selectioncriteria"
-                        value={variableDescriptions}
+                        name="selectionCriteria"
+                        value={selectionCriteria}
                         onChange={this.onChange('selectionCriteria')}
                       />
                     </Field>
