@@ -41,8 +41,14 @@ database:
   dbName: forumApi
 
 jwtSecret: "ssh this is a secret"
+defaultAccessIsGroup: true
+requiredRoleToCreateTopic: "exporter"
 user:
   idField: Email
+  emailField: Email
+  givenNameField: GivenName
+  surNameField: Surname
+  groupField: Groups
 
 createDatabase: true
 storageClassName: default

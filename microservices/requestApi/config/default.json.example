@@ -19,6 +19,10 @@
     "outputCheckerGroup": "oc",
 
     "user":{
-      "idField": "Email"
-    }
+    "idField": "Email",
+    "emailField": "Email",
+    "givenNameField": "GivenName",
+    "surNameField": "Surname",
+    "groupField": "Groups"
+  }
 }
