@@ -26,7 +26,6 @@ passport.use(
       params,
       verified
     ) => {
-      console.log(test);
       const user = {
         id: profile.id,
         displayName: profile.displayName,
