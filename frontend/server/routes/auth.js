@@ -3,7 +3,6 @@ const express = require('express');
 const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
 const jwt = require('jsonwebtoken');
-const mapKeys = require('lodash/mapKeys');
 const passport = require('passport');
 
 const router = express.Router();
@@ -27,19 +26,10 @@ router.get('/session', (req, res) => {
       token = req.user.accessToken;
     }
   } else {
-    // Passport/KeyCloak doesn't sign the token correctly so some fixing is needed.
+    // Passport/KeyCloak doesn't sign the token correctly, sign here
     const jwtClaims = get(req, 'user.claims');
     if (jwtClaims) {
-      // Create a normalized JWT that works with the microservices auth.
-      // It needs an `Email` and `Groups` property.
-      const data = {
-        ...jwtClaims,
-        Email: jwtClaims.email,
-        Groups: [],
-      };
-      delete data.email;
-
-      token = jwt.sign(data, jwtSecret);
+      token = jwt.sign(jwtClaims, jwtSecret);
     }
   }
 
