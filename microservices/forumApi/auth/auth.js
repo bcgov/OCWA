@@ -13,11 +13,11 @@ passport.use(new JWTStrategy({
         var userConf = config.get('user');
         var user = {
             jwt: jwtPayload,
-            email: jwtPayload.Email,
-            firstName: jwtPayload.GivenName,
-            lastName: jwtPayload.Surname,
-            name: jwtPayload.GivenName + " " + jwtPayload.Surname,
-            groups: jwtPayload.Groups,
+            email: jwtPayload[userConf.emailField],
+            firstName: jwtPayload[userConf.givenNameField],
+            lastName: jwtPayload[userConf.surNameField],
+            name: jwtPayload[userConf.givenNameField] + " " + jwtPayload[userConf.surNameField],
+            groups: jwtPayload[userConf.groupField],
             id: jwtPayload[userConf.idField]
         };
 

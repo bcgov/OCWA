@@ -4,17 +4,32 @@ const Schema = mongoose.Schema;
 const topicSchema = new Schema({
     name: {type: Schema.Types.String, required: true, unique: true},
     parent_id: {type: Schema.Types.ObjectId, ref: 'topic', default: null, index: true},
-    contributors: {type: [Schema.Types.String], required: true}
+    contributors: {type: [Schema.Types.String], required: true},
+    author_groups: {type: [Schema.Types.String], required: true}
 });
 
 
 var model = mongoose.model('topic', topicSchema);
 
 model.getAll = function(query, limit, page, user, callback){
+    var config = require('config');
     var logger = require('npmlog');
     var db = require('../db');
     var skip = limit * (page - 1);
     logger.verbose("Topic get all, skip, limit", skip, limit);
+
+    var defaultPermIsGroup = config.has('defaultAccessIsGroup') ? config.get('defaultAccessIsGroup') : 'false';
+
+    var defaultPermOverride = {
+        "contributors.0": user.id
+    };
+
+    if (defaultPermIsGroup){
+        defaultPermOverride = {
+            author_groups: {$in: user.groups}
+        };
+    }
+
     db.Topic.aggregate([
         {
             $lookup:{
@@ -50,11 +65,17 @@ model.getAll = function(query, limit, page, user, callback){
         },
         {
             $match:{
-                "permissions.0": {$exists: true}
-            },
+                $or: [
+                    {"permissions.0": {$exists: true}},
+                    defaultPermOverride
+                ]
+            }
         },
         {
-             $project: {"permissions": 0}
+             $project: {
+                 "permissions": 0,
+                 "author_groups": 0
+             }
         },
         {
             $match: query

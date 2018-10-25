@@ -60,6 +60,14 @@ spec:
                   key: jwtSecret
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
+            - name: EMAIL_FIELD
+              value: {{ .Values.user.emailField }}
+            - name: GIVENNAME_FIELD
+              value: {{ .Values.user.givenNameField }}
+            - name: SURNAME_FIELD
+              value: {{ .Values.user.surNameField }}
+            - name: GROUP_FIELD
+              value: {{ .Values.user.groupField
           ports:
             - name: http
               containerPort: {{ .Values.apiPort }}
