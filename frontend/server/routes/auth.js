@@ -15,17 +15,18 @@ router.get(
   }
 );
 
-// Return the session for the
+// Return the session token
 router.get('/session', (req, res) => {
   const jwtSecret = config.get('jwtSecret');
   let token = null;
 
-  // If there is now jwtSecret defined go with OCID
+  // If there is now jwtSecret defined go with OCID only
   if (isEmpty(jwtSecret)) {
     if (req.isAuthenticated()) {
       token = req.user.accessToken;
     }
   } else {
+    // Passport/KeyCloak doesn't sign the token correctly, sign here
     const jwtClaims = get(req, 'user.claims');
     if (jwtClaims) {
       token = jwt.sign(jwtClaims, jwtSecret);
