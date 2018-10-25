@@ -30,7 +30,9 @@ describe("Topics", function() {
     });
 
     after(function(done){
-        db.Permission.deleteMany({_id: permId}, function(e) {done();});
+        db.Permission.deleteMany({_id: permId}, function(e) {
+            db.Topic.deleteMany({}, function(e2) {done();});
+        });
     });
 
     describe('/GET v1/', function () {
@@ -71,7 +73,7 @@ describe("Topics", function() {
                 .set("Authorization", "Bearer "+jwt)
                 .send({})
                 .end(function (err, res) {
-                    res.should.have.status(200);
+                    res.should.have.status(500);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
                     res.body.error.should.be.a('object');
@@ -129,7 +131,7 @@ describe("Topics", function() {
                                     'parent_id': nestedParent
                                 })
                                 .end(function (err3, res3) {
-                                    res3.should.have.status(200);
+                                    res3.should.have.status(400);
                                     res3.body.should.be.a('object');
                                     res3.body.should.have.property('error').eql('Currently the api only supports nesting 1 topic level');
 
