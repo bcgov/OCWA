@@ -67,7 +67,7 @@ spec:
             - name: SURNAME_FIELD
               value: {{ .Values.user.surNameField }}
             - name: GROUP_FIELD
-              value: {{ .Values.user.groupField
+              value: {{ .Values.user.groupField }}
           ports:
             - name: http
               containerPort: {{ .Values.apiPort }}
