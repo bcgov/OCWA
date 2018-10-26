@@ -12,7 +12,6 @@ ocwa-frontend:
   service:
     type: ClusterIP
     port: 80
-    websocketPort: 3001
 
   ingress:
     enabled: false
@@ -28,6 +27,7 @@ ocwa-frontend:
   host: "serverHostedOnHere"
 
   cookieSecret: "COOKIE_SECRET_HERE"
+  jwtSecret: "ssh this is a secret"
   forumApiHost: "ocwa-forum-api.ocwa"
   forumSocket: "ocwa-forum-api.ocwa:3001"
   auth:
@@ -64,14 +64,21 @@ forum-api:
   service:
     type: ClusterIP
     port: 80
+
+  wsService:
+    type: ClusterIP
     websocketPort: 3001
 
   ingress:
     enabled: false
-    annotations: {}
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.org/websocket-services: ocwa-forum-api-ws
     path: /
     hosts:
-      - chart-example.local
+      - name: chart-example.local
+        service: ocwa-forum-api-ws
+        port: 3001
     tls: []
 
   apiPort: 3000
@@ -84,8 +91,14 @@ forum-api:
     dbName: forumApi
 
   jwtSecret: "ssh this is a secret"
+  defaultAccessIsGroup: true
+  requiredRoleToCreateTopic: "exporter"
   user:
     idField: Email
+    emailField: Email
+    givenNameField: GivenName
+    surNameField: Surname
+    groupField: Groups
 
   createDatabase: true
   storageClassName: default
@@ -195,6 +208,10 @@ request-api:
   jwtSecret: "ssh this is a secret"
   user:
     idField: Email
+    emailField: Email
+    givenNameField: GivenName
+    surNameField: Surname
+    groupField: Groups
 
   forumApi: ocwa-forum-api.ocwa
   forumApiSecret: none

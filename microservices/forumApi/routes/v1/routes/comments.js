@@ -35,6 +35,7 @@ router.get('/:topicId', function(req, res, next) {
             logger.error("User ", req.user.id, " tried to access a topic that either doesn't exist or don't have access to");
         }
         if (err || !topicRes || topicRes.length <= 0){
+            res.status(400);
             res.json({error: "No such topic"});
             return;
         }
@@ -42,6 +43,7 @@ router.get('/:topicId', function(req, res, next) {
         db.Comment.getAll({topic_id: topicId}, limit, page, req.user, function(error, results){
             logger.verbose('in comment find');
             if (error){
+                res.status(500);
                 res.json({error: error});
                 return;
             }
@@ -71,12 +73,14 @@ router.post("/:topicId", function(req, res, next){
     db.Topic.getAll({_id: topic._id}, 1, 1, req.user, function(err, topicRes){
         log.debug("Topic find one", topicRes, err);
         if (err || !topicRes){
+            res.status(400);
             res.json({message: "Invalid Topic"});
             return;
         }
 
         comment.save(function(saveErr, result){
             if (saveErr || !result) {
+                res.status(500);
                 res.json({error: saveErr});
                 return;
             }

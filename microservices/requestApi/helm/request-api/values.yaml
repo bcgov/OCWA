@@ -33,6 +33,10 @@ database:
 jwtSecret: "ssh this is a secret"
 user:
   idField: Email
+  emailField: Email
+  givenNameField: GivenName
+  surNameField: Surname
+  groupField: Groups
 
 forumApi: ocwa-forum-api.ocwa
 forumApiSecret: none

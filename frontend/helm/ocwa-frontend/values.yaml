@@ -12,7 +12,6 @@ image:
 service:
   type: ClusterIP
   port: 80
-  websocketPort: 3001
 
 ingress:
   enabled: false
@@ -29,6 +28,7 @@ logLevel: error
 host: "serverHostedOnHere"
 
 cookieSecret: "COOKIE_SECRET_HERE"
+jwtSecret: "ssh this is a secret"
 forumApiHost: "ocwa-forum-api.ocwa"
 forumSocket: "ocwa-forum-api.ocwa:3001"
 auth:

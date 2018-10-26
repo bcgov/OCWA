@@ -1,0 +1,4 @@
+{
+    "forumApiHost": "localhost:3000",
+    "forumSocket": "localhost:3001"
+}
