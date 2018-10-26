@@ -34,6 +34,7 @@ passport.use(
         accessToken,
         expires: jwtClaims.exp,
         authTime: jwtClaims.auth_time,
+        claims: jwtClaims,
       };
 
       req.user = user;

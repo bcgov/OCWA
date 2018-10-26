@@ -41,6 +41,10 @@ spec:
                   key: dbPassword
             - name: DB_NAME
               value: {{ .Values.database.dbName }}
+            - name: DEFAULT_ACCESS_IS_GROUP
+              value: "{{ .Values.defaultAccessIsGroup }}"
+            - name: requiredRoleToCreateTopic
+              value: {{ .Values.requiredRoleToCreateTopic }}
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -48,6 +52,15 @@ spec:
                   key: jwtSecret
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
+            - name: EMAIL_FIELD
+              value: {{ .Values.user.emailField }}
+            - name: GIVENNAME_FIELD
+              value: {{ .Values.user.givenNameField }}
+            - name: SURNAME_FIELD
+              value: {{ .Values.user.surNameField }}
+            - name: GROUP_FIELD
+              value: {{ .Values.user.groupField }}
+
           ports:
             - name: http
               containerPort: {{ .Values.apiPort }}

@@ -31,6 +31,7 @@ router.get('/', function(req, res, next) {
         var log = require('npmlog');
         if (err){
             log.error("Error finding ", err);
+            res.status(500);
             res.json(err);
             return;
         }
@@ -43,6 +44,7 @@ router.get('/', function(req, res, next) {
 //create a new topic
 router.post("/", function(req, res, next){
     var db = require('../db/db');
+    var config = require('config');
 
     var topic = new db.Topic;
 
@@ -50,27 +52,43 @@ router.post("/", function(req, res, next){
 
     topic.name = req.body.name;
     topic.contributors.push(req.user.id);
+    topic.author_groups = req.user.groups;
     var typeParentId = typeof(req.body.parent_id);
     topic.parent_id = ( (typeParentId === "string") || (typeParentId === "number") ) ? req.body.parent_id : null;
 
+    if (config.has('requiredRoleToCreateTopic')){
+        var reqRole = config.get('requiredRoleToCreateTopic');
+        if (req.user.groups.indexOf(reqRole)===-1){
+            log.error('User ' + req.user.id + " tried to create a topic but lacks required role: " + reqRole);
+            res.status(401);
+            res.json({error: "Lack required role to create a topic"}).status(401);
+            return;
+        }
+
+    }
+
     log.debug("Creating topic: ", topic);
+
 
     if (topic.parent_id !== null){
         db.Topic.getAll({_id: topic.parent_id}, 1, 1, req.user, function(err, resList){
             log.debug("Topic find one", resList, err);
             if (err || resList==null || resList.length === 0){
+                res.status(400);
                 res.json({error: "No such parent topic"});
                 return;
             }
             var result = resList[0];
 
             if ((typeof(result.parent_id) !== "undefined") && (result.parent_id !== null)){
+                res.status(400);
                 res.json({error: "Currently the api only supports nesting 1 topic level"});
                 return;
             }
 
             topic.save(function(saveErr, saveRes){
                 if (saveErr){
+                    res.status(500);
                     res.json({error: saveErr.message});
                     return;
                 }
@@ -82,6 +100,7 @@ router.post("/", function(req, res, next){
     }else{
         topic.save(function(saveErr, saveRes){
             if (saveErr){
+                res.status(500);
                 res.json({error: saveErr});
                 return
             }

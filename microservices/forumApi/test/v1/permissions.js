@@ -76,7 +76,7 @@ describe("Permisisons", function() {
                     "group_ids": "*"
                 })
                 .end(function (err, res) {
-                    res.should.have.status(200);
+                    res.should.have.status(500);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
                     res.body.error.should.be.a('string');
@@ -94,7 +94,7 @@ describe("Permisisons", function() {
                     "group_ids": "*"
                 })
                 .end(function (err, res) {
-                    res.should.have.status(200);
+                    res.should.have.status(500);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
                     res.body.error.should.be.a('string');
@@ -114,7 +114,7 @@ describe("Permisisons", function() {
                     "group_ids": "*"
                 })
                 .end(function (err, res) {
-                    res.should.have.status(200);
+                    res.should.have.status(500);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
                     res.body.error.should.be.a('string');
@@ -132,7 +132,7 @@ describe("Permisisons", function() {
                     'topic_id': "*"
                 })
                 .end(function (err, res) {
-                    res.should.have.status(200);
+                    res.should.have.status(500);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
                     res.body.error.should.be.a('string');
@@ -152,7 +152,7 @@ describe("Permisisons", function() {
                     "user_ids": "*"
                 })
                 .end(function (err, res) {
-                    res.should.have.status(200);
+                    res.should.have.status(500);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
                     res.body.error.should.be.a('string');

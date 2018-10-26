@@ -1,4 +1,6 @@
-config/*
+config/*.json
+config/*.example
 Dockerfile
 node_modules/
 helm/*
+dist

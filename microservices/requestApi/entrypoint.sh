@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 mkdir -p ./config
 printf "{\n" > ./config/default.json
@@ -19,7 +19,11 @@ printf "\"validationApiSecret\": \"${VALIDATION_API_KEY}\",\n" >> ./config/defau
 
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 printf "\"user\": {\n" >> ./config/default.json
-printf "\"idField\": \"${USER_ID_FIELD}\"\n" >> ./config/default.json
+printf "\"idField\": \"${USER_ID_FIELD}\",\n" >> ./config/default.json
+printf "\"emailField\": \"${EMAIL_FIELD}\",\n" >> ./config/default.json
+printf "\"givenNameField\": \"${GIVENNAME_FIELD}\",\n" >> ./config/default.json
+printf "\"surNameField\": \"${SURNAME_FIELD}\",\n" >> ./config/default.json
+printf "\"groupField\": \"${GROUP_FIELD}\"\n" >> ./config/default.json
 printf "}\n" >> ./config/default.json
 printf "}" >> ./config/default.json
 
