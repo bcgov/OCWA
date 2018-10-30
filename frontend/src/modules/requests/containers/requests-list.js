@@ -7,7 +7,7 @@ import { requestsListSchema } from '../schemas';
 
 const makeRequest = () => ({
   get: {
-    url: '/v1',
+    url: '/api/v1/requests',
     schema: requestsListSchema,
     id: 'requests',
   },
