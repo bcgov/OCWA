@@ -13,9 +13,9 @@ const fetchToken = async () => {
 };
 
 function* getToken() {
-  const token = yield call(getSession);
+  const savedToken = yield call(getSession);
 
-  if (!token) {
+  if (!savedToken) {
     yield put({
       type: 'app/get/token/requested',
     });
@@ -37,7 +37,7 @@ function* getToken() {
   } else {
     yield put({
       type: 'app/get/token/success',
-      payload: token,
+      payload: savedToken,
     });
   }
 }
