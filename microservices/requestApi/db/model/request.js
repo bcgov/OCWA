@@ -9,18 +9,17 @@ const APPROVED_STATE = 4;
 const DENIED_STATE = 5;
 const CANCELLED_STATE = 6;
 
-const chronologySchema = new Schema({
+var chronologySchema = new Schema({
     timestamp: {type: Date, default: Date.now(), required: true},
     enteredState: {type: Number, required: true, default: DRAFT_STATE},
     change_by: {type: String, required: true}
 },{_id: false});
 
 
-const requestSchema = new Schema({
-    name: {type: String, required: true},
-    state: {type: Number, required: true, default: DRAFT_STATE},
+var requestSchema = new Schema({
+    state: {type: Number, required: true, default: DRAFT_STATE, index: true},
     tags: {type: [String], required: false},
-    files: {type: [String], required: true},
+
     supportingFiles: {type: [String], required: false},
     purpose: {type: String, required: false},
     variableDescriptions: {type: String, required: false},
@@ -28,22 +27,12 @@ const requestSchema = new Schema({
     steps: {type: String, required: false},
     freq: {type: String, required: false},
     confidentiality: {type: String, required: false},
-    author: {type: String, required: true},
     topic: {type: String, required: false},
     reviewers: {type: [String], required: false, default: []},
-    chronology: {
-        type: [chronologySchema],
-        required: true,
-        default: []
-    }
-});
-
-requestSchema.pre('validate', function(doc, next){
-    if (this._canSetChrono === false){
-        next();
-    }else{
-        next(new Error("Must set chronology before saving"));
-    }
+    chronology: {type: [chronologySchema], required: true, default: []},
+    name: {type: String, required: true, index: true},
+    files: {type: [String], required: true},
+    author: {type: String, required: true}
 });
 
 var model = mongoose.model('request', requestSchema);
@@ -105,7 +94,7 @@ var getAllTopics = function(user, callback, page){
         page = 1;
     }
 
-    const limit = 100;
+    var limit = 100;
     var topics = [];
     var url = config.get('forumApi') + '/v1?limit='+limit+'&page='+page+'&parent_id=-1';
 
