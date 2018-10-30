@@ -69,7 +69,7 @@ router.post("/", function(req, res, next){
 
     }
 
-    var request = new db.Request();
+    var request = new db.Request;
     if (typeof(req.body.name) !== "undefined") {
         request.name = req.body.name;
     }
@@ -127,7 +127,7 @@ router.post("/", function(req, res, next){
                 name: request.name
             }
         }, function(apiErr, apiRes, body){
-            if (!apiErr){
+            if ((!apiErr) && (apiRes.statusCode === 200)){
                 result.topic = body._id;
                 result.save(function(e, r){
                     if (!e){
@@ -290,7 +290,6 @@ router.put('/submit/:requestId', function(req, res, next){
             reqRes.state = db.Request.AWAITING_REVIEW_STATE;
         }
 
-        console.log("RR", reqRes);
         db.Request.setChrono(reqRes, req.user.id);
 
         if (reqRes.files.length <= 0){
@@ -686,8 +685,6 @@ router.delete('/:requestId', function(req, res){
             }
 
             var map = reqRes.chronology.map(x => x.enteredState);
-
-            console.log("MAP ", map);
 
             if (map.indexOf(db.Request.AWAITING_REVIEW_STATE) !== -1){
                 res.status(403);
