@@ -220,6 +220,19 @@
     keycode "^2.1.7"
     prop-types "^15.5.10"
 
+"@atlaskit/dynamic-table@^10.0.15":
+  version "10.0.15"
+  resolved "https://registry.yarnpkg.com/@atlaskit/dynamic-table/-/dynamic-table-10.0.15.tgz#240574fab2f1198d9c65bee72b92ead5245ab17c"
+  integrity sha512-BmZa6SYMOjdJcEP4DAsaNYJ73vrKn7zcJDppwCvVs+Rnl0o+r/G+diFEVn8FF3Stpq4pfzfJTqqWYfnhojFGmQ==
+  dependencies:
+    "@atlaskit/analytics-next" "^3.0.10"
+    "@atlaskit/pagination" "^8.0.4"
+    "@atlaskit/spinner" "^9.0.10"
+    "@atlaskit/theme" "^6.1.1"
+    "@babel/runtime" "^7.0.0"
+    prop-types "^15.5.10"
+    react-beautiful-dnd "^9.0.0"
+
 "@atlaskit/editor-common@^16.0.0":
   version "16.2.3"
   resolved "https://registry.yarnpkg.com/@atlaskit/editor-common/-/editor-common-16.2.3.tgz#d10eaf0879751899dfb746cfced9a623136825d5"
