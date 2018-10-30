@@ -14,9 +14,11 @@
     "validationApi": "http://localhost:3003",
     "validationApiSecret": "api-secret",
 
-    "jwtSecret": "jwtsecret",
+    "jwtSecret": "ssh this is a secret",
 
+    "requiredRoleToCreateRequest": "exporter",
     "outputCheckerGroup": "oc",
+    "allowDenyRequest": false,
 
     "user":{
     "idField": "Email",

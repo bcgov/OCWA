@@ -31,6 +31,10 @@ database:
   dbName: forumApi
 
 jwtSecret: "ssh this is a secret"
+createRole: "exporter"
+ocGroup: "oc"
+allowDeny: false
+
 user:
   idField: Email
   emailField: Email

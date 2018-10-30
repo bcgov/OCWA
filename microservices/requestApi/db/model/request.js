@@ -9,6 +9,13 @@ const APPROVED_STATE = 4;
 const DENIED_STATE = 5;
 const CANCELLED_STATE = 6;
 
+const chronologySchema = new Schema({
+    timestamp: {type: Date, default: Date.now(), required: true},
+    enteredState: {type: Number, required: true, default: DRAFT_STATE},
+    change_by: {type: String, required: true}
+},{_id: false});
+
+
 const requestSchema = new Schema({
     name: {type: String, required: true},
     state: {type: Number, required: true, default: DRAFT_STATE},
@@ -22,11 +29,41 @@ const requestSchema = new Schema({
     freq: {type: String, required: false},
     confidentiality: {type: String, required: false},
     author: {type: String, required: true},
-    topic: {type: String, required: false}
+    topic: {type: String, required: false},
+    reviewers: {type: [String], required: false, default: []},
+    chronology: {
+        type: [chronologySchema],
+        required: true,
+        default: []
+    }
+});
+
+requestSchema.pre('validate', function(doc, next){
+    if (this._canSetChrono === false){
+        next();
+    }else{
+        next(new Error("Must set chronology before saving"));
+    }
 });
 
 var model = mongoose.model('request', requestSchema);
 
+
+model.setChrono = function(doc, userId){
+    if (typeof(doc.chronology) === "undefined"){
+        doc.chronology = [];
+    }
+
+    if ( (typeof(doc._canSetChrono) === "undefined") || (doc._canSetChrono) ) {
+        doc._canSetChrono = false;
+        var chrono = {
+            timestamp: Date.now(),
+            enteredState: doc.state,
+            change_by: userId
+        };
+        doc.chronology.push(chrono);
+    }
+};
 
 model.DRAFT_STATE = DRAFT_STATE;
 model.WIP_STATE = WIP_STATE;
@@ -40,58 +77,100 @@ model.validState = function(state){
     return state >= DRAFT_STATE && state <= CANCELLED_STATE;
 };
 
-model.getAll = function(query, limit, page, user, callback){
-    var logger = require('npmlog');
-    var db = require('../db');
-    var skip = limit * (page - 1);
-    logger.verbose("Comment get all, skip, limit", skip, limit);
 
-    var httpReq = require('request');
+
+model.stateToText = function(state){
+    var lookup = this.stateCodeLookup();
+    return typeof(lookup[state]) !== "undefined" ? lookup[state] : "INVALID STATE";
+};
+
+model.stateCodeLookup = function(){
+    var rv = {};
+    rv[this.DRAFT_STATE] = "Draft";
+    rv[this.WIP_STATE] = "WIP";
+    rv[this.AWAITING_REVIEW_STATE] = "Awaiting Review";
+    rv[this.IN_REVIEW_STATE] = "In Review";
+    rv[this.APPROVED_STATE] = "Approved";
+    rv[this.DENIED_STATE] = "Denied";
+    rv[this.CANCELLED_STATE] = "Cancelled";
+    return rv;
+};
+
+var getAllTopics = function(user, callback, page){
     var config = require('config');
-    var groups = user.groups;
-    groups.push("*");
-    var url = config.get('forumApi') + '/v1/permission?user_id='+user.id+"&group_ids="+groups+"&operand=or";
+    var httpReq = require('request');
+    var logger = require('npmlog');
+
+    if (typeof(page) === "undefined"){
+        page = 1;
+    }
+
+    const limit = 100;
+    var topics = [];
+    var url = config.get('forumApi') + '/v1?limit='+limit+'&page='+page+'&parent_id=-1';
+
     httpReq.get({
         url: url,
         headers: {
-            'X-API-KEY': config.get('validationApiSecret')
+            'Authorization': "Bearer " + user.jwt
         }
     }, function (apiErr, apiRes, body) {
         if (apiErr || !apiRes) {
             logger.error("Permission error", apiErr);
-            callback(apiErr);
+            callback(apiErr, []);
             return;
 
         }
-        var permissionArr = JSON.parse(body);
-        var topicArr = permissionArr.map( value => value.topic_id);
-        console.log("TA", topicArr, limit, skip);
-        //db.Request.find(query).limit(limit).skip(skip).exec(callback);
 
-        // db.Request.find(
-        //             {topic: "5baabd008ab1119699b917ea"}
-        // ).limit(limit).skip(skip).exec(callback);
-        // return;
+        try {
+            var topicResults = JSON.parse(body);
+        }catch (ex){
+            logger.error("Error getting topics, non json returned", body);
+            callback("Unknown error", topics);
+            return;
+        }
+
+
+        topicResults = topicResults.map(x => x._id);
+        topics = topics.concat(topicResults);
+
+
+        if (topicResults.length >= limit) {
+            getAllTopics(user, function (err, topicR) {
+                if (typeof(topicR) === "object") {
+                    topics.concat(topicR);
+                }
+                if (err) {
+                    callback(err, topics);
+                    return;
+                }
+                callback(null, topics);
+
+            }, (page + 1));
+            return;
+        }
+
+        callback(null, topics);
+    });
+};
+
+
+model.getAll = function(query, limit, page, user, callback){
+    var logger = require('npmlog');
+    var db = require('../db');
+    var skip = limit * (page - 1);
+    logger.verbose("request get all, skip, limit", skip, limit);
+
+    getAllTopics(user, function(err, topicR){
 
         db.Request.aggregate([
             {
-                $addFields: {
-                    permissions: permissionArr
-                }
-            },
-            {
                 $match: {
-                    //$expr: {
-                        $or: [
-                            {"permissions.topic_id": "*"},
-                            {topic: {$in: topicArr}}
-                        ]
-                    //}
+                    topic: {$in: topicR}
                 }
             },
             {
-                //supress permissions now
-                $project: {"permissions": 0}
+                $match: query
             }
         ]).limit(limit).skip(skip).exec(callback);
     });
