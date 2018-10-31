@@ -14,7 +14,7 @@ passport.use(new JWTStrategy({
         var encodedJWT = req.headers['authorization'].substring("Bearer ".length);
         var userConf = config.get('user');
         var user = {
-            jwt: jwtPayload,
+            jwt: encodedJWT,
             email: jwtPayload[userConf.emailField],
             firstName: jwtPayload[userConf.givenNameField],
             lastName: jwtPayload[userConf.surNameField],

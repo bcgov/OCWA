@@ -27,7 +27,15 @@ router.get('/', function(req, res, next) {
         page = 1;
     }
 
-    db.Topic.getAll({}, limit, page, req.user, function(err, results){
+    var q = {};
+
+    if (typeof(req.query.parent_id) !== "undefined"){
+
+        var pid = (req.query.parent_id == "-1") ? null : req.query.parent_id;
+        q['parent_id'] = pid;
+    }
+
+    db.Topic.getAll(q, limit, page, req.user, function(err, results){
         var log = require('npmlog');
         if (err){
             log.error("Error finding ", err);
