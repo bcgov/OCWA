@@ -7,7 +7,7 @@
   "forumApiHost": "localhost:3000",
   "forumSocket": "localhost:3001",
   "requestApiHost": "localhost:3002",
-  "filesApiHost": "localhost:1080/files",
+  "filesApiHost": "localhost:1080",
   "auth": {
     "authorizationEndpoint": "URL_REQUIRED",
     "callbackURL": "http://localhost:8000/auth",
