@@ -41,11 +41,13 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "@atlaskit/avatar": "^14.1.2",
     "@atlaskit/button": "^9.0.8",
     "@atlaskit/checkbox": "^5.0.4",
     "@atlaskit/comment": "^6.0.14",
     "@atlaskit/css-reset": "^3.0.1",
     "@atlaskit/date": "^0.1.2",
+    "@atlaskit/dropdown-menu": "^6.1.20",
     "@atlaskit/dynamic-table": "^10.0.15",
     "@atlaskit/editor-core": "^87.0.4",
     "@atlaskit/editor-wikimarkup-transformer": "^2.0.27",
@@ -84,8 +86,8 @@
     "passport-openidconnect": "^0.0.2",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
-    "react-redux": "^5.0.7",
     "react-intl": "^2.7.1",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.0",
     "redux-saga": "^0.16.2",

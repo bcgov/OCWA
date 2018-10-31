@@ -202,6 +202,22 @@
     prop-types "^15.5.10"
     uuid "^3.1.0"
 
+"@atlaskit/dropdown-menu@^6.1.20":
+  version "6.1.20"
+  resolved "https://registry.yarnpkg.com/@atlaskit/dropdown-menu/-/dropdown-menu-6.1.20.tgz#e9fd065a069581591199766379fc9d85593fa8ea"
+  integrity sha512-Z6OZI7wd1VlZ8c+GNo0dk/lt1fZSuctadcGTdgCIJP+5DJNujIrzs7zQj86ws+YD2PHUIlbE6ABn+YKPpT1ghw==
+  dependencies:
+    "@atlaskit/analytics-next" "^3.0.10"
+    "@atlaskit/button" "^9.0.15"
+    "@atlaskit/droplist" "^7.0.12"
+    "@atlaskit/icon" "^14.0.2"
+    "@atlaskit/item" "^8.0.10"
+    "@atlaskit/theme" "^6.1.1"
+    "@babel/runtime" "^7.0.0"
+    array-find "^1.0.0"
+    prop-types "^15.5.10"
+    uuid "^3.1.0"
+
 "@atlaskit/droplist@^7.0.10", "@atlaskit/droplist@^7.0.12":
   version "7.0.12"
   resolved "https://registry.yarnpkg.com/@atlaskit/droplist/-/droplist-7.0.12.tgz#75cf103da09d110430b8c74995f79407856e4e06"

@@ -15,11 +15,13 @@ class FileUploader extends React.Component {
 
   upload = file => {
     const upload = new tus.Upload(file, {
-      endpoint: 'http://localhost:1080/files/',
+      // TODO: Proxy this request as well.
+      endpoint: '/api/v1/files',
       retryDelays: [0, 1000, 3000, 5000],
       metadata: {
         filename: file.name,
         filetype: file.type,
+        lastModified: file.lastModified,
       },
       onError: this.onError,
       onProgress: this.onProgress,
