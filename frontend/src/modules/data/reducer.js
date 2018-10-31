@@ -33,6 +33,7 @@ function handleFetchStatus(state, action) {
 const entities = (state = {}, action) => {
   switch (action.type) {
     case 'data/get/success':
+    case 'data/post/success':
       return merge({}, state, action.payload.entities);
 
     default:

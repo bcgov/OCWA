@@ -6,8 +6,8 @@ import { requestSchema } from '../schemas';
 
 const makeRequest = () => ({
   create: {
-    url: '/v1',
-    schema: requestSchema,
+    url: 'api/v1/requests',
+    schema: { result: requestSchema },
     id: 'create',
   },
   query: 'requests.create',
