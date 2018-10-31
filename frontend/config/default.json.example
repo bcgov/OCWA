@@ -6,15 +6,17 @@
   "host": "localhost",
   "forumApiHost": "localhost:3000",
   "forumSocket": "localhost:3001",
+  "requestApiHost": "localhost:3002",
+  "filesApiHost": "localhost:1080/files",
   "auth": {
-    "authorizationEndpoint": "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/auth",
+    "authorizationEndpoint": "URL_REQUIRED",
     "callbackURL": "http://localhost:8000/auth",
-    "clientID": "outputchecker",
+    "clientID": "URL_REQUIRED",
     "clientSecret": "CLIENT_SECRET_HERE",
-    "issuer": "https://auth.bgddi.com/auth/realms/ocwa",
-    "scope": "openid offline_access",
-    "tokenEndpoint": "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/token",
-    "userInfoURL": "https://auth.bgddi.com/auth/realms/ocwa/protocol/openid-connect/userinfo"
+    "issuer": "URL_REQUIRED",
+    "scope": "SCOPE_REQUIRED",
+    "tokenEndpoint": "URL_REQUIRED",
+    "userInfoURL": "URL_REQUIRED"
   },
   "user":{
     "idField": "Email"
