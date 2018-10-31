@@ -2,6 +2,7 @@ import * as React from 'react';
 import cx from 'classnames';
 import tus from 'tus-js-client';
 import Spinner from '@atlaskit/spinner';
+import { getSession } from '@src/services/auth';
 
 import * as styles from './styles.css';
 
@@ -13,15 +14,16 @@ class FileUploader extends React.Component {
     progress: 0,
   };
 
-  upload = file => {
+  upload = async file => {
+    const token = await getSession();
     const upload = new tus.Upload(file, {
-      // TODO: Proxy this request as well.
       endpoint: '/api/v1/files',
       retryDelays: [0, 1000, 3000, 5000],
       metadata: {
         filename: file.name,
         filetype: file.type,
         lastModified: file.lastModified,
+        jwt: token,
       },
       onError: this.onError,
       onProgress: this.onProgress,
