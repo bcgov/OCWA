@@ -180,12 +180,17 @@ describe("Requests", function() {
                     confidentiality: "none"
                 })
                 .end(function (err, res) {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message');
-                    res.body.should.have.property('result');
-                    res.body.result.should.have.property('_id');
-                    activeRequestId = res.body.result._id;
+                    try {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message');
+                        res.body.should.have.property('result');
+                        res.body.result.should.have.property('_id');
+                        activeRequestId = res.body.result._id;
+                    }catch(ex){
+                        console.log(res.body);
+                        throw (ex);
+                    }
                     done();
                 });
         });
