@@ -170,7 +170,7 @@ describe("Requests", function() {
                 .post('/v1/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
-                    name: "testName",
+                    name: "testName2",
                     tags: ["test"],
                     purpose: "purpose",
                     variableDescriptions: "variable descriptions",
@@ -262,7 +262,7 @@ describe("Requests", function() {
                 .post('/v1/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
-                    name: "testName",
+                    name: "testName3",
                     tags: ["test"],
                     purpose: "purpose",
                     variableDescriptions: "variable descriptions",
