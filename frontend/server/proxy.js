@@ -32,8 +32,8 @@ const onProxyReq = (proxyReq, req) => {
 const filesProxy = proxy({
   target: `http://${filesApiHost}`,
   pathRewrite: {
-    '^/api/v1/files': '/',
-    '^/files': '/',
+    '^/api/v1/files': '/files',
+    '^/files': '/files',
   },
 });
 
