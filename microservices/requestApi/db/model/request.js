@@ -30,7 +30,7 @@ var requestSchema = new Schema({
     topic: {type: String, required: false},
     reviewers: {type: [String], required: false, default: []},
     chronology: {type: [chronologySchema], required: true, default: []},
-    name: {type: String, required: true, index: true},
+    name: {type: String, required: true, index: true, unique: true},
     files: {type: [String], required: true},
     author: {type: String, required: true}
 });

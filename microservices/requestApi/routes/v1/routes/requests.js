@@ -155,7 +155,14 @@ router.post("/", function(req, res, next){
                 }
             });
             res.status(500);
-            res.json({error: "Error creating forum topic: " + apiErr});
+            if (apiErr) {
+                res.json({error: "Error creating forum topic: " + apiErr});
+                return;
+            }else if (body.error){
+                res.json({error: "Error creating forum topic: " + body.error});
+                return;
+            }
+            res.json({error: "Unknown Error creating forum topic"})
         });
 
 
