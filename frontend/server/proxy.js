@@ -3,11 +3,12 @@ const isEmpty = require('lodash/isEmpty');
 const proxy = require('http-proxy-middleware');
 
 // Proxy config
+const filesApiHost = config.get('filesApiHost');
 const forumApiHost = config.get('forumApiHost');
 const forumSocket = config.get('forumSocket');
 const requestApiHost = config.get('requestApiHost');
 
-const pathRewrite = (path, req) => path.replace(/\/api\/v1\/\w+/, '');
+const pathRewrite = path => path.replace(/\/api\/v1\/\w+/, '');
 
 // Need to doctor the proxy request due to some issues with body-parser.
 const onProxyReq = (proxyReq, req) => {
@@ -28,6 +29,14 @@ const onProxyReq = (proxyReq, req) => {
   }
 };
 
+const filesProxy = proxy({
+  target: `http://${filesApiHost}`,
+  pathRewrite: {
+    '^/api/v1/files': '/',
+    '^/files': '/',
+  },
+});
+
 const forumProxy = proxy({
   target: `http://${forumApiHost}/v1`,
   onProxyReq,
@@ -46,6 +55,7 @@ const requestProxy = proxy({
 });
 
 module.exports = {
+  files: filesProxy,
   forum: forumProxy,
   forumSocket: forumSocketProxy,
   request: requestProxy,

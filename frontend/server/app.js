@@ -1,10 +1,10 @@
 const bodyParser = require('body-parser');
 const config = require('config');
-const express = require('express');
-const history = require('connect-history-api-fallback');
-const isFunction = require('lodash/isFunction');
-const passport = require('passport');
 const cookieParser = require('cookie-parser');
+const express = require('express');
+const isFunction = require('lodash/isFunction');
+const path = require('path');
+const passport = require('passport');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
 const webpack = require('webpack');
@@ -24,19 +24,6 @@ const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
 });
 
-// Make sure to set this up before webpack
-// app.use(
-//   history({
-//     htmlAcceptHeaders: ['text/html'],
-//     rewrites: [
-//       {
-//         from: '/login',
-//         to: '/login',
-//       },
-//     ],
-//   })
-// );
-
 if (isDevelopment) {
   const compiler = webpack(webpackConfig);
   // Webpack Configuration (dev and hot reload)
@@ -45,6 +32,7 @@ if (isDevelopment) {
       noInfo: true,
       publicPath: webpackConfig.output.publicPath,
       host: '0.0.0.0',
+      hot: true,
     })
   );
   app.use(webpackHotMiddleware(compiler));
@@ -53,7 +41,7 @@ if (isDevelopment) {
 // Express config
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static('dist'));
+app.use(express.static(path.join(__dirname, '..', 'dist')));
 
 // Auth & Session
 app.use(cookieParser(cookieSecret));
@@ -74,8 +62,14 @@ app.use('/auth', authRoute);
 app.get('/login', passport.authenticate('openidconnect'));
 
 // Set up some proxy action
+app.use('/files', proxy.files);
+app.use('/api/v1/files', proxy.files);
 app.use('/api/v1/forums', proxy.forum);
 app.use('/api/v1/requests', proxy.request);
+
+app.get('/*', (req, res) => {
+  res.sendFile('/index.html');
+});
 
 app.use((err, req, res) => {
   // set locals, only providing error in development

@@ -10,7 +10,7 @@ function auth(state = initialAuthState, action) {
     case 'app/get/token/requested':
       return {
         ...state,
-        fetchStatus: 'requested',
+        fetchStatus: 'loading',
       };
 
     case 'app/get/token/success':

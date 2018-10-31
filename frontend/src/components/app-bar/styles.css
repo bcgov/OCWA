@@ -18,3 +18,13 @@
     opacity: 0.5;
   }
 }
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.actions > div {
+  display: inherit;
+  margin-left: 10px;
+}

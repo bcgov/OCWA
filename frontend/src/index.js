@@ -24,7 +24,7 @@ const renderApp = () =>
 renderApp();
 
 if (module.hot) {
-  module.hot.accept('./components/app/index.jsx', () => renderApp());
+  module.hot.accept('./modules/app/containers/app', () => renderApp());
 
   module.hot.accept('./reducers', () => {
     const nextReducer = require('./reducers').default; // eslint-disable-line

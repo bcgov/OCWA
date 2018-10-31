@@ -17,16 +17,20 @@ class App extends React.Component {
     return (
       <main>
         <Auth fetchStatus={authFetchStatus} isAuthenticated={isAuthenticated} />
-        <AppBar />
-        <Switch>
-          <Route exact path="/" component={Requests} />
-          <Route
-            exact
-            path="/requests/:requestId"
-            render={() => 'Request Page'}
-          />
-          <Route render={() => '404'} />
-        </Switch>
+        {isAuthenticated && (
+          <React.Fragment>
+            <AppBar />
+            <Switch>
+              <Route exact path="/" component={Requests} />
+              <Route
+                exact
+                path="/requests/:requestId"
+                render={() => 'Request Page'}
+              />
+              <Route render={() => '404'} />
+            </Switch>
+          </React.Fragment>
+        )}
       </main>
     );
   }
