@@ -44,13 +44,15 @@ function* handleFetchData(action) {
 
 function* handlePostData(action) {
   const { schema, id, url, ...rest } = action.payload;
-  const dataType = schema.key;
+  const keyPaths = at(schema, ['key', 'schema.key', 'result.key']);
+  const dataType = head(compact(keyPaths));
   const meta = {
     ...action.meta,
     url,
     dataType,
     id,
   };
+
   yield put({
     type: `${action.type}/requested`,
     meta,
@@ -77,6 +79,7 @@ function* handlePostData(action) {
   yield call(delay, 5000);
   yield put({
     type: `${action.type}/reset`,
+    meta,
   });
 }
 

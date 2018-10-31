@@ -98,7 +98,6 @@ class NewRequest extends React.Component {
         <Button
           key="step1Btn2"
           appearance="primary"
-          isDisabled={!files.length}
           onClick={this.onChangeStep(2)}
         >
           Next Step
