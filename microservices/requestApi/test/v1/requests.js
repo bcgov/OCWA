@@ -73,7 +73,7 @@ describe("Requests", function() {
         it('it should fail without a name', function (done) {
             chai.request(server)
                 .post('/v1/')
-                .set("Authorization", "Bearer "+jwt)
+                .set("Authorization", "Bearer " + jwt)
                 .send({
                     tags: ["test"],
                     purpose: "purpose",
@@ -95,7 +95,7 @@ describe("Requests", function() {
         it('it should create a request', function (done) {
             chai.request(server)
                 .post('/v1/')
-                .set("Authorization", "Bearer "+jwt)
+                .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName",
                     tags: ["test"],
@@ -107,55 +107,68 @@ describe("Requests", function() {
                     confidentiality: "none"
                 })
                 .end(function (err, res) {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message');
-                    res.body.should.have.property('result');
-                    res.body.result.should.have.property('_id');
-                    activeRequestId = res.body.result._id;
+                    try {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message');
+                        res.body.should.have.property('result');
+                        res.body.result.should.have.property('_id');
+                        activeRequestId = res.body.result._id;
+                    } catch (ex) {
+                        console.log(res.body);
+                        throw(ex);
+                    }
                     done();
                 });
         });
+    });
 
-        it('it should get a request', function(done){
+    describe('/GET  v1 & v1/requestId', function () {
+        it('it should get a request', function (done) {
             chai.request(server)
                 .get('/v1')
-                .set("Authorization", "Bearer "+jwt)
-                .end(function (err, res){
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.length.should.be.eql(1);
                     done();
                 });
         });
 
-        it('it should get a specific request', function(done){
+        it('it should get a specific request', function (done) {
             chai.request(server)
-                .get('/v1/'+activeRequestId)
-                .set("Authorization", "Bearer "+jwt)
-                .end(function (err, res){
+                .get('/v1/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.length.should.be.eql(1);
                     done();
                 });
         });
+    });
 
-        it('it should delete a request', function(done){
+    describe('/DELETE /v1/requestId', function() {
+
+        it('it should delete a request', function (done) {
             chai.request(server)
-                .delete('/v1/'+activeRequestId)
-                .set("Authorization", "Bearer "+jwt)
+                .delete('/v1/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
                 .send({})
-                .end(function (err, res){
+                .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     done();
                 });
         });
+    })
+
+    describe('/PUT /v1/save/requestId', function() {
 
         it('it should create a request', function (done) {
             chai.request(server)
                 .post('/v1/')
-                .set("Authorization", "Bearer "+jwt)
+                .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName",
                     tags: ["test"],
@@ -177,62 +190,72 @@ describe("Requests", function() {
                 });
         });
 
-        it('it should save a request', function(done){
+        it('it should save a request', function (done) {
             chai.request(server)
-                .put('/v1/save/'+activeRequestId)
-                .set("Authorization", "Bearer "+jwt)
+                .put('/v1/save/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
                 .send({})
-                .end(function (err, res){
+                .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     done();
                 });
         });
+    });
 
-        it('it should submit a request', function(done){
+    describe('/PUT /v1/submit/requestId', function() {
+
+        it('it should submit a request', function (done) {
             chai.request(server)
-                .put('/v1/submit/'+activeRequestId)
-                .set("Authorization", "Bearer "+jwt)
+                .put('/v1/submit/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
                 .send({})
-                .end(function (err, res){
+                .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     done();
                 });
         });
+    });
 
-        it('it should pickup a request', function(done){
+    describe('/PUT /v1/pickup/requestId', function() {
+        it('it should pickup a request', function (done) {
             chai.request(server)
-                .put('/v1/pickup/'+activeRequestId)
-                .set("Authorization", "Bearer "+jwt)
+                .put('/v1/pickup/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
                 .send({})
-                .end(function (err, res){
+                .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     done();
                 });
         });
+    });
 
-        it('it should approve a request', function(done){
+    describe('/PUT /v1/approve/requestId', function() {
+
+        it('it should approve a request', function (done) {
             chai.request(server)
-                .put('/v1/approve/'+activeRequestId)
-                .set("Authorization", "Bearer "+jwt)
+                .put('/v1/approve/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
                 .send({})
-                .end(function (err, res){
+                .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     done();
                 });
         });
+    });
 
+    describe('/PUT /v1/cancel/requestId', function() {
         it('it should create a request', function (done) {
             chai.request(server)
                 .post('/v1/')
-                .set("Authorization", "Bearer "+jwt)
+                .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName",
                     tags: ["test"],
@@ -254,18 +277,17 @@ describe("Requests", function() {
                 });
         });
 
-        it('it should cancel a request', function(done){
+        it('it should cancel a request', function (done) {
             chai.request(server)
-                .put('/v1/cancel/'+activeRequestId)
-                .set("Authorization", "Bearer "+jwt)
+                .put('/v1/cancel/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
                 .send({})
-                .end(function (err, res){
+                .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     done();
                 });
         });
-
     });
 });
