@@ -32,6 +32,10 @@ spec:
               value: "{{ .Values.forumApiHost }}"
             - name: FORUM_SOCKET_HOST
               value: "{{ .Values.forumSocket }}"
+            - name: REQUEST_API_HOST
+              value: "{{ .Values.requestApiHost }}"
+            - name: FILES_API_HOST
+              value: "{{ .Values.filesApiHost }}"
             - name: COOKIE_SECRET
               valueFrom:
                 secretKeyRef:
