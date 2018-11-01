@@ -4,11 +4,12 @@ document.getElementById('test').addEventListener("change", function(e) {
 
     // Create a new tus upload
     var upload = new tus.Upload(file, {
-        endpoint: "http://localhost:1080/files/",
+        endpoint: "http://ocwa-storage-api-cddi-dlt-dev.pathfinder.gov.bc.ca/files/",
         retryDelays: [0, 1000, 3000, 5000],
         metadata: {
             filename: file.name,
-            filetype: file.type
+            filetype: file.type,
+            jwt: "JWTHERE"
         },
         onError: function(error) {
             console.log("Failed because: " + error)

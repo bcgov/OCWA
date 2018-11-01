@@ -63,7 +63,7 @@ spec:
             - name: OC_GROUP
               value: {{ .Values.ocGroup }}
             - name: ALLOW_DENY
-              value: {{ .Values.allowDeny }}
+              value: "{{ .Values.allowDeny }}"
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
             - name: EMAIL_FIELD

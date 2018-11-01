@@ -1,0 +1,11 @@
+{{- if .Values.tus.jwtHook -}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "ocwaForumApi.fullname" . }}-tusd-configmap
+data:
+  pre-create: |-
+{{ .Files.Get "files/pre-create.py" | indent 4 }}
+
+{{- end}}
