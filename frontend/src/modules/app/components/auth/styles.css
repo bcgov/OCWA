@@ -1,0 +1,14 @@
+.content {
+  margin: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content > div {
+  text-align: center;
+}
+
+.content p {
+  margin-bottom: 20px;
+}
