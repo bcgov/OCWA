@@ -22,9 +22,9 @@ function withDataRequest(Component) {
     };
 
     render() {
-      const { fetchStatus } = this.props;
+      const { fetchStatus, requestConfig } = this.props;
 
-      if (fetchStatus === 'loading') {
+      if (fetchStatus === 'loading' && requestConfig.showLoading) {
         return <div>LOADING</div>;
       }
 
@@ -32,7 +32,7 @@ function withDataRequest(Component) {
         <Component
           {...this.props}
           isSaving={fetchStatus === 'saving'}
-          isFetching={fetchStatus === 'loading'}
+          isLoading={fetchStatus === 'loading'}
           isLoaded={fetchStatus === 'loaded'}
           isIdle={fetchStatus === 'idle'}
           isFailed={fetchStatus === 'failed'}

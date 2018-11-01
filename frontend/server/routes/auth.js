@@ -4,6 +4,7 @@ const get = require('lodash/get');
 const isEmpty = require('lodash/isEmpty');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const pick = require('lodash/pick');
 
 const router = express.Router();
 
@@ -34,8 +35,16 @@ router.get('/session', (req, res) => {
   }
 
   if (token) {
+    const userFields = pick(req.user, [
+      'displayName',
+      'username',
+      'id',
+      'email',
+    ]);
     res.json({
       token,
+      expiresAt: new Date(req.user.expires * 1000),
+      user: userFields,
     });
   } else {
     res.status(401).end();

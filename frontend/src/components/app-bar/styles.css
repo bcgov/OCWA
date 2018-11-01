@@ -9,6 +9,8 @@
 }
 
 .brand {
+  display: flex;
+  align-items: center;
   font-size: 24px;
   line-height: 1.5;
   color: inherit;
