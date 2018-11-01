@@ -30,6 +30,8 @@ ocwa-frontend:
   jwtSecret: "ssh this is a secret"
   forumApiHost: "ocwa-forum-api.ocwa"
   forumSocket: "ocwa-forum-api.ocwa:3001"
+  requestApiHost: "ocwa-requests-api.ocwa"
+  filesApiHost: "ocwa-storage-api-mongo.ocwa"
   auth:
     authorizationEndpoint: "openid.auth.endpoint"
     callbackURL: "chart-example.local/auth"
