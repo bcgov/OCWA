@@ -22,6 +22,13 @@ spec:
       volumes:
       - name: minio-config
         emptyDir: {}
+      {{ if .Values.tus.jwtHook }}
+      - name: tus-config
+        configMap:
+          name: {{ template "ocwaForumApi.fullname" . }}-tusd-configmap
+          defaultMode: 511
+      {{ end }}
+
       containers:
         - name: {{ template "ocwaStorageApi.name" . }}-minio
           image: "{{ .Values.minio.image }}:{{ .Values.minio.tag }}"
@@ -58,9 +65,24 @@ spec:
         - name: {{ template "ocwaStorageApi.name" . }}-tusd
           image: "{{ .Values.tus.image }}:{{ .Values.tus.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ if .Values.tus.jwtHook }}
+          volumeMounts:
+            - name: tus-config
+              mountPath: /srv/tusd-hooks
+          {{ end }}
           command: ["/go/bin/tusd"]
-          args: ["--hooks-dir", "/srv/tusd-hooks", "-s3-endpoint", '{{ template "ocwaStorageApi.fullname" . }}.{{ .Release.Namespace }}:{{ .Values.service.minioPort }}', "-s3-bucket", "{{ .Values.tus.bucket }}"]
+          args: ["--hooks-dir", "/srv/tusd-hooks", "-s3-endpoint", '{{.Values.minio.proto}}://{{ template "ocwaStorageApi.fullname" . }}.{{ .Release.Namespace }}:{{ .Values.service.minioPort }}', "-s3-bucket", "{{ .Values.tus.bucket }}"]
           env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaStorageApi.fullname" . }}-secrets
+                  key: jwt_secret
+            - name: JWT_AUD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaStorageApi.fullname" . }}-secrets
+                  key: jwt_aud
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
