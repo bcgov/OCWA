@@ -11,15 +11,20 @@ image:
   pullPolicy: Always
 
 tus:
-  image: tusproject/tusd
+  image: h3brandon/tusd_py3
   tag: latest
   bucket: bucket
   region: us-east-1 #likely irrelevant
+  jwtHook: true
+
+jwtSecret: "ssh this is a secret"
+jwtAud: "foo"
 
 minio:
   image: minio/minio
   tag: latest
   gatewayType: azure
+  proto: http
 
 service:
   type: ClusterIP
@@ -28,10 +33,13 @@ service:
 
 ingress:
   enabled: false
-  annotations: {}
+  annotations:
+    kubernetes.io/ingress.class: nginx
   path: /
   hosts:
-    - chart-example.local
+    - name: chart-example.local
+      service: ocwa-storage-api
+      port: 80
   tls: []
 
 
