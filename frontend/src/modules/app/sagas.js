@@ -22,11 +22,11 @@ function* getToken() {
   });
 
   try {
-    const { token } = yield call(fetchToken);
-    saveSession(token);
+    const payload = yield call(fetchToken);
+    saveSession(payload.token);
     yield put({
       type: 'app/get/token/success',
-      payload: token,
+      payload,
     });
   } catch (err) {
     yield put({

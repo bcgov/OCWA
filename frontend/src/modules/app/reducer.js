@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 const initialAuthState = {
   fetchStatus: 'idle',
   isAuthenticated: false,
+  user: {},
 };
 
 function auth(state = initialAuthState, action) {
@@ -18,6 +19,7 @@ function auth(state = initialAuthState, action) {
         ...state,
         fetchStatus: 'loaded',
         isAuthenticated: true,
+        user: action.payload.user,
       };
 
     case 'app/get/token/failed':

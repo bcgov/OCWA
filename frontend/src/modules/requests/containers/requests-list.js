@@ -12,9 +12,10 @@ const makeRequest = () => ({
     id: 'requests',
   },
   query: 'requests.requests',
+  showLoading: false,
 });
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = state => {
   const entities = get(state, 'data.entities.requests', {});
   const ids = Object.keys(entities);
 
