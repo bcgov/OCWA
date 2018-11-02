@@ -265,7 +265,7 @@ matrix:
 
         - cd /home/travis/build/bcgov/OCWA
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.modules=validateApi,policyApi
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_scan_py -Dsonar.modules=validateApi,policyApi
 
     - name: "Scan - NodeJS"
       language: node_js
@@ -305,6 +305,8 @@ matrix:
         - cp config/default.json.example config/default.json
         - yarn
 
+        - cd /home/travis/build/bcgov/OCWA/frontend
+        - yarn
 
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm test
@@ -314,9 +316,12 @@ matrix:
         - sleep 15
         - npm test
 
+        - cd /home/travis/build/bcgov/OCWA/frontend
+        - npm test
+
         - cd /home/travis/build/bcgov/OCWA
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.modules=forumApi,requestApi
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_scan_js -Dsonar.modules=frontend,forumApi,requestApi
 
     - name: "OCWA Master Helm Chart"
       language: node_js
