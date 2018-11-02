@@ -265,7 +265,8 @@ matrix:
 
         - cd /home/travis/build/bcgov/OCWA
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_scan_py -Dsonar.modules=validateApi,policyApi
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_validate_api -Dsonar.projectName="OCWA Validate API" -Dsonar.modules=validateApi
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_policy_api -Dsonar.projectName="OCWA Policy API" -Dsonar.modules=policyApi
 
     - name: "Scan - NodeJS"
       language: node_js
@@ -321,7 +322,9 @@ matrix:
 
         - cd /home/travis/build/bcgov/OCWA
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_scan_js -Dsonar.modules=frontend,forumApi,requestApi
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_frontend -Dsonar.projectName="OCWA Frontend" -Dsonar.modules=frontend
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_forum_api -Dsonar.projectName="OCWA Forum API" -Dsonar.modules=forumApi
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_request_api -Dsonar.projectName="OCWA Request API" -Dsonar.modules=requestApi
 
     - name: "OCWA Master Helm Chart"
       language: node_js
