@@ -265,7 +265,7 @@ matrix:
 
         - cd /home/travis/build/bcgov/OCWA
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.modules=validateApi,policyApi
 
     - name: "Scan - NodeJS"
       language: node_js
@@ -299,16 +299,14 @@ matrix:
         - cp config/test.json.example config/test.json
         - cp config/default.json.example config/default.json
         - yarn
-        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - cp config/default.json.example config/default.json
-        - cp config/test.json.example config/test.json
-        - yarn
-
 
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - cp config/test.json.example config/test.json
         - cp config/default.json.example config/default.json
         - yarn
+
+
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm test
 
         - NODE_ENV=test npm start &
@@ -318,14 +316,7 @@ matrix:
 
         - cd /home/travis/build/bcgov/OCWA
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN
-
-        #- sudo coverage run --branch --source=src -m pytest
-        #- sudo coverage xml
-        
-        #- cd /home/travis/build/bcgov/OCWA
-        #- PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        #- sonar-scanner -Dsonar.login=$SONAR_TOKEN
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.modules=forumApi,requestApi
 
     - name: "OCWA Master Helm Chart"
       language: node_js
