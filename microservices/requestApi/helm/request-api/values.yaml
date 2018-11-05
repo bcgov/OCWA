@@ -42,10 +42,10 @@ user:
   surNameField: Surname
   groupField: Groups
 
-forumApi: ocwa-forum-api.ocwa
+forumApi: http://ocwa-forum-api.ocwa
 forumApiSecret: none
 
-validationApi: ocwa-validation-api.ocwa
+validationApi: http://ocwa-validation-api.ocwa
 validationApiSecret: validateApiSecret
 
 
