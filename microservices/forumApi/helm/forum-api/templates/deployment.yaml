@@ -43,7 +43,7 @@ spec:
               value: {{ .Values.database.dbName }}
             - name: DEFAULT_ACCESS_IS_GROUP
               value: "{{ .Values.defaultAccessIsGroup }}"
-            - name: requiredRoleToCreateTopic
+            - name: REQUIRED_CREATE_ROLE
               value: {{ .Values.requiredRoleToCreateTopic }}
             - name: JWT_SECRET
               valueFrom:
