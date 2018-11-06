@@ -34,7 +34,11 @@ spec:
           image: "{{ .Values.minio.image }}:{{ .Values.minio.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["minio"]
+          {{ if .Values.minio.server }}
+          args: ["server", "{{ .Values.minio.serverPath }}"]
+          {{ else }}
           args: ["gateway", "{{ .Values.minio.gatewayType }}"]
+          {{ end }}
           volumeMounts:
           - mountPath: /.minio
             name: minio-config

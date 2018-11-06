@@ -32,7 +32,6 @@ database:
   dbName: forumApi
 
 apiSecret: "ssh this is a secret"
-jwtSecret: "jwtSecret"
 jwtAudience: "http://localhost"
 jwt_access_group": "admin"
 jwt_group: "Groups"
