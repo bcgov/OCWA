@@ -1,18 +1,13 @@
 import { connect } from 'react-redux';
-import withRequest from '@src/modules/data/containers/request';
+import isEmpty from 'lodash/isEmpty';
 
 import NewRequest from '../components/new-request';
-import { requestSchema } from '../schemas';
+import { viewDraftRequest } from '../actions';
 
-const makeRequest = () => ({
-  create: {
-    url: 'api/v1/requests',
-    schema: { result: requestSchema },
-    id: 'create',
-  },
-  query: 'requests.create',
+const mapStateToProps = state => ({
+  disabled: !isEmpty(state.requests.viewState.currentRequestId),
 });
 
-const mapStateToProps = () => ({});
-
-export default withRequest(makeRequest, connect(mapStateToProps)(NewRequest));
+export default connect(mapStateToProps, {
+  onClick: viewDraftRequest,
+})(NewRequest);
