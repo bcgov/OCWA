@@ -212,6 +212,7 @@ matrix:
 
       script:
         - cd /home/travis/build/bcgov/OCWA/frontend
+        - cp config/test.json.example config/test.json
         - yarn
         - npm test
         - helm lint helm/ocwa-frontend
@@ -307,6 +308,7 @@ matrix:
         - yarn
 
         - cd /home/travis/build/bcgov/OCWA/frontend
+        - cp config/test.json.example config/test.json
         - yarn
 
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
