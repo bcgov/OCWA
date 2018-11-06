@@ -34,13 +34,16 @@ ingress:
 apiPort: 3000
 wsPort: 3001
 logLevel: error
+
+global:
+  jwtSecret: "ssh this is a secret"
+
 database:
   host: ocwa-forum-api-mongo.ocwa
   username: forumApi
   password: password
   dbName: forumApi
 
-jwtSecret: "ssh this is a secret"
 defaultAccessIsGroup: true
 requiredRoleToCreateTopic: "exporter"
 user:
