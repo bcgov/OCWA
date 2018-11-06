@@ -17,12 +17,16 @@ tus:
   region: us-east-1 #likely irrelevant
   jwtHook: true
 
-jwtSecret: "ssh this is a secret"
+global:
+  jwtSecret: "ssh this is a secret"
+
 jwtAud: "foo"
 
 minio:
   image: minio/minio
   tag: latest
+  server: false
+  serverPath: "/data"
   gatewayType: azure
   proto: http
 
