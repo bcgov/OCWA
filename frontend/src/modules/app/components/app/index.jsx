@@ -4,6 +4,7 @@ import Avatar from '@atlaskit/avatar';
 import Dropdown, { DropdownItem } from '@atlaskit/dropdown-menu';
 import NewRequest from '@src/modules/requests/containers/new-request';
 import Requests from '@src/modules/requests/containers/requests-list';
+import RequestForm from '@src/modules/requests/containers/request-form';
 import { Switch, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '@atlaskit/css-reset';
@@ -23,6 +24,7 @@ class App extends React.Component {
         <Auth fetchStatus={authFetchStatus} isAuthenticated={isAuthenticated} />
         {isAuthenticated && (
           <React.Fragment>
+            <RequestForm />
             <AppBar title="OCWA Export Tool">
               <NewRequest />
               <Dropdown
@@ -53,8 +55,11 @@ class App extends React.Component {
 
 App.propTypes = {
   authFetchStatus: PropTypes.string.isRequired,
+  fetchToken: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
-  user: PropTypes.object.isRequired,
+  user: PropTypes.shape({
+    displayName: PropTypes.string,
+  }).isRequired,
 };
 
 export default App;

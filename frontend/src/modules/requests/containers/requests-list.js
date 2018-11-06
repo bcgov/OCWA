@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import withRequest from '@src/modules/data/containers/request';
 
+import { viewDraftRequest } from '../actions';
 import RequestsList from '../components/requests-list';
 import { requestsListSchema } from '../schemas';
 
@@ -24,4 +25,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default withRequest(makeRequest, connect(mapStateToProps)(RequestsList));
+export default withRequest(
+  makeRequest,
+  connect(mapStateToProps, {
+    onSelect: viewDraftRequest,
+  })(RequestsList)
+);

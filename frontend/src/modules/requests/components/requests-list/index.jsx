@@ -30,7 +30,7 @@ const getIcon = state => {
   }
 };
 
-function RequestsList({ data, isLoading }) {
+function RequestsList({ data, isLoading, onSelect }) {
   const rows = data.map(d => ({
     key: `row-${d._id}`,
     cells: [
@@ -40,7 +40,17 @@ function RequestsList({ data, isLoading }) {
       },
       {
         key: d.name,
-        content: <Link to={`/requests/${d._id}`}>{d.name}</Link>,
+        content: (
+          <a
+            href="#"
+            onClick={event => {
+              event.preventDefault();
+              onSelect(d._id);
+            }}
+          >
+            {d.name}
+          </a>
+        ),
       },
     ],
   }));

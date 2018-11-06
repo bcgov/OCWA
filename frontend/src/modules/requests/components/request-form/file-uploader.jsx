@@ -1,7 +1,10 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
+import Button, { ButtonGroup } from '@atlaskit/button';
 import cx from 'classnames';
-import tus from 'tus-js-client';
+import { ModalFooter } from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
+import tus from 'tus-js-client';
 import { getSession } from '@src/services/auth';
 
 import * as styles from './styles.css';
@@ -77,7 +80,7 @@ class FileUploader extends React.Component {
 
   onDragOver = event => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy';
+    event.dataTransfer.dropEffect = 'copy'; // eslint-disable-line
 
     this.setState({ isDragging: true });
   };
@@ -95,6 +98,27 @@ class FileUploader extends React.Component {
       this.upload(files[0]);
     }
   };
+
+  renderFooter = () => (
+    <ModalFooter>
+      <Button appearance="default" onClick={this.onToggleDialog}>
+        Save and Close
+      </Button>
+      <div style={{ flex: 1 }} />
+      <ButtonGroup>
+        <Button
+          appearance="default"
+          onClick={this.onChangeStep(0)}
+          style={{ marginRight: 4 }}
+        >
+          Previous Step
+        </Button>
+        <Button appearance="primary" onClick={this.onSubmit}>
+          Submit
+        </Button>
+      </ButtonGroup>
+    </ModalFooter>
+  );
 
   render() {
     const { isDragging, isUploading, error, progress } = this.state;
@@ -119,7 +143,7 @@ class FileUploader extends React.Component {
               </div>
             )}
             {!isUploading && (
-              <div>{isDragging ? 'Drop' : 'Drag'} files here</div>
+              <div>{isDragging ? 'Drop files here' : 'Drag files here'}</div>
             )}
           </div>
         </div>
@@ -127,5 +151,9 @@ class FileUploader extends React.Component {
     );
   }
 }
+
+FileUploader.propTypes = {
+  onUploadSuccess: PropTypes.func.isRequired,
+};
 
 export default FileUploader;
