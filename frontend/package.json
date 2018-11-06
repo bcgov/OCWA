@@ -7,7 +7,7 @@
     "start": "NODE_ENV=development nodemon server/index.js",
     "start:prod": "NODE_ENV=production node server/index.js",
     "build": "webpack --config webpack.prod.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage --collectCoverageFrom=!**/__mocks__/*.js --collectCoverageFrom=!**/__tests__/*.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
