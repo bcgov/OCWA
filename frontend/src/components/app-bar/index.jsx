@@ -19,7 +19,11 @@ function AppBar({ children, title }) {
 
 AppBar.propTypes = {
   title: PropTypes.string.isRequired,
-  children: PropTypes.element,
+  children: PropTypes.node,
+};
+
+AppBar.defaultProps = {
+  children: null,
 };
 
 export default AppBar;

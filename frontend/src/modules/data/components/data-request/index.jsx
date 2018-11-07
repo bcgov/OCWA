@@ -21,6 +21,17 @@ function withDataRequest(Component) {
       }
     };
 
+    onSave = payload => {
+      const { save, requestConfig } = this.props;
+
+      if (requestConfig.save) {
+        save({
+          ...requestConfig.save,
+          payload,
+        });
+      }
+    };
+
     render() {
       const { fetchStatus, requestConfig } = this.props;
 
@@ -37,6 +48,7 @@ function withDataRequest(Component) {
           isIdle={fetchStatus === 'idle'}
           isFailed={fetchStatus === 'failed'}
           onCreate={this.onCreate}
+          onSave={this.onSave}
         />
       );
     }

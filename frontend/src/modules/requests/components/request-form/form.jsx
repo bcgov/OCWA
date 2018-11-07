@@ -1,8 +1,10 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import FieldText from '@atlaskit/field-text';
 import FieldTextArea from '@atlaskit/field-text-area';
 import Form, { Field, FormSection } from '@atlaskit/form';
+
+import { RequestSchema } from '../../types';
 
 class NewRequestForm extends React.Component {
   constructor(props) {
@@ -10,47 +12,22 @@ class NewRequestForm extends React.Component {
     this.formRef = React.createRef();
   }
 
-  state = {
-    isAdditionalVisible: true,
-    isTermsAccepted: false,
-  };
-
-  onChange = key => event => {
-    this.setState({
-      [key]: event.target.value,
-    });
-  };
-
-  onTermsChange = () => {
-    this.setState(state => ({
-      isTermsAccepted: !state.isTermsAccepted,
-    }));
-  };
-
-  onSubmit = e => {
-    const validation = this.formRef.current.validate();
-    console.log(validation);
-    console.log('is valid!', !validation.isInvalid);
-  };
-
   validate = () => {
     const validation = this.formRef.current.validate();
     return validation;
   };
 
   render() {
-    const { isAdditionalVisible, isTermsAccepted } = this.state;
-    const { data, onSubmit, ref } = this.props;
+    const { data } = this.props;
 
     return (
       <Form ref={this.formRef}>
         <Field validateOnChange isRequired label="Request Name" id="name">
           <FieldText
-            required
             shouldFitContainer
             name="name"
             id="name"
-            value={data.name}
+            value={data.name || ''}
           />
         </Field>
         <FormSection
@@ -111,7 +88,7 @@ class NewRequestForm extends React.Component {
 }
 
 NewRequestForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
+  data: RequestSchema.isRequired,
 };
 
 export default React.forwardRef((props, ref) => (

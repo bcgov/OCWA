@@ -12,24 +12,29 @@ class NewRequestDialog extends React.Component {
   }
 
   onValidate = () => {
-    const { isNewRequest, onSave } = this.props;
+    const { isNewRequest, onCreate, onSave } = this.props;
     const { isInvalid, validFields } = this.formRef.current.validate();
 
-    console.log(isNewRequest);
     if (!isInvalid) {
-      console.log(
-        validFields.reduce(
-          (prev, field) => ({
-            ...prev,
-            [field.name]: field.value,
-          }),
-          {}
-        )
+      const payload = validFields.reduce(
+        (prev, field) => ({
+          ...prev,
+          [field.name]: field.value,
+        }),
+        {}
       );
+
+      if (isNewRequest) {
+        onCreate(payload);
+      } else {
+        onSave(payload);
+      }
     }
   };
 
   renderFooter = () => {
+    const { onCancel } = this.props;
+
     return (
       <ModalFooter>
         <Button appearance="default" onClick={this.onValidate}>
@@ -37,7 +42,7 @@ class NewRequestDialog extends React.Component {
         </Button>
         <div style={{ flex: 1 }} />
         <ButtonGroup>
-          <Button appearance="default" onClick={this.props.onCancel}>
+          <Button appearance="default" onClick={onCancel}>
             Cancel
           </Button>
           <Button appearance="primary">Add Files</Button>
@@ -47,7 +52,7 @@ class NewRequestDialog extends React.Component {
   };
 
   render() {
-    const { children, currentStep, data, open } = this.props;
+    const { currentStep, data, open } = this.props;
 
     return (
       <ModalTransition>
@@ -55,10 +60,7 @@ class NewRequestDialog extends React.Component {
           <Modal
             autoFocus
             footer={this.renderFooter}
-            heading={
-              <div>{`Initiate a New Request (Step ${currentStep +
-                1}/${React.Children.count(children)})`}</div>
-            }
+            heading={`Initiate a New Request (Step ${currentStep + 1}/2)`}
             height="100%"
             onCloseComplete={this.reset}
             width="x-large"
@@ -72,8 +74,15 @@ class NewRequestDialog extends React.Component {
 }
 
 NewRequestDialog.propTypes = {
-  children: PropTypes.node.isRequired,
+  // children: PropTypes.node.isRequired,
   currentStep: PropTypes.number.isRequired,
+  data: PropTypes.shape({
+    name: PropTypes.string,
+  }).isRequired,
+  isNewRequest: PropTypes.bool.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  onCreate: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 };
 
