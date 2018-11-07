@@ -1,20 +1,10 @@
 import { connect } from 'react-redux';
 import get from 'lodash/get';
-import withRequest from '@src/modules/data/containers/request';
+import withRequestTest from '@src/modules/data/components/data-request/test';
 
-import { viewDraftRequest } from '../actions';
+import { fetchRequests, viewDraftRequest } from '../actions';
 import RequestsList from '../components/requests-list';
 import { requestsListSchema } from '../schemas';
-
-const makeRequest = () => ({
-  get: {
-    url: '/api/v1/requests',
-    schema: requestsListSchema,
-    id: 'requests',
-  },
-  query: 'requests.requests',
-  showLoading: false,
-});
 
 const mapStateToProps = state => {
   const entities = get(state, 'data.entities.requests', {});
@@ -22,12 +12,18 @@ const mapStateToProps = state => {
 
   return {
     data: ids.map(id => entities[id]),
+    fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests'),
   };
 };
 
-export default withRequest(
-  makeRequest,
-  connect(mapStateToProps, {
-    onSelect: viewDraftRequest,
-  })(RequestsList)
+export default connect(mapStateToProps, {
+  onSelect: viewDraftRequest,
+})(
+  withRequestTest(RequestsList, {
+    initialRequest: () =>
+      fetchRequests({
+        url: '/api/v1/requests',
+        schema: requestsListSchema,
+      }),
+  })
 );

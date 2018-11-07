@@ -40,17 +40,20 @@ function RequestsList({ data, isLoading, onSelect }) {
       },
       {
         key: d.name,
-        content: (
-          <a
-            href="#"
-            onClick={event => {
-              event.preventDefault();
-              onSelect(d._id);
-            }}
-          >
-            {d.name}
-          </a>
-        ),
+        content:
+          d.state < 1 ? (
+            <a
+              href="#"
+              onClick={event => {
+                event.preventDefault();
+                onSelect(d._id);
+              }}
+            >
+              {d.name}
+            </a>
+          ) : (
+            <Link to={`/requests/${d._id}`}>{d.name}</Link>
+          ),
       },
     ],
   }));
