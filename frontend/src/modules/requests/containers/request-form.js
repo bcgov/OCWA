@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
-import withRequest from '@src/modules/data/components/data-request/test';
+import withRequest from '@src/modules/data/components/data-request';
 
 import NewRequest from '../components/request-form';
 import {

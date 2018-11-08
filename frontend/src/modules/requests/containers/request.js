@@ -1,42 +1,26 @@
 import { connect } from 'react-redux';
 import get from 'lodash/get';
-import withRequestTest from '@src/modules/data/components/data-request/test';
+import withRequest from '@src/modules/data/components/data-request';
 
-import { fetchRequests } from '../actions';
+import { fetchRequest } from '../actions';
 import Request from '../components/request';
-import { requestSchema } from '../schemas';
-
-const makeRequest = () => ({
-  get: {
-    url: '/api/v1/requests',
-    schema: requestsListSchema,
-    id: 'requests',
-  },
-  query: 'requests.requests',
-  showLoading: false,
-});
+import { requestsListSchema } from '../schemas';
 
 const mapStateToProps = (state, props) => {
-  const data = get(
-    state,
-    `data.entities.requests.${props.match.requestId}`,
-    {}
-  );
+  const { requestId } = props.match.params;
 
   return {
-    data,
+    data: get(state, `data.entities.requests.${requestId}`, {}),
+    fetchStatus: get(state, `data.fetchStatus.entities.requests.${requestId}`),
   };
 };
 export default connect(mapStateToProps)(
-  withRequestTest(Request, {
-    initialData: params =>
-      fetchRequests({
-        payload: {
-          url: `/api/v1/requests/${params.requestId}`,
-          schema: {
-            result: requestSchema,
-          },
-        },
+  withRequest(Request, {
+    initialRequest: ({ requestId }) =>
+      fetchRequest({
+        url: `/api/v1/requests/${requestId}`,
+        schema: requestsListSchema,
+        id: requestId,
       }),
   })
 );
