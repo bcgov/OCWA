@@ -2,6 +2,8 @@ import React from 'react';
 import AppBar from '@src/components/app-bar';
 import Avatar from '@atlaskit/avatar';
 import Dropdown, { DropdownItem } from '@atlaskit/dropdown-menu';
+import LayerManager from '@atlaskit/layer-manager';
+import Messages from '@src/modules/data/containers/messages';
 import NewRequest from '@src/modules/requests/containers/new-request';
 import Requests from '@src/modules/requests/containers/requests-list';
 import Request from '@src/modules/requests/containers/request';
@@ -23,33 +25,43 @@ class App extends React.Component {
     const { authFetchStatus, isAuthenticated, user } = this.props;
 
     return (
-      <main className={styles.main}>
-        <Auth fetchStatus={authFetchStatus} isAuthenticated={isAuthenticated} />
-        {isAuthenticated && (
-          <React.Fragment>
-            <RequestForm />
-            <AppBar title="OCWA Export Tool">
-              <NewRequest />
-              <Dropdown
-                position="bottom right"
-                trigger={
-                  <Avatar borderColor="#0052CC" name={user.displayName} />
-                }
-              >
-                <DropdownItem>{`Howdy, ${user.displayName}`}</DropdownItem>
-                <DropdownItem href="/auth/logout">Logout</DropdownItem>
-              </Dropdown>
-            </AppBar>
-            <div className={styles.container}>
-              <Switch>
-                <Route exact path="/" component={Requests} />
-                <Route exact path="/requests/:requestId" component={Request} />
-                <Route render={() => '404'} />
-              </Switch>
-            </div>
-          </React.Fragment>
-        )}
-      </main>
+      <LayerManager>
+        <main className={styles.main}>
+          <Auth
+            fetchStatus={authFetchStatus}
+            isAuthenticated={isAuthenticated}
+          />
+          {isAuthenticated && (
+            <React.Fragment>
+              <Messages />
+              <RequestForm />
+              <AppBar title="OCWA Export Tool">
+                <NewRequest />
+                <Dropdown
+                  position="bottom right"
+                  trigger={
+                    <Avatar borderColor="#0052CC" name={user.displayName} />
+                  }
+                >
+                  <DropdownItem>{`Howdy, ${user.displayName}`}</DropdownItem>
+                  <DropdownItem href="/auth/logout">Logout</DropdownItem>
+                </Dropdown>
+              </AppBar>
+              <div className={styles.container}>
+                <Switch>
+                  <Route exact path="/" component={Requests} />
+                  <Route
+                    exact
+                    path="/requests/:requestId"
+                    component={Request}
+                  />
+                  <Route render={() => '404'} />
+                </Switch>
+              </div>
+            </React.Fragment>
+          )}
+        </main>
+      </LayerManager>
     );
   }
 }
