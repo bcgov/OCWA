@@ -1,29 +1,29 @@
 import * as React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import get from 'lodash/get';
 
-function withRequest(Component, options) {
+function withRequest(Component) {
   class WithRequest extends React.Component {
     componentDidMount() {
-      const { dispatch, match } = this.props;
-      if (options.initialRequest) {
-        dispatch(options.initialRequest(match.params));
+      const { match, initialRequest } = this.props;
+
+      if (initialRequest) {
+        initialRequest(match.params);
       }
     }
 
-    onCreate = payload => {
-      const { dispatch } = this.props;
+    sendAction = (action, payload, options = {}) => {
+      const { id, match } = this.props;
+      const proxyAction = get(this.props, action);
 
-      if (options.create) {
-        dispatch(options.create(payload));
-      }
-    };
-
-    onSave = payload => {
-      const { dispatch, id, match } = this.props;
-      if (options.save) {
-        const variables = match ? match.params : { id };
-        dispatch(options.save(payload, variables));
+      if (proxyAction) {
+        const params = get(match, 'params', {});
+        proxyAction(payload, { id, ...options, ...params });
+      } else {
+        console.error(
+          `No proxy action is defined in the container for ${action}`
+        );
       }
     };
 
@@ -40,8 +40,7 @@ function withRequest(Component, options) {
           isLoaded={fetchStatus === 'loaded'}
           isIdle={fetchStatus === 'idle'}
           isFailed={fetchStatus === 'failed'}
-          onCreate={this.onCreate}
-          onSave={this.onSave}
+          sendAction={this.sendAction}
         />
       );
     }

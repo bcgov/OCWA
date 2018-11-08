@@ -18,12 +18,9 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, {
   onSelect: viewDraftRequest,
-})(
-  withRequest(RequestsList, {
-    initialRequest: () =>
-      fetchRequests({
-        url: '/api/v1/requests',
-        schema: requestsListSchema,
-      }),
-  })
-);
+  initialRequest: () =>
+    fetchRequests({
+      url: '/api/v1/requests',
+      schema: requestsListSchema,
+    }),
+})(withRequest(RequestsList));

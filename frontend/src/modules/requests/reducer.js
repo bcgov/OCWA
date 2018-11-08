@@ -13,7 +13,6 @@ const viewState = (state = initialViewState, action = {}) => {
         currentRequestId: action.payload,
       };
 
-    case 'request/put':
     case 'requests/close/draft':
       return {
         ...state,
@@ -27,10 +26,14 @@ const viewState = (state = initialViewState, action = {}) => {
         currentNewRequestStep: action.payload,
       };
 
+    case 'request/put/success':
     case 'request/post/success':
       return {
         ...state,
-        currentNewRequestStep: 1,
+        currentRequestId: action.meta.quitEditing
+          ? null
+          : state.currentRequestId,
+        currentNewRequestStep: action.meta.quitEditing ? 0 : 1,
       };
 
     default:

@@ -2,12 +2,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import DynamicTable from '@atlaskit/dynamic-table';
 import PropTypes from 'prop-types';
-// Icons
-import EditIcon from '@atlaskit/icon/glyph/edit';
-import RecentIcon from '@atlaskit/icon/glyph/recent';
-import LockIcon from '@atlaskit/icon/glyph/lock';
-import MoreIcon from '@atlaskit/icon/glyph/more';
 
+import RequestIcon from '../request-icon';
 import * as styles from './styles.css';
 
 const head = {
@@ -17,26 +13,13 @@ const head = {
   ],
 };
 
-const getIcon = state => {
-  switch (state) {
-    case 0:
-      return <EditIcon size="small" />;
-    case 1:
-      return <RecentIcon />;
-    case 2:
-      return <LockIcon />;
-    default:
-      return <MoreIcon />;
-  }
-};
-
 function RequestsList({ data, isLoading, onSelect }) {
   const rows = data.map(d => ({
     key: `row-${d._id}`,
     cells: [
       {
         key: d.state,
-        content: getIcon(d.state),
+        content: <RequestIcon value={d.state} />,
       },
       {
         key: d.name,

@@ -12,29 +12,65 @@ class NewRequestDialog extends React.Component {
     this.formRef = React.createRef();
   }
 
-  onValidate = () => {
-    const { isNewRequest, onCreate, onSave } = this.props;
+  validateForm = () => {
     const { isInvalid, validFields } = this.formRef.current.validate();
 
     if (!isInvalid) {
-      const payload = validFields.reduce(
+      return validFields.reduce(
         (prev, field) => ({
           ...prev,
           [field.name]: field.value,
         }),
         {}
       );
+    }
 
-      if (isNewRequest) {
-        onCreate(payload);
-      } else {
-        onSave(payload);
+    return false;
+  };
+
+  onSaveAndClose = () => {
+    const { currentStep, data, onCancel } = this.props;
+
+    if (currentStep === 0) {
+      const formValues = this.validateForm();
+
+      if (formValues) {
+        this.save(formValues, true);
       }
+    } else if (currentStep === 1) {
+      this.save(
+        {
+          ...data,
+          files: [],
+        },
+        true
+      );
+    }
+  };
+
+  onAddFiles = () => {
+    const { currentStep, onChangeStep } = this.props;
+    const formValues = this.validateForm();
+
+    if (formValues) {
+      this.save(formValues);
+      onChangeStep(currentStep + 1);
     }
   };
 
   onSubmit = () => {
-    console.log('submit');
+    const { data, sendAction } = this.props;
+    sendAction('onSubmit', data, { quitEditing: true });
+  };
+
+  save = (payload, quitEditing = false) => {
+    const { isNewRequest, sendAction } = this.props;
+
+    if (isNewRequest) {
+      sendAction('onCreate', payload, { quitEditing });
+    } else {
+      sendAction('onSave', payload, { quitEditing });
+    }
   };
 
   renderFooter = () => {
@@ -45,7 +81,7 @@ class NewRequestDialog extends React.Component {
         <Button
           appearance="default"
           isDisabled={isCreating}
-          onClick={this.onValidate}
+          onClick={this.onSaveAndClose}
         >
           Save and Close
         </Button>
@@ -62,7 +98,7 @@ class NewRequestDialog extends React.Component {
             <Button
               isDisabled={isCreating}
               appearance="primary"
-              onClick={this.onValidate}
+              onClick={this.onAddFiles}
             >
               {isCreating ? 'Creating...' : 'Add Files'}
             </Button>
@@ -106,11 +142,12 @@ NewRequestDialog.propTypes = {
   data: PropTypes.shape({
     name: PropTypes.string,
   }).isRequired,
+  id: PropTypes.string,
   isNewRequest: PropTypes.bool.isRequired,
-  isCreating: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
-  onCreate: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
+  onChangeStep: PropTypes.func.isRequired,
+  isCreating: PropTypes.bool.isRequired,
+  sendAction: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
 };
 
