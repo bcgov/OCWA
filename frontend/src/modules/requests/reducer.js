@@ -13,10 +13,12 @@ const viewState = (state = initialViewState, action = {}) => {
         currentRequestId: action.payload,
       };
 
+    case 'request/put':
     case 'requests/close/draft':
       return {
         ...state,
         currentRequestId: null,
+        currentNewRequestStep: 0,
       };
 
     case 'requests/change-step':
@@ -24,6 +26,13 @@ const viewState = (state = initialViewState, action = {}) => {
         ...state,
         currentNewRequestStep: action.payload,
       };
+
+    case 'request/post/success':
+      return {
+        ...state,
+        currentNewRequestStep: 1,
+      };
+
     default:
       return state;
   }

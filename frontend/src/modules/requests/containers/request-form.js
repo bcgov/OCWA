@@ -18,11 +18,12 @@ const mapStateToProps = state => {
   const keyPath = `data.entities.requests.${currentRequestId}`;
 
   return {
-    open: !isEmpty(currentRequestId),
     currentStep: state.requests.viewState.currentNewRequestStep,
     isNewRequest: !has(state, keyPath),
     data: get(state, keyPath, {}),
     id: currentRequestId,
+    open: !isEmpty(currentRequestId),
+    fetchStatus: state.data.fetchStatus.dataTypes.requests,
   };
 };
 

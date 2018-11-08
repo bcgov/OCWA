@@ -6,7 +6,7 @@ import Form, { Field, FormSection } from '@atlaskit/form';
 
 import { RequestSchema } from '../../types';
 
-class NewRequestForm extends React.Component {
+class NewRequestForm extends React.PureComponent {
   constructor(props) {
     super(props);
     this.formRef = React.createRef();
