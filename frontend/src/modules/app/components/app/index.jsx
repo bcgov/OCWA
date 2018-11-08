@@ -11,17 +11,19 @@ import PropTypes from 'prop-types';
 import '@atlaskit/css-reset';
 
 import Auth from '../auth';
+import * as styles from './styles.css';
 
 class App extends React.Component {
   componentDidMount() {
-    this.props.fetchToken();
+    const { fetchToken } = this.props;
+    fetchToken();
   }
 
   render() {
     const { authFetchStatus, isAuthenticated, user } = this.props;
 
     return (
-      <main>
+      <main className={styles.main}>
         <Auth fetchStatus={authFetchStatus} isAuthenticated={isAuthenticated} />
         {isAuthenticated && (
           <React.Fragment>
@@ -38,11 +40,13 @@ class App extends React.Component {
                 <DropdownItem href="/auth/logout">Logout</DropdownItem>
               </Dropdown>
             </AppBar>
-            <Switch>
-              <Route exact path="/" component={Requests} />
-              <Route exact path="/requests/:requestId" component={Request} />
-              <Route render={() => '404'} />
-            </Switch>
+            <div className={styles.container}>
+              <Switch>
+                <Route exact path="/" component={Requests} />
+                <Route exact path="/requests/:requestId" component={Request} />
+                <Route render={() => '404'} />
+              </Switch>
+            </div>
           </React.Fragment>
         )}
       </main>

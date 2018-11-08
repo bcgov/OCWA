@@ -1,49 +1,41 @@
 import * as React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 
-function withDataRequest(Component) {
-  return class extends React.Component {
+function withRequest(Component, options) {
+  class WithRequest extends React.Component {
     componentDidMount() {
-      const { fetch, fetchStatus, requestConfig } = this.props;
-
-      if (requestConfig.get && fetchStatus !== 'loaded') {
-        fetch(requestConfig);
+      const { dispatch, match } = this.props;
+      if (options.initialRequest) {
+        dispatch(options.initialRequest(match.params));
       }
     }
 
     onCreate = payload => {
-      const { create, requestConfig } = this.props;
+      const { dispatch, match } = this.props;
 
-      if (requestConfig.create) {
-        create({
-          ...requestConfig.create,
-          payload,
-        });
+      if (options.create) {
+        dispatch(options.create(payload, match.params));
       }
     };
 
     onSave = payload => {
-      const { save, requestConfig } = this.props;
-
-      if (requestConfig.save) {
-        save({
-          ...requestConfig.save,
-          payload,
-        });
+      const { dispatch, id, match } = this.props;
+      if (options.save) {
+        const variables = match ? match.params : { id };
+        dispatch(options.save(payload, variables));
       }
     };
 
     render() {
-      const { fetchStatus, requestConfig } = this.props;
-
-      if (fetchStatus === 'loading' && requestConfig.showLoading) {
-        return <div>LOADING</div>;
-      }
+      const { fetchStatus } = this.props;
 
       return (
         <Component
           {...this.props}
           isSaving={fetchStatus === 'saving'}
           isLoading={fetchStatus === 'loading'}
+          isRefreshing={fetchStatus === 'refreshing'}
           isLoaded={fetchStatus === 'loaded'}
           isIdle={fetchStatus === 'idle'}
           isFailed={fetchStatus === 'failed'}
@@ -52,7 +44,20 @@ function withDataRequest(Component) {
         />
       );
     }
-  };
+  }
+
+  WithRequest.displayName = `WithRequest(${Component.displayName ||
+    Component.name ||
+    'Component'})`;
+  return WithRequest;
 }
 
-export default withDataRequest;
+// TODO: Add some data specific items that might be important
+const mapStateToProps = () => ({});
+
+const composedWithRequest = compose(
+  connect(mapStateToProps, null),
+  withRequest
+);
+
+export default composedWithRequest;

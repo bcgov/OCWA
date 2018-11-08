@@ -1,6 +1,7 @@
 import { createDataAction } from '@src/modules/data/actions';
 
 export const fetchRequests = createDataAction('requests/get');
+export const fetchRequest = createDataAction('request/get');
 export const createRequest = createDataAction('requests/post');
 export const saveRequest = createDataAction('requests/put');
 
