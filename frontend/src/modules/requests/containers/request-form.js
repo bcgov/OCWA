@@ -16,32 +16,39 @@ import { requestSchema } from '../schemas';
 const mapStateToProps = state => {
   const { currentRequestId } = state.requests.viewState;
   const keyPath = `data.entities.requests.${currentRequestId}`;
+  const isNewRequest = !has(state, keyPath);
 
   return {
     currentStep: state.requests.viewState.currentNewRequestStep,
-    isNewRequest: !has(state, keyPath),
+    isNewRequest,
     data: get(state, keyPath, {}),
     id: currentRequestId,
     open: !isEmpty(currentRequestId),
-    fetchStatus: state.data.fetchStatus.dataTypes.requests,
+    fetchStatus: isNewRequest
+      ? state.data.fetchStatus.postRequests.requests
+      : state.data.fetchStatus.entities.requests[currentRequestId],
   };
 };
 
 export default connect(mapStateToProps, {
   onChangeStep: changeStep,
   onCancel: closeDraftRequest,
-})(
-  withRequest(NewRequest, {
-    create: payload =>
-      createRequest(payload, {
-        url: 'api/v1/requests',
-        schema: { result: requestSchema },
-      }),
-    save: (payload, { id }) =>
-      saveRequest(payload, {
-        url: `api/v1/requests/save/${id}`,
-        schema: { result: requestSchema },
-        id,
-      }),
-  })
-);
+  onCreate: (payload, options) =>
+    createRequest(payload, {
+      url: 'api/v1/requests',
+      schema: { result: requestSchema },
+      ...options,
+    }),
+  onSave: (payload, options) =>
+    saveRequest(payload, {
+      url: `api/v1/requests/save/${options.id}`,
+      schema: { result: requestSchema },
+      ...options,
+    }),
+  onSubmit: (payload, options) =>
+    saveRequest(payload, {
+      url: `api/v1/requests/submit/${options.id}`,
+      schema: { result: requestSchema },
+      ...options,
+    }),
+})(withRequest(NewRequest));
