@@ -526,20 +526,7 @@
     "@atlaskit/theme" "^6.1.1"
     "@babel/runtime" "^7.0.0"
 
-"@atlaskit/flag@^9.0.10":
-  version "9.0.10"
-  resolved "https://registry.yarnpkg.com/@atlaskit/flag/-/flag-9.0.10.tgz#de5e99b375eba263d4785c158de5ae218f7de271"
-  integrity sha512-mjF30ZGfhRhvKkbZd1P+/PB3anN3XvullxQ7mxygze1UNfooYM92gzvj9oPxq9ygmQTXPwNBtaFNaDMtJkMwGw==
-  dependencies:
-    "@atlaskit/analytics-next" "^3.0.6"
-    "@atlaskit/icon" "^13.8.1"
-    "@atlaskit/portal" "^0.0.9"
-    "@atlaskit/theme" "^6.0.2"
-    babel-runtime "^6.26.0"
-    react-transition-group "^2.2.1"
-    uuid "^3.1.0"
-
-"@atlaskit/flag@^9.0.11":
+"@atlaskit/flag@^9.0.11", "@atlaskit/flag@^9.1.2":
   version "9.1.2"
   resolved "https://registry.yarnpkg.com/@atlaskit/flag/-/flag-9.1.2.tgz#a8e7aa69b46293981f75e3e5d8cf9307a76f5459"
   integrity sha512-HbVf5+fizMwlY1NqcYRdnr1jcXuwqZmYDdB+hiyprgoRItPxhbvuLcPOQggocuM3FcYTFA/p/H6yq0RqtIfHpA==

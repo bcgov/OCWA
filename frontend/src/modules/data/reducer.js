@@ -3,8 +3,10 @@ import get from 'lodash/get';
 import has from 'lodash/has';
 import isArray from 'lodash/isArray';
 import isString from 'lodash/isString';
+import last from 'lodash/last';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
+import uniqueId from 'lodash/uniqueId';
 
 function handleFetchStatus(state, action, fetchStatus) {
   let entityFetchStatus = {};
@@ -127,7 +129,28 @@ const fetchStatus = (state = initialFetchStatusState, action) => {
   return nextState;
 };
 
+const messages = (state = [], action) => {
+  if (has(action, 'payload.result.message')) {
+    return [
+      ...state,
+      {
+        id: uniqueId('messages'),
+        type: last(action.type.split('/')),
+        message: action.payload.result.message,
+      },
+    ];
+  }
+
+  // TODO: probably can shorten this regex
+  if (/\w+\/\w+\/reset$/.test(action.type)) {
+    return state.filter((d, index) => index !== 0);
+  }
+
+  return state;
+};
+
 export default combineReducers({
   entities,
   fetchStatus,
+  messages,
 });
