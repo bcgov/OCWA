@@ -67,6 +67,10 @@ app.use('/api/v1/files', proxy.files);
 app.use('/api/v1/forums', proxy.forum);
 app.use('/api/v1/requests', proxy.request);
 
+app.get('/hello', (req, res) => {
+  res.status(200).send('hi')
+})
+
 app.get('/*', (req, res) => {
   res.sendFile('/index.html');
 });

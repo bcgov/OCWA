@@ -212,6 +212,7 @@ matrix:
 
       script:
         - cd /home/travis/build/bcgov/OCWA/frontend
+        - cp config/test.json.example config/test.json
         - yarn
         - npm test
         - helm lint helm/ocwa-frontend
@@ -265,7 +266,8 @@ matrix:
 
         - cd /home/travis/build/bcgov/OCWA
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_validate_api -Dsonar.projectName="OCWA Validate API" -Dsonar.modules=validateApi
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_policy_api -Dsonar.projectName="OCWA Policy API" -Dsonar.modules=policyApi
 
     - name: "Scan - NodeJS"
       language: node_js
@@ -299,16 +301,17 @@ matrix:
         - cp config/test.json.example config/test.json
         - cp config/default.json.example config/default.json
         - yarn
-        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - cp config/default.json.example config/default.json
-        - cp config/test.json.example config/test.json
-        - yarn
-
 
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - cp config/test.json.example config/test.json
         - cp config/default.json.example config/default.json
         - yarn
+
+        - cd /home/travis/build/bcgov/OCWA/frontend
+        - cp config/test.json.example config/test.json
+        - yarn
+
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm test
 
         - NODE_ENV=test npm start &
@@ -316,16 +319,14 @@ matrix:
         - sleep 15
         - npm test
 
+        - cd /home/travis/build/bcgov/OCWA/frontend
+        - npm test
+
         - cd /home/travis/build/bcgov/OCWA
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN
-
-        #- sudo coverage run --branch --source=src -m pytest
-        #- sudo coverage xml
-        
-        #- cd /home/travis/build/bcgov/OCWA
-        #- PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        #- sonar-scanner -Dsonar.login=$SONAR_TOKEN
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_frontend -Dsonar.projectName="OCWA Frontend" -Dsonar.modules=frontend
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_forum_api -Dsonar.projectName="OCWA Forum API" -Dsonar.modules=forumApi
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_request_api -Dsonar.projectName="OCWA Request API" -Dsonar.modules=requestApi
 
     - name: "OCWA Master Helm Chart"
       language: node_js
