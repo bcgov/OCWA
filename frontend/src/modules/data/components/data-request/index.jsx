@@ -12,10 +12,10 @@ function withRequest(Component, options) {
     }
 
     onCreate = payload => {
-      const { dispatch, match } = this.props;
+      const { dispatch } = this.props;
 
       if (options.create) {
-        dispatch(options.create(payload, match.params));
+        dispatch(options.create(payload));
       }
     };
 
@@ -33,6 +33,7 @@ function withRequest(Component, options) {
       return (
         <Component
           {...this.props}
+          isCreating={fetchStatus === 'creating'}
           isSaving={fetchStatus === 'saving'}
           isLoading={fetchStatus === 'loading'}
           isRefreshing={fetchStatus === 'refreshing'}

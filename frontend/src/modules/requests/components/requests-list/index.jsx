@@ -41,7 +41,7 @@ function RequestsList({ data, isLoading, onSelect }) {
       {
         key: d.name,
         content:
-          d.state < 1 ? (
+          d.state < 2 ? (
             <a
               href="#"
               onClick={event => {

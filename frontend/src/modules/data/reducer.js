@@ -9,16 +9,24 @@ function handleFetchStatus(state, action, fetchStatus) {
 
   if (!action.meta.id) {
     if (has(action, 'payload.result')) {
-      const ids = action.payload.result.reduce(
-        (prev, id) => ({
-          ...prev,
-          [id]: fetchStatus,
-        }),
-        {}
-      );
-      entityFetchStatus = {
-        [action.meta.dataType]: ids,
-      };
+      if (isArray(action.payload.result)) {
+        const ids = action.payload.result.reduce(
+          (prev, id) => ({
+            ...prev,
+            [id]: fetchStatus,
+          }),
+          {}
+        );
+        entityFetchStatus = {
+          [action.meta.dataType]: ids,
+        };
+      } else {
+        entityFetchStatus = {
+          [action.meta.dataType]: {
+            [action.payload.result.request]: fetchStatus,
+          },
+        };
+      }
     }
 
     dataTypesFetchStatus = {

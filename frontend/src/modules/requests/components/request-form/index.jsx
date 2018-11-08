@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Modal, { ModalFooter, ModalTransition } from '@atlaskit/modal-dialog';
 
 import Form from './form';
+import FileUploader from './file-uploader';
 
 class NewRequestDialog extends React.Component {
   constructor(props) {
@@ -32,20 +33,45 @@ class NewRequestDialog extends React.Component {
     }
   };
 
+  onSubmit = () => {
+    console.log('submit');
+  };
+
   renderFooter = () => {
-    const { onCancel } = this.props;
+    const { currentStep, isCreating, onCancel } = this.props;
 
     return (
       <ModalFooter>
-        <Button appearance="default" onClick={this.onValidate}>
+        <Button
+          appearance="default"
+          isDisabled={isCreating}
+          onClick={this.onValidate}
+        >
           Save and Close
         </Button>
         <div style={{ flex: 1 }} />
         <ButtonGroup>
-          <Button appearance="default" onClick={onCancel}>
+          <Button
+            appearance="default"
+            isDisabled={isCreating}
+            onClick={onCancel}
+          >
             Cancel
           </Button>
-          <Button appearance="primary">Add Files</Button>
+          {currentStep === 0 && (
+            <Button
+              isDisabled={isCreating}
+              appearance="primary"
+              onClick={this.onValidate}
+            >
+              {isCreating ? 'Creating...' : 'Add Files'}
+            </Button>
+          )}
+          {currentStep === 1 && (
+            <Button appearance="primary" onClick={this.onSubmit}>
+              Submit for Review
+            </Button>
+          )}
         </ButtonGroup>
       </ModalFooter>
     );
@@ -65,7 +91,8 @@ class NewRequestDialog extends React.Component {
             onCloseComplete={this.reset}
             width="x-large"
           >
-            <Form ref={this.formRef} data={data} />
+            {currentStep === 0 && <Form ref={this.formRef} data={data} />}
+            {currentStep === 1 && <FileUploader />}
           </Modal>
         )}
       </ModalTransition>
@@ -80,6 +107,7 @@ NewRequestDialog.propTypes = {
     name: PropTypes.string,
   }).isRequired,
   isNewRequest: PropTypes.bool.isRequired,
+  isCreating: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onCreate: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
