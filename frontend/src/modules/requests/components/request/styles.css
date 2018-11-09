@@ -3,5 +3,32 @@
 }
 
 .header {
-  background-color: #DEE2E6;
+  padding: 30px 0;
+  border-bottom: 1px solid #dee2e6;
+  background-color: #f5f5f5;
+}
+
+.main {
+  margin-top: 30px;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.sectionHeader,
+.sectionContent {
+  border: 1px solid #dee2e6;
+}
+
+.sectionHeader {
+  font-weight: bold;
+  padding: 8px 10px;
+  border-radius: 3px 3px 0 0;
+  background-color: #f5f5f5;
+}
+
+.sectionContent {
+  border-radius: 0 0 3px 3px;
+  border-top: none;
 }
