@@ -6,9 +6,9 @@ export const getRequestStateColor = (value = 0) => {
     case 1:
       return colors.N200;
     case 2:
-      return colors.B300;
+      return colors.Y300;
     case 3:
-      return colors.B500;
+      return colors.Y500;
     case 4:
       return colors.G500;
     case 5:
