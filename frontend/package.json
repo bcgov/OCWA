@@ -11,12 +11,14 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.1",
+    "@babel/core": "7.0.0-bridge.0",
     "@babel/plugin-proposal-class-properties": "^7.0.0",
     "@babel/plugin-transform-async-to-generator": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
+    "babel-core": "^7.0.0-bridge",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "babel-loader": "^8.0.2",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.0",
@@ -102,7 +104,14 @@
   "jest": {
     "verbose": true,
     "roots": [
-      "server"
-    ]
-  }  
+      "server",
+      "src"
+    ],
+    "moduleNameMapper": {
+      "^\\@src(.*)$": "<rootDir>/src$1"
+    },
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  }
 }
