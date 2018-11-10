@@ -33,22 +33,19 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
   onChangeStep: changeStep,
   onCancel: closeDraftRequest,
-  onCreate: (payload, options) =>
-    createRequest(payload, {
+  onCreate: (payload, meta) =>
+    createRequest(payload, meta, {
       url: 'api/v1/requests',
       schema: { result: requestSchema },
-      ...options,
     }),
-  onSave: (payload, options) =>
-    saveRequest(payload, {
-      url: `api/v1/requests/save/${options.id}`,
+  onSave: (payload, meta) =>
+    saveRequest(payload, meta, {
+      url: `api/v1/requests/save/${meta.id}`,
       schema: { result: requestSchema },
-      ...options,
     }),
-  onSubmit: (payload, options) =>
-    saveRequest(payload, {
-      url: `api/v1/requests/submit/${options.id}`,
+  onSubmit: (payload, meta) =>
+    saveRequest(payload, meta, {
+      url: `api/v1/requests/submit/${meta.id}`,
       schema: { result: requestSchema },
-      ...options,
     }),
 })(withRequest(NewRequest));
