@@ -114,7 +114,7 @@ class NewRequestDialog extends React.Component {
   };
 
   render() {
-    const { currentStep, data, open } = this.props;
+    const { currentStep, data, open, onUploadFile } = this.props;
 
     return (
       <ModalTransition>
@@ -128,7 +128,7 @@ class NewRequestDialog extends React.Component {
             width="x-large"
           >
             {currentStep === 0 && <Form ref={this.formRef} data={data} />}
-            {currentStep === 1 && <FileUploader />}
+            {currentStep === 1 && <FileUploader onDrop={onUploadFile} />}
           </Modal>
         )}
       </ModalTransition>
@@ -149,6 +149,7 @@ NewRequestDialog.propTypes = {
   isCreating: PropTypes.bool.isRequired,
   sendAction: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  onUploadFile: PropTypes.func.isRequired,
 };
 
 export default NewRequestDialog;

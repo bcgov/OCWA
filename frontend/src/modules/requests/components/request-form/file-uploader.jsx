@@ -4,8 +4,6 @@ import Button, { ButtonGroup } from '@atlaskit/button';
 import cx from 'classnames';
 import { ModalFooter } from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
-import tus from 'tus-js-client';
-import { getSession } from '@src/services/auth';
 
 import * as styles from './styles.css';
 
@@ -13,64 +11,6 @@ class FileUploader extends React.Component {
   state = {
     isDragging: false,
     isUploading: false,
-    error: null,
-    progress: 0,
-  };
-
-  upload = async file => {
-    const token = await getSession();
-    const upload = new tus.Upload(file, {
-      endpoint: '/api/v1/files',
-      retryDelays: [0, 1000, 3000, 5000],
-      metadata: {
-        filename: file.name,
-        filetype: file.type,
-        lastModified: file.lastModified,
-        jwt: token,
-      },
-      onError: this.onError,
-      onProgress: this.onProgress,
-      onSuccess: this.onSuccess.bind(null, file),
-    });
-
-    // Start the upload
-    this.setState(
-      {
-        error: null,
-        progress: 0,
-        isUploading: true,
-      },
-      () => upload.start()
-    );
-  };
-
-  onError = error => {
-    this.setState({ error, isUploading: false, progress: 0 });
-
-    setTimeout(() => {
-      this.setState({
-        error: null,
-        progress: 0,
-      });
-    }, 5000);
-  };
-
-  onProgress = (bytesUploaded, bytesTotal) => {
-    const progress = (bytesUploaded / bytesTotal * 100).toFixed(2);
-    this.setState({ progress });
-  };
-
-  onSuccess = file => {
-    const { onUploadSuccess } = this.props;
-    this.setState(
-      {
-        isUploading: false,
-        progress: 100,
-      },
-      () => {
-        onUploadSuccess(file);
-      }
-    );
   };
 
   onDragLeave = event => {
@@ -87,6 +27,7 @@ class FileUploader extends React.Component {
 
   onDrop = event => {
     const { isUploading } = this.state;
+    const { onDrop } = this.props;
     const { files } = event.dataTransfer;
     event.preventDefault();
 
@@ -95,7 +36,7 @@ class FileUploader extends React.Component {
         isDragging: false,
       });
 
-      this.upload(files[0]);
+      onDrop(files[0]);
     }
   };
 
@@ -153,7 +94,7 @@ class FileUploader extends React.Component {
 }
 
 FileUploader.propTypes = {
-  onUploadSuccess: PropTypes.func.isRequired,
+  onDrop: PropTypes.func.isRequired,
 };
 
 export default FileUploader;
