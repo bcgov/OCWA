@@ -1306,7 +1306,7 @@
   dependencies:
     "@babel/highlight" "^7.0.0"
 
-"@babel/core@7.0.0-bridge.0":
+"@babel/core@7.0.0":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.0.0.tgz#0cb0c0fd2e78a0a2bec97698f549ae9ce0b99515"
   integrity sha512-nrvxS5u6QUN5gLl1GEakIcmOeoUHT1/gQtdMRq18WFURJ5osn4ppJLVSseMQo4zVWKJfBTF4muIYijXUnKlRLQ==
@@ -5168,7 +5168,7 @@ fileset@^2.0.2:
     glob "^7.0.3"
     minimatch "^3.0.3"
 
-filesize@^3.2.1:
+filesize@^3.2.1, filesize@^3.6.1:
   version "3.6.1"
   resolved "https://registry.yarnpkg.com/filesize/-/filesize-3.6.1.tgz#090bb3ee01b6f801a8a8be99d31710b3422bb317"
   integrity sha512-7KjR1vv6qnicaPMi1iiTcI85CyYwRO/PSFCu6SvqL8jN2Wjt/NIYQTFtFs7fSDCYOstUkEWIQGFUg5YZQfjlcg==
