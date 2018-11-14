@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Modal, { ModalFooter, ModalTransition } from '@atlaskit/modal-dialog';
 
 import Form from './form';
-import FileUploader from './file-uploader';
+import FileUploader from '../../containers/file-uploader';
 
 class NewRequestDialog extends React.Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class NewRequestDialog extends React.Component {
   };
 
   onSaveAndClose = () => {
-    const { currentStep, data, onCancel } = this.props;
+    const { currentStep, data } = this.props;
 
     if (currentStep === 0) {
       const formValues = this.validateForm();
@@ -142,7 +142,6 @@ NewRequestDialog.propTypes = {
   data: PropTypes.shape({
     name: PropTypes.string,
   }).isRequired,
-  id: PropTypes.string,
   isNewRequest: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onChangeStep: PropTypes.func.isRequired,

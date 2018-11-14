@@ -19,6 +19,7 @@ export const closeDraftRequest = () => ({
   type: 'requests/close/draft',
 });
 
+// Request File Upload Actions
 export const uploadFile = (file, requestId) => ({
   type: 'request/file/upload',
   meta: {
@@ -27,18 +28,20 @@ export const uploadFile = (file, requestId) => ({
   payload: file,
 });
 
-export const uploadFileProgress = (file, progress) => ({
+export const uploadFileProgress = (file, url, progress) => ({
   type: 'request/file/upload/progress',
   meta: {
     file,
+    url,
   },
   payload: progress,
 });
 
-export const uploadFileFailure = (file, error) => ({
+export const uploadFileFailure = (file, url, error) => ({
   type: 'request/file/upload/failed',
   meta: {
     file,
+    url,
   },
   error: true,
   payload: error,
