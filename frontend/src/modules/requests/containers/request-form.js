@@ -10,6 +10,7 @@ import {
   changeStep,
   closeDraftRequest,
   saveRequest,
+  uploadFile,
 } from '../actions';
 import { requestSchema } from '../schemas';
 
@@ -48,4 +49,5 @@ export default connect(mapStateToProps, {
       url: `api/v1/requests/submit/${meta.id}`,
       schema: { result: requestSchema },
     }),
+  onUploadFile: uploadFile,
 })(withRequest(NewRequest));

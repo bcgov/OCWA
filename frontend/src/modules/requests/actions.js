@@ -19,6 +19,38 @@ export const closeDraftRequest = () => ({
   type: 'requests/close/draft',
 });
 
+export const uploadFile = (file, requestId) => ({
+  type: 'request/file/upload',
+  meta: {
+    requestId,
+  },
+  payload: file,
+});
+
+export const uploadFileProgress = (file, progress) => ({
+  type: 'request/file/upload/progress',
+  meta: {
+    file,
+  },
+  payload: progress,
+});
+
+export const uploadFileFailure = (file, error) => ({
+  type: 'request/file/upload/failed',
+  meta: {
+    file,
+  },
+  error: true,
+  payload: error,
+});
+
+export const uploadFileSuccess = (file, url) => ({
+  type: 'request/file/upload/success',
+  meta: {
+    url,
+  },
+  payload: file,
+});
 export default {
   createRequest,
   changeStep,
