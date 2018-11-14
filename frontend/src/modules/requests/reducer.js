@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import merge from 'lodash/merge';
 
 const initialViewState = {
   currentRequestId: null,
@@ -41,12 +42,39 @@ const viewState = (state = initialViewState, action = {}) => {
   }
 };
 
-const initialNewRequestState = {
-  request: {},
+const files = (state = {}, action = {}) => {
+  if (action.type === 'request/file/upload/progress') {
+    return merge({}, state, {
+      [action.meta.url]: {
+        ...action.meta.file,
+        id: action.meta.url,
+      },
+    });
+  }
+
+  return state;
 };
 
-const newRequest = (state = initialNewRequestState, action = {}) => {
+const uploads = (state = {}, action = {}) => {
   switch (action.type) {
+    case 'request/file/upload/progress':
+      return {
+        ...state,
+        [action.meta.url]: action.payload,
+      };
+
+    case 'request/file/upload/success':
+      return {
+        ...state,
+        [action.meta.url]: 'loaded',
+      };
+
+    case 'request/file/upload/failed':
+      return {
+        ...state,
+        [action.meta.url]: 'failed',
+      };
+
     default:
       return state;
   }
@@ -54,5 +82,6 @@ const newRequest = (state = initialNewRequestState, action = {}) => {
 
 export default combineReducers({
   viewState,
-  newRequest,
+  files,
+  uploads,
 });

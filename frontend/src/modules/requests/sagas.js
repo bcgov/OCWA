@@ -9,6 +9,9 @@ import {
   uploadFileSuccess,
 } from './actions';
 
+// Channel to handle the file uploads with TUS
+// file: File object
+// metadata: composed details, includes filename, filetype, lastModified and jwt
 function uploadChannel(file, metadata) {
   return eventChannel(emitter => {
     const upload = new tus.Upload(file, {
@@ -19,11 +22,13 @@ function uploadChannel(file, metadata) {
         emitter({
           error,
           file,
+          url: upload.url,
         }),
       onProgress: (bytesUploaded, bytesTotal) =>
         emitter({
           file,
-          progress: (bytesUploaded / bytesTotal * 100).toFixed(2),
+          progress: bytesUploaded / bytesTotal * 100,
+          url: upload.url,
         }),
       onSuccess: () => {
         emitter({
@@ -40,31 +45,42 @@ function uploadChannel(file, metadata) {
   });
 }
 
+// Upload Saga
 function* uploadFile(action) {
-  const file = action.payload;
+  const file = {
+    filename: action.payload.name,
+    filetype: action.payload.type,
+    lastModified: action.payload.lastModified,
+    size: action.payload.size,
+  };
   const token = yield call(getSession);
   const metaData = {
-    filename: file.name,
-    filetype: file.type,
-    lastModified: file.lastModified,
-    jwt: 'azureaccountname', // NOTE: Just a temp until local testing is complete
+    ...file,
+    jwt: 'azureaccountname', // NOTE: Just a temp until local testing is complete, use `token` instead
   };
-  const channel = yield call(uploadChannel, file, metaData);
+  // Create the channel with the file and the metadata
+  const channel = yield call(uploadChannel, action.payload, metaData);
 
   while (true) {
+    // File upload states from TUS, the file is from the upload above
     const { error, progress = 0, success, url } = yield take(channel);
+    const payload = {
+      ...file,
+      id: url,
+      progress,
+    };
 
     if (error) {
-      yield put(uploadFileFailure(file, error));
+      yield put(uploadFileFailure(payload, url, error));
       return;
     }
 
     if (success) {
-      yield put(uploadFileSuccess(file, url));
+      yield put(uploadFileSuccess(payload, url));
       return;
     }
 
-    yield put(uploadFileProgress(file, progress));
+    yield put(uploadFileProgress(payload, url, progress));
   }
 }
 

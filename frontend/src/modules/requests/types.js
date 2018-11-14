@@ -20,6 +20,14 @@ export const RequestSchema = PropTypes.shape({
   _id: PropTypes.string,
 });
 
+export const FileSchema = PropTypes.shape({
+  filename: PropTypes.string.isRequired,
+  filetype: PropTypes.string.isRequired,
+  size: PropTypes.number.isRequired,
+  state: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+});
+
 export default {
   RequestSchema,
+  FileSchema,
 };
