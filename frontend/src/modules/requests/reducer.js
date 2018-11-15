@@ -4,10 +4,24 @@ import merge from 'lodash/merge';
 const initialViewState = {
   currentRequestId: null,
   currentNewRequestStep: 0,
+  filter: null,
+  search: '',
 };
 
 const viewState = (state = initialViewState, action = {}) => {
   switch (action.type) {
+    case 'requests/filter':
+      return {
+        ...state,
+        filter: action.payload,
+      };
+
+    case 'requests/search':
+      return {
+        ...state,
+        search: action.payload,
+      };
+
     case 'requests/view/draft':
       return {
         ...state,
@@ -74,6 +88,11 @@ const uploads = (state = {}, action = {}) => {
         ...state,
         [action.meta.url]: 'failed',
       };
+
+    case 'request/put/success':
+    case 'request/put/failed':
+    case 'request/close/draft':
+      return {};
 
     default:
       return state;

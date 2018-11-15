@@ -29,7 +29,7 @@ class NewRequestDialog extends React.Component {
   };
 
   onSaveAndClose = () => {
-    const { currentStep, data } = this.props;
+    const { currentStep, data, files } = this.props;
 
     if (currentStep === 0) {
       const formValues = this.validateForm();
@@ -41,7 +41,7 @@ class NewRequestDialog extends React.Component {
       this.save(
         {
           ...data,
-          files: [],
+          files,
         },
         true
       );
@@ -74,13 +74,14 @@ class NewRequestDialog extends React.Component {
   };
 
   renderFooter = () => {
-    const { currentStep, isCreating, onCancel } = this.props;
+    const { currentStep, isCreating, isUploading, onCancel } = this.props;
+    const isDisabled = isCreating || isUploading;
 
     return (
       <ModalFooter>
         <Button
           appearance="default"
-          isDisabled={isCreating}
+          isDisabled={isDisabled}
           onClick={this.onSaveAndClose}
         >
           Save and Close
@@ -89,14 +90,14 @@ class NewRequestDialog extends React.Component {
         <ButtonGroup>
           <Button
             appearance="default"
-            isDisabled={isCreating}
+            isDisabled={isDisabled}
             onClick={onCancel}
           >
             Cancel
           </Button>
           {currentStep === 0 && (
             <Button
-              isDisabled={isCreating}
+              isDisabled={isDisabled}
               appearance="primary"
               onClick={this.onAddFiles}
             >
@@ -104,7 +105,11 @@ class NewRequestDialog extends React.Component {
             </Button>
           )}
           {currentStep === 1 && (
-            <Button appearance="primary" onClick={this.onSubmit}>
+            <Button
+              appearance="primary"
+              isDisabled={isDisabled}
+              onClick={this.onSubmit}
+            >
               Submit for Review
             </Button>
           )}
@@ -114,7 +119,7 @@ class NewRequestDialog extends React.Component {
   };
 
   render() {
-    const { currentStep, data, open, onUploadFile } = this.props;
+    const { currentStep, data, open, onUploadFile, isUploading } = this.props;
 
     return (
       <ModalTransition>
@@ -123,12 +128,13 @@ class NewRequestDialog extends React.Component {
             autoFocus
             footer={this.renderFooter}
             heading={`Initiate a New Request (Step ${currentStep + 1}/2)`}
-            height="100%"
             onCloseComplete={this.reset}
             width="x-large"
           >
             {currentStep === 0 && <Form ref={this.formRef} data={data} />}
-            {currentStep === 1 && <FileUploader onDrop={onUploadFile} />}
+            {currentStep === 1 && (
+              <FileUploader isUploading={isUploading} onDrop={onUploadFile} />
+            )}
           </Modal>
         )}
       </ModalTransition>
@@ -142,7 +148,9 @@ NewRequestDialog.propTypes = {
   data: PropTypes.shape({
     name: PropTypes.string,
   }).isRequired,
+  files: PropTypes.arrayOf(PropTypes.string).isRequired,
   isNewRequest: PropTypes.bool.isRequired,
+  isUploading: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onChangeStep: PropTypes.func.isRequired,
   isCreating: PropTypes.bool.isRequired,

@@ -45,7 +45,7 @@ function* handleDataRequest(method, action) {
   }
 
   if (method !== 'get') {
-    yield call(delay, 5000);
+    yield call(delay, 3000);
     yield put({
       type: `${action.type}/reset`,
       meta,

@@ -1,18 +1,13 @@
 import { connect } from 'react-redux';
-import isNumber from 'lodash/isNumber';
+import keys from 'lodash/keys';
 
 import FileUploader from '../components/file-uploader';
 
 const mapStateToProps = state => {
-  const ids = Object.keys(state.requests.files);
-  const states = Object.keys(state.requests.uploads).map(
-    id => state.requests.uploads[id]
-  );
-  const data = ids.map(id => state.requests.files[id]);
+  const data = keys(state.requests.uploads);
 
   return {
     data,
-    isUploading: states.some(isNumber),
   };
 };
 

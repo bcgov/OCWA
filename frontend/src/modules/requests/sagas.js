@@ -1,5 +1,5 @@
-import { call, put, take, takeLatest } from 'redux-saga/effects';
-import { eventChannel } from 'redux-saga';
+import { all, call, fork, put, take, takeLatest } from 'redux-saga/effects';
+import { channel, eventChannel, END } from 'redux-saga';
 import { getSession } from '@src/services/auth';
 import tus from 'tus-js-client';
 
@@ -36,6 +36,7 @@ function uploadChannel(file, metadata) {
           success: true,
           url: upload.url,
         });
+        emitter(END);
       },
     });
 
@@ -46,24 +47,24 @@ function uploadChannel(file, metadata) {
 }
 
 // Upload Saga
-function* uploadFile(action) {
+function* uploadFile(item) {
+  // const token = yield call(getSession);
   const file = {
-    filename: action.payload.name,
-    filetype: action.payload.type,
-    lastModified: action.payload.lastModified,
-    size: action.payload.size,
+    filename: item.name,
+    filetype: item.type,
+    lastModified: item.lastModified,
+    size: item.size,
   };
-  const token = yield call(getSession);
   const metaData = {
     ...file,
     jwt: 'azureaccountname', // NOTE: Just a temp until local testing is complete, use `token` instead
   };
   // Create the channel with the file and the metadata
-  const channel = yield call(uploadChannel, action.payload, metaData);
+  const chan = yield call(uploadChannel, item, metaData);
 
   while (true) {
     // File upload states from TUS, the file is from the upload above
-    const { error, progress = 0, success, url } = yield take(channel);
+    const { error, progress = 0, success, url } = yield take(chan);
     const payload = {
       ...file,
       id: url,
@@ -84,6 +85,27 @@ function* uploadFile(action) {
   }
 }
 
+function* handleUploader(chan) {
+  while (true) {
+    const file = yield take(chan);
+    yield call(uploadFile, file);
+  }
+}
+
+function* watcher() {
+  const chan = yield call(channel);
+
+  for (let i = 0; i < 3; i++) {
+    yield fork(handleUploader, chan);
+  }
+
+  while (true) {
+    const { payload } = yield take('request/file/upload');
+    yield all(payload.map(file => put(chan, file)));
+  }
+}
+
 export default function* root() {
-  yield takeLatest('request/file/upload', uploadFile);
+  yield call(watcher);
+  // yield takeLatest('request/file/upload', uploadFile);
 }

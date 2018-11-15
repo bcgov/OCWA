@@ -1,14 +1,17 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import FileIcon from '@src/components/file-icon';
 import ArrowUpCircleIcon from '@atlaskit/icon/glyph/arrow-up-circle';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import ErrorIcon from '@atlaskit/icon/glyph/jira/failed-build-status';
+import filesize from 'filesize';
+import startCase from 'lodash/startCase';
 import { colors } from '@atlaskit/theme';
 
 import { FileSchema } from '../../types';
 import * as styles from './styles.css';
 
-function FileItem({ data }) {
+function FileItem({ data, uploadStatus }) {
   return (
     <div key={data.id} className={styles.fileItem}>
       <div className={styles.fileItemIcon}>
@@ -17,11 +20,17 @@ function FileItem({ data }) {
       <div className={styles.fileItemName}>{data.filename}</div>
       <div className={styles.fileItemSize}>
         {data.state === 'loading' && `${data.progress}% of `}
-        {data.size}
+        {filesize(data.size)}
       </div>
-      <div className={styles.fileItemState}>Uploaded</div>
+      <div className={styles.fileItemState}>{startCase(uploadStatus)}</div>
       <div className={styles.fileItemStatusIcon}>
-        <CheckCircleIcon primaryColor={colors.G500} />
+        {uploadStatus === 'uploading' && (
+          <ArrowUpCircleIcon primaryColor={colors.B500} />
+        )}
+        {uploadStatus === 'failed' && <ErrorIcon primaryColor={colors.R500} />}
+        {uploadStatus === 'loaded' && (
+          <CheckCircleIcon primaryColor={colors.G500} />
+        )}
       </div>
     </div>
   );
@@ -29,6 +38,7 @@ function FileItem({ data }) {
 
 FileItem.propTypes = {
   data: FileSchema.isRequired,
+  uploadStatus: PropTypes.oneOf(['loaded', 'failed', 'uploading']).isRequired,
 };
 
 export default FileItem;
