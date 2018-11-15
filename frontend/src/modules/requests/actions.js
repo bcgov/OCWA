@@ -5,6 +5,16 @@ export const fetchRequest = createDataAction('request/get');
 export const createRequest = createDataAction('request/post');
 export const saveRequest = createDataAction('request/put');
 
+export const changeFilter = filter => ({
+  type: 'requests/filter',
+  payload: filter,
+});
+
+export const searchResults = filter => ({
+  type: 'requests/search',
+  payload: filter,
+});
+
 export const changeStep = step => ({
   type: 'requests/change-step',
   payload: step,

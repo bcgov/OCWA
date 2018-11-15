@@ -1174,6 +1174,19 @@
     "@atlaskit/util-shared-styles" "^2.10.3"
     styled-components "^3.2.6"
 
+"@atlaskit/tabs@^8.0.9":
+  version "8.0.9"
+  resolved "https://registry.yarnpkg.com/@atlaskit/tabs/-/tabs-8.0.9.tgz#e8a8404d4a9e6e75472dc3fb8c751dd9403ef542"
+  integrity sha512-BLzjp+aAdf8dK3+ZN8Avx2FqllaeOvgaesdsQ6KCLBC7PN5FQoNnbNsLjZtRYvoStLrvay6Ma/JCFTkgMnsTBA==
+  dependencies:
+    "@atlaskit/analytics-next" "^3.0.10"
+    "@atlaskit/theme" "^6.1.1"
+    "@babel/runtime" "^7.0.0"
+    classnames "^2.2.5"
+    css-element-queries "^0.3.2"
+    debounce "^1.0.0"
+    keycode "^2.1.7"
+
 "@atlaskit/task-decision@^11.0.1":
   version "11.0.1"
   resolved "https://registry.yarnpkg.com/@atlaskit/task-decision/-/task-decision-11.0.1.tgz#83dafe21f869cb98f7e0be6445621e7d545a70d6"
@@ -3977,6 +3990,11 @@ css-color-names@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
   integrity sha1-gIrcLnnPhHOAabZGyyDsJ762KeA=
+
+css-element-queries@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/css-element-queries/-/css-element-queries-0.3.2.tgz#535d80891b3af21395d005f19905fe5154b5ccff"
+  integrity sha1-U12AiRs68hOV0AXxmQX+UVS1zP8=
 
 css-loader@^1.0.0:
   version "1.0.0"
