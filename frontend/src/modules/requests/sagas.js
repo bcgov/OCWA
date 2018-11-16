@@ -1,6 +1,6 @@
 import { all, call, fork, put, take } from 'redux-saga/effects';
 import { channel, eventChannel, END } from 'redux-saga';
-// import { getSession } from '@src/services/auth';
+import { getSession } from '@src/services/auth';
 import tus from 'tus-js-client';
 
 import {
@@ -50,7 +50,7 @@ function uploadChannel(file, metadata) {
 
 // Upload Saga
 function* uploadFileChannel(item) {
-  // const token = yield call(getSession);
+  const token = yield call(getSession);
   const file = {
     filename: item.name,
     filetype: item.type,
@@ -59,7 +59,7 @@ function* uploadFileChannel(item) {
   };
   const metaData = {
     ...file,
-    jwt: 'azureaccountname', // NOTE: Just a temp until local testing is complete, use `token` instead
+    jwt: token,
   };
   // Create the channel with the file and the metadata
   const chan = yield call(uploadChannel, item, metaData);
@@ -100,7 +100,7 @@ function* uploadDispatcher(chan) {
 function* uploadFileWatcher() {
   const chan = yield call(channel);
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 3; i += 1) {
     yield fork(uploadDispatcher, chan);
   }
 
