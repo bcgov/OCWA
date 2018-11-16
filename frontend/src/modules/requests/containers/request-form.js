@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import forIn from 'lodash/forIn';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
@@ -23,9 +24,12 @@ const mapStateToProps = state => {
   const keyPath = `data.entities.requests.${currentRequestId}`;
   const isNewRequest = !has(state, keyPath);
   const data = get(state, keyPath, {});
-  const uploadedFiles = keys(state.requests.uploads).filter(
-    d => d === 'loaded'
-  );
+  const uploadedFiles = [];
+  forIn(state.requests.uploads, (value, key) => {
+    if (value === 'loaded') {
+      uploadedFiles.push(key);
+    }
+  });
   const files = union(data.files, uploadedFiles);
   const isUploading = values(state.requests.uploads).some(isNumber);
 

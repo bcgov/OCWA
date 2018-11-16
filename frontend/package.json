@@ -94,6 +94,7 @@
     "passport-local": "^1.0.0",
     "passport-openidconnect": "^0.0.2",
     "prop-types": "^15.6.2",
+    "pug": "^2.0.3",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
     "react-intl": "^2.7.1",

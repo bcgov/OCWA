@@ -194,6 +194,7 @@ router.get('/:requestId', function(req, res, next) {
 router.put("/save/:requestId", function(req, res, next){
     var db = require('../db/db');
     var requestId = mongoose.Types.ObjectId(req.params.requestId);
+    var config = require('config');
     var logger = require('npmlog');
 
     db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, findRes){

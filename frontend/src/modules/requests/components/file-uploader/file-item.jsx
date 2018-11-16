@@ -19,7 +19,7 @@ function FileItem({ data, uploadStatus }) {
       </div>
       <div className={styles.fileItemName}>{data.filename}</div>
       <div className={styles.fileItemSize}>
-        {data.state === 'loading' && `${data.progress}% of `}
+        {uploadStatus === 'uploading' && `${data.progress}% of `}
         {filesize(data.size)}
       </div>
       <div className={styles.fileItemState}>{startCase(uploadStatus)}</div>
