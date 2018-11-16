@@ -1,6 +1,6 @@
-import { all, call, fork, put, take, takeLatest } from 'redux-saga/effects';
+import { all, call, fork, put, take } from 'redux-saga/effects';
 import { channel, eventChannel, END } from 'redux-saga';
-import { getSession } from '@src/services/auth';
+// import { getSession } from '@src/services/auth';
 import tus from 'tus-js-client';
 
 import {
@@ -9,32 +9,34 @@ import {
   uploadFileSuccess,
 } from './actions';
 
+const sanitizeURL = url => url.replace(/https?:\/\/.*\/files\//, '');
+
 // Channel to handle the file uploads with TUS
 // file: File object
 // metadata: composed details, includes filename, filetype, lastModified and jwt
 function uploadChannel(file, metadata) {
   return eventChannel(emitter => {
     const upload = new tus.Upload(file, {
-      endpoint: 'http://localhost:1080/files/',
+      endpoint: '/files/upload',
       retryDelays: [0, 1000, 3000, 5000],
       metadata,
       onError: error =>
         emitter({
           error,
           file,
-          url: upload.url,
+          url: sanitizeURL(upload.url),
         }),
       onProgress: (bytesUploaded, bytesTotal) =>
         emitter({
           file,
           progress: bytesUploaded / bytesTotal * 100,
-          url: upload.url,
+          url: sanitizeURL(upload.url),
         }),
       onSuccess: () => {
         emitter({
           file,
           success: true,
-          url: upload.url,
+          url: sanitizeURL(upload.url),
         });
         emitter(END);
       },
@@ -47,7 +49,7 @@ function uploadChannel(file, metadata) {
 }
 
 // Upload Saga
-function* uploadFile(item) {
+function* uploadFileChannel(item) {
   // const token = yield call(getSession);
   const file = {
     filename: item.name,
@@ -85,27 +87,30 @@ function* uploadFile(item) {
   }
 }
 
-function* handleUploader(chan) {
+// Responsible for forking the worker threads to the uploadFile channel
+function* uploadDispatcher(chan) {
   while (true) {
     const file = yield take(chan);
-    yield call(uploadFile, file);
+    yield call(uploadFileChannel, file);
   }
 }
 
-function* watcher() {
+// This saga is responsible for setting up the worker threads for uploading
+// before setting up a watcher for the upload action
+function* uploadFileWatcher() {
   const chan = yield call(channel);
 
   for (let i = 0; i < 3; i++) {
-    yield fork(handleUploader, chan);
+    yield fork(uploadDispatcher, chan);
   }
 
   while (true) {
     const { payload } = yield take('request/file/upload');
+    // The upload action sends an array (not FileList) of Files
     yield all(payload.map(file => put(chan, file)));
   }
 }
 
 export default function* root() {
-  yield call(watcher);
-  // yield takeLatest('request/file/upload', uploadFile);
+  yield call(uploadFileWatcher);
 }

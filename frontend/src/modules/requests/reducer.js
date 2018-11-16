@@ -57,7 +57,10 @@ const viewState = (state = initialViewState, action = {}) => {
 };
 
 const files = (state = {}, action = {}) => {
-  if (action.type === 'request/file/upload/progress') {
+  if (
+    action.type === 'request/file/upload/progress' ||
+    action.type === 'request/file/upload/failed'
+  ) {
     return merge({}, state, {
       [action.meta.url]: {
         ...action.meta.file,

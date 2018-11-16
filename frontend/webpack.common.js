@@ -1,5 +1,4 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -41,14 +40,7 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new webpack.NamedModulesPlugin(),
-    new CleanWebpackPlugin(['dist']),
-    new HtmlWebpackPlugin({
-      title: 'OCWA [DEMO]',
-      template: path.join(__dirname, 'src/templates/main.html'),
-    }),
-  ],
+  plugins: [new webpack.NamedModulesPlugin(), new CleanWebpackPlugin(['dist'])],
   stats: {
     colors: true,
   },

@@ -39,6 +39,8 @@ if (isDevelopment) {
 }
 
 // Express config
+app.set('view engine', 'pug');
+app.set('views', `${__dirname}/views`);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'dist')));
@@ -68,11 +70,11 @@ app.use('/api/v1/forums', proxy.forum);
 app.use('/api/v1/requests', proxy.request);
 
 app.get('/hello', (req, res) => {
-  res.status(200).send('hi')
-})
+  res.status(200).send('hi');
+});
 
-app.get('/*', (req, res) => {
-  res.sendFile('/index.html');
+app.get(/^((?!.json|__webpack_hmr).)*$/, (req, res) => {
+  res.render('index', { title: 'OCWA [Development Version]' });
 });
 
 app.use((err, req, res) => {
