@@ -26,6 +26,4 @@ printf "}\n" >> ./config/default.json
 printf "}" >> ./config/default.json
 
 
-#Do not start prod version for now as its a mess
-##yarn start:prod
-yarn start
+yarn start:prod
