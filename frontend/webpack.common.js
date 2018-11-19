@@ -20,22 +20,9 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 2,
-              localIdentName: '[path][name]_[local]--[hash:base64:8]',
-            },
-          },
-        ],
-      },
-      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
+        include: /src/,
         use: ['babel-loader'],
       },
     ],
