@@ -9,7 +9,7 @@ export default function(reducers, sagas) {
   const sagaMiddleware = createSagaMiddleware();
   const middleware = [sagaMiddleware];
 
-  if (process.env.NODE_ENV === 'development') {
+  if (__DEV__) {
     middleware.push(createLogger());
   }
 

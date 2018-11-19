@@ -23,11 +23,13 @@ const renderApp = () =>
 
 renderApp();
 
-if (module.hot) {
-  module.hot.accept('./modules/app/containers/app', () => renderApp());
+if (__DEV__) {
+  if (module.hot) {
+    module.hot.accept('./modules/app/containers/app', () => renderApp());
 
-  module.hot.accept('./reducers', () => {
-    const nextReducer = require('./reducers').default; // eslint-disable-line
-    store.replaceReducer(nextReducer);
-  });
+    module.hot.accept('./reducers', () => {
+      const nextReducer = require('./reducers').default; // eslint-disable-line
+      store.replaceReducer(nextReducer);
+    });
+  }
 }
