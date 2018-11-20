@@ -86,7 +86,10 @@ const handlePostStatus = (state, action) => {
       [action.meta.id]: 'failed',
     };
   } else if (/\w+\/post\/reset$/.test(action.type)) {
-    return omit(state, ['postRequests', action.meta.dataType, action.meta.id]);
+    return omit(
+      state,
+      `postRequests.${action.meta.dataType}.${action.meta.id}`
+    );
   }
 
   return merge({}, state, {

@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import get from 'lodash/get';
 import merge from 'lodash/merge';
 
 const initialViewState = {
@@ -47,7 +48,7 @@ const viewState = (state = initialViewState, action = {}) => {
         ...state,
         currentRequestId: action.meta.quitEditing
           ? null
-          : state.currentRequestId,
+          : get(action, 'payload.result.result', state.currentRequestId),
         currentNewRequestStep: action.meta.quitEditing ? 0 : 1,
       };
 
