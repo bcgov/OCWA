@@ -9,7 +9,13 @@ import {
   uploadFileSuccess,
 } from './actions';
 
-const sanitizeURL = url => url.replace(/https?:\/\/.*\/files\//, '');
+const sanitizeURL = url => {
+  if (url) {
+    return url.replace(/https?:\/\/.*\/files\//, '');
+  }
+
+  return '';
+};
 
 // Channel to handle the file uploads with TUS
 // file: File object
@@ -17,7 +23,7 @@ const sanitizeURL = url => url.replace(/https?:\/\/.*\/files\//, '');
 function uploadChannel(file, metadata) {
   return eventChannel(emitter => {
     const upload = new tus.Upload(file, {
-      endpoint: '/files/upload',
+      endpoint: '/api/v1/files/',
       retryDelays: [0, 1000, 3000, 5000],
       metadata,
       onError: error =>
