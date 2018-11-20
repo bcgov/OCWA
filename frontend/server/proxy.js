@@ -32,9 +32,9 @@ const onProxyReq = (proxyReq, req) => {
 const filesProxy = proxy({
   target: `http://${filesApiHost}`,
   pathRewrite: {
-    '^/api/v1/files': '/files/',
-    '^/files/upload': '/files/',
+    '^/api/v1/files': '/files',
   },
+  changeOrigin: true,
 });
 
 const forumProxy = proxy({
