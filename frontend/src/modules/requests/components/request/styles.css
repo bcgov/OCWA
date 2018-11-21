@@ -20,7 +20,8 @@
   border-radius: 3px 3px 0 0;
 }
 
-.tab:active {
+.tab:active,
+.tab:focus {
   outline: none !important;
 }
 
