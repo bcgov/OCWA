@@ -1,9 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import DropdownMenu, {
+  DropdownItemGroup,
+  DropdownItem,
+} from '@atlaskit/dropdown-menu';
 import { Link } from 'react-router-dom';
 import Date from '@src/components/date';
-import DynamicTable from '@atlaskit/dynamic-table';
+import { DynamicTableStateless } from '@atlaskit/dynamic-table';
 import { FieldTextStateless } from '@atlaskit/field-text';
 import head from 'lodash/head';
 import last from 'lodash/last';
@@ -15,10 +19,16 @@ import * as styles from './styles.css';
 const header = {
   cells: [
     { key: 'state', content: 'Status', isSortable: true, width: 10 },
-    { key: 'name', content: 'Request Identifier', isSortable: true },
+    {
+      key: 'name',
+      content: 'Request Identifier',
+      shouldTruncate: true,
+      isSortable: true,
+    },
     { key: 'submittedOn', content: 'Submitted On', isSortable: true },
     { key: 'updatedOn', content: 'Updated On', isSortable: true },
     { key: 'outputChecker', content: 'Output Checker', isSortable: true },
+    { key: 'more', shouldTruncate: true },
   ],
 };
 
@@ -38,7 +48,10 @@ function RequestsList({
   onChangeFilter,
   onSearch,
   onSelect,
+  onSort,
   search,
+  sortKey,
+  sortOrder,
 }) {
   const rows = data.map(d => {
     const format = 'MMM Do, YYYY';
@@ -50,7 +63,7 @@ function RequestsList({
       cells: [
         {
           key: d.state,
-          content: <RequestIcon value={d.state} />,
+          content: <RequestIcon value={d.state} size="medium" />,
         },
         {
           key: d.name,
@@ -83,6 +96,44 @@ function RequestsList({
         {
           key: 0,
           content: '-',
+        },
+        {
+          content: (
+            <DropdownMenu trigger="Actions" triggerType="button">
+              <DropdownItemGroup>
+                {d.state >= 2 &&
+                  d.state < 4 && (
+                    <DropdownItem onClick={() => console.log('hi!', d.name)}>
+                      Withdraw
+                    </DropdownItem>
+                  )}
+                {d.state < 4 && (
+                  <DropdownItem
+                    onClick={() => console.log('TODO: Cancel', d.name)}
+                  >
+                    Cancel
+                  </DropdownItem>
+                )}
+                {d.state < 2 && (
+                  <React.Fragment>
+                    <DropdownItem
+                      onClick={() => console.log(('TODO: Submit', d.name))}
+                    >
+                      Submit
+                    </DropdownItem>
+                    <DropdownItem onClick={() => onSelect(d._id)}>
+                      Edit
+                    </DropdownItem>
+                    <DropdownItem
+                      onClick={() => console.log('TODO: Delete', d.name)}
+                    >
+                      Delete
+                    </DropdownItem>
+                  </React.Fragment>
+                )}
+              </DropdownItemGroup>
+            </DropdownMenu>
+          ),
         },
       ],
     };
@@ -119,14 +170,15 @@ function RequestsList({
       </header>
       <Grid>
         <GridColumn medium={12}>
-          <DynamicTable
+          <DynamicTableStateless
             emptyView={<h2>No requests yet</h2>}
             head={header}
             rows={rows}
             loadingSpinnerSize="large"
             isLoading={isLoading}
-            defaultSortKey="state"
-            defaultSortOrder="DESC"
+            sortKey={sortKey}
+            sortOrder={sortOrder}
+            onSort={sortProps => onSort(sortProps)}
           />
         </GridColumn>
       </Grid>
@@ -148,9 +200,12 @@ RequestsList.propTypes = {
   ]),
   isLoading: PropTypes.bool.isRequired,
   onChangeFilter: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
   onSelect: PropTypes.func.isRequired,
   search: PropTypes.string.isRequired,
+  sortKey: PropTypes.string.isRequired,
+  sortOrder: PropTypes.oneOf(['DESC', 'ASC']).isRequired,
 };
 
 RequestsList.defaultProps = {

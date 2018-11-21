@@ -9,13 +9,14 @@ import {
   changeFilter,
   fetchRequests,
   searchResults,
+  sortRequests,
   viewDraftRequest,
 } from '../actions';
 import RequestsList from '../components/requests-list';
 import { requestsListSchema } from '../schemas';
 
 const mapStateToProps = state => {
-  const { filter, search } = state.requests.viewState;
+  const { filter, search, sortKey, sortOrder } = state.requests.viewState;
   const entities = get(state, 'data.entities.requests', {});
   const ids = keys(entities);
   const regex = new RegExp(search, 'i');
@@ -36,6 +37,8 @@ const mapStateToProps = state => {
     fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests'),
     filter,
     search,
+    sortKey,
+    sortOrder,
   };
 };
 
@@ -43,6 +46,7 @@ export default connect(mapStateToProps, {
   onChangeFilter: changeFilter,
   onSearch: searchResults,
   onSelect: viewDraftRequest,
+  onSort: sortRequests,
   initialRequest: () =>
     fetchRequests({
       url: '/api/v1/requests',

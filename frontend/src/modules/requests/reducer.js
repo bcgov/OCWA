@@ -6,6 +6,8 @@ const initialViewState = {
   currentRequestId: null,
   currentNewRequestStep: 0,
   filter: null,
+  sortKey: 'state',
+  sortOrder: 'DESC',
   search: '',
 };
 
@@ -15,6 +17,12 @@ const viewState = (state = initialViewState, action = {}) => {
       return {
         ...state,
         filter: action.payload,
+      };
+
+    case 'requests/sort':
+      return {
+        ...state,
+        ...action.payload,
       };
 
     case 'requests/search':

@@ -10,6 +10,14 @@ export const changeFilter = filter => ({
   payload: filter,
 });
 
+export const sortRequests = ({ key, sortOrder }) => ({
+  type: 'requests/sort',
+  payload: {
+    sortKey: key,
+    sortOrder,
+  },
+});
+
 export const searchResults = filter => ({
   type: 'requests/search',
   payload: filter,
