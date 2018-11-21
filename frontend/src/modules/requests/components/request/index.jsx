@@ -9,11 +9,15 @@ import CommentIcon from '@atlaskit/icon/glyph/comment';
 
 import Details from './details';
 import StateLabel from '../state-label';
-import Sidebar from './sidebar';
+import Sidebar from '../../containers/sidebar';
 import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
 function Request({ data, fetchStatus, updatedAt, match }) {
+  if (fetchStatus !== 'loaded') {
+    return null;
+  }
+
   return (
     <Page>
       <header className={styles.header}>
