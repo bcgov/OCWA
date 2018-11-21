@@ -50,11 +50,7 @@ class App extends React.Component {
               <div className={styles.container}>
                 <Switch>
                   <Route exact path="/" component={Requests} />
-                  <Route
-                    exact
-                    path="/requests/:requestId"
-                    component={Request}
-                  />
+                  <Route path="/requests/:requestId" component={Request} />
                   <Route render={() => '404'} />
                 </Switch>
               </div>
