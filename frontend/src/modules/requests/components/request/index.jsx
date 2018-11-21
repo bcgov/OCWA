@@ -1,28 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import DynamicTable from '@atlaskit/dynamic-table';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Date from '@src/components/date';
+import { NavLink, Route, Switch } from 'react-router-dom';
 
+import InfoIcon from '@atlaskit/icon/glyph/info';
+import CommentIcon from '@atlaskit/icon/glyph/comment';
+
+import Details from './details';
 import StateLabel from '../state-label';
+import Sidebar from './sidebar';
 import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
-const head = {
-  cells: [
-    { key: 'selected', content: '', width: 10 },
-    { key: 'name', content: 'File Name', isSortable: true },
-    { key: 'fileType', content: 'File Type', isSortable: true },
-    { key: 'fileSize', content: 'File Size', isSortable: true },
-    { key: 'modifiedAt', content: 'Date Modified', isSortable: true },
-  ],
-};
-
-const Empty = <div style={{ marginBottom: 30 }}>No files have been added</div>;
-
-function Request({ data, updatedAt }) {
-  const rows = [];
-
+function Request({ data, fetchStatus, updatedAt, match }) {
   return (
     <Page>
       <header className={styles.header}>
@@ -30,7 +21,8 @@ function Request({ data, updatedAt }) {
           <GridColumn medium={9}>
             <h1>{data.name}</h1>
             <p>
-              Updated <Date value={updatedAt} format="HH:MM on MMMM Do, YYYY" />
+              {'Updated '}
+              <Date value={updatedAt} format="HH:MM on MMMM Do, YYYY" />
             </p>
           </GridColumn>
           <GridColumn medium={3}>
@@ -39,39 +31,49 @@ function Request({ data, updatedAt }) {
             </div>
           </GridColumn>
         </Grid>
+        <Grid>
+          <GridColumn>
+            <nav className={styles.tabs}>
+              <NavLink
+                exact
+                className={styles.tab}
+                activeClassName={styles.tabActive}
+                to={match.url}
+              >
+                <InfoIcon size="small" />
+                {' Details'}
+              </NavLink>
+              <NavLink
+                exact
+                className={styles.tab}
+                activeClassName={styles.tabActive}
+                to={`${match.url}/discussion`}
+              >
+                <CommentIcon size="small" />
+                {' Discussion'}
+              </NavLink>
+            </nav>
+          </GridColumn>
+        </Grid>
       </header>
       <div className={styles.main}>
         <Grid>
           <GridColumn medium={9}>
-            <div className={styles.section}>
-              <h4>Purpose</h4>
-              <p>{data.purpose}</p>
-            </div>
-            <div className={styles.section}>
-              <div className={styles.sectionHeader}>Export Files</div>
-              <div className={styles.sectionContent}>
-                <DynamicTable emptyView={Empty} head={head} rows={rows} />
-              </div>
-            </div>
-            <div className={styles.section}>
-              <div className={styles.sectionHeader}>Support Files</div>
-              <div className={styles.sectionContent}>
-                <DynamicTable emptyView={Empty} head={head} rows={rows} />
-              </div>
-            </div>
+            <Switch>
+              <Route
+                exact
+                path={match.url}
+                render={() => <Details data={data} />}
+              />
+              <Route
+                exact
+                path={`${match.url}/discussion`}
+                render={() => 'Discussion module coming soon'}
+              />
+            </Switch>
           </GridColumn>
           <GridColumn medium={3}>
-            <h6>Output Checker</h6>
-            <p>Roz</p>
-            <h6>Actions</h6>
-            <ul>
-              <li>
-                <a href="#">Edit Request</a>
-              </li>
-              <li>
-                <a href="#">Cancel Request</a>
-              </li>
-            </ul>
+            <Sidebar data={data} />
           </GridColumn>
         </Grid>
       </div>
@@ -80,9 +82,10 @@ function Request({ data, updatedAt }) {
 }
 
 Request.propTypes = {
-  data: RequestSchema,
-  updatedAt: PropTypes.string,
+  data: RequestSchema.isRequired,
+  updatedAt: PropTypes.string.isRequired,
   fetchStatus: PropTypes.string.isRequired,
+  match: PropTypes.object.isRequired,
 };
 
 export default Request;

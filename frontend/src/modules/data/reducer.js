@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import at from 'lodash/at';
+import compact from 'lodash/compact';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isArray from 'lodash/isArray';
@@ -103,6 +105,10 @@ const entities = (state = {}, action) => {
     return merge({}, state, action.payload.entities);
   }
 
+  if (/\w+\/delete\/success$/.test(action.type)) {
+    return omit(state, `${action.meta.dataType}.${action.meta.id}`);
+  }
+
   return state;
 };
 
@@ -125,6 +131,10 @@ const fetchStatus = (state = initialFetchStatusState, action) => {
     nextState = handleFetchStatus(state, action, 'loading');
   } else if (/\w+\/(get|put)\/success$/.test(action.type)) {
     nextState = handleFetchStatus(state, action, 'loaded');
+  } else if (/\w+\/delete\/requested$/.test(action.type)) {
+    nextState = handleFetchStatus(state, action, 'deleting');
+  } else if (/\w+\/delete\/success$/.test(action.type)) {
+    nextState = handleFetchStatus(state, action, 'deleted');
   } else if (/\w+\/(delete|get|put|post)\/failed$/.test(action.type)) {
     nextState = handleFetchStatus(state, action, 'failed');
   }
@@ -133,15 +143,19 @@ const fetchStatus = (state = initialFetchStatusState, action) => {
 };
 
 const messages = (state = [], action) => {
-  if (has(action, 'payload.result.message')) {
-    return [
-      ...state,
-      {
-        id: uniqueId('messages'),
-        type: last(action.type.split('/')),
-        message: action.payload.result.message,
-      },
-    ];
+  const actionMessages = compact(
+    at(action, ['payload.result.message', 'payload.result.error'])
+  );
+  const hasErrorMessage = has(action, 'payload.result.error');
+
+  if (actionMessages.length > 0) {
+    const newMessages = actionMessages.map(message => ({
+      id: uniqueId('messages'),
+      type: hasErrorMessage ? 'failed' : last(action.type.split('/')),
+      message,
+    }));
+
+    return [...newMessages, ...state];
   }
 
   // TODO: probably can shorten this regex

@@ -1,10 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import DropdownMenu, {
-  DropdownItemGroup,
-  DropdownItem,
-} from '@atlaskit/dropdown-menu';
 import { Link } from 'react-router-dom';
 import Date from '@src/components/date';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
@@ -14,6 +10,7 @@ import last from 'lodash/last';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 
 import RequestIcon from '../request-icon';
+import RequestMenu from '../../containers/request-menu';
 import * as styles from './styles.css';
 
 const header = {
@@ -98,42 +95,7 @@ function RequestsList({
           content: '-',
         },
         {
-          content: (
-            <DropdownMenu trigger="Actions" triggerType="button">
-              <DropdownItemGroup>
-                {d.state >= 2 &&
-                  d.state < 4 && (
-                    <DropdownItem onClick={() => console.log('hi!', d.name)}>
-                      Withdraw
-                    </DropdownItem>
-                  )}
-                {d.state < 4 && (
-                  <DropdownItem
-                    onClick={() => console.log('TODO: Cancel', d.name)}
-                  >
-                    Cancel
-                  </DropdownItem>
-                )}
-                {d.state < 2 && (
-                  <React.Fragment>
-                    <DropdownItem
-                      onClick={() => console.log(('TODO: Submit', d.name))}
-                    >
-                      Submit
-                    </DropdownItem>
-                    <DropdownItem onClick={() => onSelect(d._id)}>
-                      Edit
-                    </DropdownItem>
-                    <DropdownItem
-                      onClick={() => console.log('TODO: Delete', d.name)}
-                    >
-                      Delete
-                    </DropdownItem>
-                  </React.Fragment>
-                )}
-              </DropdownItemGroup>
-            </DropdownMenu>
-          ),
+          content: <RequestMenu data={d} />,
         },
       ],
     };

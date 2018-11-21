@@ -4,6 +4,7 @@ export const fetchRequests = createDataAction('requests/get');
 export const fetchRequest = createDataAction('request/get');
 export const createRequest = createDataAction('request/post');
 export const saveRequest = createDataAction('request/put');
+export const deleteRequest = createDataAction('request/delete');
 
 export const changeFilter = filter => ({
   type: 'requests/filter',
@@ -72,11 +73,13 @@ export const uploadFileSuccess = (file, url) => ({
   },
   payload: file,
 });
+
 export default {
   createRequest,
   changeStep,
   closeDraftRequest,
   fetchRequests,
   saveRequest,
+  sortRequests,
   viewDraftRequest,
 };

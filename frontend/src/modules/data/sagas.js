@@ -5,7 +5,7 @@ import compact from 'lodash/compact';
 import head from 'lodash/head';
 import { normalize } from 'normalizr';
 
-import api from '@src/services/api';
+import api, { destroy } from '@src/services/api';
 
 function* handleDataRequest(method, action) {
   const { schema, id, url, ...rest } = action.meta;
@@ -53,6 +53,33 @@ function* handleDataRequest(method, action) {
   }
 }
 
+function* handleDeleteRequest(action) {
+  const meta = {
+    ...action.meta,
+    id: action.payload,
+  };
+
+  yield put({
+    type: `${action.type}/requested`,
+    meta,
+  });
+
+  try {
+    yield call(destroy, action.meta.url);
+    yield put({
+      type: `${action.type}/success`,
+      meta,
+    });
+  } catch (err) {
+    yield put({
+      type: `${action.type}/failed`,
+      error: true,
+      meta,
+      payload: err,
+    });
+  }
+}
+
 export default function*() {
   yield takeLatest(
     action => /\w+\/get$/.test(action.type),
@@ -68,5 +95,9 @@ export default function*() {
     action => /\w+\/put$/.test(action.type),
     handleDataRequest,
     'put'
+  );
+  yield takeLatest(
+    action => /\w+\/delete$/.test(action.type),
+    handleDeleteRequest
   );
 }
