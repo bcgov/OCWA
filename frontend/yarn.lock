@@ -988,6 +988,23 @@
     react-scrolllock "^3.0.1"
     react-transition-group "^2.2.1"
 
+"@atlaskit/notification-indicator@^4.0.5":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@atlaskit/notification-indicator/-/notification-indicator-4.0.5.tgz#fbccadb0f4e8a246fcd1a15b69819d799e295a50"
+  integrity sha512-S+OasCFt4PWCWesRSUaKZO+ZPJYQRl9N0E1moAJ5mgV9f9C4MhfgDlTn0QRhKZYydLrGAiuQOgaITtx9RVpTCw==
+  dependencies:
+    "@atlaskit/badge" "^9.1.1"
+    "@atlaskit/notification-log-client" "^3.0.2"
+    tslib "^1.8.0"
+
+"@atlaskit/notification-log-client@^3.0.2":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@atlaskit/notification-log-client/-/notification-log-client-3.1.0.tgz#eb88b1a5697723a2b2275b8f7fe5b2e5974c3984"
+  integrity sha512-4MEYKZ5wMnPUrF166WkC2ymBVW6ndfAE85dd4rmbu5So2BY7oJzKEOQtCJAMVVbRg75igMCMGzl8AhRyVJovOw==
+  dependencies:
+    "@atlaskit/util-service-support" "^3.0.1"
+    tslib "^1.8.0"
+
 "@atlaskit/outbound-auth-flow-client@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@atlaskit/outbound-auth-flow-client/-/outbound-auth-flow-client-1.0.1.tgz#36f3596507d6dca17f5b9d5fd9399155668191b6"
@@ -1272,7 +1289,7 @@
     url "^0.11.0"
     url-search-params "^0.10.0"
 
-"@atlaskit/util-service-support@^3.0.2", "@atlaskit/util-service-support@^3.0.3":
+"@atlaskit/util-service-support@^3.0.1", "@atlaskit/util-service-support@^3.0.2", "@atlaskit/util-service-support@^3.0.3":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@atlaskit/util-service-support/-/util-service-support-3.0.3.tgz#117bc0a6070c5539c4b00d56b3445ad4a5b87a96"
   integrity sha512-mZSEmkejTW/LqGLk740RIOShRDdjGHgJjffwRhIKCifA+ThKVS4mBxcpk2BeoCx+a0ZsYh5m2KiXBUv7VcNiMg==

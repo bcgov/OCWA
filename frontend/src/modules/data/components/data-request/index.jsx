@@ -6,10 +6,11 @@ import get from 'lodash/get';
 function withRequest(Component) {
   class WithRequest extends React.Component {
     componentDidMount() {
-      const { match, initialRequest } = this.props;
+      const { id, match, initialRequest } = this.props;
 
       if (initialRequest) {
-        initialRequest(match.params);
+        const params = get(match, 'params', {});
+        initialRequest({ ...params, id });
       }
     }
 

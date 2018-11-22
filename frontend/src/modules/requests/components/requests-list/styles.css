@@ -13,3 +13,7 @@
 .filters > div:last-child {
   flex: none;
 }
+
+.empty h3 {
+  margin-top: 10px;
+}

@@ -28,7 +28,7 @@ function* handleDataRequest(method, action) {
       ...rest,
       payload: action.payload,
     });
-    const payload = normalize(data, schema);
+    const payload = schema ? normalize(data, schema) : data;
 
     yield put({
       type: `${action.type}/success`,

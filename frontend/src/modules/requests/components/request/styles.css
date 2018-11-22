@@ -18,10 +18,13 @@
   padding: 10px;
   border: 1px solid transparent;
   border-radius: 3px 3px 0 0;
+  text-decoration: none;
 }
 
+.tab:hover,
 .tab:active,
 .tab:focus {
+  text-decoration: none;
   outline: none !important;
 }
 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Date from '@src/components/date';
 import { NavLink, Route, Switch } from 'react-router-dom';
+import Discussion from '@src/modules/discussion/containers/discussion';
 
 import InfoIcon from '@atlaskit/icon/glyph/info';
 import CommentIcon from '@atlaskit/icon/glyph/comment';
@@ -72,7 +73,7 @@ function Request({ data, fetchStatus, updatedAt, match }) {
               <Route
                 exact
                 path={`${match.url}/discussion`}
-                render={() => 'Discussion module coming soon'}
+                render={() => <Discussion id={data.topic} />}
               />
             </Switch>
           </GridColumn>
