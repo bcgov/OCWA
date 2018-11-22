@@ -4,10 +4,13 @@ import Button, { ButtonGroup } from '@atlaskit/button';
 import { Link } from 'react-router-dom';
 import Date from '@src/components/date';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
+import DocumentsIcon from '@atlaskit/icon/glyph/documents';
 import { FieldTextStateless } from '@atlaskit/field-text';
 import head from 'lodash/head';
 import last from 'lodash/last';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
+import SearchIcon from '@atlaskit/icon/glyph/search';
+import { akColorN70 } from '@atlaskit/util-shared-styles';
 
 import RequestIcon from '../request-icon';
 import RequestMenu from '../../containers/request-menu';
@@ -42,9 +45,9 @@ function RequestsList({
   data,
   filter,
   isLoading,
+  isLoaded,
   onChangeFilter,
   onSearch,
-  onSelect,
   onSort,
   search,
   sortKey,
@@ -66,19 +69,7 @@ function RequestsList({
           key: d.name,
           content: (
             <strong>
-              {d.state < 2 ? (
-                <a
-                  href="#"
-                  onClick={event => {
-                    event.preventDefault();
-                    onSelect(d._id);
-                  }}
-                >
-                  {d.name}
-                </a>
-              ) : (
-                <Link to={`/requests/${d._id}`}>{d.name}</Link>
-              )}
+              <Link to={`/requests/${d._id}`}>{d.name}</Link>
             </strong>
           ),
         },
@@ -100,6 +91,27 @@ function RequestsList({
       ],
     };
   });
+
+  const renderEmpty = () => {
+    let text = 'You have no requests';
+    let Icon = DocumentsIcon;
+
+    if (search) {
+      Icon = SearchIcon;
+      text = `No results match ${search}'`;
+    } else if (isLoaded && !filter) {
+      text = 'You have no requests!';
+    } else if (isLoaded && !!filter) {
+      text = 'No requests match this filter';
+    }
+
+    return (
+      <div className={styles.empty}>
+        <Icon size="xlarge" primaryColor={akColorN70} />
+        <h3>{text}</h3>
+      </div>
+    );
+  };
 
   return (
     <Page>
@@ -133,7 +145,7 @@ function RequestsList({
       <Grid>
         <GridColumn medium={12}>
           <DynamicTableStateless
-            emptyView={<h2>No requests yet</h2>}
+            emptyView={renderEmpty()}
             head={header}
             rows={rows}
             loadingSpinnerSize="large"
@@ -161,6 +173,7 @@ RequestsList.propTypes = {
     PropTypes.arrayOf(PropTypes.number),
   ]),
   isLoading: PropTypes.bool.isRequired,
+  isLoaded: PropTypes.bool.isRequired,
   onChangeFilter: PropTypes.func.isRequired,
   onSort: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,

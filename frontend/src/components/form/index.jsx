@@ -18,6 +18,11 @@ class Form extends React.Component {
     }));
   };
 
+  onCancel = () => {
+    const { actions } = this.props;
+    this.toggleEditor();
+  };
+
   onSave = async () => {
     const { actions, onSave } = this.props;
     const value = await actions.getValue();
@@ -33,7 +38,7 @@ class Form extends React.Component {
     return (
       <div style={{ marginTop: 20 }}>
         <CollapsedEditor
-          placeholder="What would you like to say?"
+          placeholder="Write a comment"
           isExpanded={isExpanded}
           onFocus={this.toggleEditor}
         >
@@ -45,6 +50,7 @@ class Form extends React.Component {
               new WikiMarkupTransformer(schema)
             }
             onSave={this.onSave}
+            onCancel={this.onCancel}
           />
         </CollapsedEditor>
       </div>

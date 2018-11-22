@@ -4,7 +4,10 @@ import Avatar from '@atlaskit/avatar';
 import Button from '@atlaskit/button';
 // Icons
 import CrossIcon from '@atlaskit/icon/glyph/cross';
+import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled';
+import SignInIcon from '@atlaskit/icon/glyph/sign-in';
 import SignOutIcon from '@atlaskit/icon/glyph/sign-out';
+import TrashIcon from '@atlaskit/icon/glyph/trash';
 
 import { RequestSchema } from '../../types';
 
@@ -53,18 +56,30 @@ function RequestSidebar({
       {data.state < 2 && (
         <React.Fragment>
           <div>
-            <Button appearance="link" onClick={() => onSubmit(data._id)}>
-              Submit
+            <Button
+              appearance="link"
+              iconBefore={<SignInIcon />}
+              onClick={() => onSubmit(data._id)}
+            >
+              Submit Request
             </Button>
           </div>
           <div>
-            <Button appearance="link" onClick={() => onEdit(data._id)}>
-              Edit
+            <Button
+              appearance="link"
+              iconBefore={<EditFilledIcon />}
+              onClick={() => onEdit(data._id)}
+            >
+              Edit Request
             </Button>
           </div>
           <div>
-            <Button appearance="link" onClick={() => onDelete(data._id)}>
-              Delete
+            <Button
+              appearance="link"
+              iconBefore={<TrashIcon />}
+              onClick={() => onDelete(data._id)}
+            >
+              Delete Request
             </Button>
           </div>
         </React.Fragment>
