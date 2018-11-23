@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Date from '@src/components/date';
+import isEmpty from 'lodash/isEmpty';
 import { NavLink, Route, Switch } from 'react-router-dom';
 import Discussion from '@src/modules/discussion/containers/discussion';
 
@@ -14,8 +15,8 @@ import Sidebar from '../../containers/sidebar';
 import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
-function Request({ data, fetchStatus, updatedAt, match }) {
-  if (fetchStatus !== 'loaded') {
+function Request({ data, isLoaded, updatedAt, match }) {
+  if (!isLoaded && isEmpty(data)) {
     return null;
   }
 
@@ -88,8 +89,8 @@ function Request({ data, fetchStatus, updatedAt, match }) {
 
 Request.propTypes = {
   data: RequestSchema.isRequired,
+  isLoaded: PropTypes.bool.isRequired,
   updatedAt: PropTypes.string.isRequired,
-  fetchStatus: PropTypes.string.isRequired,
   match: PropTypes.object.isRequired,
 };
 

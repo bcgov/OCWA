@@ -52,17 +52,17 @@ export default connect(mapStateToProps, {
   onCancel: closeDraftRequest,
   onCreate: (payload, meta) =>
     createRequest(payload, meta, {
-      url: 'api/v1/requests',
+      url: '/api/v1/requests',
       schema: { result: requestSchema },
     }),
   onSave: (payload, meta) =>
     saveRequest(payload, meta, {
-      url: `api/v1/requests/save/${meta.id}`,
+      url: `/api/v1/requests/save/${meta.id}`,
       schema: { result: requestSchema },
     }),
   onSubmit: (payload, meta) =>
     saveRequest(payload, meta, {
-      url: `api/v1/requests/submit/${meta.id}`,
+      url: `/api/v1/requests/submit/${meta.id}`,
       schema: { result: requestSchema },
     }),
   onUploadFile: uploadFile,

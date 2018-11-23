@@ -35,7 +35,7 @@ class NewRequestDialog extends React.Component {
       const formValues = this.validateForm();
 
       if (formValues) {
-        this.save(formValues, true);
+        this.save({ ...data, ...formValues, files }, true);
       }
     } else if (currentStep === 1) {
       this.save(
@@ -59,8 +59,12 @@ class NewRequestDialog extends React.Component {
   };
 
   onSubmit = () => {
-    const { data, sendAction } = this.props;
-    sendAction('onSubmit', data, { quitEditing: true });
+    const { data, files, sendAction } = this.props;
+    const payload = {
+      ...data,
+      files: [...data.files, ...files],
+    };
+    sendAction('onSubmit', payload, { quitEditing: true });
   };
 
   save = (payload, quitEditing = false) => {

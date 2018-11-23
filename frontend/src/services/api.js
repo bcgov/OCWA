@@ -54,7 +54,8 @@ export const put = async (url, options) => {
 
     return json;
   } catch (err) {
-    throw new Error(err);
+    const { error } = await err.response.json();
+    throw new Error(error || err);
   }
 };
 
@@ -72,7 +73,8 @@ export const destroy = async (url, options) => {
 
     return json;
   } catch (err) {
-    throw new Error(err);
+    const { error } = await err.response.json();
+    throw new Error(error || err);
   }
 };
 

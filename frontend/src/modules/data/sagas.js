@@ -2,6 +2,7 @@ import at from 'lodash/at';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import compact from 'lodash/compact';
+import has from 'lodash/has';
 import head from 'lodash/head';
 import { normalize } from 'normalizr';
 
@@ -28,7 +29,8 @@ function* handleDataRequest(method, action) {
       ...rest,
       payload: action.payload,
     });
-    const payload = schema ? normalize(data, schema) : data;
+    const payload =
+      schema && !has(data, 'error') ? normalize(data, schema) : data;
 
     yield put({
       type: `${action.type}/success`,

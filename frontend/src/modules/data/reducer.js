@@ -143,10 +143,19 @@ const fetchStatus = (state = initialFetchStatusState, action) => {
 };
 
 const messages = (state = [], action) => {
-  const actionMessages = compact(
-    at(action, ['payload.result.message', 'payload.result.error'])
-  );
-  const hasErrorMessage = has(action, 'payload.result.error');
+  const actionMessages = action.error
+    ? [action.payload.message]
+    : compact(
+        at(action, [
+          'payload.result.message',
+          'payload.result.error',
+          'payload.error',
+        ])
+      );
+  const hasErrorMessage =
+    action.error ||
+    has(action, 'payload.result.error') ||
+    has(action, 'payload.error');
 
   if (actionMessages.length > 0) {
     const newMessages = actionMessages.map(message => ({

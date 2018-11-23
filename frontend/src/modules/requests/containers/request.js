@@ -5,13 +5,28 @@ import withRequest from '@src/modules/data/components/data-request';
 
 import { fetchRequest } from '../actions';
 import Request from '../components/request';
-import { requestsListSchema } from '../schemas';
+import { requestSchema } from '../schemas';
+
+const defaultRequest = {
+  chronology: [],
+  files: [],
+  fileStatus: {},
+  reviewers: [],
+  supportingFiles: [],
+};
 
 const mapStateToProps = (state, props) => {
   const { requestId } = props.match.params;
-  const data = get(state, `data.entities.requests.${requestId}`, {});
-  const chronology = get(data, 'chronology', []);
-  const updatedAt = get(last(chronology), 'timestamp', new Date());
+  const data = get(
+    state,
+    `data.entities.requests.${requestId}`,
+    defaultRequest
+  );
+  const updatedAt = get(
+    last(data.chronology),
+    'timestamp',
+    new Date().toString()
+  );
 
   return {
     data,
@@ -20,13 +35,11 @@ const mapStateToProps = (state, props) => {
   };
 };
 
-export default connect(mapStateToProps)(
-  withRequest(Request, {
-    initialRequest: ({ requestId }) =>
-      fetchRequest({
-        url: `/api/v1/requests/${requestId}`,
-        schema: requestsListSchema,
-        id: requestId,
-      }),
-  })
-);
+export default connect(mapStateToProps, {
+  initialRequest: ({ requestId }) =>
+    fetchRequest({
+      url: `/api/v1/requests/${requestId}`,
+      schema: requestSchema,
+      id: requestId,
+    }),
+})(withRequest(Request));
