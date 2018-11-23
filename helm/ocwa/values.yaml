@@ -223,6 +223,15 @@ request-api:
   forumApi: http://ocwa-forum-api.ocwa
   forumApiSecret: none
 
+  storageUri: ocwa-storage-api.ocwa
+  storagePort: 9000
+  storageKey: myKey
+  storageSecret: mySecret
+  storageUseSSL: false
+  storageWarnSize: 1025
+  storageMaxSize: 10000000
+  storageBucket: data
+
   validationApi: http://ocwa-validation-api.ocwa
   validationApiSecret: validateApiSecret
 

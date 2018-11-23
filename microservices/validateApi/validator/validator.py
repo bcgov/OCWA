@@ -28,13 +28,19 @@ class Validator:
 
 def validate(rule, resultObj):
 
-    result, message = read_file_and_evaluate(rule['Source'], resultObj)
-    print("Running validation process for " + rule['Name'] + " got result " + str(result) + " and message " + message)
+    source = ""
+    if 'Source' in rule:
+        source = rule['Source']
+    else:
+        source = rule['source']
+
+    result, message = read_file_and_evaluate(source, resultObj)
+    print("Running validation process for " + rule['name'] + " got result " + str(result) + " and message " + message)
     if result:
         resultObj.state = 0
     else:
         resultObj.state = 1
-        resultObj.message = "Failed " + rule['Name']
+        resultObj.message = "Failed " + rule['name']
 
     resultObj.save()
 
@@ -58,7 +64,9 @@ def evaluate_source(source, file_attributes):
         redirected_stdout = sys.stdout = StringIO()
         exec(source)
         sys.stdout = old_stdout
-        result = redirected_stdout.getvalue().lower() in ("yes", "true", "t", "1", "yes\n", "true\n", "t\n", "1\n")
+        execOutput = redirected_stdout.getvalue().lower()
+        print(execOutput)
+        result = execOutput in ("yes", "true", "t", "1", "yes\n", "true\n", "t\n", "1\n")
     except (Exception, NameError) as e:
         print(e)
         message = str(e)
@@ -90,6 +98,16 @@ def read_file(file_id, deep_read=False):
 
         if "content-length" in fileResp['ResponseMetadata']['HTTPHeaders']:
             file["size"] = fileResp['ResponseMetadata']['HTTPHeaders']['content-length']
+
+        ftIndex = 'filetype'
+        if 'Filetype' in file:
+            ftIndex='Filetype'
+
+        print(file)
+
+        index = file[ftIndex].find('/')
+        if index > -1:
+            file['extension'] = file[ftIndex][(index+1):]
 
         file['content'] = ""
         if deep_read:

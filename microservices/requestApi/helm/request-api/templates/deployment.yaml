@@ -74,6 +74,26 @@ spec:
               value: {{ .Values.user.surNameField }}
             - name: GROUP_FIELD
               value: {{ .Values.user.groupField }}
+            - name: STORAGE_URI
+              value: {{ .Values.storageUri }}
+            - name: STORAGE_PORT
+              value: {{ .Values.storagePort }}
+            - name: STORAGE_KEY
+              value: {{ .Values.storageKey }}
+            - name: STORAGE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaRequestApi.fullname" . }}-secrets
+                  key: storageSecret
+            - name: STORAGE_USESSL
+              value: {{ .Values.storageUseSSL }}
+            - name: STROAGE_WARN_SIZE
+              value: {{ .Values.storageWarnSize }}
+            - name: STORAGE_MAX_SIZE
+                value: {{ .Values.storageMaxSize }}
+            - name: STORAGE_BUCKET
+              value: {{ .Values.storageBucket }}
+
           ports:
             - name: http
               containerPort: {{ .Values.apiPort }}

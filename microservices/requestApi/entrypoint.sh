@@ -16,6 +16,17 @@ printf "\"forumApi\": \"${FORUM_API}\",\n" >> ./config/default.json
 printf "\"validationApi\": \"${VALIDATION_API}\",\n" >> ./config/default.json
 printf "\"validationApiSecret\": \"${VALIDATION_API_KEY}\",\n" >> ./config/default.json
 
+printf "\"storageApi\": {\n" >> ./config/default.json
+printf "\"uri\": \"${STORAGE_URI}\",\n" >> ./config/default.json
+printf "\"port\": \"${STORAGE_PORT}\",\n" >> ./config/default.json
+printf "\"key\": \"${STORAGE_KEY}\",\n" >> ./config/default.json
+printf "\"secret\": \"${STORAGE_SECRET}\",\n" >> ./config/default.json
+printf "\"useSSL\": \"${STORAGE_USESSL}\",\n" >> ./config/default.json
+printf "\"warnRequestBundlesize\": \"${STROAGE_WARN_SIZE}\",\n" >> ./config/default.json
+printf "\"maxRequestBundlesize\": \"${STORAGE_MAX_SIZE}\",\n" >> ./config/default.json
+printf "\"bucket\": \"${STORAGE_BUCKET}\"\n" >> ./config/default.json
+printf "}\n" >> ./config/default.json
+
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 
 printf "\"requiredRoleToCreateRequest\": \"${CREATE_ROLE}\",\n" >> ./config/default.json

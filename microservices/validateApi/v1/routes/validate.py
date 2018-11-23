@@ -13,15 +13,6 @@ from v1.auth.auth import auth
 validate = Blueprint('validate', 'validate')
 
 
-
-@validate.route("/",
-                methods=['GET'], strict_slashes=False)
-@auth
-def test() -> object:
-    rule = hcl.loads("rule \"test\"{\nSource=\"${file.size}<100\"\n}")
-    return jsonify({"message": rule})
-
-
 @validate.route('/<string:fileId>',
            methods=['GET'], strict_slashes=False)
 @auth
@@ -50,19 +41,20 @@ def validate_policy(fileId: str) -> object:
 
     db=Db()
 
-    for key, val in policy.items():
-        results = db.Results.objects(file_id=fileId, rule_id=key)
+    for i in range(len(policy)):
+        results = db.Results.objects(file_id=fileId, rule_id=policy[i]['name'])
 
         if (len(results) == 0):
             result = db.Results(
                 file_id=fileId,
                 message="",
-                rule_id=key,
-                state=2
+                rule_id=policy[i]['name'],
+                state=2,
+                mandatory=policy[i]['mandatory']
             )
 
             result.save()
-            v = Validator(policy[key], result)
+            v = Validator(policy[i], result)
             v.start_validate()
             
 
@@ -122,8 +114,9 @@ def validate_rule(fileId: str, ruleId: str) -> object:
 def get_policies():
     conf = Config().data
     policy_api_url = conf['policyApi']
+    headers = {'X-API-KEY': conf['apiSecret']}
 
-    response = requests.get(policy_api_url)
+    response = requests.get(policy_api_url, headers=headers)
 
     return response.json()
 

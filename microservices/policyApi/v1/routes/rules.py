@@ -75,7 +75,7 @@ def write_policy() -> object:
         )
 
         if 'mandatory' in ruleDef:
-            rule.mangatory = ruleDef['mandatory']
+            rule.mandatory = ruleDef['mandatory']
 
         rule.save()
 
