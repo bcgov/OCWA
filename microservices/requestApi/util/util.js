@@ -1,6 +1,12 @@
 util = {};
 
 util.getBundleMeta = function(fileIds, callback){
+
+    if (fileIds.length === 0){
+        callback([]);
+        return;
+    }
+
     var config = require('config');
     var storageConfig = config.get('storageApi');
     var Minio = require('minio');
@@ -33,6 +39,12 @@ util.getBundleMeta = function(fileIds, callback){
 };
 
 util.getFileStatus = function(fileIds, callback){
+
+    if (fileIds.length === 0){
+        callback({}, true);
+        return;
+    }
+
     var config = require('config');
 
     var status = {};
