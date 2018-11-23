@@ -13,6 +13,7 @@
     "debug": "^2.6.9",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.3.0",
+    "minio": "^7.0.1",
     "mongoose": "^5.3.8",
     "morgan": "^1.9.1",
     "ms": "^2.1.1",

@@ -49,7 +49,7 @@ helm install --name ocwa --namespace ocwa ./helm/ocwa -f ./helm/ocwa/config.yaml
 
 ### Helm update (Kubernetes)
 helm dep up ./helm/ocwa
-helm upgrade --name ocwa ./helm/ocwa  -f ./helm/ocwa/config.yaml
+helm upgrade ocwa ./helm/ocwa  -f ./helm/ocwa/config.yaml
 
 ### Openshift (OCP)
 Openshift is a bit of a different deployment as helm is not supported by the test deployment area. Additionally due to the way 

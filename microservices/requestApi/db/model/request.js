@@ -119,27 +119,37 @@ var getAllTopics = function(user, callback, page){
             return;
         }
 
-
-        topicResults = topicResults.map(x => x._id);
-        topics = topics.concat(topicResults);
-
-
-        if (topicResults.length >= limit) {
-            getAllTopics(user, function (err, topicR) {
-                if (typeof(topicR) === "object") {
-                    topics.concat(topicR);
-                }
-                if (err) {
-                    callback(err, topics);
-                    return;
-                }
-                callback(null, topics);
-
-            }, (page + 1));
+        if (typeof(topicResults) === "undefined"){
+            logger.error("Error getting topics", topicResults);
+            callback("API error", topics);
             return;
         }
 
-        callback(null, topics);
+        try {
+            topicResults = topicResults.map(x => x._id);
+            topics = topics.concat(topicResults);
+
+
+            if (topicResults.length >= limit) {
+                getAllTopics(user, function (err, topicR) {
+                    if (typeof(topicR) === "object") {
+                        topics.concat(topicR);
+                    }
+                    if (err) {
+                        callback(err, topics);
+                        return;
+                    }
+                    callback(null, topics);
+
+                }, (page + 1));
+                return;
+            }
+
+            callback(null, topics);
+        }catch(ex){
+            logger.error("Error handling topic results", ex);
+            callback(ex, []);
+        }
     });
 };
 

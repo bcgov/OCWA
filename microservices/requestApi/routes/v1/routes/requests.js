@@ -148,7 +148,7 @@ router.post("/", function(req, res, next){
                 return;
             }
 
-            log.error("Error creating topic, deleting request as a result", apiErr, result);
+            log.error("Error creating topic, deleting request as a result", apiRes.statusCode, apiErr, result);
             db.Request.deleteOne({_id: result._id}, function(e){
                 if (e) {
                     log.error("Error deleting request", result, e);
@@ -184,7 +184,15 @@ router.get('/:requestId', function(req, res, next) {
             res.json({error: findErr.message});
             return;
         }
-        res.json(findRes);
+
+        findRes = findRes[0];
+        var util = require('../util/util');
+
+        util.getFileStatus(findRes.files, function(status) {
+            findRes.fileStatus = status;
+            res.json(findRes);
+        });
+
     });
 
 
@@ -220,6 +228,7 @@ router.put("/save/:requestId", function(req, res, next){
         findRes.steps = (typeof(req.body.steps) !== "undefined") ? req.body.steps : findRes.steps;
         findRes.freq = (typeof(req.body.freq) !== "undefined") ? req.body.freq : findRes.freq;
         findRes.confidentiality = (typeof(req.body.confidentiality) !== "undefined") ? req.body.confidentiality : findRes.confidentiality;
+        findRes.files = (typeof(req.body.files) !== "undefined") ? req.body.files : findRes.files;
 
         var setChrono = findRes.state!==db.Request.WIP_STATE;
         findRes.state = db.Request.WIP_STATE;
@@ -240,9 +249,11 @@ router.put("/save/:requestId", function(req, res, next){
                 httpReq.put({
                     url: config.get('validationApi') + '/v1/validate/' + findRes.files[i],
                     headers: {
-                        'X-API-KEY': config.get('validationApiSecret')
+                        'x-api-key': config.get('validationApiSecret')
                     }
                 }, function (apiErr, apiRes, body) {
+                    var jso = JSON.parse(body);
+                    logger.debug("put file " + findRes.files[i] + " up for validation", apiErr, apiRes, jso.error);
                     if (apiErr) {
                         logger.debug("Error validating file: ", apiErr);
                     }
@@ -250,7 +261,7 @@ router.put("/save/:requestId", function(req, res, next){
             }
 
 
-            res.json({message: "Successfully updated"});
+            res.json({message: "Successfully updated", result: findRes});
         });
     });
 
@@ -262,7 +273,6 @@ router.put('/submit/:requestId', function(req, res, next){
     var config = require('config');
     var logger = require('npmlog');
     var requestId = mongoose.Types.ObjectId(req.params.requestId);
-
     var httpReq = require('request');
 
     db.Request.getAll({_id: requestId}, 1, 1, req.user, function (reqErr, reqRes) {
@@ -287,6 +297,11 @@ router.put('/submit/:requestId', function(req, res, next){
             return;
         }
 
+        if (reqRes.files.length <= 0){
+            res.json({error: "Can't submit a request without files. Nothing to export."});
+            return;
+        }
+
         var numResults = 0;
         var allResults = [];
         var pass = true;
@@ -300,43 +315,47 @@ router.put('/submit/:requestId', function(req, res, next){
 
         db.Request.setChrono(reqRes, req.user.id);
 
-        if (reqRes.files.length <= 0){
-            db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
-                if (!updateErr) {
-                    res.json({message: "Request submitted", results: allResults});
+        var util = require('../util/util');
+
+        var config = require('config');
+        var storageApi = config.get('storageApi');
+        var warnSize =  storageApi.warnRequestBundlesize;
+        var maxSize = storageApi.maxRequestBundlesize;
+        if ( (warnSize > 0) || (maxSize > 0)){
+            util.getBundleMeta(reqRes.files, function(metadataRes){
+
+                var bundleSize = 0;
+                for (var i=0; i<metadataRes.length; i++){
+                    bundleSize += metadataRes[i].size;
+                    //also available: etag, metaData, lastModified: note this is the stuff from minio/s3 not tus.
+                }
+
+                if ( (warnSize > 0) && (bundleSize >= warnSize) && (bundleSize < maxSize)){
+                    logger.warn("Bundle exceeds warn size but not max size");
+                }
+
+                if ( (warnSize > 0) && (bundleSize >= maxSize)){
+                    logger.error("Bundle exceeds max size");
+                    res.status(403);
+                    res.json({error: "Request submission failed, bundle exceeds max size failed", info: maxSize});
                     return;
                 }
-                res.json({error: updateErr.message});
-            });
-        }
 
-        for (var i = 0; i < reqRes.files.length; i++) {
-            httpReq.get({
-                url: config.get('validationApi') + '/v1/validate/' + reqRes.files[i],
-                headers: {
-                    'X-API-KEY': config.get('validationApiSecret')
-                }
-            }, function (apiErr, apiRes, body) {
-                if (apiErr || !apiRes) {
-                    allResults.push({error: apiErr.message});
-                    pass = false;
-                } else {
-                    // 0 is pass
-                    allResults.push({
-                        pass: (apiRes.results[0].state === 0),
-                        state: apiRes.results[0].state,
-                        message: apiRes.results[0].message
-                    });
-                    if (apiRes.results[0].state !== 0) {
-                        pass = false;
+                util.getFileStatus(reqRes.files, function(status) {
+                    var pass = true;
+                    for (var i=0; i < reqRes.files; i++){
+                        for (var j=0; j < status[reqRes.files[i]].length; j++) {
+                            if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
+                                pass = false;
+                                break;
+                            }
+                        }
                     }
-                }
-                numResults++;
-                if (numResults === reqRes.files.length) {
                     if (pass) {
                         db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                             if (!updateErr) {
-                                res.json({message: "Request submitted", results: allResults});
+                                reqRes.fileStatus = status;
+                                res.json({message: "Request submitted", result: reqRes});
                                 return;
                             }
                             res.json({error: updateErr.message});
@@ -344,11 +363,38 @@ router.put('/submit/:requestId', function(req, res, next){
 
                         return;
                     }
-                    res.json({error: "Request submission failed, validation failed", results: allResults});
+                    res.json({error: "Request submission failed, validation failed", fileStatus: status});
+                });
+            });
+        }else{
+            util.getFileStatus(reqRes.files, function(status) {
+                var pass = true;
+                for (var i=0; i < reqRes.files; i++){
+                    for (var j=0; j < status[reqRes.files[i]].length; j++) {
+                        if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
+                            pass = false;
+                            break;
+                        }
+                    }
                 }
+                if (pass) {
+                    db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
+                        if (!updateErr) {
+                            reqRes.fileStatus = status;
+                            res.json({message: "Request submitted", result: reqRes});
+                            return;
+                        }
+                        res.json({error: updateErr.message});
+                    });
 
+                    return;
+                }
+                res.json({error: "Request submission failed, validation failed", fileStatus: status});
             });
         }
+
+
+
     });
 });
 
@@ -388,7 +434,7 @@ router.put('/cancel/:requestId', function(req, res){
                     reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
 
                     logRequestFinalState(reqRes, req.user);
-                    res.json({message: "Request cancelled successfully"});
+                    res.json({message: "Request cancelled successfully", result: reqRes});
                     return;
                 }
                 res.status(500);
@@ -442,7 +488,7 @@ router.put('/withdraw/:requestId', function(req, res){
         if (reqRes.author === req.user.id) {
             db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                 if (!updateErr) {
-                    res.json({message: "Request withdrawn successfully"});
+                    res.json({message: "Request withdrawn successfully", result: reqRes});
                     return;
                 }
                 res.status(500);
@@ -493,7 +539,7 @@ router.put('/approve/:requestId', function(req, res){
                     //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
                     reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
                     logRequestFinalState(reqRes, req.user);
-                    res.json({message: "Request approved successfully"});
+                    res.json({message: "Request approved successfully", result: reqRes});
                     return;
                 }
                 res.status(500);
@@ -553,7 +599,7 @@ router.put('/deny/:requestId', function(req, res){
                     //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
                     reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
                     logRequestFinalState(reqRes, req.user);
-                    res.json({message: "Request denied successfully"});
+                    res.json({message: "Request denied successfully", result: reqRes});
                     return;
                 }
                 res.status(500);
@@ -603,7 +649,7 @@ router.put('/requestRevisions/:requestId', function(req, res){
 
             db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                 if (!updateErr) {
-                    res.json({message: "Requested revision(s) successfully"});
+                    res.json({message: "Requested revision(s) successfully", result: reqRes});
                     return;
                 }
                 res.status(500);
@@ -654,7 +700,7 @@ router.put('/pickup/:requestId', function(req, res){
 
             db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                 if (!updateErr) {
-                    res.json({message: "Request picked up successfully"});
+                    res.json({message: "Request picked up successfully", result: reqRes});
                     return;
                 }
                 res.status(500);
@@ -696,7 +742,7 @@ router.delete('/:requestId', function(req, res){
 
             if (map.indexOf(db.Request.AWAITING_REVIEW_STATE) !== -1){
                 res.status(403);
-                res.json({error: "You cannot delete a request if it has ever been submitted"})
+                res.json({error: "You cannot delete a request if it has ever been submitted"});
                 return;
             }
 

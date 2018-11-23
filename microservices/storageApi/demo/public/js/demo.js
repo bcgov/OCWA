@@ -4,7 +4,7 @@ document.getElementById('test').addEventListener("change", function(e) {
 
     // Create a new tus upload
     var upload = new tus.Upload(file, {
-        endpoint: "http://ocwa-storage-api-cddi-dlt-dev.pathfinder.gov.bc.ca/files/",
+        endpoint: "http://127.0.0.1:1080/files/",
         retryDelays: [0, 1000, 3000, 5000],
         metadata: {
             filename: file.name,
