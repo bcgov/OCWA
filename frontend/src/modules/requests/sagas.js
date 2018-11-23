@@ -1,6 +1,7 @@
 import { all, call, fork, put, take } from 'redux-saga/effects';
 import { channel, eventChannel, END } from 'redux-saga';
 import { getSession } from '@src/services/auth';
+import head from 'lodash/head';
 import tus from 'tus-js-client';
 
 import {
@@ -9,9 +10,11 @@ import {
   uploadFileSuccess,
 } from './actions';
 
-const sanitizeURL = url => {
+export const sanitizeURL = url => {
   if (url) {
-    return url.replace(/https?:\/\/.*\/files\//, '');
+    const fileUploadIdHash = url.replace(/https?:\/\/.*\/files\//, '');
+    const fileUploadId = head(fileUploadIdHash.split('+'));
+    return fileUploadId;
   }
 
   return '';
