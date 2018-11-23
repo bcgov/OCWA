@@ -66,6 +66,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.8
+            - python3-pip
       before_script:
         - wget -q ${HELM_URL}/${HELM_TGZ}
         - tar xzfv ${HELM_TGZ}
@@ -94,6 +95,12 @@ matrix:
         - export MINIO_ACCESS_KEY="myKey"
         - export MINIO_SECRET_KEY="mySecret"
         - ./minio server /tmp &
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
