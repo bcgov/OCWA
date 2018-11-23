@@ -17,8 +17,8 @@
     "storageApi": {
         "uri": "localhost",
         "port": 9000,
-        "key": "whoaAccess",
-        "secret": "myKey",
+        "key": "myKey",
+        "secret": "mySecret",
         "useSSL": false,
         "warnRequestBundlesize": 1024,
         "maxRequestBundlesize": 0,
