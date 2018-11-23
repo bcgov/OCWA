@@ -57,8 +57,25 @@ describe("Requests", function() {
         var file = __dirname+'/../file/gov.jpeg';
         var fileStream = Fs.createReadStream(file);
 
-        minioClient.putObject(storageConfig.bucket, fileId, fileStream, function(err, etag) {
-            done();
+        minioClient.bucketExists(storageConfig.bucket, function(err, exists) {
+            if (err) {
+                return console.log(err)
+            }
+            if (!exists) {
+                minioClient.makeBucket(storageConfig.bucket, 'us-east-1', function(err) {
+                    if (err) {
+                        console.log('Error creating bucket.', err)
+                        done();
+                    }
+                    minioClient.putObject(storageConfig.bucket, fileId, fileStream, function(err, etag) {
+                        done();
+                    });
+                })
+            }else{
+                minioClient.putObject(storageConfig.bucket, fileId, fileStream, function(err, etag) {
+                    done();
+                });
+            }
         });
 
     });
