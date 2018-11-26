@@ -38,6 +38,6 @@ resource "docker_container" "ocwa_request_api" {
       "STORAGE_WARN_SIZE=10m",
       "STORAGE_MAX_SIZE=10m",
       "STORAGE_ACCESS_KEY=${random_id.accessKey.hex}",
-      "STORAGE_ACCESS_SECRET=${random_string.secretKey.result}",    
+      "STORAGE_ACCESS_SECRET=${random_string.secretKey.result}"   
   ]
 }
