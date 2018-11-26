@@ -178,7 +178,7 @@ describe("Requests", function() {
     });
 
     describe('/GET  v1 & v1/requestId', function () {
-        it('it should get a request', function (done) {
+        it('it should get requests', function (done) {
             chai.request(server)
                 .get('/v1')
                 .set("Authorization", "Bearer " + jwt)
@@ -215,7 +215,7 @@ describe("Requests", function() {
                     done();
                 });
         });
-    })
+    });
 
     describe('/PUT /v1/save/requestId', function() {
 
