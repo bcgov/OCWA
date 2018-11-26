@@ -3,7 +3,6 @@ const isEmpty = require('lodash/isEmpty');
 const proxy = require('http-proxy-middleware');
 
 // Proxy config
-const filesApiHost = config.get('filesApiHost');
 const forumApiHost = config.get('forumApiHost');
 const forumSocket = config.get('forumSocket');
 const requestApiHost = config.get('requestApiHost');
@@ -29,14 +28,6 @@ const onProxyReq = (proxyReq, req) => {
   }
 };
 
-const filesProxy = proxy({
-  target: `http://${filesApiHost}`,
-  pathRewrite: {
-    '^/api/v1/files': '/files',
-  },
-  changeOrigin: true,
-});
-
 const forumProxy = proxy({
   target: `http://${forumApiHost}/v1`,
   onProxyReq,
@@ -55,7 +46,6 @@ const requestProxy = proxy({
 });
 
 module.exports = {
-  files: filesProxy,
   forum: forumProxy,
   forumSocket: forumSocketProxy,
   request: requestProxy,

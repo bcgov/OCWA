@@ -20,6 +20,7 @@ const webpackConfig = require('../webpack.dev');
 const app = express();
 const cookieSecret = config.get('cookieSecret');
 const isDevelopment = process.env.NODE_ENV === 'development';
+const filesApiHost = config.get('filesApiHost');
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
 });
@@ -64,8 +65,6 @@ app.use('/auth', authRoute);
 app.get('/login', passport.authenticate('openidconnect'));
 
 // Set up some proxy action
-app.use('/files', proxy.files);
-app.use('/api/v1/files', proxy.files);
 app.use('/api/v1/forums', proxy.forum);
 app.use('/api/v1/requests', proxy.request);
 
@@ -74,7 +73,10 @@ app.get('/hello', (req, res) => {
 });
 
 app.get(/^((?!.json|__webpack_hmr).)*$/, (req, res) => {
-  res.render('index', { title: 'OCWA [Development Version]' });
+  res.render('index', {
+    title: 'OCWA [Development Version]',
+    filesApiHost,
+  });
 });
 
 app.use((err, req, res) => {
