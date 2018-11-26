@@ -64,7 +64,7 @@ describe("Requests", function() {
             if (!exists) {
                 minioClient.makeBucket(storageConfig.bucket, 'us-east-1', function(err) {
                     if (err) {
-                        console.log('Error creating bucket.', err)
+                        console.log('Error creating bucket.', err);
                         done();
                     }
                     minioClient.putObject(storageConfig.bucket, fileId, fileStream, function(err, etag) {
