@@ -65,22 +65,27 @@ util.getFileStatus = function(fileIds, callback){
                 status[fileIds[index]].push({error: apiErr.message});
             } else {
                 // 0 is pass
-                var json = JSON.parse(body);
-                body = json;
+                console.log(body);
+                try {
+                    var json = JSON.parse(body);
+                    body = json;
 
-                for (var j=0; j<body.length; j++) {
+                    for (var j = 0; j < body.length; j++) {
 
-                    status[fileIds[index]].push({
-                        pass: (body[j].state === 0),
-                        state: body[j].state,
-                        message: body[j].message,
-                        name: body[j].rule_id,
-                        mandatory: body[j].mandatory
-                    });
+                        status[fileIds[index]].push({
+                            pass: (body[j].state === 0),
+                            state: body[j].state,
+                            message: body[j].message,
+                            name: body[j].rule_id,
+                            mandatory: body[j].mandatory
+                        });
 
-                    if (body.state !== 0){
-                        fullPass = false;
+                        if (body.state !== 0) {
+                            fullPass = false;
+                        }
                     }
+                }catch(ex){
+                    callback({}, false);
                 }
             }
             numResults++;
