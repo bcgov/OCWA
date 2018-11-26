@@ -29,3 +29,7 @@ variable "sslCertificate" {
 variable "sslCertificateKey" {
   type = "string"
 }
+
+variable "images" {
+  type = "map"
+}
