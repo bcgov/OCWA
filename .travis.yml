@@ -198,7 +198,7 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
-        - sudo pytest
+        - sudo coverage run --branch --source=db,v1,validator -m pytest
         - helm lint helm/validate-api
         - bash docker_quayio_push
 
@@ -339,6 +339,23 @@ matrix:
         - npm test
 
         - NODE_ENV=test npm start &
+        - wget https://dl.minio.io/server/minio/release/linux-amd64/minio
+        - chmod +x minio
+        - export MINIO_ACCESS_KEY="myKey"
+        - export MINIO_SECRET_KEY="mySecret"
+        - ./minio server /tmp &
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - python3 wsgi.py &
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
