@@ -36,7 +36,7 @@ def test_get_validate_policy_result_with_no_record(client, mockdb):
 
 def test_put_validate_policy_with_no_previous_result(client, mocker, mockdb):
     mock_get_policy = mocker.patch('v1.routes.validate.get_policies')
-    mock_get_policy.return_value = {"rule_1":{"Name":"Great rule 1","Source":""},"rule_2":{"Name":"Great rule 2","Source":""}}
+    mock_get_policy.return_value = [{"_id": {"$oid": "1"}, "name":"Great rule 1","source":"", "mandatory": False},{"_id": {"$oid": "2"}, "name":"Great rule 2","source":"", "mandatory": False}]
 
     mock_validator_validate = mocker.patch('v1.validator.validator.Validator.start_validate')
 
@@ -50,7 +50,7 @@ def test_put_validate_policy_with_no_previous_result(client, mocker, mockdb):
 
 def test_put_validate_policy_with_previous_result(client, mocker, mockdb):
     mock_get_policy = mocker.patch('v1.routes.validate.get_policies')
-    mock_get_policy.return_value = {"rule_1":"b"}
+    mock_get_policy.return_value = [{"_id": {"$oid": "1"}, "name":"rule_1","source":"", "mandatory": False}]
 
     mock_validator_validate = mocker.patch('v1.validator.validator.Validator.start_validate')
 
@@ -64,7 +64,7 @@ def test_put_validate_policy_with_previous_result(client, mocker, mockdb):
 
 def test_put_validate_policy_with_previous_result_and_new_rule(client, mocker, mockdb):
     mock_get_policy = mocker.patch('v1.routes.validate.get_policies')
-    mock_get_policy.return_value = {"rule_1":{},"rule_NEW":{}}
+    mock_get_policy.return_value = [{"_id":{"$oid": "5"}, "name": "rule_NEW", "source":"", "mandatory": False}]
 
     mock_validator_validate = mocker.patch('v1.validator.validator.Validator.start_validate')
 
