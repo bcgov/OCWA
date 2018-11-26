@@ -166,17 +166,12 @@ describe("Requests", function() {
                     confidentiality: "none"
                 })
                 .end(function (err, res) {
-                    try {
-                        res.should.have.status(200);
-                        res.body.should.be.a('object');
-                        res.body.should.have.property('message');
-                        res.body.should.have.property('result');
-                        res.body.result.should.have.property('_id');
-                        activeRequestId = res.body.result._id;
-                    } catch (ex) {
-                        console.log(res.body);
-                        throw(ex);
-                    }
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('result');
+                    res.body.result.should.have.property('_id');
+                    activeRequestId = res.body.result._id;
                     done();
                 });
         });
@@ -239,17 +234,12 @@ describe("Requests", function() {
                     confidentiality: "none"
                 })
                 .end(function (err, res) {
-                    try {
-                        res.should.have.status(200);
-                        res.body.should.be.a('object');
-                        res.body.should.have.property('message');
-                        res.body.should.have.property('result');
-                        res.body.result.should.have.property('_id');
-                        activeRequestId = res.body.result._id;
-                    }catch(ex){
-                        console.log(res.body);
-                        throw (ex);
-                    }
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('result');
+                    res.body.result.should.have.property('_id');
+                    activeRequestId = res.body.result._id;
                     done();
                 });
         });
@@ -278,15 +268,9 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-                    try {
-                        console.log("Submit status not 200", res,status, res.body);
-                        res.should.have.status(200);
-                        res.body.should.be.a('object');
-                        res.body.should.have.property('message');
-                    }catch (ex){
-                        console.log("Submit Error", res.body);
-                        throw (ex);
-                    }
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
                     done();
                 });
         });
@@ -299,15 +283,10 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-                    try{
-                        res.should.have.status(200);
-                        res.body.should.be.a('object');
-                        res.body.should.have.property('message');
-                        done();
-                    }catch (ex){
-                        console.log("Pickup Error", res.body);
-                        throw (ex);
-                    }
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    done();
                 });
         });
     });
@@ -320,15 +299,10 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-                    try {
-                        res.should.have.status(200);
-                        res.body.should.be.a('object');
-                        res.body.should.have.property('message');
-                        done();
-                    }catch (ex){
-                        console.log("Approve Error", res.body);
-                        throw (ex);
-                    }
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    done();
                 });
         });
     });
