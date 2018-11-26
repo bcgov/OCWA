@@ -343,7 +343,7 @@ router.put('/submit/:requestId', function(req, res, next){
                     logger.warn("Bundle exceeds warn size but not max size");
                 }
 
-                if ( (warnSize > 0) && (bundleSize >= maxSize)){
+                if ( (maxSize > 0) && (bundleSize >= maxSize)){
                     logger.error("Bundle exceeds max size");
                     res.status(403);
                     res.json({error: "Request submission failed, bundle exceeds max size failed", info: maxSize});
