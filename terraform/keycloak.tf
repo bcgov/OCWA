@@ -23,7 +23,7 @@ resource "docker_container" "ocwa_keycloak" {
    "KEYCLOAK_PASSWORD=${random_string.keycloakAdminPassword.result}"
   ]
   healthcheck = {
-    test =  ["CMD", "curl", "-f", "https://authdev.popdata.bc.ca/auth/"]
+    test =  ["curl", "${var.authHost}/auth/"]
     interval = "5s"
     timeout = "5s"
     start_period = "10s"
