@@ -278,9 +278,14 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message');
+                    try {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message');
+                    }catch (ex){
+                        console.log("Submit Error", res.body);
+                        throw (ex);
+                    }
                     done();
                 });
         });
@@ -293,10 +298,15 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message');
-                    done();
+                    try{
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message');
+                        done();
+                    }catch (ex){
+                        console.log("Pickup Error", res.body);
+                        throw (ex);
+                    }
                 });
         });
     });
@@ -309,10 +319,15 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message');
-                    done();
+                    try {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message');
+                        done();
+                    }catch (ex){
+                        console.log("Approve Error", res.body);
+                        throw (ex);
+                    }
                 });
         });
     });
