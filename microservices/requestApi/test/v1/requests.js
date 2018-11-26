@@ -279,9 +279,7 @@ describe("Requests", function() {
                 .send({})
                 .end(function (err, res) {
                     try {
-                        if (res.status !== 200){
-                            console.log("Submit status not 200", res.body);
-                        }
+                        console.log("Submit status not 200", res.body);
                         res.should.have.status(200);
                         res.body.should.be.a('object');
                         res.body.should.have.property('message');
