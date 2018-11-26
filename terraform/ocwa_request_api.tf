@@ -27,7 +27,7 @@ resource "docker_container" "ocwa_request_api" {
       "CREATE_ROLE=/exporter",
       "OC_GROUP=oc",
       "ALLOW_DENY=true",
-      "VALIDATE_API=http://ocwa_validate_api:3003",
+      "VALIDATION_API=http://ocwa_validate_api:3003",
       "VALIDATION_API_KEY=${random_string.apiSecret.result}",
       "FORUM_API=http://ocwa_forum_api:3000",
       "FORUM_API_KEY=${random_string.apiSecret.result}"
