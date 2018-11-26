@@ -66,6 +66,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.8
+            - python3-pip
       before_script:
         - wget -q ${HELM_URL}/${HELM_TGZ}
         - tar xzfv ${HELM_TGZ}
@@ -89,6 +90,23 @@ matrix:
         - cp config/default.json.example config/default.json
         - cp config/test.json.example config/test.json
         - NODE_ENV=test npm start &
+        - wget https://dl.minio.io/server/minio/release/linux-amd64/minio
+        - chmod +x minio
+        - export MINIO_ACCESS_KEY="myKey"
+        - export MINIO_SECRET_KEY="mySecret"
+        - ./minio server /tmp &
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - python3 wsgi.py &
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
@@ -171,6 +189,12 @@ matrix:
         - sudo pip3 install -r requirements.txt
 
       script:
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .

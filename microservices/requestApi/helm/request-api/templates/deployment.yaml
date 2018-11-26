@@ -90,7 +90,7 @@ spec:
             - name: STROAGE_WARN_SIZE
               value: {{ .Values.storageWarnSize }}
             - name: STORAGE_MAX_SIZE
-                value: {{ .Values.storageMaxSize }}
+              value: {{ .Values.storageMaxSize }}
             - name: STORAGE_BUCKET
               value: {{ .Values.storageBucket }}
 

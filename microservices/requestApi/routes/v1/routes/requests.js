@@ -9,6 +9,15 @@ router.get('/status_codes', function(req, res, next) {
     res.json(db.Request.stateCodeLookup());
 });
 
+router.get('/file_status_codes', function(req, res, next) {
+    var db = require('../db/db');
+    res.json({
+        "0": "Pass",
+        "1": "Fail",
+        "2": "Pending"
+    });
+});
+
 /* GET all requests. */
 router.get('/', function(req, res, next) {
     var logger = require('npmlog');
@@ -179,7 +188,7 @@ router.get('/:requestId', function(req, res, next) {
     var requestId = mongoose.Types.ObjectId(req.params.requestId);
 
     db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, findRes){
-        if (findErr || !findRes){
+        if (findErr || !findRes || findRes.length === 0){
             res.status(500);
             res.json({error: findErr.message});
             return;
@@ -334,7 +343,7 @@ router.put('/submit/:requestId', function(req, res, next){
                     logger.warn("Bundle exceeds warn size but not max size");
                 }
 
-                if ( (warnSize > 0) && (bundleSize >= maxSize)){
+                if ( (maxSize > 0) && (bundleSize >= maxSize)){
                     logger.error("Bundle exceeds max size");
                     res.status(403);
                     res.json({error: "Request submission failed, bundle exceeds max size failed", info: maxSize});
