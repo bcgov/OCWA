@@ -4,8 +4,7 @@ data "docker_registry_image" "ocwa_request_api" {
 }
 
 resource "docker_image" "ocwa_request_api" {
-  name          = "${data.docker_registry_image.ocwa_request_api.name}"
-  pull_triggers = ["${data.docker_registry_image.ocwa_request_api.sha256_digest}"]
+  name          = "bcgovimages/ocwa_request_api${var.images.request_api}"
 }
 
 resource "docker_container" "ocwa_request_api" {
