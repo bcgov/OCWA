@@ -29,7 +29,7 @@
 
     "requiredRoleToCreateRequest": "exporter",
     "outputCheckerGroup": "oc",
-    "allowDenyRequest": false,
+    "allowDenyRequest": true,
 
     "user":{
     "idField": "Email",
