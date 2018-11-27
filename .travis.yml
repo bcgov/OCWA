@@ -17,6 +17,7 @@ matrix:
       language: node_js
       node_js:
         - "node"
+      cache: npm
       addons:
         apt:
           sources:
@@ -127,6 +128,7 @@ matrix:
       language: python
       python:
         - "3.6"
+      cache: pip
       addons:
         apt:
           sources:
@@ -167,6 +169,7 @@ matrix:
       language: python
       python:
         - "3.6"
+      cache: pip
       addons:
         apt:
           sources:
@@ -216,6 +219,7 @@ matrix:
       language: node_js
       node_js:
         - "node"
+      cache: npm
       addons:
         apt:
           sources:
@@ -255,6 +259,7 @@ matrix:
     - name: "Scan - Python"
       python:
         - "3.6"
+      cache: pip
       addons:
         apt:
           sources:
@@ -297,6 +302,7 @@ matrix:
       language: node_js
       node_js:
         - "node"
+      cache: npm
       addons:
         apt:
           sources:
@@ -374,6 +380,7 @@ matrix:
       language: node_js
       node_js:
         - "node"
+      cache: npm
       script:
         - cd /home/travis/build/bcgov/OCWA
         - wget -q ${HELM_URL}/${HELM_TGZ}
