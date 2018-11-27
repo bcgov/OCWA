@@ -1,10 +1,10 @@
 import ky from 'ky';
 
-import { getSession } from './auth';
+import { getToken } from './auth';
 
 export const get = async (url, options) => {
   try {
-    const token = await getSession();
+    const token = getToken();
     const json = await ky
       .get(url, {
         ...options,
@@ -22,7 +22,7 @@ export const get = async (url, options) => {
 
 export const post = async (url, options) => {
   try {
-    const token = await getSession();
+    const token = getToken();
     const json = await ky
       .post(url, {
         ...options,
@@ -41,7 +41,7 @@ export const post = async (url, options) => {
 
 export const put = async (url, options) => {
   try {
-    const token = await getSession();
+    const token = await getToken();
     const json = await ky
       .put(url, {
         ...options,
@@ -61,7 +61,7 @@ export const put = async (url, options) => {
 
 export const destroy = async (url, options) => {
   try {
-    const token = await getSession();
+    const token = getToken();
     const json = await ky
       .delete(url, {
         ...options,

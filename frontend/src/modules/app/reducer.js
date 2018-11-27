@@ -19,7 +19,7 @@ function auth(state = initialAuthState, action) {
         ...state,
         fetchStatus: 'loaded',
         isAuthenticated: true,
-        user: action.payload.user,
+        user: action.payload,
       };
 
     case 'app/get/token/failed':

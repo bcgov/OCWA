@@ -1,6 +1,6 @@
 import { all, call, fork, put, take } from 'redux-saga/effects';
 import { channel, eventChannel, END } from 'redux-saga';
-import { getSession } from '@src/services/auth';
+import { getToken } from '@src/services/auth';
 import head from 'lodash/head';
 import tus from 'tus-js-client';
 
@@ -59,7 +59,7 @@ function uploadChannel(file, metadata) {
 
 // Upload Saga
 function* uploadFileChannel(item) {
-  const token = yield call(getSession);
+  const token = getToken();
   const file = {
     filename: item.name,
     filetype: item.type,
