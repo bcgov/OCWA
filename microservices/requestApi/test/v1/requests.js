@@ -346,4 +346,88 @@ describe("Requests", function() {
                 });
         });
     });
+
+    describe('/PUT /v1/deny/requestId', function() {
+        it('it should create a request', function (done) {
+            chai.request(server)
+                .post('/v1/')
+                .set("Authorization", "Bearer " + jwt)
+                .send({
+                    name: "testName3",
+                    tags: ["test"],
+                    purpose: "purpose",
+                    variableDescriptions: "variable descriptions",
+                    selectionCriteria: "selection criteria",
+                    steps: "steps",
+                    freq: "freq",
+                    confidentiality: "none"
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('result');
+                    res.body.result.should.have.property('_id');
+                    activeRequestId = res.body.result._id;
+                    done();
+                });
+        });
+
+        it('it should save a request', function (done) {
+            chai.request(server)
+                .put('/v1/save/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({
+                    files: [fileId]
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    done();
+                });
+        });
+
+        it('it should submit a request', function (done) {
+            chai.request(server)
+                .put('/v1/submit/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    done();
+                });
+        });
+
+        it('it should pickup a request', function (done) {
+            chai.request(server)
+                .put('/v1/pickup/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    done();
+                });
+        });
+
+        it('it should deny a request', function (done) {
+            chai.request(server)
+                .put('/v1/deny/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('result');
+                    done();
+                });
+        });
+
+
+    });
 });
