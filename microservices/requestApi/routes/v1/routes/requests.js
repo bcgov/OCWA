@@ -354,6 +354,11 @@ router.put('/submit/:requestId', function(req, res, next){
                 }
 
                 util.getFileStatus(reqRes.files, function(status) {
+                    if (status.length !== reqRes.files.length){
+                        res.status(403);
+                        res.json({error: "Not all files were submitted for validation, did you let save finish?"});
+                        return;
+                    }
                     var pass = true;
                     for (var i=0; i < reqRes.files; i++){
                         for (var j=0; j < status[reqRes.files[i]].length; j++) {
@@ -375,16 +380,23 @@ router.put('/submit/:requestId', function(req, res, next){
                                 }
                                 return;
                             }
+                            res.status(403);
                             res.json({error: updateErr.message});
                         });
 
                         return;
                     }
+                    res.status(403);
                     res.json({error: "Request submission failed, validation failed", fileStatus: status});
                 });
             });
         }else{
             util.getFileStatus(reqRes.files, function(status) {
+                if (status.length !== reqRes.files.length){
+                    res.status(403);
+                    res.json({error: "Not all files were submitted for validation, did you let save finish?"});
+                    return;
+                }
                 var pass = true;
                 for (var i=0; i < reqRes.files; i++){
                     for (var j=0; j < status[reqRes.files[i]].length; j++) {
@@ -406,11 +418,13 @@ router.put('/submit/:requestId', function(req, res, next){
                             }
                             return;
                         }
+                        res.status(403);
                         res.json({error: updateErr.message});
                     });
 
                     return;
                 }
+                res.status(403);
                 res.json({error: "Request submission failed, validation failed", fileStatus: status});
             });
         }
