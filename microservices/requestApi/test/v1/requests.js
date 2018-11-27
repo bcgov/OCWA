@@ -15,12 +15,6 @@ chai.use(chaiHttp);
 
 describe("Requests", function() {
     var activeRequestId = '';
-<<<<<<< HEAD
-    after(function(done){
-        db.Request.deleteMany({}, function(err){
-            done();
-        });
-=======
     var fileId = 'test.jpeg';
     after(function(done){
         db.Request.deleteMany({}, function(err){
@@ -70,7 +64,7 @@ describe("Requests", function() {
             if (!exists) {
                 minioClient.makeBucket(storageConfig.bucket, 'us-east-1', function(err) {
                     if (err) {
-                        console.log('Error creating bucket.', err)
+                        console.log('Error creating bucket.', err);
                         done();
                     }
                     minioClient.putObject(storageConfig.bucket, fileId, fileStream, function(err, etag) {
@@ -84,7 +78,6 @@ describe("Requests", function() {
             }
         });
 
->>>>>>> 0cc024dce61cd44cc916a68d10458a097911034f
     });
 
     describe('/GET v1/', function () {
@@ -173,24 +166,19 @@ describe("Requests", function() {
                     confidentiality: "none"
                 })
                 .end(function (err, res) {
-                    try {
-                        res.should.have.status(200);
-                        res.body.should.be.a('object');
-                        res.body.should.have.property('message');
-                        res.body.should.have.property('result');
-                        res.body.result.should.have.property('_id');
-                        activeRequestId = res.body.result._id;
-                    } catch (ex) {
-                        console.log(res.body);
-                        throw(ex);
-                    }
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('result');
+                    res.body.result.should.have.property('_id');
+                    activeRequestId = res.body.result._id;
                     done();
                 });
         });
     });
 
     describe('/GET  v1 & v1/requestId', function () {
-        it('it should get a request', function (done) {
+        it('it should get requests', function (done) {
             chai.request(server)
                 .get('/v1')
                 .set("Authorization", "Bearer " + jwt)
@@ -207,11 +195,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
-<<<<<<< HEAD
-                    res.body.length.should.be.eql(1);
-=======
                     res.body.should.have.property('_id');
->>>>>>> 0cc024dce61cd44cc916a68d10458a097911034f
                     done();
                 });
         });
@@ -231,7 +215,7 @@ describe("Requests", function() {
                     done();
                 });
         });
-    })
+    });
 
     describe('/PUT /v1/save/requestId', function() {
 
@@ -250,17 +234,12 @@ describe("Requests", function() {
                     confidentiality: "none"
                 })
                 .end(function (err, res) {
-                    try {
-                        res.should.have.status(200);
-                        res.body.should.be.a('object');
-                        res.body.should.have.property('message');
-                        res.body.should.have.property('result');
-                        res.body.result.should.have.property('_id');
-                        activeRequestId = res.body.result._id;
-                    }catch(ex){
-                        console.log(res.body);
-                        throw (ex);
-                    }
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('result');
+                    res.body.result.should.have.property('_id');
+                    activeRequestId = res.body.result._id;
                     done();
                 });
         });
@@ -269,13 +248,9 @@ describe("Requests", function() {
             chai.request(server)
                 .put('/v1/save/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
-<<<<<<< HEAD
-                .send({})
-=======
                 .send({
                     files: [fileId]
                 })
->>>>>>> 0cc024dce61cd44cc916a68d10458a097911034f
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
@@ -293,21 +268,9 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-<<<<<<< HEAD
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
-=======
-                    try {
-                        console.log("Submit status not 200", res,status, res.body);
-                        res.should.have.status(200);
-                        res.body.should.be.a('object');
-                        res.body.should.have.property('message');
-                    }catch (ex){
-                        console.log("Submit Error", res.body);
-                        throw (ex);
-                    }
->>>>>>> 0cc024dce61cd44cc916a68d10458a097911034f
                     done();
                 });
         });
@@ -320,22 +283,10 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-<<<<<<< HEAD
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     done();
-=======
-                    try{
-                        res.should.have.status(200);
-                        res.body.should.be.a('object');
-                        res.body.should.have.property('message');
-                        done();
-                    }catch (ex){
-                        console.log("Pickup Error", res.body);
-                        throw (ex);
-                    }
->>>>>>> 0cc024dce61cd44cc916a68d10458a097911034f
                 });
         });
     });
@@ -348,22 +299,10 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-<<<<<<< HEAD
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     done();
-=======
-                    try {
-                        res.should.have.status(200);
-                        res.body.should.be.a('object');
-                        res.body.should.have.property('message');
-                        done();
-                    }catch (ex){
-                        console.log("Approve Error", res.body);
-                        throw (ex);
-                    }
->>>>>>> 0cc024dce61cd44cc916a68d10458a097911034f
                 });
         });
     });

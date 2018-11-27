@@ -65,7 +65,6 @@ util.getFileStatus = function(fileIds, callback){
                 status[fileIds[index]].push({error: apiErr.message});
             } else {
                 // 0 is pass
-                console.log(body);
                 try {
                     var json = JSON.parse(body);
                     body = json;
