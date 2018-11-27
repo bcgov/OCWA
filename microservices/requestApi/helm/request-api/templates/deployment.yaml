@@ -87,7 +87,7 @@ spec:
                   key: storageSecret
             - name: STORAGE_USESSL
               value: "{{ .Values.storageUseSSL }}"
-            - name: STROAGE_WARN_SIZE
+            - name: STORAGE_WARN_SIZE
               value: "{{ .Values.storageWarnSize }}"
             - name: STORAGE_MAX_SIZE
               value: "{{ .Values.storageMaxSize }}"

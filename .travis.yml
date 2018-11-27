@@ -61,6 +61,10 @@ matrix:
           condition: $TRAVIS_BRANCH =~ ^master|develop$
 
     - name: "Request Api"
+      language: node_js
+      node_js:
+        - "node"
+      cache: npm
       addons:
         apt:
           sources:
