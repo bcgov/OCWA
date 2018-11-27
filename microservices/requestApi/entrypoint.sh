@@ -22,10 +22,10 @@ printf "\"port\": \"${STORAGE_PORT}\",\n" >> ./config/default.json
 printf "\"key\": \"${STORAGE_KEY}\",\n" >> ./config/default.json
 printf "\"secret\": \"${STORAGE_SECRET}\",\n" >> ./config/default.json
 printf "\"useSSL\": \"${STORAGE_USESSL}\",\n" >> ./config/default.json
-printf "\"warnRequestBundlesize\": \"${STROAGE_WARN_SIZE}\",\n" >> ./config/default.json
+printf "\"warnRequestBundlesize\": \"${STORAGE_WARN_SIZE}\",\n" >> ./config/default.json
 printf "\"maxRequestBundlesize\": \"${STORAGE_MAX_SIZE}\",\n" >> ./config/default.json
 printf "\"bucket\": \"${STORAGE_BUCKET}\"\n" >> ./config/default.json
-printf "}\n" >> ./config/default.json
+printf "},\n" >> ./config/default.json
 
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 

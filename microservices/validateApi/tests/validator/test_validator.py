@@ -65,8 +65,9 @@ class ValidatorTest(unittest.TestCase):
         mock_readfile.return_value = ({}, {"size":10})
 
         rule = {
-            "Source": "print(${file.size}<100)",
-            "Name": "Max File Size Rule"
+            "source": "print(${file.size}<100)",
+            "name": "Max File Size Rule",
+            "mandatory": True
         }
         assert results.state == None
         validator.validate(rule, results)

@@ -17,6 +17,7 @@ matrix:
       language: node_js
       node_js:
         - "node"
+      cache: npm
       addons:
         apt:
           sources:
@@ -127,6 +128,7 @@ matrix:
       language: python
       python:
         - "3.6"
+      cache: pip
       addons:
         apt:
           sources:
@@ -167,6 +169,7 @@ matrix:
       language: python
       python:
         - "3.6"
+      cache: pip
       addons:
         apt:
           sources:
@@ -198,7 +201,7 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
-        - sudo pytest
+        - sudo coverage run --branch --source=db,v1,validator -m pytest
         - helm lint helm/validate-api
         - bash docker_quayio_push
 
@@ -216,6 +219,7 @@ matrix:
       language: node_js
       node_js:
         - "node"
+      cache: npm
       addons:
         apt:
           sources:
@@ -255,6 +259,7 @@ matrix:
     - name: "Scan - Python"
       python:
         - "3.6"
+      cache: pip
       addons:
         apt:
           sources:
@@ -297,12 +302,14 @@ matrix:
       language: node_js
       node_js:
         - "node"
+      cache: npm
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-4.8
+            - python3-pip
 
       before_script:
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
@@ -339,6 +346,23 @@ matrix:
         - npm test
 
         - NODE_ENV=test npm start &
+        - wget https://dl.minio.io/server/minio/release/linux-amd64/minio
+        - chmod +x minio
+        - export MINIO_ACCESS_KEY="myKey"
+        - export MINIO_SECRET_KEY="mySecret"
+        - ./minio server /tmp &
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - python3 wsgi.py &
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - sudo pip3 install -U setuptools
+        - sudo pip3 install -r requirements.txt
+        - cp config/default.json.template config/default.json
+        - sudo pip3 install -e .
+        - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
@@ -356,6 +380,7 @@ matrix:
       language: node_js
       node_js:
         - "node"
+      cache: npm
       script:
         - cd /home/travis/build/bcgov/OCWA
         - wget -q ${HELM_URL}/${HELM_TGZ}
