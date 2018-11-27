@@ -353,7 +353,7 @@ describe("Requests", function() {
                 .post('/v1/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
-                    name: "testName3",
+                    name: "testName6",
                     tags: ["test"],
                     purpose: "purpose",
                     variableDescriptions: "variable descriptions",

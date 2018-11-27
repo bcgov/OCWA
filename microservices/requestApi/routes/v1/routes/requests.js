@@ -283,6 +283,7 @@ router.put('/submit/:requestId', function(req, res, next){
     var logger = require('npmlog');
     var requestId = mongoose.Types.ObjectId(req.params.requestId);
     var httpReq = require('request');
+    var autoAccept = config.get('autoAccept');
 
     db.Request.getAll({_id: requestId}, 1, 1, req.user, function (reqErr, reqRes) {
         if (reqErr || !reqRes || reqRes.length<0) {
@@ -316,9 +317,11 @@ router.put('/submit/:requestId', function(req, res, next){
         var pass = true;
 
 
-        if (reqRes.reviewers.length > 0){
+        if (reqRes.reviewers.length > 0) {
             reqRes.state = db.Request.IN_REVIEW_STATE;
-        }else {
+        } else if (autoAccept) {
+            reqRes.state = db.Request.APPROVED_STATE;
+        } else {
             reqRes.state = db.Request.AWAITING_REVIEW_STATE;
         }
 
@@ -364,7 +367,12 @@ router.put('/submit/:requestId', function(req, res, next){
                         db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                             if (!updateErr) {
                                 reqRes.fileStatus = status;
-                                res.json({message: "Request submitted", result: reqRes});
+                                if (autoAccept) {
+                                    logRequestFinalState(reqRes, req.user);
+                                    res.json({message: "Request approved", result: reqRes});
+                                }else{
+                                    res.json({message: "Request submitted", result: reqRes});
+                                }
                                 return;
                             }
                             res.json({error: updateErr.message});
@@ -390,7 +398,12 @@ router.put('/submit/:requestId', function(req, res, next){
                     db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                         if (!updateErr) {
                             reqRes.fileStatus = status;
-                            res.json({message: "Request submitted", result: reqRes});
+                            if (autoAccept) {
+                                logRequestFinalState(reqRes, req.user);
+                                res.json({message: "Request approved", result: reqRes});
+                            }else{
+                                res.json({message: "Request submitted", result: reqRes});
+                            }
                             return;
                         }
                         res.json({error: updateErr.message});
