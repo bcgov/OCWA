@@ -71,6 +71,9 @@ router.post('/refresh', (req, res) => {
       },
     },
     (err, response, body) => {
+      if (err) {
+        res.status(401).end();
+      }
       const json = JSON.parse(body);
       const claims = jwt.decode(json.id_token);
       const token = jwt.sign(claims, jwtSecret);

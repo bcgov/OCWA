@@ -35,13 +35,14 @@ export const post = async (url, options) => {
 
     return json;
   } catch (err) {
-    throw new Error(err);
+    const { error } = await err.response.json();
+    throw new Error(error || err);
   }
 };
 
 export const put = async (url, options) => {
   try {
-    const token = await getToken();
+    const token = getToken();
     const json = await ky
       .put(url, {
         ...options,
