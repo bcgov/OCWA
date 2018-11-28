@@ -354,7 +354,7 @@ router.put('/submit/:requestId', function(req, res, next){
                 }
 
                 util.getFileStatus(reqRes.files, function(status) {
-                    if (status.length !== reqRes.files.length){
+                    if (Object.keys(status).length !== reqRes.files.length){
                         res.status(403);
                         res.json({error: "Not all files were submitted for validation, did you let save finish?"});
                         return;
@@ -382,17 +382,19 @@ router.put('/submit/:requestId', function(req, res, next){
                             }
                             res.status(403);
                             res.json({error: updateErr.message});
+                            return;
                         });
 
                         return;
                     }
                     res.status(403);
                     res.json({error: "Request submission failed, validation failed", fileStatus: status});
+                    return;
                 });
             });
         }else{
             util.getFileStatus(reqRes.files, function(status) {
-                if (status.length !== reqRes.files.length){
+                if (Object.keys(status).length !== reqRes.files.length){
                     res.status(403);
                     res.json({error: "Not all files were submitted for validation, did you let save finish?"});
                     return;
@@ -420,12 +422,14 @@ router.put('/submit/:requestId', function(req, res, next){
                         }
                         res.status(403);
                         res.json({error: updateErr.message});
+                        return;
                     });
 
                     return;
                 }
                 res.status(403);
                 res.json({error: "Request submission failed, validation failed", fileStatus: status});
+                return;
             });
         }
 
