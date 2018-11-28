@@ -29,6 +29,8 @@ printf "},\n" >> ./config/default.json
 
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 
+printf "\"autoAccept\": ${AUTO_APPROVE},\n" >> ./config/default.json
+
 printf "\"requiredRoleToCreateRequest\": \"${CREATE_ROLE}\",\n" >> ./config/default.json
 printf "\"outputCheckerGroup\": \"${OC_GROUP}\",\n" >> ./config/default.json
 printf "\"allowDenyRequest\": ${ALLOW_DENY},\n" >> ./config/default.json

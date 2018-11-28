@@ -57,6 +57,8 @@ storageWarnSize: 1025
 storageMaxSize: 10000000
 storageBucket: data
 
+autoApprove: false
+
 validationApi: http://ocwa-validation-api.ocwa
 validationApiSecret: validateApiSecret
 
