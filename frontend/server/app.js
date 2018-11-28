@@ -12,6 +12,7 @@ const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
 require('./auth');
+const { parseApiHost } = require('./utils');
 const proxy = require('./proxy');
 const authRoute = require('./routes/auth');
 const webpackConfig = require('../webpack.dev');
@@ -75,7 +76,7 @@ app.get('/hello', (req, res) => {
 app.get(/^((?!.json|__webpack_hmr).)*$/, (req, res) => {
   res.render('index', {
     title: 'OCWA [Development Version]',
-    filesApiHost,
+    filesApiHost: parseApiHost(filesApiHost),
   });
 });
 

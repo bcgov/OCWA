@@ -26,7 +26,7 @@ export const sanitizeURL = url => {
 function uploadChannel(file, metadata) {
   return eventChannel(emitter => {
     const upload = new tus.Upload(file, {
-      endpoint: `http://${FILES_API_HOST}/files/`,
+      endpoint: `${FILES_API_HOST}/files/`,
       retryDelays: [0, 1000, 3000, 5000],
       metadata,
       onError: error =>

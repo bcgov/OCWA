@@ -78,8 +78,16 @@ class NewRequestDialog extends React.Component {
   };
 
   renderFooter = () => {
-    const { currentStep, isCreating, isUploading, onCancel } = this.props;
+    const {
+      currentStep,
+      data,
+      files,
+      isCreating,
+      isUploading,
+      onCancel,
+    } = this.props;
     const isDisabled = isCreating || isUploading;
+    const isDraft = data.state === 0;
 
     return (
       <ModalFooter>
@@ -111,7 +119,7 @@ class NewRequestDialog extends React.Component {
           {currentStep === 1 && (
             <Button
               appearance="primary"
-              isDisabled={isDisabled}
+              isDisabled={isDisabled || isDraft || files.length <= 0}
               onClick={this.onSubmit}
             >
               Submit for Review
