@@ -94,7 +94,7 @@ spec:
             - name: STORAGE_BUCKET
               value: {{ .Values.storageBucket }}
             - name: AUTO_APPROVE
-              value: {{ .Values.autoApprove }}
+              value: "{{ .Values.autoApprove }}"
 
           ports:
             - name: http
