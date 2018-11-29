@@ -129,6 +129,8 @@ const fetchStatus = (state = initialFetchStatusState, action) => {
     nextState = handlePostStatus(state, action);
   } else if (/\w+\/get\/requested$/.test(action.type)) {
     nextState = handleFetchStatus(state, action, 'loading');
+  } else if (/\w+\/put\/requested$/.test(action.type)) {
+    nextState = handleFetchStatus(state, action, 'saving');
   } else if (/\w+\/(get|put)\/success$/.test(action.type)) {
     nextState = handleFetchStatus(state, action, 'loaded');
   } else if (/\w+\/delete\/requested$/.test(action.type)) {

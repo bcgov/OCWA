@@ -2,6 +2,7 @@ import * as React from 'react';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import PropTypes from 'prop-types';
 import Modal, { ModalFooter, ModalTransition } from '@atlaskit/modal-dialog';
+import Spinner from '@atlaskit/spinner';
 
 import Form from './form';
 import FileUploader from '../../containers/file-uploader';
@@ -13,6 +14,10 @@ class NewRequestDialog extends React.Component {
   }
 
   validateForm = () => {
+    if (!this.formRef.current) {
+      return false;
+    }
+
     const { isInvalid, validFields } = this.formRef.current.validate();
 
     if (!isInvalid) {
@@ -26,6 +31,20 @@ class NewRequestDialog extends React.Component {
     }
 
     return false;
+  };
+
+  onSave = () => {
+    const { currentStep, data, files } = this.props;
+
+    if (currentStep === 0) {
+      const formValues = this.validateForm();
+      this.save({ ...data, ...formValues, files });
+    } else {
+      this.save({
+        ...data,
+        files,
+      });
+    }
   };
 
   onSaveAndClose = () => {
@@ -53,7 +72,7 @@ class NewRequestDialog extends React.Component {
     const formValues = this.validateForm();
 
     if (formValues) {
-      this.save(formValues);
+      this.save(formValues, false, true);
       onChangeStep(currentStep + 1);
     }
   };
@@ -67,13 +86,13 @@ class NewRequestDialog extends React.Component {
     sendAction('onSubmit', payload, { quitEditing: true });
   };
 
-  save = (payload, quitEditing = false) => {
+  save = (payload, quitEditing = false, nextStep = false) => {
     const { isNewRequest, sendAction } = this.props;
 
     if (isNewRequest) {
       sendAction('onCreate', payload, { quitEditing });
     } else {
-      sendAction('onSave', payload, { quitEditing });
+      sendAction('onSave', payload, { quitEditing, nextStep });
     }
   };
 
@@ -83,6 +102,7 @@ class NewRequestDialog extends React.Component {
       data,
       files,
       isCreating,
+      isSaving,
       isUploading,
       onCancel,
     } = this.props;
@@ -91,21 +111,17 @@ class NewRequestDialog extends React.Component {
 
     return (
       <ModalFooter>
-        <Button
-          appearance="default"
-          isDisabled={isDisabled}
-          onClick={this.onSaveAndClose}
-        >
-          Save and Close
+        <Button appearance="default" isDisabled={isDisabled} onClick={onCancel}>
+          Cancel
         </Button>
         <div style={{ flex: 1 }} />
         <ButtonGroup>
           <Button
             appearance="default"
             isDisabled={isDisabled}
-            onClick={onCancel}
+            onClick={this.onSaveAndClose}
           >
-            Cancel
+            Save & Close
           </Button>
           {currentStep === 0 && (
             <Button
@@ -113,9 +129,17 @@ class NewRequestDialog extends React.Component {
               appearance="primary"
               onClick={this.onAddFiles}
             >
-              {isCreating ? 'Creating...' : 'Add Files'}
+              {isCreating ? 'Creating...' : 'Save & Add Files'}
             </Button>
           )}
+          <Button
+            appearance="primary"
+            isDisabled={isCreating || isSaving}
+            iconBefore={(isCreating || isSaving) && <Spinner invertColor />}
+            onClick={this.onSave}
+          >
+            Save
+          </Button>
           {currentStep === 1 && (
             <Button
               appearance="primary"
@@ -166,6 +190,7 @@ NewRequestDialog.propTypes = {
   onCancel: PropTypes.func.isRequired,
   onChangeStep: PropTypes.func.isRequired,
   isCreating: PropTypes.bool.isRequired,
+  isSaving: PropTypes.bool.isRequired,
   sendAction: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   onUploadFile: PropTypes.func.isRequired,
