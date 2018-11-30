@@ -61,7 +61,7 @@ server {
     proxy_set_header         Upgrade $http_upgrade;
     proxy_set_header         Connection $connection_upgrade;
 
-    proxy_pass ${ocwaHost}/files;
+    proxy_pass http://ocwa_tusd:1080/files;
   }
 
   location /files {
