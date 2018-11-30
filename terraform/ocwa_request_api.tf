@@ -26,6 +26,7 @@ resource "docker_container" "ocwa_request_api" {
       "CREATE_ROLE=/exporter",
       "OC_GROUP=oc",
       "ALLOW_DENY=true",
+      "AUTO_APPROVE=false",
       "VALIDATION_API=http://ocwa_validate_api:3003",
       "VALIDATION_API_KEY=${random_string.apiSecret.result}",
       "FORUM_API=http://ocwa_forum_api:3000",
@@ -37,6 +38,7 @@ resource "docker_container" "ocwa_request_api" {
       "STORAGE_WARN_SIZE=10m",
       "STORAGE_MAX_SIZE=10m",
       "STORAGE_KEY=${random_id.accessKey.hex}",
-      "STORAGE_SECRET=${random_string.secretKey.result}"   
+      "STORAGE_SECRET=${random_string.secretKey.result}"
+      
   ]
 }
