@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-cd /home/acope/onpremise/OCWA/terraform
+cd /home/acope/deploy/OCWA/terraform
 
 terraform plan
 
