@@ -27,7 +27,7 @@ resource "docker_container" "ocwa_frontend" {
       "AUTH_SCOPES=openid offline_access",
       "AUTH_CALLBACK_URL=${var.ocwaHost}/auth",
       "CLIENT_SECRET=${random_uuid.outputcheckerClientSecret.result}",
-      "FILES_API_HOST=ocwadev.popdata.bc.ca",
+      "FILES_API_HOST=${var.ocwaHost}",
       "REQUEST_API_HOST=ocwa_request_api:3002",
       "FORUM_API_HOST=ocwa_forum_api:3000",
       "FORUM_SOCKET_HOST=ocwa_forum_api:3001",
