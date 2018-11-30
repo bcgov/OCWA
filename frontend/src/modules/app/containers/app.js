@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 
 import App from '../components/app';
 import { fetchToken } from '../actions';
+import { initSocket } from '@src/modules/discussion/actions';
 
 const mapStateToProps = state => ({
   authFetchStatus: state.app.auth.fetchStatus,
@@ -14,5 +15,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(mapStateToProps, {
     fetchToken,
+    initSocket,
   })(App)
 );

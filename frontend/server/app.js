@@ -12,7 +12,7 @@ const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
 require('./auth');
-const { parseApiHost } = require('./utils');
+const { parseApiHost, parseWsHost } = require('./utils');
 const proxy = require('./proxy');
 const authRoute = require('./routes/auth');
 const webpackConfig = require('../webpack.dev');
@@ -22,6 +22,7 @@ const app = express();
 const cookieSecret = config.get('cookieSecret');
 const isDevelopment = process.env.NODE_ENV === 'development';
 const filesApiHost = config.get('filesApiHost');
+const forumSocket = config.get('forumSocket');
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
 });
@@ -77,6 +78,7 @@ app.get(/^((?!.json|__webpack_hmr).)*$/, (req, res) => {
   res.render('index', {
     title: 'OCWA [Development Version]',
     filesApiHost: parseApiHost(filesApiHost),
+    socketHost: parseWsHost(forumSocket),
   });
 });
 

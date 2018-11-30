@@ -29,8 +29,9 @@ PostsList.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       _id: PropTypes.string.isRequired,
-      author_user: PropTypes.string.isRequired,
-      comment: PropTypes.string.isRequired,
+      authorUser: PropTypes.string,
+      createdTs: PropTypes.string,
+      comment: PropTypes.string,
     })
   ).isRequired,
   fetchStatus: PropTypes.string.isRequired,

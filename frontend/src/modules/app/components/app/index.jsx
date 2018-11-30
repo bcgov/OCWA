@@ -21,6 +21,14 @@ class App extends React.Component {
     fetchToken();
   }
 
+  componentDidUpdate(prevProps) {
+    const { isAuthenticated, initSocket } = this.props;
+
+    if (isAuthenticated && !prevProps.isAuthenticated) {
+      initSocket();
+    }
+  }
+
   render() {
     const { authFetchStatus, isAuthenticated, user } = this.props;
 
@@ -65,6 +73,7 @@ class App extends React.Component {
 App.propTypes = {
   authFetchStatus: PropTypes.string.isRequired,
   fetchToken: PropTypes.func.isRequired,
+  initSocket: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.shape({
     displayName: PropTypes.string,
