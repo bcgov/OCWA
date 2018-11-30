@@ -102,30 +102,5 @@ server {
 server {
   listen                    80 default;
 
-  location /files {
-    proxy_set_header        Host            $host;
-    proxy_set_header        X-Real-IP       $remote_addr;
-    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header        X-Forwarded-Proto $scheme;
-    proxy_http_version      1.1;
-    proxy_set_header         Upgrade $http_upgrade;
-    proxy_set_header         Connection $connection_upgrade;
-
-    proxy_pass http://ocwa_tusd:1080/files;
-  }
-
-  # Proxy everything else to the frontend
-  location / {
-    proxy_set_header        Host            $host;
-    proxy_set_header        X-Real-IP       $remote_addr;
-    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header        X-Forwarded-Proto $scheme;
-    proxy_http_version      1.1;
-    proxy_set_header         Upgrade $http_upgrade;
-    proxy_set_header         Connection $connection_upgrade;
-
-    proxy_pass http://ocwa_frontend:8000;
-  }
-
-  # return 301 ${ocwaHost};
+  return 301 ${ocwaHost};
 }
