@@ -46,6 +46,8 @@ database:
 
 defaultAccessIsGroup: true
 requiredRoleToCreateTopic: "exporter"
+ignoreGroups: "\"/oc\""
+
 user:
   idField: Email
   emailField: Email

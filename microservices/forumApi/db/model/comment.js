@@ -15,6 +15,7 @@ model.getAll = function(query, limit, page, user, callback){
     var db = require('../db');
     var skip = limit * (page - 1);
     logger.verbose("Comment get all, skip, limit", skip, limit);
+    console.log("Comment get all, skip, limit", skip, limit, query);
     db.Comment.aggregate([
         {
             $lookup:{

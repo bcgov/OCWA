@@ -11,7 +11,11 @@ run `npm install` to install dependencies and npm start to start up the server
 Run `docker build .` to build the docker container and the following commands to run it
 ```
 hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
-docker run -e EMAIL_FIELD=Email -e GIVENNAME_FIELD=GivenName -e SURNAME_FIELD=Surname -e GROUP_FIELD=Groups -e JWT_SECRET=MySecret -e DEFAULT_ACCESS_IS_GROUP=true -e REQUIRED_CREATE_ROLE=exporter -e LOG_LEVEL=info -e DB_USERNAME=mongoUser -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e USER_ID_FIELD=Email  -e DB_HOST=docker --add-host=docker:$hostip -p $apiport:3000 -p $wsport:3001 imageid
+docker run -e EMAIL_FIELD=Email -e GIVENNAME_FIELD=GivenName -e SURNAME_FIELD=Surname -e GROUP_FIELD=Groups -e JWT_SECRET=MySecret\
+           -e DEFAULT_ACCESS_IS_GROUP=true -e REQUIRED_CREATE_ROLE=exporter -e LOG_LEVEL=info -e DB_USERNAME=mongoUser \
+           -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e USER_ID_FIELD=Email  -e DB_HOST=docker \
+           -e IGNORE_GROUPS="\"group1\", \"group2\"" \
+           --add-host=docker:$hostip -p $apiport:3000 -p $wsport:3001 imageid
 ``` 
 replacing image id with the image id from docker build and the configuration values as necessary and $apiport and $wsport with the ports you want the api and websocket on locally respectively.
 

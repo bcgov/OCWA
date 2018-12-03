@@ -40,7 +40,7 @@ router.get('/:topicId', function(req, res, next) {
             return;
         }
 
-        db.Comment.getAll({topic_id: topicId}, limit, page, req.user, function(error, results){
+        db.Comment.getAll({topic_id: topic._id}, limit, page, req.user, function(error, results){
             logger.verbose('in comment find');
             if (error){
                 res.status(500);

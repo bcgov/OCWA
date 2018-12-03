@@ -60,20 +60,35 @@ router.post("/", function(req, res, next){
 
     topic.name = req.body.name;
     topic.contributors.push(req.user.id);
-    topic.author_groups = req.user.groups;
+
+    var groups = req.user.groups.slice();
+
     var typeParentId = typeof(req.body.parent_id);
     topic.parent_id = ( (typeParentId === "string") || (typeParentId === "number") ) ? req.body.parent_id : null;
 
     if (config.has('requiredRoleToCreateTopic')){
         var reqRole = config.get('requiredRoleToCreateTopic');
-        if (req.user.groups.indexOf(reqRole)===-1){
+        var reqIndex = req.user.groups.indexOf(reqRole);
+        if (reqIndex===-1){
             log.error('User ' + req.user.id + " tried to create a topic but lacks required role: " + reqRole);
             res.status(401);
             res.json({error: "Lack required role to create a topic"}).status(401);
             return;
+        }else{
+            groups = groups.slice(reqIndex, 1);
         }
 
     }
+
+    var ignoreGroups = config.has('ignoreGroupsFromConsideration') ? config.get('ignoreGroupsFromConsideration') : [];
+    for (var i=0; i<ignoreGroups.length; i++){
+        var ignoreIndex = groups.indexOf(ignoreGroups[i]);
+        if (ignoreIndex !== -1){
+            groups = groups.slice(ignoreIndex);
+        }
+    }
+
+    topic.author_groups = groups;
 
     log.debug("Creating topic: ", topic);
 

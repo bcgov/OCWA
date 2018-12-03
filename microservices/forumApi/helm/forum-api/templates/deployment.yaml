@@ -60,6 +60,8 @@ spec:
               value: {{ .Values.user.surNameField }}
             - name: GROUP_FIELD
               value: {{ .Values.user.groupField }}
+            - name: IGNORE_GROUPS
+              value: {{ .Values.user.ignoreGroups }}
 
           ports:
             - name: http

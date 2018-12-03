@@ -25,8 +25,16 @@ model.getAll = function(query, limit, page, user, callback){
     };
 
     if (defaultPermIsGroup){
+        var removeGroup = config.get('requiredRoleToCreateTopic');
+        var checkGroups = user.groups;
+
+        var index = checkGroups.indexOf(removeGroup);
+        if (index !== -1){
+            checkGroups.splice(index,1);
+        }
+
         defaultPermOverride = {
-            author_groups: {$in: user.groups}
+            author_groups: {$in: checkGroups}
         };
     }
 
