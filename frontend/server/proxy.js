@@ -2,13 +2,12 @@ const config = require('config');
 const isEmpty = require('lodash/isEmpty');
 const proxy = require('http-proxy-middleware');
 
+const { pathRewrite, parseApiHost, parseWsHost } = require('./utils');
+
 // Proxy config
-const filesApiHost = config.get('filesApiHost');
 const forumApiHost = config.get('forumApiHost');
 const forumSocket = config.get('forumSocket');
 const requestApiHost = config.get('requestApiHost');
-
-const pathRewrite = path => path.replace(/\/api\/v1\/\w+/, '');
 
 // Need to doctor the proxy request due to some issues with body-parser.
 const onProxyReq = (proxyReq, req) => {
@@ -29,33 +28,24 @@ const onProxyReq = (proxyReq, req) => {
   }
 };
 
-const filesProxy = proxy({
-  target: `http://${filesApiHost}`,
-  pathRewrite: {
-    '^/api/v1/files': '/files',
-  },
-  changeOrigin: true,
-});
-
 const forumProxy = proxy({
-  target: `http://${forumApiHost}/v1`,
+  target: parseApiHost(`${forumApiHost}/v1`),
   onProxyReq,
   pathRewrite,
 });
 
 const forumSocketProxy = proxy({
-  target: `ws://${forumSocket}`,
+  target: parseWsHost(forumSocket),
   ws: true,
 });
 
 const requestProxy = proxy({
-  target: `http://${requestApiHost}/v1`,
+  target: parseApiHost(`${requestApiHost}/v1`),
   onProxyReq,
   pathRewrite,
 });
 
 module.exports = {
-  files: filesProxy,
   forum: forumProxy,
   forumSocket: forumSocketProxy,
   request: requestProxy,

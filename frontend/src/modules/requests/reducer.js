@@ -57,7 +57,8 @@ const viewState = (state = initialViewState, action = {}) => {
         currentRequestId: action.meta.quitEditing
           ? null
           : get(action, 'payload.result.result', state.currentRequestId),
-        currentNewRequestStep: action.meta.quitEditing ? 0 : 1,
+        currentNewRequestStep:
+          action.meta.quitEditing || !action.meta.nextStep ? 0 : 1,
       };
 
     default:

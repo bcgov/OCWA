@@ -1,17 +1,19 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Comment, { CommentTime } from '@atlaskit/comment';
-import { Date } from '@atlaskit/date';
+import get from 'lodash/get';
 import { ADFEncoder, ReactRenderer } from '@atlaskit/renderer';
 import { WikiMarkupTransformer } from '@atlaskit/editor-wikimarkup-transformer';
 import { akColorN40 } from '@atlaskit/util-shared-styles';
+import format from 'date-fns/format';
 
 const adfEncoder = new ADFEncoder(schema => new WikiMarkupTransformer(schema));
 
 class Post extends React.Component {
   renderContent = () => {
     const { data } = this.props;
-    const document = adfEncoder.encode(data.comment);
+    const comment = get(data, 'comment', '');
+    const document = adfEncoder.encode(comment);
 
     return <ReactRenderer document={document} />;
   };
@@ -29,16 +31,12 @@ class Post extends React.Component {
         }}
       >
         <Comment
-          author={data.author_user}
+          author={get(data, 'authorUser', '')}
           content={this.renderContent()}
-          type="reviewer"
+          type="researcher"
           time={
             <CommentTime>
-              <Date
-                color="white"
-                value={data.created_ts}
-                format="MMM DD, YYYY h:mA"
-              />
+              {format(get(data, 'createdTs', new Date()), 'MMM DD, YYYY h:mA')}
             </CommentTime>
           }
         />
@@ -50,7 +48,8 @@ class Post extends React.Component {
 Post.propTypes = {
   data: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    author_user: PropTypes.string.isRequired,
+    authorUser: PropTypes.string.isRequired,
+    createdTs: PropTypes.string.isRequired,
     comment: PropTypes.string.isRequired,
   }).isRequired,
 };

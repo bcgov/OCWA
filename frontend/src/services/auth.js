@@ -1,19 +1,27 @@
-export const LS_AUTH_KEY = 'ocwa.token';
+import get from 'lodash/get';
 
-export const saveSession = token => {
-  localStorage.setItem(LS_AUTH_KEY, token);
-};
+let session = null;
 
-export const getSession = async () => {
-  try {
-    const token = localStorage.getItem(LS_AUTH_KEY);
-
-    return token;
-  } catch (err) {
-    throw err;
+export const saveSession = payload => {
+  if (!payload) {
+    throw new Error('No JWT payload');
   }
+
+  session = payload;
 };
+
+export const getSession = () => {
+  if (!session) {
+    throw new Error('Session expired');
+  }
+
+  return session;
+};
+
+export const getToken = () => get(session, 'token', null);
+
+export const getRefreshToken = () => get(session, 'refreshToken', null);
 
 export const destroySession = () => {
-  localStorage.setItem(LS_AUTH_KEY, '');
+  session = null;
 };

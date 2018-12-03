@@ -5,6 +5,7 @@ const isEmpty = require('lodash/isEmpty');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const pick = require('lodash/pick');
+const request = require('request');
 
 const router = express.Router();
 
@@ -29,6 +30,7 @@ router.get('/session', (req, res) => {
   } else {
     // Passport/KeyCloak doesn't sign the token correctly, sign here
     const jwtClaims = get(req, 'user.claims');
+
     if (jwtClaims) {
       token = jwt.sign(jwtClaims, jwtSecret);
     }
@@ -43,12 +45,46 @@ router.get('/session', (req, res) => {
     ]);
     res.json({
       token,
+      refreshToken: req.user.refreshToken,
       expiresAt: new Date(req.user.expires * 1000),
       user: userFields,
     });
   } else {
     res.status(401).end();
   }
+});
+
+router.post('/refresh', (req, res) => {
+  const jwtSecret = config.get('jwtSecret');
+  const tokenURL = config.get('auth.tokenEndpoint');
+  const clientID = config.get('auth.clientID');
+  const clientSecret = config.get('auth.clientSecret');
+
+  request.post(
+    tokenURL,
+    {
+      form: {
+        client_id: clientID,
+        client_secret: clientSecret,
+        grant_type: 'refresh_token',
+        refresh_token: req.body.refreshToken,
+      },
+    },
+    (err, response, body) => {
+      if (err) {
+        res.status(401).end();
+      }
+      const json = JSON.parse(body);
+      const claims = jwt.decode(json.id_token);
+      const token = jwt.sign(claims, jwtSecret);
+
+      res.json({
+        token,
+        refreshToken: json.refresh_token,
+        expiresAt: new Date(claims.exp * 1000),
+      });
+    }
+  );
 });
 
 router.get('/logout', (req, res) => {

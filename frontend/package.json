@@ -106,8 +106,12 @@
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.0",
     "redux-saga": "^0.16.2",
+    "request": "^2.88.0",
     "styled-components": "^3.4.6",
     "tus-js-client": "^1.5.1"
+  },
+  "resolutions": {
+    "**/event-stream": "^4.0.1"
   },
   "jest": {
     "verbose": true,
