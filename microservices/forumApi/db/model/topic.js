@@ -26,7 +26,7 @@ model.getAll = function(query, limit, page, user, callback){
 
     if (defaultPermIsGroup){
         var removeGroup = config.get('requiredRoleToCreateTopic');
-        var checkGroups = user.groups;
+        var checkGroups = user.groups.slice();
 
         var index = checkGroups.indexOf(removeGroup);
         if (index !== -1){

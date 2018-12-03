@@ -75,7 +75,7 @@ router.post("/", function(req, res, next){
             res.json({error: "Lack required role to create a topic"}).status(401);
             return;
         }else{
-            groups = groups.slice(reqIndex, 1);
+            groups.splice(reqIndex, 1);
         }
 
     }
@@ -84,7 +84,7 @@ router.post("/", function(req, res, next){
     for (var i=0; i<ignoreGroups.length; i++){
         var ignoreIndex = groups.indexOf(ignoreGroups[i]);
         if (ignoreIndex !== -1){
-            groups = groups.slice(ignoreIndex);
+            groups.splice(ignoreIndex, 1);
         }
     }
 
