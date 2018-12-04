@@ -22,7 +22,7 @@ printf "\"userInfoURL\": \"${USER_INFO_ENDPOINT}\"\n" >> ./config/default.json
 printf "},\n" >> ./config/default.json
 printf "\"storage\": {\n" >> ./config/default.json
 printf "\"endPoint\": \"${STORAGE_ENDPOINT}\",\n" >> ./config/default.json
-printf "\"port\": \"${STORAGE_PORT}\",\n" >> ./config/default.json
+printf "\"port\": ${STORAGE_PORT},\n" >> ./config/default.json
 printf "\"useSSL\": \"${STORAGE_SSL}\",\n" >> ./config/default.json
 printf "\"bucket\": \"${STORAGE_BUCKET}\",\n" >> ./config/default.json
 printf "\"accessKey\": \"${STORAGE_ACCESS_KEY}\",\n" >> ./config/default.json
