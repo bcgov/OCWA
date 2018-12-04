@@ -44,6 +44,13 @@ auth:
   scope: "openid offline_access"
   tokenEndpoint: "openid.auth.tokenEndpoint"
   userInfoURL: "openid.userinfo.url"
+storage:
+  endPoint: "ocwa-storage-api.ocwa"
+  port: 9000
+  useSSL: false
+  bucket: "data"
+  accessKey: "ssh this is a secret"
+  secretKey: "ssh this is a secret"
 user:
   idField: Email
 

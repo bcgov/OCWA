@@ -63,6 +63,18 @@ spec:
               value: {{ .Values.auth.scope }}
             - name: TOKEN_ENDPOINT
               value: {{ .Values.auth.tokenEndpoint }}
+            - name: STORAGE_ENDPOINT
+              value: {{ .Values.storage.port }}
+            - name: STORAGE_PORT
+              value: {{ .Values.storage.useSSL }}
+            - name: STORAGE_SSL
+              value: {{ .Values.storage.bucket }}
+            - name: STORAGE_BUCKET
+              value: {{ .Values.storage.bucket }}
+            - name: STORAGE_ACCESS_KEY
+              value: {{ .Values.storage.accessKey }}
+            - name: STORAGE_SECRET_KEY
+              value: {{ .Values.storage.secretKey }}
             - name: USER_INFO_ENDPOINT
               value: {{ .Values.auth.userInfoURL }}
             - name: USER_ID_FIELD
