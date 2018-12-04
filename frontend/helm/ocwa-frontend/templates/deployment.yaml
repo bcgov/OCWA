@@ -64,11 +64,11 @@ spec:
             - name: TOKEN_ENDPOINT
               value: {{ .Values.auth.tokenEndpoint }}
             - name: STORAGE_ENDPOINT
-              value: {{ .Values.storage.port }}
+              value: {{ .Values.storage.endPoint }}
             - name: STORAGE_PORT
-              value: {{ .Values.storage.useSSL }}
+              value: "{{ .Values.storage.port }}"
             - name: STORAGE_SSL
-              value: {{ .Values.storage.bucket }}
+              value: "{{ .Values.storage.useSSL }}"
             - name: STORAGE_BUCKET
               value: {{ .Values.storage.bucket }}
             - name: STORAGE_ACCESS_KEY
