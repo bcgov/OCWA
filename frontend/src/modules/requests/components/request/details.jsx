@@ -1,49 +1,12 @@
 import * as React from 'react';
-import { Checkbox } from '@atlaskit/checkbox';
-import DynamicTable from '@atlaskit/dynamic-table';
 import get from 'lodash/get';
 
+import Files from '../../containers/files';
 import * as styles from './styles.css';
 
-const head = {
-  cells: [
-    { key: 'selected', content: '', width: 10 },
-    { key: 'name', content: 'File Name', isSortable: true },
-    /* { key: 'fileType', content: 'File Type', isSortable: true }, */
-    /* { key: 'fileSize', content: 'File Size', isSortable: true }, */
-    /* { key: 'modifiedAt', content: 'Date Modified', isSortable: true }, */
-    { key: 'fileStatus', content: 'File Status' },
-  ],
-};
-const Empty = <div style={{ marginBottom: 30 }}>No files have been added</div>;
-
 function RequestDetails({ data }) {
-  const rows = data.files.map(id => {
-    const row = {
-      id,
-      name: id,
-      status: get(data, `fileStatus.${id}`, []),
-      selected: false,
-    };
-
-    return {
-      key: `row-${id}`,
-      cells: [
-        {
-          key: row.selected,
-          content: <Checkbox value="Basic checkbox" name="checkbox-basic" />,
-        },
-        {
-          key: row.id,
-          content: id,
-        },
-        {
-          key: row.status,
-          content: row.status.map(d => d.error).join(','),
-        },
-      ],
-    };
-  });
+  const files = get(data, 'files', []);
+  const supportFiles = get(data, 'supportFiles', []);
 
   return (
     <React.Fragment>
@@ -54,15 +17,22 @@ function RequestDetails({ data }) {
       <div className={styles.section}>
         <div className={styles.sectionHeader}>Export Files</div>
         <div className={styles.sectionContent}>
-          <DynamicTable emptyView={Empty} head={head} rows={rows} />
+          {files.length > 0 && (
+            <Files ids={files} fileStatus={data.fileStatus} />
+          )}
+          {!files.length && (
+            <div className={styles.empty}>No files have been added</div>
+          )}
         </div>
       </div>
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>Support Files</div>
-        <div className={styles.sectionContent}>
-          <DynamicTable emptyView={Empty} head={head} rows={[]} />
+      {supportFiles.length > 0 && (
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>Support Files</div>
+          <div className={styles.sectionContent}>
+            <Files ids={supportFiles} />
+          </div>
         </div>
-      </div>
+      )}
     </React.Fragment>
   );
 }

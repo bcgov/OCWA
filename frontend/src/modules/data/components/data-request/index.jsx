@@ -6,21 +6,21 @@ import get from 'lodash/get';
 function withRequest(Component) {
   class WithRequest extends React.Component {
     componentDidMount() {
-      const { id, match, initialRequest } = this.props;
+      const { id, ids, match, initialRequest } = this.props;
 
       if (initialRequest) {
         const params = get(match, 'params', {});
-        initialRequest({ ...params, id });
+        initialRequest({ ...params, id, ids });
       }
     }
 
     sendAction = (action, payload, options = {}) => {
-      const { id, match } = this.props;
+      const { id, ids, match } = this.props;
       const proxyAction = get(this.props, action);
 
       if (proxyAction) {
         const params = get(match, 'params', {});
-        proxyAction(payload, { id, ...options, ...params });
+        proxyAction(payload, { id, ids, ...options, ...params });
       } else {
         console.error(
           `No proxy action is defined in the container for ${action}`

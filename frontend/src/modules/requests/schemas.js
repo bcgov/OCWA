@@ -10,7 +10,12 @@ export const requestSchema = new schema.Entity(
 
 export const requestsListSchema = new schema.Array(requestSchema);
 
+export const fileSchema = new schema.Entity('files');
+export const filesListSchema = new schema.Array(fileSchema);
+
 export default {
+  fileSchema,
+  filesListSchema,
   requestSchema,
   requestsListSchema,
 };

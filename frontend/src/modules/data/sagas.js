@@ -1,10 +1,11 @@
 import at from 'lodash/at';
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import compact from 'lodash/compact';
 import has from 'lodash/has';
 import head from 'lodash/head';
 import { normalize } from 'normalizr';
+import { camelizeKeys } from 'humps';
 
 import api, { destroy } from '@src/services/api';
 
@@ -25,10 +26,14 @@ function* handleDataRequest(method, action) {
   });
 
   try {
-    const data = yield call(api[method], url, {
+    const response = yield call(api[method], url, {
       ...rest,
       payload: action.payload,
     });
+    const data = camelizeKeys(
+      response,
+      (key, convert) => (/^(_id|_v)$/.test(key) ? key : convert(key))
+    );
     const payload =
       schema && !has(data, 'error') ? normalize(data, schema) : data;
 
@@ -83,22 +88,22 @@ function* handleDeleteRequest(action) {
 }
 
 export default function*() {
-  yield takeLatest(
+  yield takeEvery(
     action => /\w+\/get$/.test(action.type),
     handleDataRequest,
     'get'
   );
-  yield takeLatest(
+  yield takeEvery(
     action => /\w+\/post$/.test(action.type),
     handleDataRequest,
     'post'
   );
-  yield takeLatest(
+  yield takeEvery(
     action => /\w+\/put$/.test(action.type),
     handleDataRequest,
     'put'
   );
-  yield takeLatest(
+  yield takeEvery(
     action => /\w+\/delete$/.test(action.type),
     handleDeleteRequest
   );

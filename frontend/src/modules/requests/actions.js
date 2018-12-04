@@ -5,6 +5,7 @@ export const fetchRequest = createDataAction('request/get');
 export const createRequest = createDataAction('request/post');
 export const saveRequest = createDataAction('request/put');
 export const deleteRequest = createDataAction('request/delete');
+export const fetchFiles = createDataAction('files/get');
 
 export const changeFilter = filter => ({
   type: 'requests/filter',

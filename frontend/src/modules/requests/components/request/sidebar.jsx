@@ -58,6 +58,7 @@ function RequestSidebar({
           <div>
             <Button
               appearance="link"
+              isDisabled={data.state < 1 || data.files.length <= 0}
               iconBefore={<SignInIcon />}
               onClick={() => onSubmit(data._id)}
             >
