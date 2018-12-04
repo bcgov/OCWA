@@ -18,6 +18,14 @@
     "tokenEndpoint": "URL_REQUIRED",
     "userInfoURL": "URL_REQUIRED"
   },
+  "storage": {
+    "endPoint": "http://localhost/minio",
+    "port": 9000,
+    "useSSL": true,
+    "bucket": "BUCKET_NAME",
+    "accessKey": "ACCESS_KEY",
+    "secretKey": "SECRET_KEY"
+  },
   "user":{
     "idField": "Email"
   }
