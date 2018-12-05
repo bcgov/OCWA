@@ -1,8 +1,10 @@
 const config = require('config');
 const express = require('express');
 const get = require('lodash/get');
+const has = require('lodash/has');
 const isEmpty = require('lodash/isEmpty');
 const jwt = require('jsonwebtoken');
+const merge = require('lodash/merge');
 const passport = require('passport');
 const pick = require('lodash/pick');
 const request = require('request');
@@ -77,6 +79,19 @@ router.post('/refresh', (req, res) => {
       const json = JSON.parse(body);
       const claims = jwt.decode(json.id_token);
       const token = jwt.sign(claims, jwtSecret);
+
+      // Update the session under the hood so refreshes work.
+      if (has(req, 'session.passport.user')) {
+        req.session.passport.user = merge(
+          {},
+          req.session.passport.user,
+          claims,
+          {
+            accessToken: token,
+            refreshToken: json.refresh_token,
+          }
+        );
+      }
 
       res.json({
         token,
