@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import FileIcon from '@src/components/file-icon';
 import ArrowUpCircleIcon from '@atlaskit/icon/glyph/arrow-up-circle';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
@@ -13,7 +14,7 @@ import * as styles from './styles.css';
 
 function FileItem({ data, uploadStatus }) {
   return (
-    <div key={data.id} className={styles.fileItem}>
+    <div key={data.id} className={cx('file-item', styles.fileItem)}>
       <div className={styles.fileItemIcon}>
         <FileIcon type={data.filetype} />
       </div>

@@ -21,69 +21,71 @@ function Request({ data, isLoaded, updatedAt, match }) {
   }
 
   return (
-    <Page>
-      <header className={styles.header}>
-        <Grid>
-          <GridColumn medium={9}>
-            <h1>{data.name}</h1>
-            <p>
-              {'Updated '}
-              <Date value={updatedAt} format="HH:MM on MMMM Do, YYYY" />
-            </p>
-          </GridColumn>
-          <GridColumn medium={3}>
-            <div style={{ textAlign: 'right' }}>
-              <StateLabel value={data.state} />
-            </div>
-          </GridColumn>
-        </Grid>
-        <Grid>
-          <GridColumn>
-            <nav className={styles.tabs}>
-              <NavLink
-                exact
-                className={styles.tab}
-                activeClassName={styles.tabActive}
-                to={match.url}
-              >
-                <InfoIcon size="small" />
-                {' Details'}
-              </NavLink>
-              <NavLink
-                exact
-                className={styles.tab}
-                activeClassName={styles.tabActive}
-                to={`${match.url}/discussion`}
-              >
-                <CommentIcon size="small" />
-                {' Discussion'}
-              </NavLink>
-            </nav>
-          </GridColumn>
-        </Grid>
-      </header>
-      <div className={styles.main}>
-        <Grid>
-          <GridColumn medium={9}>
-            <Switch>
-              <Route
-                exact
-                path={match.url}
-                render={() => <Details data={data} />}
-              />
-              <Route
-                exact
-                path={`${match.url}/discussion`}
-                render={() => <Discussion id={data.topic} />}
-              />
-            </Switch>
-          </GridColumn>
-          <GridColumn medium={3}>
-            <Sidebar data={data} />
-          </GridColumn>
-        </Grid>
-      </div>
-    </Page>
+    <div id="requests-page">
+      <Page>
+        <header className={styles.header}>
+          <Grid>
+            <GridColumn medium={9}>
+              <h1 id="request-title">{data.name}</h1>
+              <p id="request-header-details">
+                {'Updated '}
+                <Date value={updatedAt} format="HH:MM on MMMM Do, YYYY" />
+              </p>
+            </GridColumn>
+            <GridColumn medium={3}>
+              <div id="request-status" style={{ textAlign: 'right' }}>
+                <StateLabel value={data.state} />
+              </div>
+            </GridColumn>
+          </Grid>
+          <Grid>
+            <GridColumn>
+              <nav className={styles.tabs}>
+                <NavLink
+                  exact
+                  className={styles.tab}
+                  activeClassName={styles.tabActive}
+                  to={match.url}
+                >
+                  <InfoIcon size="small" />
+                  {' Details'}
+                </NavLink>
+                <NavLink
+                  exact
+                  className={styles.tab}
+                  activeClassName={styles.tabActive}
+                  to={`${match.url}/discussion`}
+                >
+                  <CommentIcon size="small" />
+                  {' Discussion'}
+                </NavLink>
+              </nav>
+            </GridColumn>
+          </Grid>
+        </header>
+        <div id="request-details" className={styles.main}>
+          <Grid>
+            <GridColumn medium={9}>
+              <Switch>
+                <Route
+                  exact
+                  path={match.url}
+                  render={() => <Details data={data} />}
+                />
+                <Route
+                  exact
+                  path={`${match.url}/discussion`}
+                  render={() => <Discussion id={data.topic} />}
+                />
+              </Switch>
+            </GridColumn>
+            <GridColumn medium={3}>
+              <Sidebar data={data} />
+            </GridColumn>
+          </Grid>
+        </div>
+      </Page>
+    </div>
   );
 }
 

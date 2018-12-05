@@ -34,7 +34,7 @@ class App extends React.Component {
 
     return (
       <LayerManager>
-        <main className={styles.main}>
+        <main id="app-main" className={styles.main}>
           <Auth
             fetchStatus={authFetchStatus}
             isAuthenticated={isAuthenticated}
@@ -55,7 +55,7 @@ class App extends React.Component {
                   <DropdownItem href="/auth/logout">Logout</DropdownItem>
                 </Dropdown>
               </AppBar>
-              <div className={styles.container}>
+              <div id="app-content" className={styles.container}>
                 <Switch>
                   <Route exact path="/" component={Requests} />
                   <Route path="/requests/:requestId" component={Request} />

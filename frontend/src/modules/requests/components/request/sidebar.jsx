@@ -20,15 +20,19 @@ function RequestSidebar({
   onWithdraw,
 }) {
   return (
-    <aside>
+    <aside id="request-sidebar">
       <h6>Output Checker</h6>
-      {data.reviewers.map(d => (
-        <p>
-          <Avatar key={d} size="small" />
-          {d}
-        </p>
-      ))}
-      {data.reviewers.length <= 0 && <p>No reviewer has been assigned</p>}
+      <div id="request-reviewers">
+        {data.reviewers.map(d => (
+          <p>
+            <Avatar key={d} size="small" />
+            {d}
+          </p>
+        ))}
+      </div>
+      {data.reviewers.length <= 0 && (
+        <p id="request-reviewers-empty">No reviewer has been assigned</p>
+      )}
       <h6>Actions</h6>
       {data.state >= 2 &&
         data.state < 4 && (
@@ -36,6 +40,7 @@ function RequestSidebar({
             <div>
               <Button
                 appearance="link"
+                id="request-sidebar-withdraw-button"
                 iconBefore={<SignOutIcon />}
                 onClick={() => onWithdraw(data._id)}
               >
@@ -45,6 +50,7 @@ function RequestSidebar({
             <div>
               <Button
                 appearance="link"
+                id="request-sidebar-cancel-button"
                 iconBefore={<CrossIcon />}
                 onClick={() => onCancel(data._id)}
               >
@@ -58,6 +64,7 @@ function RequestSidebar({
           <div>
             <Button
               appearance="link"
+              id="request-sidebar-submit-button"
               isDisabled={data.state < 1 || data.files.length <= 0}
               iconBefore={<SignInIcon />}
               onClick={() => onSubmit(data._id)}
@@ -68,6 +75,7 @@ function RequestSidebar({
           <div>
             <Button
               appearance="link"
+              id="request-sidebar-edit-button"
               iconBefore={<EditFilledIcon />}
               onClick={() => onEdit(data._id)}
             >
@@ -77,6 +85,7 @@ function RequestSidebar({
           <div>
             <Button
               appearance="link"
+              id="request-sidebar-delete-button"
               iconBefore={<TrashIcon />}
               onClick={() => onDelete(data._id)}
             >

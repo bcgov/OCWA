@@ -8,7 +8,7 @@ import * as styles from './styles.css';
 function AppBar({ children, title }) {
   return (
     <div className={styles.container}>
-      <Link to="/" className={styles.brand}>
+      <Link id="app-bar-brand" to="/" className={styles.brand}>
         <AppIcon size="large" />
         {title}
       </Link>

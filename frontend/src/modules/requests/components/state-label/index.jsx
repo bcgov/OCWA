@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 
 import RequestIcon from '../request-icon';
 import { getRequestStateColor } from '../../utils';
@@ -37,7 +38,7 @@ function StateLabel({ value }) {
 
   return (
     <div
-      className={styles.container}
+      className={cx('request-state-label', styles.container)}
       style={{ backgroundColor: getRequestStateColor(value) }}
     >
       <RequestIcon color="white" size="medium" value={value} />
