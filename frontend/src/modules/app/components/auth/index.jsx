@@ -13,24 +13,28 @@ function Auth({ fetchStatus, isAuthenticated }) {
         <ModalDialog appearance={isFailed ? 'warning' : null} width="small">
           <div className={styles.content}>
             {!/(loaded|failed)/.test(fetchStatus) && (
-              <div>
+              <div id="app-auth-loading">
                 <p>Checking authentication...</p>
                 <Spinner size="medium" />
               </div>
             )}
             {fetchStatus === 'loaded' && (
-              <div>
+              <div id="app-auth-loaded">
                 <p>Success!</p>
               </div>
             )}
             {isFailed && (
-              <div>
+              <div id="app-auth-failed">
                 <p>
                   There was an error authenticating.
                   <br />
                   Please sign in.
                 </p>
-                <Button appearance="warning" href="/login">
+                <Button
+                  appearance="warning"
+                  href="/login"
+                  id="app-auth-login-button"
+                >
                   Login
                 </Button>
               </div>

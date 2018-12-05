@@ -12,9 +12,9 @@ function RequestDetails({ data }) {
     <React.Fragment>
       <div className={styles.section}>
         <h4>Purpose</h4>
-        <p>{data.purpose}</p>
+        <p id="request-purpose">{data.purpose}</p>
       </div>
-      <div className={styles.section}>
+      <div id="request-export-files" className={styles.section}>
         <div className={styles.sectionHeader}>Export Files</div>
         <div className={styles.sectionContent}>
           {files.length > 0 && (
@@ -26,7 +26,7 @@ function RequestDetails({ data }) {
         </div>
       </div>
       {supportFiles.length > 0 && (
-        <div className={styles.section}>
+        <div id="request-support-files" className={styles.section}>
           <div className={styles.sectionHeader}>Support Files</div>
           <div className={styles.sectionContent}>
             <Files ids={supportFiles} />

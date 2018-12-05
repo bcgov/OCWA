@@ -5,3 +5,10 @@
   border: 1px solid #dee2e6;
   border-radius: 3px;
 }
+
+.post {
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #dfe1e6;
+}
