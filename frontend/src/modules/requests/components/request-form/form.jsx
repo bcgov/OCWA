@@ -21,68 +21,96 @@ class NewRequestForm extends React.PureComponent {
     const { data } = this.props;
 
     return (
-      <Form ref={this.formRef}>
-        <Field validateOnChange isRequired label="Request Name" id="name">
-          <FieldText
-            shouldFitContainer
-            name="name"
-            id="name"
-            value={data.name || ''}
-          />
-        </Field>
-        <FormSection
-          name="additional"
-          title="Additional Information"
-          description="These fields aren't required but are recommended"
-        >
-          <Field label="Purpose" helperText="Purpose of the request">
-            <FieldTextArea
+      <div id="request-form">
+        <Form ref={this.formRef}>
+          <Field validateOnChange isRequired label="Request Name" id="name">
+            <FieldText
               shouldFitContainer
-              name="purpose"
-              value={data.purpose}
+              name="name"
+              id="name"
+              value={data.name || ''}
             />
           </Field>
-          <Field
-            label="Variable Descriptions"
-            helperText="Description of variables in the request"
+          <FormSection
+            name="additional"
+            title="Additional Information"
+            description="These fields aren't required but are recommended"
           >
-            <FieldTextArea
-              shouldFitContainer
-              name="variableDescriptions"
-              value={data.variableDescriptions}
-            />
-          </Field>
-          <Field
-            label="Selection Criteria"
-            helperText="Selection criteria and sample size description for the request"
-          >
-            <FieldTextArea
-              shouldFitContainer
-              name="selectionCriteria"
-              value={data.selectionCriteria}
-            />
-          </Field>
-          <Field label="Steps" helperText="Annotation of steps taken">
-            <FieldTextArea shouldFitContainer name="steps" value={data.steps} />
-          </Field>
-          <Field
-            label="Frequency"
-            helperText="Weighted results and unweighted frequencies"
-          >
-            <FieldTextArea shouldFitContainer name="freq" value={data.freq} />
-          </Field>
-          <Field
-            label="Confidentiality"
-            helperText="Confidentiality disclosure to describe how it's upheld when criteria isn't met"
-          >
-            <FieldTextArea
-              shouldFitContainer
-              name="confidentiality"
-              value={data.confidentiality}
-            />
-          </Field>
-        </FormSection>
-      </Form>
+            <Field
+              id="purpose"
+              label="Purpose"
+              helperText="Purpose of the request"
+            >
+              <FieldTextArea
+                shouldFitContainer
+                name="purpose"
+                id="purpose"
+                value={data.purpose}
+              />
+            </Field>
+            <Field
+              id="variableDescriptions"
+              label="Variable Descriptions"
+              helperText="Description of variables in the request"
+            >
+              <FieldTextArea
+                shouldFitContainer
+                name="variableDescriptions"
+                id="variableDescriptions"
+                value={data.variableDescriptions}
+              />
+            </Field>
+            <Field
+              id="selectionCriteria"
+              label="Selection Criteria"
+              helperText="Selection criteria and sample size description for the request"
+            >
+              <FieldTextArea
+                shouldFitContainer
+                name="selectionCriteria"
+                id="selectionCriteria"
+                value={data.selectionCriteria}
+              />
+            </Field>
+            <Field
+              id="steps"
+              label="Steps"
+              helperText="Annotation of steps taken"
+            >
+              <FieldTextArea
+                shouldFitContainer
+                name="steps"
+                id="steps"
+                value={data.steps}
+              />
+            </Field>
+            <Field
+              id="freq"
+              label="Frequency"
+              helperText="Weighted results and unweighted frequencies"
+            >
+              <FieldTextArea
+                shouldFitContainer
+                id="freq"
+                name="freq"
+                value={data.freq}
+              />
+            </Field>
+            <Field
+              id="confidentiality"
+              label="Confidentiality"
+              helperText="Confidentiality disclosure to describe how it's upheld when criteria isn't met"
+            >
+              <FieldTextArea
+                shouldFitContainer
+                id="confidentiality"
+                name="confidentiality"
+                value={data.confidentiality}
+              />
+            </Field>
+          </FormSection>
+        </Form>
+      </div>
     );
   }
 }

@@ -11,6 +11,7 @@ function NewRequest({ disabled, onClick }) {
   return (
     <Button
       appearance="primary"
+      id="new-request-button"
       iconBefore={
         <AddCircleIcon primaryColor="white" secondaryColor={colors.B500} />
       }

@@ -47,24 +47,26 @@ class FileUploader extends React.Component {
     const { isDragging } = this.state;
 
     return (
-      <div className={styles.container}>
+      <div className={cx('file-uploader', styles.container)}>
         {!data.length && (
           <div
-            className={cx(styles.dropZone, {
+            className={cx('file-uploader-drop-zone', styles.dropZone, {
               [styles.dropZoneDragOver]: isDragging,
             })}
             onDragLeave={this.onDragLeave}
             onDragOver={this.onDragOver}
             onDrop={this.onDrop}
           >
-            <div className={styles.uploadText}>
+            <div className={cx('file-uploader-text', styles.uploadText)}>
               {!isUploading && (
                 <div>{isDragging ? 'Drop files here' : 'Drag files here'}</div>
               )}
             </div>
           </div>
         )}
-        <div>{data.map(id => <FileItem key={id} id={id} />)}</div>
+        <div className="file-uploader-list">
+          {data.map(id => <FileItem key={id} id={id} />)}
+        </div>
       </div>
     );
   }

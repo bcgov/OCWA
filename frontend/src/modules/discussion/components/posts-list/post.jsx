@@ -1,11 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import Comment, { CommentTime } from '@atlaskit/comment';
 import get from 'lodash/get';
 import { ADFEncoder, ReactRenderer } from '@atlaskit/renderer';
 import { WikiMarkupTransformer } from '@atlaskit/editor-wikimarkup-transformer';
 import { akColorN40 } from '@atlaskit/util-shared-styles';
 import format from 'date-fns/format';
+
+import * as styles from './styles.css';
 
 const adfEncoder = new ADFEncoder(schema => new WikiMarkupTransformer(schema));
 
@@ -23,11 +26,9 @@ class Post extends React.Component {
 
     return (
       <div
+        className={cx('discussion-post', styles.post)}
         style={{
-          border: `1px solid ${akColorN40}`,
-          borderRadius: 4,
-          marginBottom: 20,
-          padding: 10,
+          borderColor: `1px solid ${akColorN40}`,
         }}
       >
         <Comment

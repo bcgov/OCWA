@@ -111,13 +111,19 @@ class NewRequestDialog extends React.Component {
 
     return (
       <ModalFooter>
-        <Button appearance="default" isDisabled={isDisabled} onClick={onCancel}>
+        <Button
+          appearance="default"
+          id="request-form-cancel-button"
+          isDisabled={isDisabled}
+          onClick={onCancel}
+        >
           Cancel
         </Button>
         <div style={{ flex: 1 }} />
         <ButtonGroup>
           <Button
             appearance="default"
+            id="request-form-save-close-button"
             isDisabled={isDisabled}
             onClick={this.onSaveAndClose}
           >
@@ -125,6 +131,7 @@ class NewRequestDialog extends React.Component {
           </Button>
           {currentStep === 0 && (
             <Button
+              id="request-form-save-files-button"
               isDisabled={isDisabled}
               appearance="primary"
               onClick={this.onAddFiles}
@@ -134,6 +141,7 @@ class NewRequestDialog extends React.Component {
           )}
           <Button
             appearance="primary"
+            id="request-form-save-button"
             isDisabled={isCreating || isSaving}
             iconBefore={(isCreating || isSaving) && <Spinner invertColor />}
             onClick={this.onSave}
@@ -143,6 +151,7 @@ class NewRequestDialog extends React.Component {
           {currentStep === 1 && (
             <Button
               appearance="primary"
+              id="request-form-submit-button"
               isDisabled={isDisabled || isDraft || files.length <= 0}
               onClick={this.onSubmit}
             >
@@ -162,6 +171,7 @@ class NewRequestDialog extends React.Component {
         {open && (
           <Modal
             autoFocus
+            id="request-form"
             footer={this.renderFooter}
             heading={`Initiate a New Request (Step ${currentStep + 1}/2)`}
             onCloseComplete={this.reset}

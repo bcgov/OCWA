@@ -22,7 +22,11 @@ function PostsList({ data, fetchStatus }) {
     return <Spinner size="large" />;
   }
 
-  return <div>{data.map(d => <Post key={d._id} data={d} />)}</div>;
+  return (
+    <div id="discussion-posts-list">
+      {data.map(d => <Post key={d._id} data={d} />)}
+    </div>
+  );
 }
 
 PostsList.propTypes = {

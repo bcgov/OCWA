@@ -6,7 +6,7 @@ import PostsList from '../../containers/posts';
 
 function Discussion({ id }) {
   return (
-    <div>
+    <div id="discussion">
       <PostsList id={id} />
       <NewPost id={id} />
     </div>

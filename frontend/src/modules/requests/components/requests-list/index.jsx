@@ -115,11 +115,11 @@ function RequestsList({
 
   return (
     <Page>
-      <header className={styles.header}>
+      <header id="requests-list-header" className={styles.header}>
         <Grid>
           <GridColumn medium={12}>
             <h1 className={styles.title}>My Requests</h1>
-            <nav className={styles.filters}>
+            <nav id="requests-list-filters" className={styles.filters}>
               <ButtonGroup>
                 {filters.map(d => (
                   <Button
@@ -134,6 +134,7 @@ function RequestsList({
               <FieldTextStateless
                 isLabelHidden
                 shouldFitContainer={false}
+                id="requests-list-search"
                 placeholder="Search Requests"
                 onChange={event => onSearch(event.target.value)}
                 value={search}
@@ -144,16 +145,18 @@ function RequestsList({
       </header>
       <Grid>
         <GridColumn medium={12}>
-          <DynamicTableStateless
-            emptyView={renderEmpty()}
-            head={header}
-            rows={rows}
-            loadingSpinnerSize="large"
-            isLoading={isLoading}
-            sortKey={sortKey}
-            sortOrder={sortOrder}
-            onSort={sortProps => onSort(sortProps)}
-          />
+          <div id="requests-list-table">
+            <DynamicTableStateless
+              emptyView={renderEmpty()}
+              head={header}
+              rows={rows}
+              loadingSpinnerSize="large"
+              isLoading={isLoading}
+              sortKey={sortKey}
+              sortOrder={sortOrder}
+              onSort={sortProps => onSort(sortProps)}
+            />
+          </div>
         </GridColumn>
       </Grid>
     </Page>
