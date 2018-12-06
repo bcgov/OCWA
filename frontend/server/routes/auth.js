@@ -1,8 +1,10 @@
 const config = require('config');
 const express = require('express');
 const get = require('lodash/get');
+const has = require('lodash/has');
 const isEmpty = require('lodash/isEmpty');
 const jwt = require('jsonwebtoken');
+const merge = require('lodash/merge');
 const passport = require('passport');
 const pick = require('lodash/pick');
 const request = require('request');
@@ -13,6 +15,15 @@ router.get(
   '/',
   passport.authenticate('openidconnect', { failureRedirect: '/' }),
   (req, res) => {
+    // Clean up the token on first successful sign in
+    const jwtSecret = config.get('jwtSecret');
+    const jwtClaims = get(req, 'user.claims');
+
+    if (jwtClaims) {
+      // Passport/KeyCloak doesn't sign the token correctly, sign here
+      req.user.accessToken = jwt.sign(jwtClaims, jwtSecret);
+    }
+
     res.redirect('/');
   }
 );
@@ -22,18 +33,13 @@ router.get('/session', (req, res) => {
   const jwtSecret = config.get('jwtSecret');
   let token = null;
 
-  // If there is now jwtSecret defined go with OCID only
+  // If there is no jwtSecret defined go with OCID only
   if (isEmpty(jwtSecret)) {
     if (req.isAuthenticated()) {
       token = req.user.accessToken;
     }
   } else {
-    // Passport/KeyCloak doesn't sign the token correctly, sign here
-    const jwtClaims = get(req, 'user.claims');
-
-    if (jwtClaims) {
-      token = jwt.sign(jwtClaims, jwtSecret);
-    }
+    token = get(req, 'user.accessToken');
   }
 
   if (token) {
@@ -59,16 +65,17 @@ router.post('/refresh', (req, res) => {
   const tokenURL = config.get('auth.tokenEndpoint');
   const clientID = config.get('auth.clientID');
   const clientSecret = config.get('auth.clientSecret');
+  const form = {
+    client_id: clientID,
+    client_secret: clientSecret,
+    grant_type: 'refresh_token',
+    refresh_token: req.body.refreshToken,
+  };
 
   request.post(
     tokenURL,
     {
-      form: {
-        client_id: clientID,
-        client_secret: clientSecret,
-        grant_type: 'refresh_token',
-        refresh_token: req.body.refreshToken,
-      },
+      form,
     },
     (err, response, body) => {
       if (err) {
@@ -77,6 +84,24 @@ router.post('/refresh', (req, res) => {
       const json = JSON.parse(body);
       const claims = jwt.decode(json.id_token);
       const token = jwt.sign(claims, jwtSecret);
+
+      // Update the session under the hood so refreshes work.
+      if (has(req, 'session.passport.user')) {
+        const currentUser = req.session.passport.user;
+
+        // Update the passport session manually
+        req.session.passport.user = merge({}, currentUser, claims, {
+          accessToken: token,
+          refreshToken: json.refresh_token,
+        });
+
+        // Persist the session on refresh
+        req.session.save(e => {
+          if (e) {
+            res.status(401).end();
+          }
+        });
+      }
 
       res.json({
         token,
