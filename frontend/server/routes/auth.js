@@ -15,6 +15,13 @@ router.get(
   '/',
   passport.authenticate('openidconnect', { failureRedirect: '/' }),
   (req, res) => {
+    const jwtSecret = config.get('jwtSecret');
+    const jwtClaims = get(req, 'user.claims');
+
+    if (jwtClaims) {
+      // Passport/KeyCloak doesn't sign the token correctly, sign here
+      req.user.accessToken = jwt.sign(jwtClaims, jwtSecret);
+    }
     res.redirect('/');
   }
 );
@@ -24,18 +31,13 @@ router.get('/session', (req, res) => {
   const jwtSecret = config.get('jwtSecret');
   let token = null;
 
-  // If there is now jwtSecret defined go with OCID only
+  // If there is no jwtSecret defined go with OCID only
   if (isEmpty(jwtSecret)) {
     if (req.isAuthenticated()) {
       token = req.user.accessToken;
     }
   } else {
-    // Passport/KeyCloak doesn't sign the token correctly, sign here
-    const jwtClaims = get(req, 'user.claims');
-
-    if (jwtClaims) {
-      token = jwt.sign(jwtClaims, jwtSecret);
-    }
+    token = get(req, 'user.accessToken');
   }
 
   if (token) {
@@ -79,6 +81,8 @@ router.post('/refresh', (req, res) => {
       const json = JSON.parse(body);
       const claims = jwt.decode(json.id_token);
       const token = jwt.sign(claims, jwtSecret);
+      console.log('claims exp', claims.exp);
+      console.log('refresh', token);
 
       // Update the session under the hood so refreshes work.
       if (has(req, 'session.passport.user')) {
@@ -91,6 +95,13 @@ router.post('/refresh', (req, res) => {
             refreshToken: json.refresh_token,
           }
         );
+        req.session.save(err => {
+          if (err) {
+            console.log('error!');
+          } else {
+            console.log('success');
+          }
+        });
       }
 
       res.json({
