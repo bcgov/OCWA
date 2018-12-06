@@ -6,7 +6,7 @@
     "port": 27017,
     "username": "forumUser",
     "password": "forumPass",
-    "dbName": "forumDB"
+    "dbName": "forumDb"
   },
 
   "apiSecret": "MySecret",

@@ -116,7 +116,7 @@ def get_policies():
     policy_api_url = conf['policyApi']
     headers = {'X-API-KEY': conf['apiSecret']}
 
-    response = requests.get(policy_api_url, headers=headers)
+    response = requests.get(policy_api_url + "/v1/", headers=headers)
 
     return response.json()
 
