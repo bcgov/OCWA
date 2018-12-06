@@ -190,7 +190,7 @@ router.get('/:requestId', function(req, res, next) {
     db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, findRes){
         if (findErr || !findRes || findRes.length === 0){
             res.status(500);
-            res.json({error: findErr.message});
+            res.json({error: findRes && findRes.length === 0 ? "Request Not Found" : findErr.message });
             return;
         }
 
@@ -261,8 +261,7 @@ router.put("/save/:requestId", function(req, res, next){
                         'x-api-key': config.get('validationApiSecret')
                     }
                 }, function (apiErr, apiRes, body) {
-                    var jso = JSON.parse(body);
-                    logger.debug("put file " + findRes.files[i] + " up for validation", apiErr, apiRes, jso.error);
+                    logger.debug("put file " + findRes.files[i] + " up for validation", apiErr, apiRes, body);
                     if (apiErr) {
                         logger.debug("Error validating file: ", apiErr);
                     }
