@@ -85,13 +85,17 @@ model.stateCodeLookup = function(){
     return rv;
 };
 
-var getAllTopics = function(user, callback, page){
+var getAllTopics = function(user, callback, page, existingTopics){
     var config = require('config');
     var httpReq = require('request');
     var logger = require('npmlog');
 
     if (typeof(page) === "undefined"){
         page = 1;
+    }
+
+    if (typeof(existingTopics) === "undefined"){
+        existingTopics = [];
     }
 
     var limit = 100;
@@ -132,16 +136,20 @@ var getAllTopics = function(user, callback, page){
 
             if (topicResults.length >= limit) {
                 getAllTopics(user, function (err, topicR) {
+                    console.log("DEBUG", page, topics.length, topicR.length);
                     if (typeof(topicR) === "object") {
-                        topics.concat(topicR);
+                        console.log("PRE PUSH");
+                        topics.push.apply(topicR);
+                        console.log("POST PUSH");
                     }
+                    console.log("DEBUG2", page, topics.length, topicR.length);
                     if (err) {
                         callback(err, topics);
                         return;
                     }
                     callback(null, topics);
 
-                }, (page + 1));
+                }, (page + 1), topics);
                 return;
             }
 

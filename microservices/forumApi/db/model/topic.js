@@ -24,38 +24,43 @@ model.getAll = function(query, limit, page, user, callback){
         "contributors.0": user.id
     };
 
-    if (defaultPermIsGroup){
+    var checkGroups = user.groups.slice();
+    if ((defaultPermIsGroup) && (config.has('requiredRoleToCreateTopic'))){
         var removeGroup = config.get('requiredRoleToCreateTopic');
-        var checkGroups = user.groups.slice();
 
         var index = checkGroups.indexOf(removeGroup);
         if (index !== -1){
             checkGroups.splice(index,1);
         }
 
-        defaultPermOverride = {
-            author_groups: {$in: checkGroups}
-        };
+        var index = checkGroups.indexOf('/oc');
+        if (index !== -1){
+            checkGroups.splice(index,1);
+        }
     }
+    defaultPermOverride = {
+        author_groups: {$in: checkGroups}
+    };
 
-    db.Topic.aggregate([
+
+    var agg = [
         {
             $lookup:{
                 from: "permissions",
                 let: { topicId: "$_id", parent: "$parent_id"},
                 pipeline: [
                     {$match: {
-                        $expr: {
-                            $and: [
-                                {$or: [
-                                    {$eq: ["$topic_id", "$$topicId"] },
-                                    {$eq: ["$topic_id", "$$parent"] },
-                                    {$eq: ["$topic_id", "*"] }
-                                ]},
-                                {$eq: ["$allow", true]}
-                            ]
-                        }
-                    }},
+                            $expr: {
+                                $and: [
+                                    {$or: [
+                                            {$eq: ["$topic_id", "$$topicId"] },
+                                            {$eq: ["$topic_id", "$$parent"] },
+                                            {$eq: ["$topic_id", "*"] }
+                                        ]},
+                                    {$eq: ["$allow", true]}
+                                ]
+                            }
+                        }},
                     {
                         $match: {
                             $or: [
@@ -80,16 +85,32 @@ model.getAll = function(query, limit, page, user, callback){
             }
         },
         {
-             $project: {
-                 "permissions": 0,
-                 "author_groups": 0
-             }
+            $project: {
+                "permissions": 0,
+                "author_groups": 0
+            }
         },
         {
             $match: query
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: limit
         }
 
-    ]).limit(limit).skip(skip).exec(callback);
+    ];
+
+    //note skip MUST be before limit or this will not work
+    //note because this is an aggregate query the skip and limit must be in the aggregate not the inline functions
+
+    //var util = require('util');
+
+    //console.log("get topic ", util.inspect(agg, {showHidden: false, depth: null}));
+
+    //console.log("l", limit, "s", skip);
+    db.Topic.aggregate(agg).exec(callback);
 };
 
 module.exports = model;
