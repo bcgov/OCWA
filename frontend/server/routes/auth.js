@@ -15,6 +15,7 @@ router.get(
   '/',
   passport.authenticate('openidconnect', { failureRedirect: '/' }),
   (req, res) => {
+    // Clean up the token on first successful sign in
     const jwtSecret = config.get('jwtSecret');
     const jwtClaims = get(req, 'user.claims');
 
@@ -22,6 +23,7 @@ router.get(
       // Passport/KeyCloak doesn't sign the token correctly, sign here
       req.user.accessToken = jwt.sign(jwtClaims, jwtSecret);
     }
+
     res.redirect('/');
   }
 );
@@ -63,16 +65,17 @@ router.post('/refresh', (req, res) => {
   const tokenURL = config.get('auth.tokenEndpoint');
   const clientID = config.get('auth.clientID');
   const clientSecret = config.get('auth.clientSecret');
+  const form = {
+    client_id: clientID,
+    client_secret: clientSecret,
+    grant_type: 'refresh_token',
+    refresh_token: req.body.refreshToken,
+  };
 
   request.post(
     tokenURL,
     {
-      form: {
-        client_id: clientID,
-        client_secret: clientSecret,
-        grant_type: 'refresh_token',
-        refresh_token: req.body.refreshToken,
-      },
+      form,
     },
     (err, response, body) => {
       if (err) {
@@ -81,25 +84,21 @@ router.post('/refresh', (req, res) => {
       const json = JSON.parse(body);
       const claims = jwt.decode(json.id_token);
       const token = jwt.sign(claims, jwtSecret);
-      console.log('claims exp', claims.exp);
-      console.log('refresh', token);
 
       // Update the session under the hood so refreshes work.
       if (has(req, 'session.passport.user')) {
-        req.session.passport.user = merge(
-          {},
-          req.session.passport.user,
-          claims,
-          {
-            accessToken: token,
-            refreshToken: json.refresh_token,
-          }
-        );
-        req.session.save(err => {
-          if (err) {
-            console.log('error!');
-          } else {
-            console.log('success');
+        const currentUser = req.session.passport.user;
+
+        // Update the passport session manually
+        req.session.passport.user = merge({}, currentUser, claims, {
+          accessToken: token,
+          refreshToken: json.refresh_token,
+        });
+
+        // Persist the session on refresh
+        req.session.save(e => {
+          if (e) {
+            res.status(401).end();
           }
         });
       }
