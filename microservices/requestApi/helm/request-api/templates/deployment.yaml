@@ -47,7 +47,7 @@ spec:
                   name: {{ template "ocwaRequestApi.fullname" . }}-secrets
                   key: forumApiSecret
             - name: VALIDATION_API
-              value: {{ .Values.user.validationApi }}
+              value: {{ .Values.validationApi }}
             - name: VALIDATION_API_KEY
               valueFrom:
                 secretKeyRef:
