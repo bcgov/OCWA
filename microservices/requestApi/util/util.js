@@ -14,7 +14,7 @@ util.getBundleMeta = function(fileIds, callback){
     var Minio = require('minio');
     var minioClient = new Minio.Client({
         endPoint: storageConfig['uri'],
-        port: storageConfig['port'],
+        port: parseInt(storageConfig['port']),
         useSSL: storageConfig['useSSL'],
         accessKey: storageConfig['key'],
         secretKey: storageConfig['secret']
