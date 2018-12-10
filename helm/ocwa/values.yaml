@@ -168,7 +168,7 @@ policy-api:
     password: password
     dbName: forumApi
 
-  apiSecret: "ssh this is an api secret"
+  apiSecret: "ssh this is a secret"
   jwtAudience: "http://localhost"
   jwt_access_group": "admin"
   jwt_group: "Groups"
@@ -344,7 +344,7 @@ validate-api:
   policyApi: ocwa-policy-api.ocwa
 
 
-  apiSecret: "ssh this is a api secret"
+  apiSecret: "ssh this is a secret"
   user:
     idField: Email
 

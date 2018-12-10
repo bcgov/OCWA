@@ -1,3 +1,5 @@
+var log = require('npmlog');
+
 util = {};
 
 util.getBundleMeta = function(fileIds, callback){
@@ -12,13 +14,11 @@ util.getBundleMeta = function(fileIds, callback){
     var Minio = require('minio');
     var minioClient = new Minio.Client({
         endPoint: storageConfig['uri'],
-        port: storageConfig['port'],
-        useSSL: storageConfig['useSSL'],
+        port: parseInt(storageConfig['port']),
+        useSSL: (storageConfig['useSSL'] === 'true'),
         accessKey: storageConfig['key'],
         secretKey: storageConfig['secret']
     });
-
-    var log = require('npmlog');
 
     var metadata = [];
     for (var i=0; i<fileIds.length; i++) {
@@ -63,6 +63,7 @@ util.getFileStatus = function(fileIds, callback){
             status[fileIds[index]] = [];
             if (apiErr || !apiRes) {
                 status[fileIds[index]].push({error: apiErr.message});
+                fullPass = false;
             } else {
                 // 0 is pass
                 try {
@@ -84,7 +85,9 @@ util.getFileStatus = function(fileIds, callback){
                         }
                     }
                 }catch(ex){
-                    callback({}, false);
+                    log.error(ex);
+                    status[fileIds[index]].push({error: "parsing error for validation response."});
+                    fullPass = false;
                 }
             }
             numResults++;
