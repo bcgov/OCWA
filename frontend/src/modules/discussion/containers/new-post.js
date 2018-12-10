@@ -9,7 +9,7 @@ export default connect(null, {
   onSave: (payload, { id }) =>
     createPost(
       { comment: payload },
-      { topicId: id },
+      { topicId: id, comment: payload },
       {
         url: `/api/v1/forums/comment/${id}`,
         schema: postSchema,

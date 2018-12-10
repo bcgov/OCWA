@@ -1,6 +1,9 @@
 import { combineReducers } from 'redux';
-import union from 'lodash/union';
 import get from 'lodash/get';
+import has from 'lodash/has';
+import merge from 'lodash/merge';
+import omit from 'lodash/omit';
+import union from 'lodash/union';
 
 const initialPostsState = {};
 
@@ -14,6 +17,7 @@ function posts(state = initialPostsState, action = {}) {
           action.payload.result,
         ]),
       };
+
     case 'discussion/posts/get/success':
       return {
         ...state,
@@ -28,6 +32,26 @@ function posts(state = initialPostsState, action = {}) {
   }
 }
 
+// Add temp messages
+function newPosts(state = {}, action = {}) {
+  switch (action.type) {
+    case 'discussion/posts/post/success':
+      return has(state, action.payload.result)
+        ? omit(state, action.payload.result)
+        : merge({}, state, action.payload.entities.posts, {
+            [action.payload.result]: {
+              comment: action.meta.comment,
+              createdTs: new Date().toString(),
+              authorUser: '...',
+            },
+          });
+
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   posts,
+  newPosts,
 });

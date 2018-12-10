@@ -23,7 +23,7 @@ function PostsList({ data, fetchStatus }) {
   }
 
   return (
-    <div id="discussion-posts-list">
+    <div id="discussion-posts-list" className={styles.list}>
       {data.map(d => <Post key={d._id} data={d} />)}
     </div>
   );

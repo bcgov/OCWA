@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Avatar from '@atlaskit/avatar';
 import cx from 'classnames';
 import Comment, { CommentTime } from '@atlaskit/comment';
 import get from 'lodash/get';
@@ -32,9 +33,9 @@ class Post extends React.Component {
         }}
       >
         <Comment
+          avatar={<Avatar size="medium" />}
           author={get(data, 'authorUser', '')}
           content={this.renderContent()}
-          type="researcher"
           time={
             <CommentTime>
               {format(get(data, 'createdTs', new Date()), 'MMM DD, YYYY h:mA')}

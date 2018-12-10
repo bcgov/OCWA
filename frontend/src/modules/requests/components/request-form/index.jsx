@@ -68,12 +68,10 @@ class NewRequestDialog extends React.Component {
   };
 
   onAddFiles = () => {
-    const { currentStep, onChangeStep } = this.props;
     const formValues = this.validateForm();
 
     if (formValues) {
       this.save(formValues, false, true);
-      onChangeStep(currentStep + 1);
     }
   };
 
@@ -187,7 +185,6 @@ class NewRequestDialog extends React.Component {
 }
 
 NewRequestDialog.propTypes = {
-  // children: PropTypes.node.isRequired,
   currentStep: PropTypes.number.isRequired,
   data: PropTypes.shape({
     name: PropTypes.string,

@@ -5,6 +5,7 @@ import Date from '@src/components/date';
 import isEmpty from 'lodash/isEmpty';
 import { NavLink, Route, Switch } from 'react-router-dom';
 import Discussion from '@src/modules/discussion/containers/discussion';
+import Spinner from '@atlaskit/spinner';
 
 import InfoIcon from '@atlaskit/icon/glyph/info';
 import CommentIcon from '@atlaskit/icon/glyph/comment';
@@ -75,7 +76,9 @@ function Request({ data, isLoaded, updatedAt, match }) {
                 <Route
                   exact
                   path={`${match.url}/discussion`}
-                  render={() => <Discussion id={data.topic} />}
+                  render={() =>
+                    data.topic ? <Discussion id={data.topic} /> : <Spinner />
+                  }
                 />
               </Switch>
             </GridColumn>
@@ -93,7 +96,9 @@ Request.propTypes = {
   data: RequestSchema.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   updatedAt: PropTypes.string.isRequired,
-  match: PropTypes.object.isRequired,
+  match: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default Request;
