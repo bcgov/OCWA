@@ -5,6 +5,7 @@ import cx from 'classnames';
 import UploadIcon from '@atlaskit/icon/glyph/upload';
 
 import * as styles from './styles.css';
+import Files from '../../containers/files';
 import FileItem from '../../containers/file-item';
 
 class Uploader extends React.Component {
@@ -59,50 +60,58 @@ class Uploader extends React.Component {
 
   render() {
     const { isDragging } = this.state;
-    const { data, isUploading, uploadText } = this.props;
+    const { data, files, isUploading, uploadText } = this.props;
 
     return (
-      <React.Fragment>
-        {!data.length && (
-          <div
-            className={cx('file-uploader-drop-zone', styles.dropZone, {
-              [styles.dropZoneDragOver]: isDragging,
-            })}
-            onDragLeave={this.onDragLeave}
-            onDragOver={this.onDragOver}
-            onDrop={this.onDrop}
-          >
-            <div className={cx('file-uploader-text', styles.uploadText)}>
-              {!isUploading && (
-                <div>
-                  <p>{isDragging ? 'Drop your files' : uploadText}</p>
-                  <small>Or</small>
-                  <Button
-                    className={styles.uploadButton}
-                    iconBefore={<UploadIcon />}
-                  >
-                    Upload Files
-                    <input
-                      multiple
-                      type="file"
-                      onChange={this.onFileInputChange}
-                    />
-                  </Button>
-                </div>
-              )}
+      <div className={styles.uploadContainer}>
+        <div
+          className={cx('file-uploader-drop-zone', styles.dropZone, {
+            [styles.dropZoneDragOver]: isDragging,
+          })}
+          onDragLeave={this.onDragLeave}
+          onDragOver={this.onDragOver}
+          onDrop={this.onDrop}
+        >
+          <div className={cx('file-uploader-text', styles.uploadText)}>
+            <div>
+              <p>
+                Make sure you save your request after uploading to enable
+                submission.
+              </p>
+              <p>{isDragging ? 'Drop your files' : uploadText}</p>
+              <small>Or</small>
+              <Button
+                className={styles.uploadButton}
+                iconBefore={<UploadIcon />}
+              >
+                Upload Files
+                <input multiple type="file" onChange={this.onFileInputChange} />
+              </Button>
             </div>
           </div>
-        )}
-        <div className={cx('file-uploader-list', styles.fileUploaderList)}>
-          {data.map(id => <FileItem key={id} id={id} />)}
         </div>
-      </React.Fragment>
+        <div className={cx('file-uploader-list', styles.fileUploaderList)}>
+          {data.length > 0 && (
+            <div className={styles.uploadQueueList}>
+              <h5>Upload Queue</h5>
+              {data.map(id => <FileItem key={id} id={id} />)}
+            </div>
+          )}
+          {files.length > 0 && (
+            <div className={styles.loadedFiles}>
+              <h5>Request Files</h5>
+              <Files ids={files} />
+            </div>
+          )}
+        </div>
+      </div>
     );
   }
 }
 
 Uploader.propTypes = {
   data: PropTypes.arrayOf(PropTypes.string).isRequired,
+  files: PropTypes.arrayOf(PropTypes.object).isRequired,
   isUploading: PropTypes.bool.isRequired,
   onUpload: PropTypes.func.isRequired,
   uploadText: PropTypes.string.isRequired,

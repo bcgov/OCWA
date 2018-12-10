@@ -18,15 +18,19 @@ class FileUploader extends React.Component {
 
   render() {
     const { tab } = this.state;
+    const { data } = this.props;
     const tabs = [
       {
         label: 'Export Files',
-        content: <FilesUploader uploadText="Drag Files Here" />,
+        content: <FilesUploader data={data} uploadText="Drag Files Here" />,
       },
       {
         label: 'Supporting Files',
         content: (
-          <SupportingFilesUploader uploadText="Drag Support Files Here" />
+          <SupportingFilesUploader
+            data={data}
+            uploadText="Drag Support Files Here"
+          />
         ),
       },
     ];
@@ -40,5 +44,9 @@ class FileUploader extends React.Component {
     );
   }
 }
+
+FileUploader.propTypes = {
+  data: PropTypes.object.isRequired,
+};
 
 export default FileUploader;

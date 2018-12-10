@@ -87,6 +87,8 @@ export const uploadFileSuccess = (file, url) => ({
 
 export const uploadFileReset = () => ({ type: 'request/file/upload/reset' });
 
+export const reset = () => ({ type: 'request/reset' });
+
 export default {
   createRequest,
   changeStep,
@@ -98,4 +100,5 @@ export default {
   uploadSupportingFile,
   uploadFile,
   uploadFileReset,
+  reset,
 };

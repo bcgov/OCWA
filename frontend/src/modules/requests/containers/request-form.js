@@ -13,6 +13,7 @@ import {
   createRequest,
   changeStep,
   closeDraftRequest,
+  reset,
   saveRequest,
 } from '../actions';
 import { requestSchema } from '../schemas';
@@ -23,12 +24,19 @@ const mapStateToProps = state => {
   const isNewRequest = !has(state, keyPath);
   const data = get(state, keyPath, {});
   const uploadedFiles = [];
-  forIn(state.requests.uploads, (value, key) => {
-    if (value === 'loaded') {
+  const uploadedSupportingFiles = [];
+  forIn(state.requests.files, (value, key) => {
+    if (state.requests.uploads[key] === 'loaded') {
       uploadedFiles.push(key);
     }
   });
+  forIn(state.requests.supportingFiles, (value, key) => {
+    if (state.requests.uploads[key] === 'loaded') {
+      uploadedSupportingFiles.push(key);
+    }
+  });
   const files = union(data.files, uploadedFiles);
+  const supportingFiles = union(data.supportingFiles, uploadedSupportingFiles);
   const isUploading = values(state.requests.uploads).some(isNumber);
 
   return {
@@ -36,6 +44,7 @@ const mapStateToProps = state => {
     isNewRequest,
     data,
     files,
+    supportingFiles,
     id: currentRequestId,
     isUploading,
     open: !isEmpty(currentRequestId),
@@ -63,4 +72,5 @@ export default connect(mapStateToProps, {
       url: `/api/v1/requests/submit/${meta.id}`,
       schema: { result: requestSchema },
     }),
+  onReset: reset,
 })(withRequest(NewRequest));

@@ -46,6 +46,7 @@ const viewState = (state = initialViewState, action = {}) => {
         currentRequestId: action.payload,
       };
 
+    case 'request/reset':
     case 'requests/close/draft':
       return {
         ...state,
@@ -66,8 +67,9 @@ const viewState = (state = initialViewState, action = {}) => {
         currentRequestId: action.meta.quitEditing
           ? null
           : get(action, 'payload.result.result', state.currentRequestId),
-        currentNewRequestStep:
-          action.meta.quitEditing || !action.meta.nextStep ? 0 : 1,
+        currentNewRequestStep: action.meta.nextStep
+          ? 1
+          : state.currentNewRequestStep,
       };
 
     default:
@@ -98,6 +100,10 @@ const files = (state = {}, action = {}) => {
     return mapKeys(state, uploadIdMapper.bind(null, action));
   }
 
+  if (action.type === 'requests/close/draft') {
+    return {};
+  }
+
   return state;
 };
 
@@ -122,6 +128,10 @@ const supportingFiles = (state = {}, action = {}) => {
 
   if (/request\/file\/upload\/(failed|progress)$/.test(action.type)) {
     return mapKeys(state, uploadIdMapper.bind(null, action));
+  }
+
+  if (action.type === 'requests/close/draft') {
+    return {};
   }
 
   return state;
