@@ -5,7 +5,7 @@ import Modal, { ModalFooter, ModalTransition } from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
 
 import Form from './form';
-import FileUploader from '../../containers/file-uploader';
+import FileUploader from '../file-uploader';
 
 class NewRequestDialog extends React.Component {
   constructor(props) {
@@ -164,7 +164,7 @@ class NewRequestDialog extends React.Component {
   };
 
   render() {
-    const { currentStep, data, open, onUploadFile, isUploading } = this.props;
+    const { currentStep, data, open } = this.props;
 
     return (
       <ModalTransition>
@@ -178,9 +178,7 @@ class NewRequestDialog extends React.Component {
             width="x-large"
           >
             {currentStep === 0 && <Form ref={this.formRef} data={data} />}
-            {currentStep === 1 && (
-              <FileUploader isUploading={isUploading} onDrop={onUploadFile} />
-            )}
+            {currentStep === 1 && <FileUploader />}
           </Modal>
         )}
       </ModalTransition>
@@ -203,7 +201,6 @@ NewRequestDialog.propTypes = {
   isSaving: PropTypes.bool.isRequired,
   sendAction: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  onUploadFile: PropTypes.func.isRequired,
 };
 
 export default NewRequestDialog;

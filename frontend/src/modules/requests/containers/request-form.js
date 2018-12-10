@@ -4,7 +4,6 @@ import get from 'lodash/get';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
 import isNumber from 'lodash/isNumber';
-import keys from 'lodash/keys';
 import union from 'lodash/union';
 import values from 'lodash/values';
 import withRequest from '@src/modules/data/components/data-request';
@@ -15,7 +14,6 @@ import {
   changeStep,
   closeDraftRequest,
   saveRequest,
-  uploadFile,
 } from '../actions';
 import { requestSchema } from '../schemas';
 
@@ -65,5 +63,4 @@ export default connect(mapStateToProps, {
       url: `/api/v1/requests/submit/${meta.id}`,
       schema: { result: requestSchema },
     }),
-  onUploadFile: uploadFile,
 })(withRequest(NewRequest));

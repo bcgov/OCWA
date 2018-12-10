@@ -51,13 +51,11 @@ function* handleDataRequest(method, action) {
     });
   }
 
-  if (method !== 'get') {
-    yield call(delay, 3000);
-    yield put({
-      type: `${action.type}/reset`,
-      meta,
-    });
-  }
+  yield call(delay, 3000);
+  yield put({
+    type: `${action.type}/reset`,
+    meta,
+  });
 }
 
 function* handleDeleteRequest(action) {

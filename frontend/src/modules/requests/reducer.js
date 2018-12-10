@@ -1,6 +1,15 @@
 import { combineReducers } from 'redux';
 import get from 'lodash/get';
-import merge from 'lodash/merge';
+import mapKeys from 'lodash/mapKeys';
+import uniqueId from 'lodash/uniqueId';
+
+const uploadIdMapper = (action, value, key) => {
+  if (action.meta.file.filename === value.filename) {
+    return action.meta.file.id;
+  }
+
+  return key;
+};
 
 const initialViewState = {
   currentRequestId: null,
@@ -67,16 +76,52 @@ const viewState = (state = initialViewState, action = {}) => {
 };
 
 const files = (state = {}, action = {}) => {
-  if (
-    action.type === 'request/file/upload/progress' ||
-    action.type === 'request/file/upload/failed'
-  ) {
-    return merge({}, state, {
-      [action.meta.url]: {
-        ...action.meta.file,
-        id: action.meta.url,
-      },
-    });
+  if (action.type === 'request/file/upload') {
+    // Normalize the file objects for the UI to match output from TUS
+    if (!action.meta.isSupportingFile) {
+      return action.payload.reduce(
+        (prev, file) => ({
+          ...prev,
+          [uniqueId('file')]: {
+            filename: file.name,
+            size: file.size,
+            filetype: file.type,
+            lastModified: file.lastModified,
+          },
+        }),
+        state
+      );
+    }
+  }
+
+  if (/request\/file\/upload\/(failed|progress)$/.test(action.type)) {
+    return mapKeys(state, uploadIdMapper.bind(null, action));
+  }
+
+  return state;
+};
+
+const supportingFiles = (state = {}, action = {}) => {
+  // Normalize the file objects for the UI to match output from TUS
+  if (action.type === 'request/file/upload') {
+    if (action.meta.isSupportingFile) {
+      return action.payload.reduce(
+        (prev, file) => ({
+          ...prev,
+          [uniqueId('supporting-file')]: {
+            filename: file.name,
+            size: file.size,
+            filetype: file.type,
+            lastModified: file.lastModified,
+          },
+        }),
+        state
+      );
+    }
+  }
+
+  if (/request\/file\/upload\/(failed|progress)$/.test(action.type)) {
+    return mapKeys(state, uploadIdMapper.bind(null, action));
   }
 
   return state;
@@ -113,7 +158,8 @@ const uploads = (state = {}, action = {}) => {
 };
 
 export default combineReducers({
-  viewState,
   files,
+  supportingFiles,
   uploads,
+  viewState,
 });

@@ -3,10 +3,15 @@
   min-height: 500px;
 }
 
+.nav {
+  margin-bottom: 20px;
+}
+
 .dropZone {
   width: 100%;
   height: 100%;
   min-height: 500px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,7 +27,31 @@
   text-align: center;
 }
 
+.uploadText small {
+  display: block;
+  margin: 10px 0;
+}
+
+.uploadButton {
+  position: relative;
+}
+
+.uploadButton input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 9;
+}
+
+.fileUploaderList {
+  flex: 1;
+}
+
 .fileItem {
+  height: 30px;
   padding: 5px 0;
   display: flex;
   align-items: center;

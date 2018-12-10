@@ -2,10 +2,10 @@ import { connect } from 'react-redux';
 import keys from 'lodash/keys';
 
 import FileUploader from '../components/file-uploader/uploader';
-import { uploadFile } from '../actions';
+import { uploadSupportingFile } from '../actions';
 
 const mapStateToProps = state => {
-  const data = keys(state.requests.files);
+  const data = keys(state.requests.supportingFiles);
   const isUploading = data.length > 0;
 
   return {
@@ -15,5 +15,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  onUpload: uploadFile,
+  onUpload: uploadSupportingFile,
 })(FileUploader);

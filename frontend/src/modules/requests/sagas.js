@@ -1,5 +1,5 @@
 import { all, call, fork, put, take } from 'redux-saga/effects';
-import { channel, eventChannel, END } from 'redux-saga';
+import { channel, delay, eventChannel, END } from 'redux-saga';
 import { getToken } from '@src/services/auth';
 import head from 'lodash/head';
 import tus from 'tus-js-client';
@@ -8,6 +8,7 @@ import {
   uploadFileFailure,
   uploadFileProgress,
   uploadFileSuccess,
+  uploadFileReset,
 } from './actions';
 
 export const sanitizeURL = url => {
@@ -84,11 +85,15 @@ function* uploadFileChannel(item) {
 
     if (error) {
       yield put(uploadFileFailure(payload, url, error));
+      yield call(delay, 5000);
+      yield put(uploadFileReset());
       return;
     }
 
     if (success) {
       yield put(uploadFileSuccess(payload, url));
+      yield call(delay, 5000);
+      yield put(uploadFileReset());
       return;
     }
 

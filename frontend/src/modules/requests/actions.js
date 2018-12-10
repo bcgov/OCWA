@@ -48,6 +48,16 @@ export const uploadFile = (file, requestId) => ({
   payload: file,
 });
 
+// Same as above, but with some extra flags for separate upload features.
+export const uploadSupportingFile = (file, requestId) => ({
+  type: 'request/file/upload',
+  meta: {
+    requestId,
+    isSupportingFile: true,
+  },
+  payload: file,
+});
+
 export const uploadFileProgress = (file, url, progress) => ({
   type: 'request/file/upload/progress',
   meta: {
@@ -75,6 +85,8 @@ export const uploadFileSuccess = (file, url) => ({
   payload: file,
 });
 
+export const uploadFileReset = () => ({ type: 'request/file/upload/reset' });
+
 export default {
   createRequest,
   changeStep,
@@ -83,4 +95,7 @@ export default {
   saveRequest,
   sortRequests,
   viewDraftRequest,
+  uploadSupportingFile,
+  uploadFile,
+  uploadFileReset,
 };

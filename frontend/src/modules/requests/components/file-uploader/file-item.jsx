@@ -6,13 +6,14 @@ import ArrowUpCircleIcon from '@atlaskit/icon/glyph/arrow-up-circle';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import ErrorIcon from '@atlaskit/icon/glyph/jira/failed-build-status';
 import filesize from 'filesize';
+import Spinner from '@atlaskit/spinner';
 import startCase from 'lodash/startCase';
 import { colors } from '@atlaskit/theme';
 
 import { FileSchema } from '../../types';
 import * as styles from './styles.css';
 
-function FileItem({ data, uploadStatus }) {
+function FileItem({ data, progress, uploadStatus }) {
   return (
     <div key={data.id} className={cx('file-item', styles.fileItem)}>
       <div className={styles.fileItemIcon}>
@@ -20,11 +21,12 @@ function FileItem({ data, uploadStatus }) {
       </div>
       <div className={styles.fileItemName}>{data.filename}</div>
       <div className={styles.fileItemSize}>
-        {uploadStatus === 'uploading' && `${data.progress}% of `}
+        {uploadStatus === 'uploading' && `${progress}% of `}
         {filesize(data.size)}
       </div>
       <div className={styles.fileItemState}>{startCase(uploadStatus)}</div>
       <div className={styles.fileItemStatusIcon}>
+        {uploadStatus === 'queued' && <Spinner />}
         {uploadStatus === 'uploading' && (
           <ArrowUpCircleIcon primaryColor={colors.B500} />
         )}
@@ -39,7 +41,10 @@ function FileItem({ data, uploadStatus }) {
 
 FileItem.propTypes = {
   data: FileSchema.isRequired,
-  uploadStatus: PropTypes.oneOf(['loaded', 'failed', 'uploading']).isRequired,
+  progress: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
+  uploadStatus: PropTypes.oneOf(['queued', 'loaded', 'failed', 'uploading'])
+    .isRequired,
 };
 
 export default FileItem;
