@@ -100,7 +100,10 @@ const files = (state = {}, action = {}) => {
     return mapKeys(state, uploadIdMapper.bind(null, action));
   }
 
-  if (action.type === 'requests/close/draft') {
+  if (
+    action.type === 'requests/close/draft' ||
+    action.type === 'request/put/success'
+  ) {
     return {};
   }
 
@@ -130,7 +133,10 @@ const supportingFiles = (state = {}, action = {}) => {
     return mapKeys(state, uploadIdMapper.bind(null, action));
   }
 
-  if (action.type === 'requests/close/draft') {
+  if (
+    action.type === 'requests/close/draft' ||
+    action.type === 'request/put/success'
+  ) {
     return {};
   }
 
