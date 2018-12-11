@@ -4,7 +4,7 @@
    <name>Run OCWA test cases</name>
    <tag></tag>
    <isRerun>false</isRerun>
-   <lastRun>2018-12-11T12:11:17</lastRun>
+   <lastRun>2018-12-11T13:49:04</lastRun>
    <mailRecipient></mailRecipient>
    <numberOfRerun>0</numberOfRerun>
    <pageLoadTimeout>30</pageLoadTimeout>
