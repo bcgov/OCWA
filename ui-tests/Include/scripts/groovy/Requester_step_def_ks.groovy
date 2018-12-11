@@ -75,9 +75,9 @@ class Requester_step_def_ks {
 		newRequestButtonObject = new TestObject("new-request-button")
 		newRequestButtonObject.addProperty("id", ConditionType.EQUALS, "new-request-button", true)
 
-		WebUI.waitForPageLoad(20)
+		WebUI.waitForPageLoad(30)
 
-		WebUI.waitForElementClickable(newRequestButtonObject, 20)
+		WebUI.waitForElementClickable(newRequestButtonObject, 30)
 		//WebUI.sendKeys(Keys.Return)
 		WebUI.click(newRequestButtonObject)
 
