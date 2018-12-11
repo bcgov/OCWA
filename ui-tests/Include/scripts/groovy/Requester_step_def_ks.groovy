@@ -58,7 +58,7 @@ class Requester_step_def_ks {
 	def requester_login() {
 		WebUI.openBrowser('')
 
-		WebUI.navigateToUrl('http://ocwa-cddi-dlt-dev.pathfinder.gov.bc.ca/')
+		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Login'))
 
@@ -76,7 +76,7 @@ class Requester_step_def_ks {
 		newRequestButtonObject.addProperty("id", ConditionType.EQUALS, "new-request-button", true)
 
 		WebUI.waitForPageLoad(20)
-		
+
 		WebUI.waitForElementClickable(newRequestButtonObject, 20)
 		//WebUI.sendKeys(Keys.Return)
 		WebUI.click(newRequestButtonObject)

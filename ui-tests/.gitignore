@@ -214,4 +214,5 @@ venv.bak/
 
 # Katalon Studio
 Reports/*
+Profiles/default.glbl
 
