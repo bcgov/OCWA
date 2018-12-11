@@ -405,6 +405,9 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - python3-pip
+          packages:
+            - g++-4.8
+            - python3-pip
 
       before_script:
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
