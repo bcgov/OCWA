@@ -41,9 +41,9 @@ public class Requester_step_def_kr {
 
 		WebUI.openBrowser('')
 		def driver = DriverFactory.getWebDriver()
-		String baseUrl = "http://ocwa-cddi-dlt-dev.pathfinder.gov.bc.ca/"
+		String baseUrl = GlobalVariable.OCWA_URL
 		selenium = new WebDriverBackedSelenium(driver, baseUrl)
-		selenium.open("http://ocwa-cddi-dlt-dev.pathfinder.gov.bc.ca/")
+		selenium.open(GlobalVariable.OCWA_URL)
 		selenium.click("id=app-auth-login-button")
 		selenium.type("id=username", "xxx")
 		selenium.type("id=password", "xxx")
