@@ -468,7 +468,7 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/ui-tests
         - chmod ugo+x runTests.sh
         - wget https://github.com/katalon-studio/katalon-studio/releases/download/v5.8.3/Katalon_Studio_${KATALON_VERSION}.tar.gz
-        - tar -xvf Katalon_Studio_${KATALON_VERSION}.tar.gz
+        - tar -xf Katalon_Studio_${KATALON_VERSION}.tar.gz
         - chmod ugo+x Katalon_Studio_${KATALON_VERSION}/katalon
         - export PATH=$PATH:/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_${KATALON_VERSION}
         
