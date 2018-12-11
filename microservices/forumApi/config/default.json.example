@@ -15,7 +15,7 @@
   "jwtSecret": "superSecretHere",
 
   "defaultAccessIsGroup": true,
-  "requiredRoleToCreateTopic": "/exporter",
+  "requiredRoleToCreateTopic": "exporter",
   "ignoreGroupsFromConsideration": [],
 
   "user":{
