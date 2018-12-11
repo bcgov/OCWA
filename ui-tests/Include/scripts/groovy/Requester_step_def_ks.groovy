@@ -75,9 +75,10 @@ class Requester_step_def_ks {
 		newRequestButtonObject = new TestObject("new-request-button")
 		newRequestButtonObject.addProperty("id", ConditionType.EQUALS, "new-request-button", true)
 
-		WebUI.waitForPageLoad(0)
-
-		WebUI.waitForElementClickable(newRequestButtonObject, 0)
+		WebUI.waitForPageLoad(20)
+		
+		WebUI.waitForElementClickable(newRequestButtonObject, 20)
+		//WebUI.sendKeys(Keys.Return)
 		WebUI.click(newRequestButtonObject)
 
 		request_name = CustomKeywords.'test_OCWA_keywords.random_test_request_name.gen_random_test_request_name'()

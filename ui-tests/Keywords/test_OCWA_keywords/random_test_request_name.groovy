@@ -23,7 +23,7 @@ public class random_test_request_name {
 	@Keyword
 	def gen_random_test_request_name() {
 		Date today = new Date()
-		String todaysDate = today.format('MMddyy-hhmm')
+		String todaysDate = today.format('MMddyy-hhmm-ss')
 		String engagementName = 'auto_eng ' + todaysDate
 		//return (engagementName)
 		//WebUI.comment(engagementName)
