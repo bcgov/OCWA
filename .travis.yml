@@ -405,6 +405,9 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
             - python3-pip
+          packages:
+            - g++-4.8
+            - python3-pip
 
       before_script:
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
@@ -466,15 +469,14 @@ matrix:
         
         #Install Katalon Studios
         - cd /home/travis/build/bcgov/OCWA/ui-tests
-        - rm -rf .project
         - chmod ugo+x runTests.sh
         - wget https://github.com/katalon-studio/katalon-studio/releases/download/v5.8.3/Katalon_Studio_${KATALON_VERSION}.tar.gz
         - tar -xf Katalon_Studio_${KATALON_VERSION}.tar.gz
         - chmod ugo+x Katalon_Studio_${KATALON_VERSION}/katalon
         - export PATH=$PATH:/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_${KATALON_VERSION}
-        
+        - cd /home/travis/build/bcgov/OCWA/
         #RUN Integration Tests
-        - ./runTests.sh
+        - ./ui-tests/runTests.sh
 
 env:
   global:
