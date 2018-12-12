@@ -117,7 +117,7 @@ router.post("/", function(req, res, next){
                 }
                 var messages = require('../messages/messages');
                 messages.sendTopicMessage(topic);
-                res.json({message: "Successfully written", _id: saveRes._id});
+                res.json({message: "Successfully written", _id: saveRes._id, result: saveRes});
             });
         });
     }else{
@@ -129,7 +129,7 @@ router.post("/", function(req, res, next){
             }
             var messages = require('../messages/messages');
             messages.sendTopicMessage(topic);
-            res.json({message: "Successfully written", _id: saveRes._id});
+            res.json({message: "Successfully written", _id: saveRes._id, result: saveRes});
         });
     }
 });

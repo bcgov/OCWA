@@ -7,7 +7,7 @@ printf "\"logLevel\": \"${LOG_LEVEL}\",\n" >> ./config/default.json
 
 printf "\"database\": {\n" >> ./config/default.json
 printf "\"host\": \"${DB_HOST}\",\n" >> ./config/default.json
-printf "\"port\": \"${DB_PORT}\",\n" >> ./config/default.json
+printf "\"port\": ${DB_PORT},\n" >> ./config/default.json
 printf "\"username\": \"${DB_USERNAME}\",\n" >> ./config/default.json
 printf "\"password\": \"${DB_PASSWORD}\",\n" >> ./config/default.json
 printf "\"dbName\": \"${DB_NAME}\"\n" >> ./config/default.json
