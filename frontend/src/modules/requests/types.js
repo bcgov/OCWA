@@ -27,7 +27,16 @@ export const FileSchema = PropTypes.shape({
   state: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 });
 
+export const FileStatusSchema = PropTypes.shape({
+  pass: PropTypes.bool,
+  state: PropTypes.number,
+  message: PropTypes.string,
+  name: PropTypes.string,
+  mandatory: PropTypes.bool,
+});
+
 export default {
-  RequestSchema,
   FileSchema,
+  FileStatusSchema,
+  RequestSchema,
 };

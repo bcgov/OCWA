@@ -1,9 +1,7 @@
 import { combineReducers } from 'redux';
 import get from 'lodash/get';
-import has from 'lodash/has';
-import merge from 'lodash/merge';
-import omit from 'lodash/omit';
 import union from 'lodash/union';
+import uniqueId from 'lodash/uniqueId';
 
 const initialPostsState = {};
 
@@ -14,7 +12,7 @@ function posts(state = initialPostsState, action = {}) {
       return {
         ...state,
         [action.meta.topicId]: union(get(state, action.meta.topicId, []), [
-          action.payload.result,
+          action.payload.result.result,
         ]),
       };
 
@@ -32,19 +30,20 @@ function posts(state = initialPostsState, action = {}) {
   }
 }
 
-// Add temp messages
-function newPosts(state = {}, action = {}) {
+// Add temp messages incase of latency
+function newPost(state = {}, action = {}) {
   switch (action.type) {
+    case 'discussion/posts/post/requested':
+      return {
+        _id: uniqueId('post'),
+        isSaving: true,
+        comment: action.meta.comment,
+        createdTs: new Date().toString(),
+        authorUser: '-',
+      };
+
     case 'discussion/posts/post/success':
-      return has(state, action.payload.result)
-        ? omit(state, action.payload.result)
-        : merge({}, state, action.payload.entities.posts, {
-            [action.payload.result]: {
-              comment: action.meta.comment,
-              createdTs: new Date().toString(),
-              authorUser: '...',
-            },
-          });
+      return {};
 
     default:
       return state;
@@ -53,5 +52,5 @@ function newPosts(state = {}, action = {}) {
 
 export default combineReducers({
   posts,
-  newPosts,
+  newPost,
 });

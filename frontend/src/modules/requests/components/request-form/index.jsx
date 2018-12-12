@@ -1,7 +1,8 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/arrow-right-circle';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import PropTypes from 'prop-types';
+import get from 'lodash/get';
 import Modal, { ModalFooter, ModalTransition } from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
 import { colors } from '@atlaskit/theme';
@@ -100,7 +101,6 @@ class NewRequestDialog extends React.Component {
     const {
       currentStep,
       data,
-      files,
       isCreating,
       isSaving,
       isUploading,
@@ -155,7 +155,9 @@ class NewRequestDialog extends React.Component {
             <Button
               appearance="primary"
               id="request-form-submit-button"
-              isDisabled={isDisabled || isDraft || data.files.length <= 0}
+              isDisabled={
+                isDisabled || isDraft || get(data, 'files.length', 0) <= 0
+              }
               onClick={this.onSubmit}
             >
               Submit for Review

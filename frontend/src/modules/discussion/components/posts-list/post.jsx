@@ -34,6 +34,7 @@ class Post extends React.Component {
       >
         <Comment
           avatar={<Avatar size="medium" />}
+          isSaving={data.isSaving}
           author={get(data, 'authorUser', '')}
           content={this.renderContent()}
           time={

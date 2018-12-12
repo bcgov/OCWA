@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import {
   CollapsedEditor,
   Editor,
@@ -19,7 +20,6 @@ class Form extends React.Component {
   };
 
   onCancel = () => {
-    const { actions } = this.props;
     this.toggleEditor();
   };
 
@@ -35,6 +35,8 @@ class Form extends React.Component {
 
   render() {
     const { isExpanded } = this.state;
+    const { isSending } = this.props;
+
     return (
       <div style={{ marginTop: 20 }}>
         <CollapsedEditor
@@ -45,6 +47,7 @@ class Form extends React.Component {
           <Editor
             allowCodeBlocks
             shouldFocus
+            disabled={isSending}
             appearance="comment"
             contentTransformerProvider={schema =>
               new WikiMarkupTransformer(schema)
@@ -57,6 +60,16 @@ class Form extends React.Component {
     );
   }
 }
+
+EditorContext.propTypes = {
+  isSending: PropTypes.bool,
+};
+
+EditorContext.defaultProps = {
+  actions: PropTypes.object.isRequired,
+  onSave: PropTypes.func.isRequired,
+  isSending: false,
+};
 
 export default props => (
   <EditorContext>

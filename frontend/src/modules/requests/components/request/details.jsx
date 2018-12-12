@@ -1,12 +1,18 @@
 import * as React from 'react';
+import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
 
 import Files from '../../containers/files';
+import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
 function RequestDetails({ data }) {
   const files = get(data, 'files', []);
   const supportFiles = get(data, 'supportFiles', []);
+
+  if (isEmpty(data)) {
+    return 'Loading...';
+  }
 
   return (
     <React.Fragment>
@@ -36,5 +42,13 @@ function RequestDetails({ data }) {
     </React.Fragment>
   );
 }
+
+RequestDetails.propTypes = {
+  data: RequestSchema,
+};
+
+RequestDetails.defaultProps = {
+  data: {},
+};
 
 export default RequestDetails;

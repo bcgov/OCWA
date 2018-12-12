@@ -73,25 +73,14 @@ const handlePostStatus = (state, action) => {
   const entities = { [action.meta.dataType]: {} };
 
   if (/\w+\/post\/requested$/.test(action.type)) {
-    postRequests[action.meta.dataType] = {
-      [action.meta.id]: 'creating',
-    };
+    postRequests[action.meta.dataType] = 'creating';
   } else if (/\w+\/post\/success$/.test(action.type)) {
-    postRequests[action.meta.dataType] = {
-      [action.meta.id]: 'loaded',
-    };
-    entities[action.meta.dataType] = {
-      [action.payload.result.result]: 'loaded',
-    };
+    postRequests[action.meta.dataType] = 'loaded';
+    entities[action.meta.dataType] = 'loaded';
   } else if (/\w+\/post\/failed$/.test(action.type)) {
-    postRequests[action.meta.dataType] = {
-      [action.meta.id]: 'failed',
-    };
+    postRequests[action.meta.dataType] = 'failed';
   } else if (/\w+\/post\/reset$/.test(action.type)) {
-    return omit(
-      state,
-      `postRequests.${action.meta.dataType}.${action.meta.id}`
-    );
+    return omit(state, `postRequests.${action.meta.dataType}`);
   }
 
   return merge({}, state, {

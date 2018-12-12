@@ -7,13 +7,21 @@ import FileIcon from '@src/components/file-icon';
 import filesize from 'filesize';
 import get from 'lodash/get';
 
-const Empty = <div style={{ marginBottom: 30 }}>No files have been added</div>;
+import { FileStatusSchema } from '../../types';
+import StatusIcon from './status-icon';
+import * as styles from './styles.css';
+
+const Empty = <div className={styles.empty}>No files have been added</div>;
 const head = {
   cells: [
-    //{ key: 'selected', content: '', width: 10 },
+    {
+      key: 'fileStatus',
+      content: <span className={styles.startCell}>File Status</span>,
+    },
+    // { key: 'selected', content: '', width: 10 },
     {
       key: 'filename',
-      content: <span style={{ paddingLeft: 10 }}>File Name</span>,
+      content: 'File Name',
       isSortable: true,
     },
     { key: 'filetype', content: 'File Type', isSortable: true, width: 10 },
@@ -24,7 +32,6 @@ const head = {
       isSortable: true,
       width: 20,
     },
-    { key: 'fileStatus', content: 'File Status' },
   ],
 };
 
@@ -36,11 +43,16 @@ function FilesTable({ data, fileStatus }) {
       key: `row-${data.id}`,
       cells: [
         {
+          content: (
+            <span className={styles.startCell}>
+              <StatusIcon data={status} />
+            </span>
+          ),
+        },
+        {
           key: file.filename,
           content: (
-            <span
-              style={{ paddingLeft: 10, display: 'flex', alignItems: 'center' }}
-            >
+            <span style={{ display: 'flex', alignItems: 'center' }}>
               <FileIcon type={file.filetype} />
               <span style={{ marginLeft: 10 }}>{file.filename}</span>
             </span>
@@ -57,11 +69,11 @@ function FilesTable({ data, fileStatus }) {
         {
           key: file.lastmodified,
           content: (
-            <DateTime format="MMM Do, YYYY" value={Number(file.lastmodified)} />
+            <DateTime
+              format="MMM Do, YYYY"
+              value={new Date(Number(file.lastmodified))}
+            />
           ),
-        },
-        {
-          content: status.map(d => d.error).join(','),
         },
       ],
     };
@@ -79,7 +91,7 @@ FilesTable.propTypes = {
       filetype: PropTypes.string.isRequired,
     })
   ).isRequired,
-  fileStatus: PropTypes.object.isRequired,
+  fileStatus: PropTypes.objectOf(PropTypes.arrayOf(FileStatusSchema)),
 };
 
 export default FilesTable;

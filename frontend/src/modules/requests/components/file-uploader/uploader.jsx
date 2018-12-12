@@ -60,7 +60,7 @@ class Uploader extends React.Component {
 
   render() {
     const { isDragging } = this.state;
-    const { data, files, isUploading, uploadText } = this.props;
+    const { data, files, uploadText } = this.props;
 
     return (
       <div className={styles.uploadContainer}>
@@ -81,11 +81,17 @@ class Uploader extends React.Component {
               <p>{isDragging ? 'Drop your files' : uploadText}</p>
               <small>Or</small>
               <Button
+                id="file-uploader-button"
                 className={styles.uploadButton}
                 iconBefore={<UploadIcon />}
               >
                 Upload Files
-                <input multiple type="file" onChange={this.onFileInputChange} />
+                <input
+                  multiple
+                  id="file-uploader-input"
+                  type="file"
+                  onChange={this.onFileInputChange}
+                />
               </Button>
             </div>
           </div>
