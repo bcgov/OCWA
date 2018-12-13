@@ -470,10 +470,10 @@ matrix:
         #Install Katalon Studios
         - cd /home/travis/build/bcgov/OCWA/ui-tests
         - chmod ugo+x runTests.sh
-        - wget https://github.com/katalon-studio/katalon-studio/releases/download/${KATALON_VERSION}/Katalon_Studio_${KATALON_VERSION}.tar.gz
-        - tar -xf Katalon_Studio_${KATALON_VERSION}.tar.gz
-        - chmod ugo+x Katalon_Studio_${KATALON_VERSION}/katalon
-        - export PATH=$PATH:/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_${KATALON_VERSION}
+        - wget https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
+        - tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
+        - chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
+        - export PATH=$PATH:/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
         - cd /home/travis/build/bcgov/OCWA/
         #RUN Integration Tests
         - ./ui-tests/runTests.sh
@@ -488,7 +488,7 @@ env:
   - YAMLLINT_VERSION=1.8.1
   - CXX=g++-4.8
   - MONGODB=4.1.1
-  - KATALON_VERSION=Linux_64-5.9.0
+  - KATALON_VERSION=5.9.0
   - SONAR_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/
   - SONAR_APP=sonar-scanner
   - SONAR_VERSION=3.2.0.1227-linux
