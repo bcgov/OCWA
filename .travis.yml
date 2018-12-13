@@ -475,6 +475,8 @@ matrix:
         - chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
         - export PATH=$PATH:/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
         - cd /home/travis/build/bcgov/OCWA/
+        - cat /home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}/.classpath
+        - cp /home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}/.classpath  /home/travis/build/bcgov/OCWA/ui-tests/.classpath
         #RUN Integration Tests
         - ./ui-tests/runTests.sh
 
