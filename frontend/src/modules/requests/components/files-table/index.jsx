@@ -5,13 +5,30 @@ import DateTime from '@src/components/date';
 import DynamicTable from '@atlaskit/dynamic-table';
 import FileIcon from '@src/components/file-icon';
 import filesize from 'filesize';
+import ErrorIcon from '@atlaskit/icon/glyph/error';
 import get from 'lodash/get';
+import { colors } from '@atlaskit/theme';
 
 import { FileStatusSchema } from '../../types';
 import StatusIcon from './status-icon';
 import * as styles from './styles.css';
 
-const Empty = <div className={styles.empty}>No files have been added</div>;
+const renderEmpty = isFailed => {
+  let text = <p>No files have been added yet. Edit to add.</p>;
+
+  if (isFailed) {
+    text = (
+      <div>
+        <div>
+          <ErrorIcon size="xlarge" primaryColor={colors.R500} />
+        </div>
+        <p>There was an error while requesting your files.</p>
+      </div>
+    );
+  }
+
+  return <div className={styles.empty}>{text}</div>;
+};
 const head = {
   cells: [
     {
@@ -35,7 +52,7 @@ const head = {
   ],
 };
 
-function FilesTable({ data, fileStatus }) {
+function FilesTable({ data, isLoading, isFailed, fileStatus }) {
   const rows = data.map(file => {
     const status = get(fileStatus, file.id, []);
 
@@ -78,7 +95,14 @@ function FilesTable({ data, fileStatus }) {
       ],
     };
   });
-  return <DynamicTable emptyView={Empty} head={head} rows={rows} />;
+  return (
+    <DynamicTable
+      emptyView={renderEmpty(isFailed)}
+      isLoading={isLoading}
+      head={head}
+      rows={rows}
+    />
+  );
 }
 
 FilesTable.propTypes = {
@@ -91,7 +115,10 @@ FilesTable.propTypes = {
       filetype: PropTypes.string.isRequired,
     })
   ).isRequired,
-  fileStatus: PropTypes.objectOf(PropTypes.arrayOf(FileStatusSchema)),
+  fileStatus: PropTypes.objectOf(PropTypes.arrayOf(FileStatusSchema))
+    .isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  isFailed: PropTypes.bool.isRequired,
 };
 
 export default FilesTable;
