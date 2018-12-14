@@ -444,9 +444,7 @@ matrix:
         - export PATH=$PATH:/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
         - cd /home/travis/build/bcgov/OCWA/
         #RUN Integration Tests
-        - xvfb-run --server-args="-screen 0 1440x900x24" make test
-        - sleep 5
-        - ./ui-tests/runTestsTesting.sh
+        - xvfb-run --server-args="-screen 0 1440x900x24" ./ui-tests/runTestsTesting.sh
 
     - name: "Front End"
       stage: "Frontend"
