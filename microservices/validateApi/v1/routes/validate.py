@@ -54,7 +54,9 @@ def validate_policy(fileId: str) -> object:
             )
 
             result.save()
+            print ("creating validator")
             v = Validator(policy[i], result)
+            print ("calling start validate")
             v.start_validate()
             
 
