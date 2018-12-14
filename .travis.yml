@@ -478,7 +478,7 @@ matrix:
         #RUN Integration Tests
         - Xvfb :0 >& /dev/null &DISPLAY=:0
         - export DISPLAY
-        - sudo ./ui-tests/runTestsTesting.sh
+        - sudo -E PATH=$PATH ./ui-tests/runTestsTesting.sh
 
 env:
   global:
