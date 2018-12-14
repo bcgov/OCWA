@@ -138,6 +138,7 @@ router.delete('/:topicId', function(req, res){
     var db = require('../db/db');
     var config = require('config');
     var logger = require('npmlog');
+    var mongoose = require('mongoose');
     var topicId = mongoose.Types.ObjectId(req.params.topicId);
 
     db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(topicErr, topicRes) {
