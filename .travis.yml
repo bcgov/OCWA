@@ -14,6 +14,7 @@ addons:
 matrix:
   include:
     - name: "Forum Api"
+      stage: "APIs"
       language: node_js
       node_js:
         - "node"
@@ -61,6 +62,7 @@ matrix:
           condition: $TRAVIS_BRANCH =~ ^master|develop$
 
     - name: "Request Api"
+      stage: "APIs"
       language: node_js
       node_js:
         - "node"
@@ -129,6 +131,7 @@ matrix:
           condition: $TRAVIS_BRANCH =~ ^master|develop$
 
     - name: "Policy Api"
+      stage: "APIs"
       language: python
       python:
         - "3.6"
@@ -170,6 +173,7 @@ matrix:
           condition: $TRAVIS_BRANCH =~ ^master|develop$
 
     - name: "Validation Api"
+      stage: "APIs"
       language: python
       python:
         - "3.6"
@@ -219,48 +223,8 @@ matrix:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$
 
-    - name: "Front End"
-      language: node_js
-      node_js:
-        - "node"
-      cache: npm
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-4.8
-
-      before_script:
-        - cd /home/travis/build/bcgov/OCWA/frontend
-        - wget -q ${HELM_URL}/${HELM_TGZ}
-        - tar xzfv ${HELM_TGZ}
-        - PATH=`pwd`/linux-amd64/:$PATH
-        - helm init --client-only
-        # Installig pip deps
-        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
-      before_install:
-        - npm install -g yarn --cache-min 999999999
-
-      script:
-        - cd /home/travis/build/bcgov/OCWA/frontend
-        - cp config/test.json.example config/test.json
-        - yarn
-        - npm test
-        - helm lint helm/ocwa-frontend
-        - bash docker_quayio_push ocwa_frontend
-
-      before_deploy:
-        - cd /home/travis/build/bcgov/OCWA/frontend
-        
-      deploy:
-        provider: script
-        script: bash docker_push
-        on:
-          all_branches: true
-          condition: $TRAVIS_BRANCH =~ ^master|develop$
-
     - name: "Scan - Python"
+      stage: "Tests"
       python:
         - "3.6"
       cache: pip
@@ -303,6 +267,7 @@ matrix:
         - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_policy_api -Dsonar.projectName="OCWA Policy API" -Dsonar.modules=policyApi
 
     - name: "Scan - NodeJS"
+      stage: "Tests"
       language: node_js
       node_js:
         - "node"
@@ -381,6 +346,7 @@ matrix:
         - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_request_api -Dsonar.projectName="OCWA Request API" -Dsonar.modules=requestApi
 
     - name: "OCWA Master Helm Chart"
+      stage: "Tests"
       language: node_js
       node_js:
         - "node"
@@ -397,6 +363,7 @@ matrix:
         - helm lint helm/ocwa
 
     - name: "Integration Tests"
+      stage: "Tests"
       language: node_js
       node_js:
         - "node"
@@ -479,6 +446,48 @@ matrix:
         - Xvfb :0 >& /dev/null &DISPLAY=:0
         - export DISPLAY
         - sudo -E PATH=$PATH ./ui-tests/runTestsTesting.sh
+
+    - name: "Front End"
+      stage: "Frontend"
+      language: node_js
+      node_js:
+      - "node"
+      cache: npm
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - g++-4.8
+
+      before_script:
+      - cd /home/travis/build/bcgov/OCWA/frontend
+      - wget -q ${HELM_URL}/${HELM_TGZ}
+      - tar xzfv ${HELM_TGZ}
+      - PATH=`pwd`/linux-amd64/:$PATH
+      - helm init --client-only
+      # Installig pip deps
+      - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+      before_install:
+      - npm install -g yarn --cache-min 999999999
+
+      script:
+      - cd /home/travis/build/bcgov/OCWA/frontend
+      - cp config/test.json.example config/test.json
+      - yarn
+      - npm test
+      - helm lint helm/ocwa-frontend
+      - bash docker_quayio_push ocwa_frontend
+
+      before_deploy:
+      - cd /home/travis/build/bcgov/OCWA/frontend
+
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^master|develop$
 
 env:
   global:
