@@ -255,13 +255,14 @@ router.put("/save/:requestId", function(req, res, next){
             var httpReq = require('request');
 
             for (var i=0; i<findRes.files.length; i++) {
+                var myFile = findRes.files[i];
                 httpReq.put({
-                    url: config.get('validationApi') + '/v1/validate/' + findRes.files[i],
+                    url: config.get('validationApi') + '/v1/validate/' + myFile,
                     headers: {
                         'x-api-key': config.get('validationApiSecret')
                     }
                 }, function (apiErr, apiRes, body) {
-                    logger.debug("put file " + findRes.files[i] + " up for validation", apiErr, apiRes, body);
+                    logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
                     if (apiErr) {
                         logger.debug("Error validating file: ", apiErr);
                     }
