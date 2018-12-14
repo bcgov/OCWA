@@ -368,6 +368,7 @@ matrix:
       node_js:
         - "node"
       addons:
+        chrome: stable
         apt:
           sources:
             - ubuntu-toolchain-r-test
@@ -443,9 +444,9 @@ matrix:
         - export PATH=$PATH:/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
         - cd /home/travis/build/bcgov/OCWA/
         #RUN Integration Tests
-        - Xvfb :0 >& /dev/null &DISPLAY=:0
-        - export DISPLAY
-        - sudo -E PATH=$PATH ./ui-tests/runTestsTesting.sh
+        - xvfb-run --server-args="-screen 0 1440x900x24" make test
+        - sleep 5
+        - ./ui-tests/runTestsTesting.sh
 
     - name: "Front End"
       stage: "Frontend"
