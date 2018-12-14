@@ -134,4 +134,47 @@ router.post("/", function(req, res, next){
     }
 });
 
+router.delete('/:topicId', function(req, res){
+    var db = require('../db/db');
+    var config = require('config');
+    var logger = require('npmlog');
+    var topicId = mongoose.Types.ObjectId(req.params.topicId);
+
+    db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(topicErr, topicRes) {
+        if (topicErr || !topicRes || topicRes.length <= 0){
+            res.status(500);
+            res.json({error: topicErr.message});
+            return;
+        }
+
+        topicRes = topicRes[0];
+
+        if (topicRes.contributors[0] === req.user.id){
+
+            db.Topic.deleteOne({_id: requestId}, function(err, result){
+                if (err){
+                    res.status(500);
+                    res.json({error: err});
+                    return;
+                }
+
+                db.Comment.delete({topic_id: topicId}, function(deleteErr){
+                    if (deleteErr){
+                        logger.error("Error deleting comments: ", deleteErr)
+                    }else {
+                        logger.debug("Deleted all comments for the topic that was deleted");
+                    }
+                });
+
+                res.json({message: "Record successfully deleted"});
+            });
+
+        }else{
+            res.status(403);
+            res.json({error: "You did not create this topic and can therefore not delete it"});
+        }
+
+
+    });
+});
 module.exports = router;
