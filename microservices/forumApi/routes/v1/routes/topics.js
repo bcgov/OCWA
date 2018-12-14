@@ -159,7 +159,7 @@ router.delete('/:topicId', function(req, res){
                     return;
                 }
 
-                db.Comment.delete({topic_id: topicId}, function(deleteErr){
+                db.Comment.deleteMany({topic_id: topicId}, function(deleteErr){
                     if (deleteErr){
                         logger.error("Error deleting comments: ", deleteErr)
                     }else {
