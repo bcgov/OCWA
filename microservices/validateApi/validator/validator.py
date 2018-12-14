@@ -8,6 +8,8 @@ from munch import munchify
 #import re #uncomment if we use the regular expression method
 from io import StringIO
 import sys
+import logging
+log = logging.getLogger(__name__)
 
 class Validator:
 
@@ -21,7 +23,7 @@ class Validator:
         self.result = result
 
     def start_validate(self):
-        print("Starting validation process")
+        log.debug("Starting validation process")
         self.proc = Process(target=validate, args=(self.rule, self.result))
         self.proc.start()
 
@@ -35,7 +37,7 @@ def validate(rule, resultObj):
         source = rule['source']
 
     result, message = read_file_and_evaluate(source, resultObj)
-    print("Running validation process for " + rule['name'] + " got result " + str(result) + " and message " + message)
+    log.debug("Running validation process for " + rule['name'] + " got result " + str(result) + " and message " + message)
     if result:
         resultObj.state = 0
     else:
@@ -68,7 +70,7 @@ def evaluate_source(source, file_attributes):
         print(execOutput)
         result = execOutput in ("yes", "true", "t", "1", "yes\n", "true\n", "t\n", "1\n")
     except (Exception, NameError) as e:
-        print(e)
+        log.error(e)
         message = str(e)
 
     return result, message
@@ -103,7 +105,7 @@ def read_file(file_id, deep_read=False):
         if 'Filetype' in file:
             ftIndex='Filetype'
 
-        print(file)
+        log.debug(file)
 
         index = file[ftIndex].find('/')
         if index > -1:
@@ -115,8 +117,8 @@ def read_file(file_id, deep_read=False):
 
 
     except (Exception) as e:
-        print("Failed to get file")
-        print("Error %s" % str(e))
+        log.debug("Failed to get file")
+        log.debug("Error %s" % str(e))
         raise
 
     return fileResp, file

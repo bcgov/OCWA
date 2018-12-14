@@ -9,6 +9,8 @@ import requests
 import hcl
 from v1.validator.validator import Validator
 from v1.auth.auth import auth
+import logging
+log = logging.getLogger(__name__)
 
 validate = Blueprint('validate', 'validate')
 
@@ -54,9 +56,9 @@ def validate_policy(fileId: str) -> object:
             )
 
             result.save()
-            print ("creating validator")
+            log.debug("creating validator")
             v = Validator(policy[i], result)
-            print ("calling start validate")
+            log.debug("calling start validate")
             v.start_validate()
             
 

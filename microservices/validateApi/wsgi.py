@@ -27,7 +27,12 @@ def main(port: int = conf.data['apiPort']) -> object:
     :param port: Port number
     :return:
     """
-    logging.basicConfig(level=logging.INFO,
+    config = conf.conf.data
+    logLevel = config['logLevel'].upper()
+
+    loggingLevel = getattr(logging, logLevel)
+
+    logging.basicConfig(level=loggingLevel,
                         format='%(asctime)s - %(levelname)s - %(message)s')
 
     if sys.version_info[0] < 3:
