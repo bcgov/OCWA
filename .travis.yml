@@ -445,7 +445,6 @@ matrix:
 
         - NODE_ENV=test npm start &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-        - sleep 15
 
         - cd /home/travis/build/bcgov/OCWA/frontend
 
@@ -471,13 +470,14 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/ui-tests
         - chmod ugo+x runTests.sh
         - chmod ugo+x runTestsTesting.sh
-        - wget https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
+        - wget --quiet https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
         - export PATH=$PATH:/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
         - cd /home/travis/build/bcgov/OCWA/
         #RUN Integration Tests
-        - Xvfb :0 >& /dev/null &DISPLAY=:0export DISPLAY
+        - Xvfb :0 >& /dev/null &DISPLAY=:0
+        - export DISPLAY
         - ./ui-tests/runTestsTesting.sh
 
 env:
