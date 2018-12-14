@@ -152,7 +152,7 @@ router.delete('/:topicId', function(req, res){
 
         if (topicRes.contributors[0] === req.user.id){
 
-            db.Topic.deleteOne({_id: requestId}, function(err, result){
+            db.Topic.deleteOne({_id: topicId}, function(err, result){
                 if (err){
                     res.status(500);
                     res.json({error: err});
