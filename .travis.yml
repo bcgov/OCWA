@@ -470,6 +470,7 @@ matrix:
         #Install Katalon Studios
         - cd /home/travis/build/bcgov/OCWA/ui-tests
         - chmod ugo+x runTests.sh
+        - chmod ugo+x runTestsTesting.sh
         - wget https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
@@ -478,7 +479,6 @@ matrix:
         - cat /home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}/.classpath
         - cp /home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}/.classpath  /home/travis/build/bcgov/OCWA/ui-tests/.classpath
         #RUN Integration Tests
-        - chmod ugo+x runTestsTesting.sh
         - ./ui-tests/runTestsTesting.sh
 
 env:
