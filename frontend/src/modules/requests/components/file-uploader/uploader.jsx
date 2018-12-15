@@ -105,7 +105,7 @@ class Uploader extends React.Component {
           )}
           {files.length > 0 && (
             <div className={styles.loadedFiles}>
-              <h5>Request Files</h5>
+              <h5>Uploaded Files</h5>
               <Files ids={files} />
             </div>
           )}
@@ -117,7 +117,7 @@ class Uploader extends React.Component {
 
 Uploader.propTypes = {
   data: PropTypes.arrayOf(PropTypes.string).isRequired,
-  files: PropTypes.arrayOf(PropTypes.object).isRequired,
+  files: PropTypes.arrayOf(PropTypes.string).isRequired,
   isUploading: PropTypes.bool.isRequired,
   onUpload: PropTypes.func.isRequired,
   uploadText: PropTypes.string.isRequired,

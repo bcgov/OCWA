@@ -8,6 +8,7 @@ import { DynamicTableStateless } from '@atlaskit/dynamic-table';
 import DocumentsIcon from '@atlaskit/icon/glyph/documents';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import { FieldTextStateless } from '@atlaskit/field-text';
+import get from 'lodash/get';
 import head from 'lodash/head';
 import last from 'lodash/last';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
@@ -92,11 +93,9 @@ function RequestsList({
         {
           content: (
             <div className={styles.actionsColumn}>
-              {d.files.length > 0 && (
-                <div>
-                  <AttachmentIcon size="small" /> {d.files.length}
-                </div>
-              )}
+              <div>
+                <AttachmentIcon size="small" /> {get(d, 'files.length', 0)}
+              </div>
               <RequestMenu data={d} />
             </div>
           ),

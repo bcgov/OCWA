@@ -8,7 +8,7 @@ import * as styles from './styles.css';
 
 function RequestDetails({ data }) {
   const files = get(data, 'files', []);
-  const supportFiles = get(data, 'supportFiles', []);
+  const supportingFiles = get(data, 'supportingFiles', []);
 
   if (isEmpty(data)) {
     return 'Loading...';
@@ -18,7 +18,9 @@ function RequestDetails({ data }) {
     <React.Fragment>
       <div className={styles.section}>
         <h4>Purpose</h4>
-        <p id="request-purpose">{data.purpose}</p>
+        <p id="request-purpose">
+          {data.purpose || 'No purpose has been added yet.'}
+        </p>
       </div>
       <div id="request-export-files" className={styles.section}>
         <div className={styles.sectionHeader}>Export Files</div>
@@ -31,14 +33,15 @@ function RequestDetails({ data }) {
           )}
         </div>
       </div>
-      {supportFiles.length > 0 && (
-        <div id="request-support-files" className={styles.section}>
-          <div className={styles.sectionHeader}>Support Files</div>
-          <div className={styles.sectionContent}>
-            <Files ids={supportFiles} />
-          </div>
+      <div id="request-support-files" className={styles.section}>
+        <div className={styles.sectionHeader}>Support Files</div>
+        <div className={styles.sectionContent}>
+          {supportingFiles.length > 0 && <Files ids={supportingFiles} />}
+          {!supportingFiles.length && (
+            <div className={styles.empty}>No files have been added</div>
+          )}
         </div>
-      )}
+      </div>
     </React.Fragment>
   );
 }

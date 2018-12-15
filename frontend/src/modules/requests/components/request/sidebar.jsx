@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from '@atlaskit/avatar';
 import Button from '@atlaskit/button';
+import { withRouter } from 'react-router-dom';
 // Icons
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled';
@@ -13,6 +14,8 @@ import { RequestSchema } from '../../types';
 
 function RequestSidebar({
   data,
+  isSaving,
+  history,
   onCancel,
   onDelete,
   onEdit,
@@ -41,6 +44,7 @@ function RequestSidebar({
               <Button
                 appearance="link"
                 id="request-sidebar-withdraw-button"
+                isDisabled={isSaving}
                 iconBefore={<SignOutIcon />}
                 onClick={() => onWithdraw(data._id)}
               >
@@ -52,6 +56,7 @@ function RequestSidebar({
                 appearance="link"
                 id="request-sidebar-cancel-button"
                 iconBefore={<CrossIcon />}
+                isDisabled={isSaving}
                 onClick={() => onCancel(data._id)}
               >
                 Cancel Request
@@ -65,7 +70,7 @@ function RequestSidebar({
             <Button
               appearance="link"
               id="request-sidebar-submit-button"
-              isDisabled={data.state < 1 || data.files.length <= 0}
+              isDisabled={isSaving || data.state < 1 || data.files.length <= 0}
               iconBefore={<SignInIcon />}
               onClick={() => onSubmit(data._id)}
             >
@@ -77,6 +82,7 @@ function RequestSidebar({
               appearance="link"
               id="request-sidebar-edit-button"
               iconBefore={<EditFilledIcon />}
+              isDisabled={isSaving}
               onClick={() => onEdit(data._id)}
             >
               Edit Request
@@ -87,7 +93,10 @@ function RequestSidebar({
               appearance="link"
               id="request-sidebar-delete-button"
               iconBefore={<TrashIcon />}
-              onClick={() => onDelete(data._id)}
+              onClick={() => {
+                history.push('/');
+                onDelete(data._id);
+              }}
             >
               Delete Request
             </Button>
@@ -100,6 +109,10 @@ function RequestSidebar({
 
 RequestSidebar.propTypes = {
   data: RequestSchema.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  isSaving: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
@@ -107,4 +120,4 @@ RequestSidebar.propTypes = {
   onWithdraw: PropTypes.func.isRequired,
 };
 
-export default RequestSidebar;
+export default withRouter(RequestSidebar);

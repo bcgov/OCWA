@@ -61,6 +61,16 @@ const viewState = (state = initialViewState, action = {}) => {
       };
 
     case 'request/put/success':
+      return {
+        ...state,
+        currentRequestId: action.meta.quitEditing
+          ? null
+          : state.currentRequestId,
+        currentNewRequestStep: action.meta.nextStep
+          ? 1
+          : state.currentNewRequestStep,
+      };
+
     case 'request/post/success':
       return {
         ...state,

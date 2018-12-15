@@ -1,14 +1,29 @@
 import { connect } from 'react-redux';
+import get from 'lodash/get';
 
 import { deleteRequest, viewDraftRequest, saveRequest } from '../actions';
 import Sidebar from '../components/request/sidebar';
 import { requestSchema } from '../schemas';
 
-export default connect(null, {
+const mapStateToProps = (state, props) => {
+  const fetchStatus = get(
+    state,
+    `data.fetchStatus.entities.requests.${props.data._id}`,
+    'idle'
+  );
+  const isSaving = fetchStatus === 'saving';
+
+  return {
+    fetchStatus,
+    isSaving,
+  };
+};
+
+export default connect(mapStateToProps, {
   onCancel: id =>
     saveRequest(
       null,
-      { id, dataType: 'requests', schema: requestSchema },
+      { id, dataType: 'requests', schema: { result: requestSchema } },
       {
         url: `/api/v1/requests/cancel/${id}`,
       }
@@ -25,7 +40,7 @@ export default connect(null, {
   onWithdraw: id =>
     saveRequest(
       null,
-      { id, dataType: 'requests', schema: requestSchema },
+      { id, dataType: 'requests', schema: { result: requestSchema } },
       {
         url: `/api/v1/requests/withdraw/${id}`,
       }
@@ -33,7 +48,7 @@ export default connect(null, {
   onSubmit: id =>
     saveRequest(
       null,
-      { id, dataType: 'requests', schema: requestSchema },
+      { id, dataType: 'requests', schema: { result: requestSchema } },
       {
         url: `/api/v1/requests/submit/${id}`,
       }

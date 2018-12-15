@@ -5,3 +5,12 @@
 .empty {
   margin: 20px 0;
 }
+
+.statusRow {
+  display: flex;
+  align-items: center;
+}
+
+.statusRow > span:first-child {
+  margin-right: 10px;
+}

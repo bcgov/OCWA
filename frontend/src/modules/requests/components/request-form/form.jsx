@@ -1,5 +1,4 @@
 import * as React from 'react';
-//import PropTypes from 'prop-types';
 import FieldText from '@atlaskit/field-text';
 import FieldTextArea from '@atlaskit/field-text-area';
 import Form, { Field, FormSection } from '@atlaskit/form';

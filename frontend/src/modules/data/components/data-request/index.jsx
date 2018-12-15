@@ -3,8 +3,14 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 
+import ErrorComponent from '../error';
+
 function withRequest(Component) {
   class WithRequest extends React.Component {
+    state = {
+      error: null,
+    };
+
     componentDidMount() {
       const { id, ids, match, initialRequest } = this.props;
 
@@ -12,6 +18,15 @@ function withRequest(Component) {
         const params = get(match, 'params', {});
         initialRequest({ ...params, id, ids });
       }
+    }
+
+    componentDidCatch(error, info) {
+      this.setState({
+        error: {
+          message: error.message,
+          info: info.componentStack,
+        },
+      });
     }
 
     sendAction = (action, payload, options = {}) => {
@@ -30,6 +45,12 @@ function withRequest(Component) {
 
     render() {
       const { fetchStatus } = this.props;
+      const { error } = this.state;
+      const hasError = Boolean(error);
+
+      if (hasError) {
+        return <ErrorComponent data={error} />;
+      }
 
       return (
         <Component

@@ -41,7 +41,9 @@ class NewRequestDialog extends React.Component {
 
     if (currentStep === 0) {
       const formValues = this.validateForm();
-      this.save({ ...data, ...formValues, files });
+      if (formValues) {
+        this.save({ ...data, ...formValues, files });
+      }
     } else {
       this.save({
         ...data,

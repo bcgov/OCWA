@@ -31,15 +31,17 @@ const renderEmpty = isFailed => {
 };
 const head = {
   cells: [
+    // { key: 'selected', content: '', width: 10 },
     {
       key: 'fileStatus',
-      content: <span className={styles.startCell}>File Status</span>,
+      shouldTruncate: true,
+      content: '',
     },
-    // { key: 'selected', content: '', width: 10 },
     {
       key: 'filename',
       content: 'File Name',
       isSortable: true,
+      shouldTruncate: true,
     },
     { key: 'filetype', content: 'File Type', isSortable: true, width: 10 },
     { key: 'size', content: 'File Size', isSortable: true, width: 10 },
@@ -51,7 +53,6 @@ const head = {
     },
   ],
 };
-
 function FilesTable({ data, isLoading, isFailed, fileStatus }) {
   const rows = data.map(file => {
     const status = get(fileStatus, file.id, []);
@@ -61,18 +62,18 @@ function FilesTable({ data, isLoading, isFailed, fileStatus }) {
       cells: [
         {
           content: (
-            <span className={styles.startCell}>
+            <div className={styles.startCell}>
               <StatusIcon data={status} />
-            </span>
+            </div>
           ),
         },
         {
           key: file.filename,
           content: (
-            <span style={{ display: 'flex', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
               <FileIcon type={file.filetype} />
               <span style={{ marginLeft: 10 }}>{file.filename}</span>
-            </span>
+            </div>
           ),
         },
         {
@@ -115,10 +116,13 @@ FilesTable.propTypes = {
       filetype: PropTypes.string.isRequired,
     })
   ).isRequired,
-  fileStatus: PropTypes.objectOf(PropTypes.arrayOf(FileStatusSchema))
-    .isRequired,
+  fileStatus: PropTypes.objectOf(PropTypes.arrayOf(FileStatusSchema)),
   isLoading: PropTypes.bool.isRequired,
   isFailed: PropTypes.bool.isRequired,
+};
+
+FilesTable.defaultProps = {
+  fileStatus: {},
 };
 
 export default FilesTable;
