@@ -52,6 +52,9 @@ def validate_policy(fileId: str) -> object:
         results = db.Results.objects(file_id=fileId, rule_id=policy[i]['name'])
 
         log.debug("checking result length")
+        log.debug(fileId)
+        log.debug(policy[i]['name'])
+        log.debug(results)
         if (len(results) == 0):
             log.debug("no results")
             result = db.Results(
