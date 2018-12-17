@@ -13,9 +13,11 @@ import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import internal.GlobalVariable as GlobalVariable
 
-WebUI.openBrowser('')
+WebUI.openBrowser('http://ocwa-cddi-dlt-dev.pathfinder.gov.bc.ca/')
 
-WebUI.delay(5)
+WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+
+WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Login'))
 
 WebUI.closeBrowser()
 
