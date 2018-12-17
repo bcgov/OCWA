@@ -1,5 +1,5 @@
 {{- if .Values.createDatabase -}}
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "ocwaForumApi.fullname" . }}-mongo
@@ -21,44 +21,50 @@ spec:
         release: {{ .Release.Name }}
     spec:
       volumes:
-        - name: data
-          persistentVolumeClaim:
-            claimName: {{ template "ocwaForumApi.fullname" . }}-mongo-pvc
+      - name: init
+        persistentVolumeClaim:
+          claimName: {{ template "ocwaForumApi.fullname" . }}-mongo-pvc
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ template "ocwaForumApi.fullname" . }}-mongo-data-pvc
       containers:
         - name: "mongo"
-          image: mongo:4.1
+          image: {{.Values.mongoImage.repository}}:{{.Values.mongoImage.tag}}
           imagePullPolicy: IfNotPresent
           env:
-            - name: MONGO_INITDB_ROOT_USERNAME
-              value: root
-            - name: MONGO_INITDB_ROOT_PASSWORD
-              value: root
-            - name: MONGO_INITDB_DATABASE
+            - name: {{.Values.dbPod.adminEnv}}
+              value: {{.Values.dbPod.admin}}
+            - name: {{.Values.dbPod.passEnv}}
+              value: {{.Values.dbPod.pass}}
+            - name: {{.Values.dbPod.dbEnv}}
               value: {{.Values.database.dbName}}
+            {{if eq .Values.dbPod.addAdminPassEnv true}}
+            - name: {{.Values.dbPod.adminPassEnv}}
+              value: root
+            {{end}}
           volumeMounts:
-            - name: data
+            - name: init
               mountPath: /docker-entrypoint-initdb.d
+            - name: data
+              mountPath: {{.Values.dbPod.persistence}}
           ports:
             - name: mongo
               containerPort: 27017
               protocol: TCP
       initContainers:
+        {{if eq .Values.dbPod.initDb true}}
         - name: "init-mongo"
-          image: mongo:4.1
-          command: ['sh', '-c', 'echo ''db.createUser({user:"{{.Values.database.username}}", pwd:"$DB_PASSWORD", roles:["readWrite"]});'' > /docker-entrypoint-initdb.d/init.js; cat /docker-entrypoint-initdb.d/init.js']
+          image: {{.Values.mongoImage.repository}}:{{.Values.mongoImage.tag}}
+          command: ['sh', '-c', 'echo ''db.createUser({user:"{{.Values.database.username}}", pwd:"{{.Values.database.password}}", roles:["readWrite"]});'' > /docker-entrypoint-initdb.d/init.js']
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               value: root
             - name: MONGO_INITDB_ROOT_PASSWORD
               value: root
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
-                  key: dbPassword
             - name: MONGO_INITDB_DATABASE
               value: {{.Values.database.dbName}}
           volumeMounts:
-            - name: data
+            - name: init
               mountPath: /docker-entrypoint-initdb.d
+        {{end}}
 {{- end}}

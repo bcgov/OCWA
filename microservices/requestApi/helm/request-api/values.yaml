@@ -24,23 +24,43 @@ ingress:
 ##Configuration for OCWA Request Api
 apiPort: 3002
 logLevel: error
+
+global:
+  jwtSecret: "ssh this is a secret"
+
 database:
   host: ocwa-forum-api-mongo.ocwa
   username: forumApi
   password: password
   dbName: forumApi
 
-jwtSecret: "ssh this is a secret"
+createRole: "exporter"
+ocGroup: "oc"
+allowDeny: false
+
 user:
   idField: Email
+  emailField: Email
+  givenNameField: GivenName
+  surNameField: Surname
+  groupField: Groups
 
-forumApi: ocwa-forum-api.ocwa
+forumApi: http://ocwa-forum-api.ocwa
 forumApiSecret: none
 
-validationApi: ocwa-validation-api.ocwa
-validationApiSecret: validateApiSecret
+storageUri: ocwa-storage-api.ocwa
+storagePort: 9000
+storageKey: myKey
+storageSecret: mySecret
+storageUseSSL: false
+storageWarnSize: 1025
+storageMaxSize: 10000000
+storageBucket: data
 
-createDatabase: false
+autoApprove: false
+
+validationApi: http://ocwa-validation-api.ocwa
+validationApiSecret: validateApiSecret
 
 
 resources: {}

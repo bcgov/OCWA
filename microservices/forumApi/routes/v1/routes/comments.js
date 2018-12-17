@@ -8,7 +8,7 @@ var router = express.Router();
 router.get('/:topicId', function(req, res, next) {
     var logger = require('npmlog');
     var db = require('../db/db');
-    topicId = req.params.topicId;
+    var topicId = req.params.topicId;
 
     var limit = 100;
     if (typeof(req.query.limit) !== "undefined"){
@@ -26,18 +26,24 @@ router.get('/:topicId', function(req, res, next) {
         page = 1;
     }
 
-    db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(err, topicRes){
+    var topic = new db.Topic;
+    topic._id = topicId;
+
+    db.Topic.getAll({_id: topic._id}, 1, 1, req.user, function(err, topicRes){
+
         if ((!topicRes) || (topicRes.length <= 0) ){
             logger.error("User ", req.user.id, " tried to access a topic that either doesn't exist or don't have access to");
         }
         if (err || !topicRes || topicRes.length <= 0){
+            res.status(400);
             res.json({error: "No such topic"});
             return;
         }
 
-        db.Comment.getAll({topic_id: topicId}, limit, page, req.user, function(error, results){
+        db.Comment.getAll({topic_id: topic._id}, limit, page, req.user, function(error, results){
             logger.verbose('in comment find');
             if (error){
+                res.status(500);
                 res.json({error: error});
                 return;
             }
@@ -60,16 +66,21 @@ router.post("/:topicId", function(req, res, next){
 
     var log = require('npmlog');
 
+    var topic = new db.Topic;
+    topic._id = topicId;
+
     log.debug("finding topic", topicId);
-    db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(err, topicRes){
+    db.Topic.getAll({_id: topic._id}, 1, 1, req.user, function(err, topicRes){
         log.debug("Topic find one", topicRes, err);
         if (err || !topicRes){
+            res.status(400);
             res.json({message: "Invalid Topic"});
             return;
         }
 
         comment.save(function(saveErr, result){
             if (saveErr || !result) {
+                res.status(500);
                 res.json({error: saveErr});
                 return;
             }
@@ -77,7 +88,7 @@ router.post("/:topicId", function(req, res, next){
             log.debug("comment saved triggering websocket");
             messages.sendCommentMessage(topicId, result);
 
-            res.json({message: "Successfully written", _id: result._id});
+            res.json({message: "Successfully written", _id: result._id, result: result});
         });
     });
 

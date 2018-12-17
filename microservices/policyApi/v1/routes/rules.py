@@ -1,15 +1,15 @@
 from flask import Blueprint, jsonify, request, Response
 from v1.db.db import Db
-from config import Config
-import requests
-import http
-import mongoengine.errors
 import hcl
+
+from v1.auth.auth import jwt_or_api_key
+from v1.auth.auth import admin_jwt
 
 rules = Blueprint('validate', 'validate')
 
 @rules.route('/',
            methods=['GET'], strict_slashes=False)
+@jwt_or_api_key
 def get_policy() -> object:
     """
     Get policy
@@ -24,6 +24,7 @@ def get_policy() -> object:
 
 @rules.route('/<string:ruleName>',
            methods=['GET'], strict_slashes=False)
+@jwt_or_api_key
 def get_rule(ruleName: str) -> object:
     """
     Gets a rule
@@ -38,6 +39,7 @@ def get_rule(ruleName: str) -> object:
 
 @rules.route('/',
            methods=['POST'], strict_slashes=False)
+@admin_jwt
 def write_policy() -> object:
     """
     (Over)write policy
@@ -73,7 +75,7 @@ def write_policy() -> object:
         )
 
         if 'mandatory' in ruleDef:
-            rule.mangatory = ruleDef['mandatory']
+            rule.mandatory = ruleDef['mandatory']
 
         rule.save()
 
@@ -83,6 +85,7 @@ def write_policy() -> object:
 
 @rules.route('/<string:ruleName>',
            methods=['POST'], strict_slashes=False)
+@admin_jwt
 def write_rule(ruleName: str) -> object:
     """
     (Over)write a single rule
@@ -124,8 +127,5 @@ def write_rule(ruleName: str) -> object:
         db.Rules.objects(name=ruleName).update_one(source=rule['rule'][ruleName]['source'], mandatory=rule['rule'][ruleName]['mandatory'], upsert=True, write_concern=None)
     else:
         db.Rules.objects(name=ruleName).update_one(source=rule['rule'][ruleName]['source'], upsert=True, write_concern=None)
-
-
-
 
     return jsonify({"success": "Written successfully"})

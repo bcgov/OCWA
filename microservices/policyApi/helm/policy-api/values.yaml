@@ -31,11 +31,16 @@ database:
   password: password
   dbName: forumApi
 
-apiSecret: "ssh this is a secret"
+global:
+  jwtSecret: "ssh this is a secret"
+
+apiSecret: "ssh this is an api secret"
+jwtAudience: "http://localhost"
+jwt_access_group": "admin"
+jwt_group: "Groups"
+
 user:
   idField: Email
-
-createDatabase: false
 
 
 resources: {}

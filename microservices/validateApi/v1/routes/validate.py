@@ -7,19 +7,18 @@ from v1.db.db import Db
 from config import Config
 import requests
 import hcl
+import sys
 from v1.validator.validator import Validator
+from v1.auth.auth import auth
+import logging
+log = logging.getLogger(__name__)
 
 validate = Blueprint('validate', 'validate')
 
-@validate.route("/",
-                methods=['GET'], strict_slashes=False)
-def test() -> object:
-    v = Validator(hcl.loads("rule \"test\"{\nsource=\"${file.size}<100\"\n}"), {})
-    v.start_validate()
-    return jsonify({"message": "Successful"})
 
 @validate.route('/<string:fileId>',
            methods=['GET'], strict_slashes=False)
+@auth
 def validate_policy_result(fileId: str) -> object:
     """
     Returns the result of file
@@ -33,6 +32,7 @@ def validate_policy_result(fileId: str) -> object:
 
 @validate.route('/<string:fileId>',
            methods=['PUT'], strict_slashes=False)
+@auth
 def validate_policy(fileId: str) -> object:
     """
     Validates a file
@@ -44,19 +44,31 @@ def validate_policy(fileId: str) -> object:
 
     db=Db()
 
-    for key, val in policy.items():
-        results = db.Results.objects(file_id=fileId, rule_id=key)
+    log.debug("Policies")
+    log.debug(policy)
+    for i in range(len(policy)):
+        log.debug("rule")
+        log.debug(policy[i])
+        results = db.Results.objects(file_id=fileId, rule_id=policy[i]['name'])
 
+        log.debug("checking result length")
+        log.debug(fileId)
+        log.debug(policy[i]['name'])
+        log.debug(results)
         if (len(results) == 0):
+            log.debug("no results")
             result = db.Results(
                 file_id=fileId,
                 message="",
-                rule_id=key,
-                state=2
+                rule_id=policy[i]['name'],
+                state=2,
+                mandatory=policy[i]['mandatory']
             )
-
+            log.debug("pre save")
             result.save()
-            v = Validator(policy[key], result)
+            log.debug("creating validator")
+            v = Validator(policy[i], result)
+            log.debug("calling start validate")
             v.start_validate()
             
 
@@ -65,6 +77,7 @@ def validate_policy(fileId: str) -> object:
 
 @validate.route('/<string:fileId>/<string:ruleId>',
            methods=['GET'], strict_slashes=False)
+@auth
 def validate_rule_result(fileId: str, ruleId: str) -> object:
     """
     Returns the result of file with specific rule
@@ -76,8 +89,10 @@ def validate_rule_result(fileId: str, ruleId: str) -> object:
     return db.Results.objects(file_id=fileId, rule_id=ruleId).to_json()
 
 
+
 @validate.route('/<string:fileId>/<string:ruleId>',
            methods=['PUT'], strict_slashes=False)
+@auth
 def validate_rule(fileId: str, ruleId: str) -> object:
     """
     Validates a file with specific rule
@@ -113,8 +128,9 @@ def validate_rule(fileId: str, ruleId: str) -> object:
 def get_policies():
     conf = Config().data
     policy_api_url = conf['policyApi']
+    headers = {'X-API-KEY': conf['apiSecret']}
 
-    response = requests.get(policy_api_url)
+    response = requests.get(policy_api_url + "/v1/", headers=headers)
 
     return response.json()
 

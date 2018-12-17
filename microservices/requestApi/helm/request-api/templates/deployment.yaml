@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "ocwaRequestApi.fullname" . }}
@@ -47,7 +47,7 @@ spec:
                   name: {{ template "ocwaRequestApi.fullname" . }}-secrets
                   key: forumApiSecret
             - name: VALIDATION_API
-              value: {{ .Values.user.validationApi }}
+              value: {{ .Values.validationApi }}
             - name: VALIDATION_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -58,8 +58,44 @@ spec:
                 secretKeyRef:
                   name: {{ template "ocwaRequestApi.fullname" . }}-secrets
                   key: jwtSecret
+            - name: CREATE_ROLE
+              value: {{ .Values.createRole }}
+            - name: OC_GROUP
+              value: {{ .Values.ocGroup }}
+            - name: ALLOW_DENY
+              value: "{{ .Values.allowDeny }}"
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
+            - name: EMAIL_FIELD
+              value: {{ .Values.user.emailField }}
+            - name: GIVENNAME_FIELD
+              value: {{ .Values.user.givenNameField }}
+            - name: SURNAME_FIELD
+              value: {{ .Values.user.surNameField }}
+            - name: GROUP_FIELD
+              value: {{ .Values.user.groupField }}
+            - name: STORAGE_URI
+              value: {{ .Values.storageUri }}
+            - name: STORAGE_PORT
+              value: "{{ .Values.storagePort }}"
+            - name: STORAGE_KEY
+              value: {{ .Values.storageKey }}
+            - name: STORAGE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaRequestApi.fullname" . }}-secrets
+                  key: storageSecret
+            - name: STORAGE_USESSL
+              value: "{{ .Values.storageUseSSL }}"
+            - name: STORAGE_WARN_SIZE
+              value: "{{ .Values.storageWarnSize }}"
+            - name: STORAGE_MAX_SIZE
+              value: "{{ .Values.storageMaxSize }}"
+            - name: STORAGE_BUCKET
+              value: {{ .Values.storageBucket }}
+            - name: AUTO_APPROVE
+              value: "{{ .Values.autoApprove }}"
+
           ports:
             - name: http
               containerPort: {{ .Values.apiPort }}

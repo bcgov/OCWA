@@ -6,6 +6,10 @@ import boto3
 from config import Config
 from munch import munchify
 #import re #uncomment if we use the regular expression method
+from io import StringIO
+import sys
+import logging
+log = logging.getLogger(__name__)
 
 class Validator:
 
@@ -19,26 +23,32 @@ class Validator:
         self.result = result
 
     def start_validate(self):
-        print("Starting validation process")
+        log.debug("Starting validation process")
         self.proc = Process(target=validate, args=(self.rule, self.result))
         self.proc.start()
 
 
 def validate(rule, resultObj):
 
-    result, message = read_file_and_evaluate(rule['Source'], resultObj)
-    print("Running validation process for " + rule['Name'] + " got result " + str(result) + " and message " + message)
+    source = ""
+    if 'Source' in rule:
+        source = rule['Source']
+    else:
+        source = rule['source']
+
+    result, message = read_file_and_evaluate(source, resultObj)
+    log.debug("Running validation process for " + rule['name'] + " got result " + str(result) + " and message " + message)
     if result:
         resultObj.state = 0
     else:
         resultObj.state = 1
-        resultObj.message = "Failed " + rule['Name']
+        resultObj.message = "Failed " + rule['name']
 
     resultObj.save()
 
 
 def read_file_and_evaluate(source, result):
-    file_resp, file_attributes = read_file(result['file_id'])
+    file_resp, file_attributes = read_file(result['file_id'], not(source.find('${file.content}') == -1))
     return evaluate_source(source, file_attributes)
 
 
@@ -52,14 +62,20 @@ def evaluate_source(source, file_attributes):
 
     try:
         source = source.format(munchified_attributes)
-        result = eval(source)
+        old_stdout = sys.stdout
+        redirected_stdout = sys.stdout = StringIO()
+        exec(source)
+        sys.stdout = old_stdout
+        execOutput = redirected_stdout.getvalue().lower()
+        print(execOutput)
+        result = execOutput in ("yes", "true", "t", "1", "yes\n", "true\n", "t\n", "1\n")
     except (Exception, NameError) as e:
-        print(e)
+        log.error(e)
         message = str(e)
 
     return result, message
 
-def read_file(file_id):
+def read_file(file_id, deep_read=False):
 
     config = Config().conf.data
     endpoint = config['storage']['endpoint']
@@ -74,7 +90,7 @@ def read_file(file_id):
 
     file = {}
     try:
-        fileResp = conn.get_object(Bucket=bucket, key=file_id)
+        fileResp = conn.get_object(Bucket=bucket, Key=file_id)
 
         for key, val in fileResp['ResponseMetadata'].items():
             file[key] = val
@@ -85,9 +101,24 @@ def read_file(file_id):
         if "content-length" in fileResp['ResponseMetadata']['HTTPHeaders']:
             file["size"] = fileResp['ResponseMetadata']['HTTPHeaders']['content-length']
 
+        ftIndex = 'filetype'
+        if 'Filetype' in file:
+            ftIndex='Filetype'
+
+        log.debug(file)
+
+        index = file[ftIndex].find('/')
+        if index > -1:
+            file['extension'] = file[ftIndex][(index+1):]
+
+        file['content'] = ""
+        if deep_read:
+            file['content'] = fileResp['Body'].read()
+
+
     except (Exception) as e:
-        print("Failed to get file")
-        print("Error %s" % str(e))
+        log.debug("Failed to get file")
+        log.debug("Error %s" % str(e))
         raise
 
     return fileResp, file

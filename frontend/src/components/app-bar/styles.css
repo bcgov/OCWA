@@ -1,0 +1,32 @@
+.container {
+  padding: 8px 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #003366;
+  color: white;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  line-height: 1.5;
+  color: inherit;
+
+  &:hover {
+    text-decoration: none;
+    opacity: 0.5;
+  }
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.actions > div {
+  display: inherit;
+  margin-left: 10px;
+}

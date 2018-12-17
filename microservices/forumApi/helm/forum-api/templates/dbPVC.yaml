@@ -12,7 +12,26 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: default
+  storageClassName: {{.Values.storageClassName}}
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "ocwaForumApi.fullname" . }}-mongo-data-pvc
+  labels:
+      app: {{ template "ocwaForumApi.name" . }}-mongo
+      chart: {{ template "ocwaForumApi.chart" . }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{.Values.storageClassName}}
   resources:
     requests:
       storage: 5Gi

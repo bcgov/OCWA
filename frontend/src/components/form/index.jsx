@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import {
   CollapsedEditor,
   Editor,
@@ -18,6 +19,10 @@ class Form extends React.Component {
     }));
   };
 
+  onCancel = () => {
+    this.toggleEditor();
+  };
+
   onSave = async () => {
     const { actions, onSave } = this.props;
     const value = await actions.getValue();
@@ -30,27 +35,41 @@ class Form extends React.Component {
 
   render() {
     const { isExpanded } = this.state;
+    const { isSending } = this.props;
+
     return (
       <div style={{ marginTop: 20 }}>
         <CollapsedEditor
-          placeholder="What would you like to say?"
+          placeholder="Write a comment"
           isExpanded={isExpanded}
           onFocus={this.toggleEditor}
         >
           <Editor
             allowCodeBlocks
             shouldFocus
+            disabled={isSending}
             appearance="comment"
             contentTransformerProvider={schema =>
               new WikiMarkupTransformer(schema)
             }
             onSave={this.onSave}
+            onCancel={this.onCancel}
           />
         </CollapsedEditor>
       </div>
     );
   }
 }
+
+EditorContext.propTypes = {
+  isSending: PropTypes.bool,
+};
+
+EditorContext.defaultProps = {
+  actions: PropTypes.object.isRequired,
+  onSave: PropTypes.func.isRequired,
+  isSending: false,
+};
 
 export default props => (
   <EditorContext>

@@ -34,6 +34,7 @@ router.get('/', function(req, res, next) {
         var log = require('npmlog');
         if (err){
             log.error("Error finding ", err);
+            res.status(500);
             res.json(err);
             return;
         }
@@ -64,6 +65,7 @@ router.post("/", function(req, res, next){
 
     permission.save(function(saveErr, saveRes){
         if (saveErr){
+            res.status(500);
             res.json({error: saveErr.message});
             return;
         }

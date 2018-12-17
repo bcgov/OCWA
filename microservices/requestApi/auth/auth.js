@@ -5,7 +5,6 @@ const ExtractJWT = passJwt.ExtractJwt;
 var config = require('config');
 var logger = require('npmlog');
 
-
 passport.use(new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
         secretOrKey: config.get("jwtSecret"),
@@ -16,11 +15,11 @@ passport.use(new JWTStrategy({
         var userConf = config.get('user');
         var user = {
             jwt: encodedJWT,
-            email: jwtPayload.Email,
-            firstName: jwtPayload.GivenName,
-            lastName: jwtPayload.Surname,
-            name: jwtPayload.GivenName + " " + jwtPayload.Surname,
-            groups: jwtPayload.Groups,
+            email: jwtPayload[userConf.emailField],
+            firstName: jwtPayload[userConf.givenNameField],
+            lastName: jwtPayload[userConf.surNameField],
+            name: jwtPayload[userConf.givenNameField] + " " + jwtPayload[userConf.surNameField],
+            groups: jwtPayload[userConf.groupField],
             id: jwtPayload[userConf.idField]
         };
         logger.verbose('user ' + user.id + ' authenticated successfully');

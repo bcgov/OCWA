@@ -1,0 +1,32 @@
+{
+  "port": 8000,
+  "wsPort": 3001,
+  "cookieSecret": "COOKIE_SECRET_HERE",
+  "jwtSecret": "JWT_SECRET_HERE",
+  "host": "localhost",
+  "forumApiHost": "localhost:3000",
+  "forumSocket": "localhost:3001",
+  "requestApiHost": "localhost:3002",
+  "filesApiHost": "localhost:1080",
+  "auth": {
+    "authorizationEndpoint": "URL_REQUIRED",
+    "callbackURL": "http://localhost:8000/auth",
+    "clientID": "CLIENT_ID_HERE",
+    "clientSecret": "CLIENT_SECRET_HERE",
+    "issuer": "URL_REQUIRED",
+    "scope": "SCOPE_REQUIRED",
+    "tokenEndpoint": "URL_REQUIRED",
+    "userInfoURL": "URL_REQUIRED"
+  },
+  "storage": {
+    "endPoint": "http://minio",
+    "port": 9000,
+    "useSSL": true,
+    "bucket": "test",
+    "accessKey": "accessKey",
+    "secretKey": "secretkey"
+  },
+  "user":{
+    "idField": "Email"
+  }
+}
