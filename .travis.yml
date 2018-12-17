@@ -442,10 +442,11 @@ matrix:
         - tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
         - export PATH=$PATH:/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
-        #- cd /home/travis/build/bcgov/OCWA/
+        - cd /home/travis/build/bcgov/OCWA/
+        - export CLASSPATH=/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
         #RUN Integration Tests
-        #- xvfb-run --server-args="-screen 0 1440x900x24" ./ui-tests/runTests.sh
-        - xvfb-run --server-args="-screen 0 1440x900x24" ./runTests.sh
+        - xvfb-run --server-args="-screen 0 1440x900x24" ./ui-tests/runTests.sh
+        #- xvfb-run --server-args="-screen 0 1440x900x24" ./runTests.sh
 
     - name: "Front End"
       stage: "Frontend"
