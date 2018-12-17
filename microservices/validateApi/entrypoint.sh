@@ -16,8 +16,8 @@ printf "},\n" >> ./config/default.json
 printf "\"storage\": {\n" >> ./config/default.json
 printf "\"endpoint\": \"${STORAGE_HOST}\",\n" >> ./config/default.json
 printf "\"bucket\": \"${STORAGE_BUCKET}\",\n" >> ./config/default.json
-printf "\"access_key_id\": \"${STORAGE_ACCESS_KEY}\",\n" >> ./config/default.json
-printf "\"access_secret_id\": \"${STORAGE_ACCESS_SECRET}\"\n" >> ./config/default.json
+printf "\"access_key\": \"${STORAGE_ACCESS_KEY}\",\n" >> ./config/default.json
+printf "\"secret_key\": \"${STORAGE_ACCESS_SECRET}\"\n" >> ./config/default.json
 printf "},\n" >> ./config/default.json
 
 printf "\"policyApi\": \"${POLICY_URL}\",\n" >> ./config/default.json

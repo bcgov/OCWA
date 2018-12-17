@@ -255,13 +255,14 @@ router.put("/save/:requestId", function(req, res, next){
             var httpReq = require('request');
 
             for (var i=0; i<findRes.files.length; i++) {
+                var myFile = findRes.files[i];
                 httpReq.put({
-                    url: config.get('validationApi') + '/v1/validate/' + findRes.files[i],
+                    url: config.get('validationApi') + '/v1/validate/' + myFile,
                     headers: {
                         'x-api-key': config.get('validationApiSecret')
                     }
                 }, function (apiErr, apiRes, body) {
-                    logger.debug("put file " + findRes.files[i] + " up for validation", apiErr, apiRes, body);
+                    logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
                     if (apiErr) {
                         logger.debug("Error validating file: ", apiErr);
                     }
@@ -769,8 +770,9 @@ router.delete('/:requestId', function(req, res){
         }
 
         reqRes = reqRes[0];
+        var topicId = reqRes.topic;
 
-        if (reqRes.author = req.user.id){
+        if (reqRes.author == req.user.id){
             if (reqRes.state > db.Request.WIP_STATE){
                 res.status(403);
                 res.json({error: "You cannot delete a request that isn't in the draft/wip state"});
@@ -791,6 +793,22 @@ router.delete('/:requestId', function(req, res){
                     res.json({error: err});
                     return;
                 }
+
+                var httpReq = require('request');
+
+                httpReq.delete({
+                    url: config.get('forumApi')+'/v1/'+topicId,
+                    headers: {
+                        'Authorization': "Bearer "+req.user.jwt
+                    }
+                }, function(apiErr, apiRes, body){
+                    if ((!apiErr) && (apiRes.statusCode === 200)){
+                        logger.debug("Deleted request topic");
+                    }else{
+                        logger.error("Error deleting topic: ", apiErr, body);
+                    }
+                });
+
                 res.json({message: "Record successfully deleted"});
             });
 
