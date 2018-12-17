@@ -15,7 +15,7 @@ import internal.GlobalVariable as GlobalVariable
 
 WebUI.openBrowser('http://ocwa-cddi-dlt-dev.pathfinder.gov.bc.ca/')
 
-WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+//WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 
 WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Login'))
 
