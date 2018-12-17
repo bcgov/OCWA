@@ -57,10 +57,12 @@ class Requester_step_def_ks {
 	@Given("requester has logged in")
 	def requester_login() {
 		WebUI.openBrowser('')
+		WebUI.delay(5)
+		WebUI.closeBrowser()
 
-		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+		//WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Login'))
+		//WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Login'))
 
 		//WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Username or email_userna'), 'pripley')
 
