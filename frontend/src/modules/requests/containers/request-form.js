@@ -19,32 +19,47 @@ import {
 import { requestSchema } from '../schemas';
 
 const mapStateToProps = state => {
-  const { currentRequestId } = state.requests.viewState;
+  const { currentRequestId, filesToDelete } = state.requests.viewState;
   const keyPath = `data.entities.requests.${currentRequestId}`;
   const isNewRequest = !has(state, keyPath);
-  const data = get(state, keyPath, {});
-  const uploadedFiles = [];
-  const uploadedSupportingFiles = [];
+  const request = get(state, keyPath, {
+    files: [],
+    supportingFiles: [],
+  });
+
+  // Files (saved and current editing session files, uploaded or removed)
+  const queuedFiles = [];
+  const queuedSupportingFiles = [];
   forIn(state.requests.files, (value, key) => {
     if (state.requests.uploads[key] === 'loaded') {
-      uploadedFiles.push(key);
+      queuedFiles.push(key);
     }
   });
   forIn(state.requests.supportingFiles, (value, key) => {
     if (state.requests.uploads[key] === 'loaded') {
-      uploadedSupportingFiles.push(key);
+      queuedSupportingFiles.push(key);
     }
   });
-  const files = union(data.files, uploadedFiles);
-  const supportingFiles = union(data.supportingFiles, uploadedSupportingFiles);
+  const files = union(request.files, queuedFiles).filter(
+    id => !filesToDelete.includes(id)
+  );
+  const supportingFiles = union(
+    request.supportingFiles,
+    queuedSupportingFiles
+  ).filter(id => !filesToDelete.includes(id));
   const isUploading = values(state.requests.uploads).some(isNumber);
+  const data = {
+    ...request,
+    files,
+    supportingFiles,
+  };
 
   return {
     currentStep: state.requests.viewState.currentNewRequestStep,
     isNewRequest,
     data,
-    files,
-    supportingFiles,
+    queuedFiles,
+    queuedSupportingFiles,
     id: currentRequestId,
     isUploading,
     open: !isEmpty(currentRequestId),

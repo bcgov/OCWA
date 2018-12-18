@@ -22,14 +22,19 @@ class FileUploader extends React.Component {
     const tabs = [
       {
         label: 'Export Files',
-        content: <FilesUploader data={data} uploadText="Drag Files Here" />,
+        content: (
+          <FilesUploader
+            data={data}
+            uploadText="Drag Export Files from your computer here"
+          />
+        ),
       },
       {
         label: 'Supporting Files',
         content: (
           <SupportingFilesUploader
             data={data}
-            uploadText="Drag Support Files Here"
+            uploadText="Drag Support Files from your computer here"
           />
         ),
       },

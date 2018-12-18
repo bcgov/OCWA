@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { deleteRequest, viewDraftRequest, saveRequest } from '../actions';
+import { deleteRequest, editRequest, saveRequest } from '../actions';
 import RequestMenu from '../components/request-menu';
 import { requestSchema } from '../schemas';
 
@@ -8,7 +8,7 @@ export default connect(null, {
   onCancel: id =>
     saveRequest(
       null,
-      { id, dataType: 'requests', schema: requestSchema },
+      { id, dataType: 'requests', schema: { result: requestSchema } },
       {
         url: `/api/v1/requests/cancel/${id}`,
       }
@@ -21,11 +21,11 @@ export default connect(null, {
         url: `/api/v1/requests/${id}`,
       }
     ),
-  onEdit: viewDraftRequest,
+  onEdit: editRequest,
   onWithdraw: id =>
     saveRequest(
       null,
-      { id, dataType: 'requests', schema: requestSchema },
+      { id, dataType: 'requests', schema: { result: requestSchema } },
       {
         url: `/api/v1/requests/withdraw/${id}`,
       }
@@ -33,7 +33,7 @@ export default connect(null, {
   onSubmit: id =>
     saveRequest(
       null,
-      { id, dataType: 'requests', schema: requestSchema },
+      { id, dataType: 'requests', schema: { result: requestSchema } },
       {
         url: `/api/v1/requests/submit/${id}`,
       }

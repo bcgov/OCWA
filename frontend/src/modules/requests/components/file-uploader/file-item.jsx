@@ -16,15 +16,6 @@ import * as styles from './styles.css';
 function FileItem({ data, progress, uploadStatus }) {
   return (
     <div key={data.id} className={cx('file-item', styles.fileItem)}>
-      <div className={styles.fileItemIcon}>
-        <FileIcon type={data.filetype} />
-      </div>
-      <div className={styles.fileItemName}>{data.filename}</div>
-      <div className={styles.fileItemSize}>
-        {uploadStatus === 'uploading' && `${progress}% of `}
-        {filesize(data.size)}
-      </div>
-      <div className={styles.fileItemState}>{startCase(uploadStatus)}</div>
       <div className={styles.fileItemStatusIcon}>
         {uploadStatus === 'queued' && <Spinner />}
         {uploadStatus === 'uploading' && (
@@ -34,6 +25,15 @@ function FileItem({ data, progress, uploadStatus }) {
         {uploadStatus === 'loaded' && (
           <CheckCircleIcon primaryColor={colors.G500} />
         )}
+      </div>
+      <div className={styles.fileItemIcon}>
+        <FileIcon type={data.fileType} />
+      </div>
+      <div className={styles.fileItemName}>{data.fileName}</div>
+      <div className={styles.fileItemSize}>
+        {startCase(uploadStatus)}{' '}
+        {uploadStatus === 'uploading' && `${progress}% of `}
+        {filesize(data.size || 0)}
       </div>
     </div>
   );
