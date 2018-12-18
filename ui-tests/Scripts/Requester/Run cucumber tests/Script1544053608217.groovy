@@ -13,22 +13,16 @@ import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import internal.GlobalVariable as GlobalVariable
 
-//import org.junit.runner.RunWith
-//import cucumber.api.CucumberOptions
-//import cucumber.api.junit.Cucumber
-//import com.kms.katalon.core.cucumber.keyword.CucumberRunnerResult
- 
-//@RunWith(Cucumber.class)
-//@CucumberOptions(features = "Include/features/requester", glue = "")
-//public class MyCucumberRunner {}
+
 
 //cucumberRunnerClass c = new MyCucumberRunner()
 
-//CucumberRunnerResult c1 = CucumberKW.runWithCucumberRunner(MyCucumberRunner.class)
+//CucumberRunnerResult c1 = 
+CucumberKW.runWithCucumberRunner(MyCucumberRunner.class)
 
 
 //CucumberKW.runFeatureFile('Include/features/requester/draft_requests.feature')
-CucumberKW.runFeatureFile('Include/features/requester/draft_requests.feature', FailureHandling.STOP_ON_FAILURE)
+//CucumberKW.runFeatureFile('Include/features/requester/draft_requests.feature', FailureHandling.STOP_ON_FAILURE)
 //CucumberRunnerResult c1 = CucumberKW.runFeatureFile('Include/features/requester/draft_requests.feature')
 //CucumberKW.runFeatureFolder('Include/features/requester')
 //println "Status" + c1.getStatus().toString()
