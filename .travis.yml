@@ -100,7 +100,7 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/
         - export CLASSPATH=/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
         #RUN Integration Tests
-        - xvfb-run --server-args="-screen 0 1440x900x24" ./ui-tests/runTests.sh
+        - xvfb-run --server-args="-screen 0 1440x900x24" ./ui_tests/runTests.sh
         #- xvfb-run --server-args="-screen 0 1440x900x24" ./runTests.sh
 
     

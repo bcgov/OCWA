@@ -1,0 +1,8 @@
+# Katalon Studio
+Reports/*
+ReportFolder/*
+Profiles/default.glbl
+.classpath
+.settings
+/bin/
+Libs/TempTest*.groovy
