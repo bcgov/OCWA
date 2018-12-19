@@ -90,15 +90,15 @@ matrix:
         - sudo apt-get install -y openjdk-8-jre openjdk-8-jdk
 
         #Install Katalon Studios
-        - cd /home/travis/build/bcgov/OCWA/ui-tests
+        - cd /home/travis/build/bcgov/OCWA/ui_tests
         - chmod ugo+x runTests.sh
         - chmod ugo+x runTestsTesting.sh
         - wget --quiet https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
-        - export PATH=$PATH:/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
+        - export PATH=$PATH:/home/travis/build/bcgov/OCWA/ui_tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
         - cd /home/travis/build/bcgov/OCWA/
-        - export CLASSPATH=/home/travis/build/bcgov/OCWA/ui-tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
+        - export CLASSPATH=/home/travis/build/bcgov/OCWA/ui_tests/Katalon_Studio_Linux_64-${KATALON_VERSION}
         #RUN Integration Tests
         - xvfb-run --server-args="-screen 0 1440x900x24" ./ui_tests/runTests.sh
         #- xvfb-run --server-args="-screen 0 1440x900x24" ./runTests.sh
