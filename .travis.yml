@@ -106,6 +106,7 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA
         - cat ./ui_tests/console.properties
         - xvfb-run --server-args="-screen 0 1440x900x24" ./ui_tests/runTests.sh
+        - cat ./ui_tests/.classpath
         #- xvfb-run --server-args="-screen 0 1440x900x24" ./runTests.sh
 
     
