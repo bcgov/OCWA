@@ -21,6 +21,8 @@ keycloak = {
 
 ocwaHost = "https://ocwa.example.com"
 
+ocwaWebSocketHost = "wss://ocwa.example.com/socket"
+
 authHost = "https://auth.example.com"
 
 sslCertificate = "/ssl/cert.pem"
