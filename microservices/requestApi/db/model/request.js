@@ -12,7 +12,8 @@ const CANCELLED_STATE = 6;
 var chronologySchema = new Schema({
     timestamp: {type: Date, default: Date.now(), required: true},
     enteredState: {type: Number, required: true, default: DRAFT_STATE},
-    change_by: {type: String, required: true}
+    change_by: {type: String, required: true},
+    changes: {type: Map, of: Mixed, required: false}
 },{_id: false});
 
 
@@ -38,7 +39,7 @@ var requestSchema = new Schema({
 var model = mongoose.model('request', requestSchema);
 
 
-model.setChrono = function(doc, userId){
+model.setChrono = function(doc, userId, objectDelta){
     if (typeof(doc.chronology) === "undefined"){
         doc.chronology = [];
     }
@@ -50,6 +51,11 @@ model.setChrono = function(doc, userId){
             enteredState: doc.state,
             change_by: userId
         };
+
+        if (typeof(objectDelta !== "undefined")){
+            chrono['changes'] = objectDelta;
+        }
+
         doc.chronology.push(chrono);
     }
 };
