@@ -22,6 +22,7 @@ resource "docker_container" "ocwa_policy_api" {
       "DB_PASSWORD=${random_string.mongoSuperPassword.result}",
       "JWT_AUD=aud",
       "JWT_ACCESS_GROUP=admin",
-      "JWT_GROUPS=groups"
+      "JWT_GROUPS=groups",
+      "USER_ID_FIELD=email"
   ]
 }
