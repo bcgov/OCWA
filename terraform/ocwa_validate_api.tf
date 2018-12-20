@@ -27,6 +27,6 @@ resource "docker_container" "ocwa_validate_api" {
       "STORAGE_BUCKET=bucket",
       "STORAGE_ACCESS_KEY=${random_id.accessKey.hex}",
       "STORAGE_ACCESS_SECRET=${random_string.secretKey.result}",
-      "POLICY_URL=ocwa_policy_api:3004"
+      "POLICY_URL=http://ocwa_policy_api:3004"
   ]
 }
