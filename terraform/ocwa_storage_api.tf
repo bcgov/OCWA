@@ -10,7 +10,7 @@ resource "docker_image" "minio" {
 
 resource "docker_container" "minio" {
   image = "${docker_image.minio.latest}"
-  name = "ocwa_minio"
+  name = "ocwaminio"
   command = [ "server", "/data" ]
   networks_advanced = { name = "${docker_network.private_network.name}" }
   volumes = [{
@@ -39,7 +39,7 @@ resource "docker_image" "tusd" {
 resource "docker_container" "tusd" {
   image = "${docker_image.tusd.latest}"
   name = "ocwa_tusd"
-  command = [ "-behind-proxy", "-s3-bucket", "bucket", "-s3-endpoint", "http://ocwa_minio:9000" ]
+  command = [ "-behind-proxy", "-s3-bucket", "bucket", "-s3-endpoint", "http://ocwaminio:9000" ]
   networks_advanced = { name = "${docker_network.private_network.name}" }
   env = [
       "AWS_ACCESS_KEY=${random_id.accessKey.hex}",
@@ -51,7 +51,7 @@ resource "docker_container" "tusd" {
 resource "null_resource" "minio_first_install" {
   provisioner "local-exec" {
     environment = {
-        MC_HOSTS_PRIMARY = "http://${random_id.accessKey.hex}:${random_string.secretKey.result}@ocwa_minio:9000"
+        MC_HOSTS_PRIMARY = "http://${random_id.accessKey.hex}:${random_string.secretKey.result}@ocwaminio:9000"
     }
     command = "docker run -e MC_HOSTS_PRIMARY --net=ocwa_vnet minio/mc mb PRIMARY/bucket"
   }

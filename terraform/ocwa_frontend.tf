@@ -34,7 +34,7 @@ resource "docker_container" "ocwa_frontend" {
       "HOST=0.0.0.0",
       "PORT=8000",
       "USER_ID_FIELD=email",
-      "STORAGE_ENDPOINT=ocwa_minio",
+      "STORAGE_ENDPOINT=ocwaminio",
       "STORAGE_PORT=9000",
       "STORAGE_SSL=false",
       "STORAGE_BUCKET=bucket",
