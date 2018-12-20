@@ -100,7 +100,7 @@ matrix:
         - chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
         - chmod -R 777 Katalon_Studio_Linux_64-${KATALON_VERSION}
         - export PATH=$PATH:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}
-        - export CLASSPATH=/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/plugins
+        - export CLASSPATH=/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/plugins/org.junit_4.12.0.jar:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/jre/lib/rt.jar
         - echo $CLASSPATH
         #RUN Integration Tests
         - cd /home/travis/build/bcgov/OCWA
