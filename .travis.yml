@@ -99,7 +99,8 @@ matrix:
         - tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
         - export PATH=$PATH:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}
-        - export CLASSPATH=/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}
+        - export CLASSPATH=/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/plugins
+        - echo $CLASSPATH
         #RUN Integration Tests
         - cd /home/travis/build/bcgov/OCWA
         - xvfb-run --server-args="-screen 0 1440x900x24" ./ui_tests/runTests.sh
