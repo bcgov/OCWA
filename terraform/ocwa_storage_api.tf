@@ -61,4 +61,6 @@ resource "null_resource" "minio_first_install" {
     }
     command = "docker run -e MC_HOSTS_PRIMARY --net=ocwa_vnet minio/mc mb PRIMARY/bucket"
   }
+
+  depends_on = [ "docker_container.minio" ]
 }
