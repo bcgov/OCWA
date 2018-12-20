@@ -21,10 +21,10 @@ resource "docker_container" "ocwa_postgres" {
   networks_advanced = { name = "${docker_network.private_network.name}" }
 
   healthcheck = {
-    test = ["CMD-SHELL", "pg_isready -U pgadmin"]
+    test = ["CMD-SHELL", "pg_isready -U padmin"]
     interval = "30s"
     timeout = "30s"
-    retries = 3
+    retries = 20
   }
 }
 

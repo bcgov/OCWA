@@ -15,6 +15,14 @@ resource "docker_container" "ocwa_mongodb" {
     container_path = "/data/db"
   }
   networks_advanced = { name = "${docker_network.private_network.name}" }
+  healthcheck = {
+    test =  ["CMD", "curl", "-f", "http://ocwa_mongodb:27017"]
+    interval = "5s"
+    timeout = "5s"
+    start_period = "10s"
+    retries = 20
+  }
+
 }
 
 data "template_file" "mongodb_script" {
