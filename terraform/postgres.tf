@@ -22,8 +22,8 @@ resource "docker_container" "ocwa_postgres" {
 
   healthcheck = {
     test = ["CMD-SHELL", "pg_isready -U pgadmin"]
-    interval = 30s
-    timeout = 30s
+    interval = "30s"
+    timeout = "30s"
     retries = 3
   }
 }
