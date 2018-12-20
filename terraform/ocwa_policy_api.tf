@@ -1,6 +1,6 @@
 
 data "docker_registry_image" "ocwa_policy_api" {
-  name = "bcgovimages/ocwa_policy_api:edge"
+  name = "bcgovimages/ocwa_policy_api:latest"
 }
 
 resource "docker_image" "ocwa_policy_api" {

@@ -1,6 +1,6 @@
 
 data "docker_registry_image" "ocwa_validate_api" {
-  name = "bcgovimages/ocwa_validate_api:edge"
+  name = "bcgovimages/ocwa_validate_api:latest"
 }
 
 resource "docker_image" "ocwa_validate_api" {

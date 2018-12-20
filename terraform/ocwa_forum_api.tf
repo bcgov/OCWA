@@ -1,6 +1,6 @@
 
 data "docker_registry_image" "ocwa_forum_api" {
-  name = "bcgovimages/ocwa_forum_api:edge"
+  name = "bcgovimages/ocwa_forum_api:latest"
 }
 
 resource "docker_image" "ocwa_forum_api" {
