@@ -30,6 +30,8 @@ resource "docker_container" "ocwa_nginx" {
   }
   ]
 
+  env = ["_TF_NGINX_CONFIG_HASH_REF=${md5(local_file.proxy.content)}"]
+
   depends_on = ["local_file.proxy"]
 }
 
