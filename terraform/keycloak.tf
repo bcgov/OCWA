@@ -10,6 +10,7 @@ resource "docker_image" "keycloak" {
 resource "docker_container" "ocwa_keycloak" {
   image = "${docker_image.keycloak.latest}"
   name = "ocwa_keycloak"
+  restart = "on-failure"
   networks_advanced = { name = "${docker_network.private_network.name}" }
   env = [
    "DB_VENDOR=postgres",
@@ -23,11 +24,11 @@ resource "docker_container" "ocwa_keycloak" {
    "KEYCLOAK_PASSWORD=${random_string.keycloakAdminPassword.result}"
   ]
   healthcheck = {
-    test =  ["curl", "${var.authHost}/auth/"]
+    test =  ["CMD", "curl", "-f", "http://ocwa_keycloak:8080"]
     interval = "5s"
     timeout = "5s"
     start_period = "10s"
-    retries = 5
+    retries = 20
   }
   depends_on = ["null_resource.postgres_first_time_install"]
 }

@@ -11,6 +11,7 @@ resource "docker_image" "ocwa_forum_api" {
 resource "docker_container" "ocwa_forum_api" {
   image = "${docker_image.ocwa_forum_api.latest}"
   name = "ocwa_forum_api"
+  restart = "on-failure"
   networks_advanced = { name = "${docker_network.private_network.name}" }
   env = [
       "JWT_SECRET=${random_string.jwtSecret.result}",

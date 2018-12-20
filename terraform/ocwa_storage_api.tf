@@ -11,6 +11,7 @@ resource "docker_image" "minio" {
 resource "docker_container" "minio" {
   image = "${docker_image.minio.latest}"
   name = "ocwaminio"
+  restart = "on-failure"
   command = [ "server", "/data" ]
   networks_advanced = { name = "${docker_network.private_network.name}" }
   volumes = [{
@@ -39,6 +40,7 @@ resource "docker_image" "tusd" {
 resource "docker_container" "tusd" {
   image = "${docker_image.tusd.latest}"
   name = "ocwa_tusd"
+  restart = "on-failure"
   command = [ "-behind-proxy", "-s3-bucket", "bucket", "-s3-endpoint", "http://ocwaminio:9000" ]
   networks_advanced = { name = "${docker_network.private_network.name}" }
   env = [
