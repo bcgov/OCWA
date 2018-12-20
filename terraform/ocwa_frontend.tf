@@ -1,6 +1,6 @@
 
 data "docker_registry_image" "ocwa_frontend" {
-  name = "bcgovimages/ocwa_frontend:edge"
+  name = "bcgovimages/ocwa_frontend:latest"
 }
 
 resource "docker_image" "ocwa_frontend" {
