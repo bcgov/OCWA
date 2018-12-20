@@ -32,6 +32,9 @@ resource "local_file" "mongodb_script" {
 
 resource "null_resource" "mongodb_first_time_install" {
   provisioner "local-exec" {
+    command = "scripts/wait-for-healthy.sh ocwa_mongodb"
+  }
+  provisioner "local-exec" {
     environment = {
         SCRIPT_PATH = "${var.hostRootPath}"
     }
