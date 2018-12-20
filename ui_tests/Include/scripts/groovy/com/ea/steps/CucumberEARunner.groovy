@@ -9,6 +9,6 @@ import cucumber.api.junit.Cucumber;
 
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features="Include/features", glue="", plugin=["pretty", "html:ReportFolder", "json:ReportFolder/cucumber.json"])
+@CucumberOptions(features="ui_tests/Include/features", glue="", plugin=["pretty", "html:ReportFolder", "json:ReportFolder/cucumber.json"])
 public class CucumberEARunner {
 }
