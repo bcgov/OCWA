@@ -39,7 +39,7 @@ resource "docker_image" "tusd" {
 resource "docker_container" "tusd" {
   image = "${docker_image.tusd.latest}"
   name = "ocwa_tusd"
-  command = [ "-s3-bucket", "bucket", "-s3-endpoint", "http://ocwa_minio:9000" ]
+  command = [ "-behind-proxy", "-s3-bucket", "bucket", "-s3-endpoint", "http://ocwa_minio:9000" ]
   networks_advanced = { name = "${docker_network.private_network.name}" }
   env = [
       "AWS_ACCESS_KEY=${random_id.accessKey.hex}",
