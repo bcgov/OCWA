@@ -103,6 +103,7 @@ matrix:
         - echo $CLASSPATH
         #RUN Integration Tests
         - cd /home/travis/build/bcgov/OCWA
+        - cat ./ui_tests/console.properties
         - xvfb-run --server-args="-screen 0 1440x900x24" ./ui_tests/runTests.sh
         #- xvfb-run --server-args="-screen 0 1440x900x24" ./runTests.sh
 
