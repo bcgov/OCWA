@@ -249,7 +249,7 @@ router.put("/save/:requestId", function(req, res, next){
         findRes.files = (typeof(req.body.files) !== "undefined") ? req.body.files : findRes.files;
         findRes.supportingFiles = (typeof(req.body.supportingFiles) !== "undefined") ? req.body.supportingFiles : findRes.supportingFiles;
 
-        var setChrono = (findRes.state!==db.Request.WIP_STATE) || (Object.Keys(objectDelta).length > 0 );
+        var setChrono = (findRes.state!==db.Request.WIP_STATE) || (Object.keys(objectDelta).length > 0 );
         findRes.state = db.Request.WIP_STATE;
 
         if (setChrono) {
