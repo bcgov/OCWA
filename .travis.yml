@@ -94,20 +94,22 @@ matrix:
         - chmod ugo+x runTests.sh
         #- chmod ugo+x runTestsTesting.sh
         #added line to install Katalon a directory up
-        - cd /home/travis/build/bcgov
+        #- cd /home/travis/build/bcgov
+        - cd /usr/local/bin
         - wget --quiet https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
         - chmod -R 777 Katalon_Studio_Linux_64-${KATALON_VERSION}
-        - export PATH=$PATH:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}
-        - export CLASSPATH=/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/plugins/org.junit_4.12.0.jar:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/jre/lib/rt.jar
-        - echo $CLASSPATH
+        #- export PATH=$PATH:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}
+        #- export CLASSPATH=/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/plugins/org.junit_4.12.0.jar:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/jre/lib/rt.jar
+        #- echo $CLASSPATH
         #RUN Integration Tests
-        - cd /home/travis/build/bcgov/OCWA
-        - cat ./KatalonCucumberBDD/console.properties
-        - xvfb-run --server-args="-screen 0 1440x900x24" ./KatalonCucumberBDD/runTests.sh
-        - cat ./KatalonCucumberBDD/.classpath
+        - cd Katalon_Studio_Linux_64-${KATALON_VERSION}
+        #- cd /home/travis/build/bcgov/OCWA
+        #- xvfb-run --server-args="-screen 0 1440x900x24" ./KatalonCucumberBDD/runTests.sh
+        #- cat ./KatalonCucumberBDD/.classpath
         #- xvfb-run --server-args="-screen 0 1440x900x24" ./runTests.sh
+        - xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash  -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
 
     
 env:
