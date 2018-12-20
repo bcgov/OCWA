@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for i in {1..5}; do
+for i in {1..30}; do
   RESULT=$(docker inspect --format='{{json .State.Health.Status}}' $1)
   if [ $RESULT == "\"healthy\"" ]; then
     exit 0;
