@@ -34,7 +34,12 @@ resource "docker_container" "ocwa_nginx" {
     NGINX_CONFIG_MD5 = "${md5(local_file.proxy.content)}"
   }
 
-  depends_on = ["local_file.proxy"]
+  depends_on = [
+    "local_file.proxy",
+    "null_resource.keycloak_first_time_install",
+    "docker_container.ocwa_frontend",
+    "null_resource.minio_first_install"
+  ]
 }
 
 data "template_file" "proxy_config" {
