@@ -30,7 +30,9 @@ resource "docker_container" "ocwa_nginx" {
   }
   ]
 
-  labels = ["NGINX_CONFIG_HASH_REF=${md5(local_file.proxy.content)}"]
+  labels = {
+    NGINX_CONFIG_MD5 = "${md5(local_file.proxy.content)}"
+  }
 
   depends_on = ["local_file.proxy"]
 }
