@@ -52,6 +52,10 @@ resource "docker_container" "tusd" {
 
 resource "null_resource" "minio_first_install" {
   provisioner "local-exec" {
+    command = "scripts/wait-for-healthy.sh ocwaminio"
+  }
+
+  provisioner "local-exec" {
     environment = {
         MC_HOSTS_PRIMARY = "http://${random_id.accessKey.hex}:${random_string.secretKey.result}@ocwaminio:9000"
     }

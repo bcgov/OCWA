@@ -19,6 +19,13 @@ resource "docker_container" "ocwa_postgres" {
       "POSTGRES_PASSWORD=${random_string.postgresSuperPassword.result}"
   ]
   networks_advanced = { name = "${docker_network.private_network.name}" }
+
+  healthcheck = {
+    test = ["CMD-SHELL", "pg_isready -U pgadmin"]
+    interval = 30s
+    timeout = 30s
+    retries = 3
+  }
 }
 
 data "template_file" "postgres_script" {
