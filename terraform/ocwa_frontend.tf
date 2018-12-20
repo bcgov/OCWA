@@ -33,6 +33,12 @@ resource "docker_container" "ocwa_frontend" {
       "FORUM_SOCKET_HOST=ocwa_forum_api:3001",
       "HOST=0.0.0.0",
       "PORT=8000",
-      "USER_ID_FIELD=email"
+      "USER_ID_FIELD=email",
+      "STORAGE_ENDPOINT=ocwa_minio",
+      "STORAGE_PORT=9000",
+      "STORAGE_SSL=false",
+      "STORAGE_BUCKET=bucket",
+      "STORAGE_ACCESS_KEY=${random_id.accessKey.hex}",
+      "STORAGE_SECRET_KEY=${random_string.secretKey.result}"
   ]
 }
