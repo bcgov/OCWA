@@ -13,7 +13,7 @@ resource "docker_container" "ocwa_validate_api" {
   name = "ocwa_validate_api"
   networks_advanced = { name = "${docker_network.private_network.name}" }
   env = [
-      "LOG_LEVEL=info",
+      "LOG_LEVEL=debug",
       "JWT_SECRET=${random_string.jwtSecret.result}",
       "API_SECRET=${random_string.apiSecret.result}",
       "API_PORT=3003",
