@@ -94,13 +94,14 @@ matrix:
         - chmod ugo+x runTests.sh
         - chmod ugo+x runTestsTesting.sh
         #added line to install Katalon a directory up
-        - cd /home/travis/build/bcgov/OCWA
+        - cd /home/travis/build/bcgov
         - wget --quiet https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
-        - export PATH=$PATH:/home/travis/build/bcgov/OCWA/Katalon_Studio_Linux_64-${KATALON_VERSION}
-        - export CLASSPATH=/home/travis/build/bcgov/OCWA/Katalon_Studio_Linux_64-${KATALON_VERSION}
+        - export PATH=$PATH:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}
+        - export CLASSPATH=/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}
         #RUN Integration Tests
+        - cd /home/travis/build/bcgov/OCWA
         - xvfb-run --server-args="-screen 0 1440x900x24" ./ui_tests/runTests.sh
         #- xvfb-run --server-args="-screen 0 1440x900x24" ./runTests.sh
 
