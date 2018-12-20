@@ -11,6 +11,7 @@ resource "docker_image" "ocwa_validate_api" {
 resource "docker_container" "ocwa_validate_api" {
   image = "${docker_image.ocwa_validate_api.latest}"
   name = "ocwa_validate_api"
+  restart = "on-failure"
   networks_advanced = { name = "${docker_network.private_network.name}" }
   env = [
       "LOG_LEVEL=debug",
