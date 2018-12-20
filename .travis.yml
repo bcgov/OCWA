@@ -90,7 +90,7 @@ matrix:
         - sudo apt-get install -y openjdk-8-jre openjdk-8-jdk
 
         #Install Katalon Studios
-        - cd /home/travis/build/bcgov/OCWA/KatalonCucumber
+        - cd /home/travis/build/bcgov/OCWA/KatalonCucumberBDD
         - chmod ugo+x runTests.sh
         #- chmod ugo+x runTestsTesting.sh
         #added line to install Katalon a directory up
@@ -104,9 +104,9 @@ matrix:
         - echo $CLASSPATH
         #RUN Integration Tests
         - cd /home/travis/build/bcgov/OCWA
-        - cat ./KatalonCucumber/console.properties
-        - xvfb-run --server-args="-screen 0 1440x900x24" ./KatalonCucumber/runTests.sh
-        - cat ./KatalonCucumber/.classpath
+        - cat ./KatalonCucumberBDD/console.properties
+        - xvfb-run --server-args="-screen 0 1440x900x24" ./KatalonCucumberBDD/runTests.sh
+        - cat ./KatalonCucumberBDD/.classpath
         #- xvfb-run --server-args="-screen 0 1440x900x24" ./runTests.sh
 
     
