@@ -13,7 +13,7 @@ var chronologySchema = new Schema({
     timestamp: {type: Date, default: Date.now(), required: true},
     enteredState: {type: Number, required: true, default: DRAFT_STATE},
     change_by: {type: String, required: true},
-    changes: {type: Map, of: Mixed, required: false}
+    changes: {type: Schema.Types.Map, of: Schema.Types.Mixed, required: false}
 },{_id: false});
 
 
