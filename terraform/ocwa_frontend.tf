@@ -30,7 +30,7 @@ resource "docker_container" "ocwa_frontend" {
       "FILES_API_HOST=${var.ocwaHost}",
       "REQUEST_API_HOST=ocwa_request_api:3002",
       "FORUM_API_HOST=ocwa_forum_api:3000",
-      "FORUM_SOCKET_HOST=${ocwaWebSocketHost}",
+      "FORUM_SOCKET_HOST=${var.ocwaWebSocketHost}",
       "HOST=0.0.0.0",
       "PORT=8000",
       "USER_ID_FIELD=email",
