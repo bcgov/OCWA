@@ -36,6 +36,10 @@ resource "local_file" "postgres_script" {
 
 resource "null_resource" "postgres_first_time_install" {
   provisioner "local-exec" {
+    command = "scripts/wait-for-healthy.sh ocwa_postgres"
+  }
+
+  provisioner "local-exec" {
     environment = {
       SCRIPT_PATH = "${var.hostRootPath}"
       POSTGRES_USER = "padmin"

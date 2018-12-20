@@ -35,6 +35,10 @@ resource "docker_container" "ocwa_keycloak" {
 
 resource "null_resource" "keycloak_first_time_install" {
   provisioner "local-exec" {
+    command = "scripts/wait-for-healthy.sh ocwa_keycloak"
+  }
+
+  provisioner "local-exec" {
     environment = {
       "TESTUSER_PASSWORD" = "${random_string.testUserPassword.result}",
       "KEYCLOAK_USER" = "${var.keycloak["username"]}",
