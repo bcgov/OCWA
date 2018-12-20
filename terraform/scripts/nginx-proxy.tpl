@@ -49,7 +49,7 @@ server {
     proxy_set_header         Upgrade $http_upgrade;
     proxy_set_header         Connection $connection_upgrade;
 
-    proxy_pass http://ocwa_minio:9000;
+    proxy_pass http://ocwaminio:9000;
   }
 
   location /files {

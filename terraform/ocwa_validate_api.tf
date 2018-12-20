@@ -23,7 +23,7 @@ resource "docker_container" "ocwa_validate_api" {
       "DB_USERNAME=${var.mongodb["username"]}",
       "DB_PASSWORD=${random_string.mongoSuperPassword.result}",
       "USER_ID_FIELD=email",
-      "STORAGE_HOST=http://ocwa_minio:9000",
+      "STORAGE_HOST=http://ocwaminio",
       "STORAGE_BUCKET=bucket",
       "STORAGE_ACCESS_KEY=${random_id.accessKey.hex}",
       "STORAGE_ACCESS_SECRET=${random_string.secretKey.result}",

@@ -32,7 +32,7 @@ resource "docker_container" "ocwa_request_api" {
       "VALIDATION_API_KEY=${random_string.apiSecret.result}",
       "FORUM_API=http://ocwa_forum_api:3000",
       "FORUM_API_KEY=${random_string.apiSecret.result}",
-      "STORAGE_URI=ocwa_minio",
+      "STORAGE_URI=ocwaminio",
       "STORAGE_PORT=9000",
       "STORAGE_USESSL=false",
       "STORAGE_BUCKET=bucket",
