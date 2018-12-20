@@ -37,38 +37,29 @@ class NewRequestDialog extends React.Component {
   };
 
   onSave = () => {
-    const { currentStep, data, files } = this.props;
+    const { currentStep, data } = this.props;
 
     if (currentStep === 0) {
       const formValues = this.validateForm();
       if (formValues) {
-        this.save({ ...data, ...formValues, files });
+        this.save({ ...data, ...formValues });
       }
     } else {
-      this.save({
-        ...data,
-        files,
-      });
+      this.save(data);
     }
   };
 
   onSaveAndClose = () => {
-    const { currentStep, data, files } = this.props;
+    const { currentStep, data } = this.props;
 
     if (currentStep === 0) {
       const formValues = this.validateForm();
 
       if (formValues) {
-        this.save({ ...data, ...formValues, files }, true);
+        this.save({ ...data, ...formValues }, true);
       }
     } else if (currentStep === 1) {
-      this.save(
-        {
-          ...data,
-          files,
-        },
-        true
-      );
+      this.save(data, true);
     }
   };
 
@@ -86,16 +77,12 @@ class NewRequestDialog extends React.Component {
   };
 
   save = (payload, quitEditing = false, nextStep = false) => {
-    const { files, supportingFiles, isNewRequest, sendAction } = this.props;
+    const { isNewRequest, sendAction } = this.props;
 
     if (isNewRequest) {
       sendAction('onCreate', payload, { quitEditing, nextStep });
     } else {
-      sendAction(
-        'onSave',
-        { ...payload, files, supportingFiles },
-        { quitEditing, nextStep }
-      );
+      sendAction('onSave', payload, { quitEditing, nextStep });
     }
   };
 
@@ -136,7 +123,7 @@ class NewRequestDialog extends React.Component {
           <Button
             appearance="primary"
             id="request-form-save-button"
-            isDisabled={isCreating || isSaving}
+            isDisabled={isCreating || isSaving || isUploading}
             iconBefore={(isCreating || isSaving) && <Spinner />}
             onClick={this.onSave}
           >
@@ -170,12 +157,8 @@ class NewRequestDialog extends React.Component {
     );
   };
 
-  onClose = () => {
-    this.props.onReset();
-  };
-
   render() {
-    const { currentStep, data, open } = this.props;
+    const { currentStep, data, onReset, open } = this.props;
 
     return (
       <ModalTransition>
@@ -185,7 +168,7 @@ class NewRequestDialog extends React.Component {
             id="request-form"
             footer={this.renderFooter}
             heading={`Initiate a New Request (Step ${currentStep + 1}/2)`}
-            onCloseComplete={this.onClose}
+            onCloseComplete={onReset}
             width="x-large"
           >
             {currentStep === 0 && <Form ref={this.formRef} data={data} />}
@@ -203,7 +186,6 @@ NewRequestDialog.propTypes = {
     name: PropTypes.string,
     files: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
-  files: PropTypes.arrayOf(PropTypes.string).isRequired,
   isNewRequest: PropTypes.bool.isRequired,
   isUploading: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
@@ -211,7 +193,6 @@ NewRequestDialog.propTypes = {
   onReset: PropTypes.func.isRequired,
   isSaving: PropTypes.bool.isRequired,
   sendAction: PropTypes.func.isRequired,
-  supportingFiles: PropTypes.arrayOf(PropTypes.string).isRequired,
   open: PropTypes.bool.isRequired,
 };
 
