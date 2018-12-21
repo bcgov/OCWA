@@ -21,7 +21,7 @@ public class GlobalVariable {
 
     static {
         def allVariables = [:]        
-        allVariables.put('default', [:])
+        allVariables.put('default', ['OCWA_URL' : 'http://ocwa-cddi-dlt-dev.pathfinder.gov.bc.ca'])
         allVariables.put('Travis', allVariables['default'] + ['OCWA_URL' : 'http://localhost:8000'])
         
         String profileName = RunConfiguration.getExecutionProfile()
