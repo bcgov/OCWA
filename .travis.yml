@@ -62,14 +62,14 @@ matrix:
         - NODE_ENV=test npm start &
 
         #Start Minio
-        - wget https://dl.minio.io/server/minio/release/linux-amd64/minio
+        - wget --quiet https://dl.minio.io/server/minio/release/linux-amd64/minio
         - chmod +x minio
         - export MINIO_ACCESS_KEY="myKey"
         - export MINIO_SECRET_KEY="mySecret"
         - ./minio server /tmp &
         
         #Start TusD
-        - wget https://github.com/tus/tusd/releases/download/$TUSD_VERSION/tusd_linux_amd64.tar.gz
+        - wget --quiet https://github.com/tus/tusd/releases/download/$TUSD_VERSION/tusd_linux_amd64.tar.gz
         - export AWS_ACCESS_KEY_ID=$MINIO_ACCESS_KEY
         - export AWS_SECRET_ACCESS_KEY=$MINIO_SECRET_KEY
         - export AWS_REGION=us-east-1
@@ -92,11 +92,15 @@ matrix:
         - python3 wsgi.py &
         
         #Start Request Api
-        - NODE_ENV=test npm start &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+        - cp config/default.json.template config/default.json
+        - cp config/test.json.template config/test.json
+        - NODE_ENV=test npm start &
         
         #Start FrontEnd
         - cd /home/travis/build/bcgov/OCWA/frontend
+        - cp config/default.json.template config/default.json
+        - yarn
         - NODE_ENV=test yarn start &
 
         #Katalon requires OpenJDK 8 installed separately

@@ -75,7 +75,7 @@ class Requester_step_def_ks {
 	@Given("requester has started a request")
 	def requester_starts_new_request() {
 
-		newRequestButtonObject = new TestObject("new-request-button")
+		/*newRequestButtonObject = new TestObject("new-request-button")
 		newRequestButtonObject.addProperty("id", ConditionType.EQUALS, "new-request-button", true)
 
 		WebUI.waitForPageLoad(30)
@@ -85,7 +85,7 @@ class Requester_step_def_ks {
 		WebUI.click(newRequestButtonObject)
 		request_name = CustomKeywords.'test_OCWA_keywords.random_test_request_name.gen_random_test_request_name'()
 		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/input_Request Name_name'), request_name)
-		WebUI.delay(2)
+		WebUI.delay(2)*/
 	}
 
 	@Given("has not submitted the request")
@@ -95,12 +95,12 @@ class Requester_step_def_ks {
 	@Given("requester add output files to the request")
 	def requester_adds_output_files() {
 
-		TestObject requestFormSaveFilesButton = new TestObject("request-form-save-files-button")
+		/*TestObject requestFormSaveFilesButton = new TestObject("request-form-save-files-button")
 		requestFormSaveFilesButton.addProperty("id", ConditionType.EQUALS, "request-form-save-files-button", true)
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
 		WebUI.click(requestFormSaveFilesButton)
 		TestObject uploadFileButton = new TestObject("fileUploadButton")
-		uploadFileButton.addProperty("id", ConditionType.EQUALS, "file-uploader-input", true)
+		uploadFileButton.addProperty("id", ConditionType.EQUALS, "file-uploader-input", true)*/
 		//WebUI.sendKeys(uploadFileButton, "C:\\\\Users\\PaulR\\\\Documents\\\\2 - Metadata\\\\HAS project\\\\hospital_visits_bc_2017.csv")
 		//WebUI.sendKeys(uploadFileButton, findTestData('TestFile1'))
 		//WebUI.sendKeys(uploadFileButton, '/Data Files/TestFile1'))
@@ -126,9 +126,9 @@ def request_has_been_claimed_by_a_oc(){}
 
 @When("the requester saves their request")
 def requester_saves_new_request() {
-	requestFormSaveCloseButtonObject = new TestObject("request-form-save-close-button")
+	/*requestFormSaveCloseButtonObject = new TestObject("request-form-save-close-button")
 	requestFormSaveCloseButtonObject.addProperty("id", ConditionType.EQUALS, "request-form-save-close-button", true)
-	WebUI.click(requestFormSaveCloseButtonObject)
+	WebUI.click(requestFormSaveCloseButtonObject)*/
 }
 
 @When("requester submits their request")
@@ -149,8 +149,8 @@ def requester_creates_a_new_comment(){
 
 @Then("the requester should be able to re-open the request and pick up where they left off")
 def confirm_draft_save_was_successful() {
-	WebUI.waitForPageLoad(20)
-	WebUI.verifyTextPresent(request_name, false)
+/*	WebUI.waitForPageLoad(20)
+	WebUI.verifyTextPresent(request_name, false)*/
 	WebUI.closeBrowser()
 }
 
