@@ -57,34 +57,47 @@ matrix:
         - cp config/default.json.example config/default.json
         - yarn
 
-        - cd /home/travis/build/bcgov/OCWA/frontend
-        - cp config/test.json.example config/test.json
-        - yarn
-
+        #Start Forum Api
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-
         - NODE_ENV=test npm start &
-        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
 
-        - cd /home/travis/build/bcgov/OCWA/frontend
-
+        #Start Minio
         - wget https://dl.minio.io/server/minio/release/linux-amd64/minio
         - chmod +x minio
         - export MINIO_ACCESS_KEY="myKey"
         - export MINIO_SECRET_KEY="mySecret"
         - ./minio server /tmp &
+        
+        #Start TusD
+        - wget https://github.com/tus/tusd/releases/download/$TUSD_VERSION/tusd_linux_amd64.tar.gz
+        - export AWS_ACCESS_KEY_ID=$MINIO_ACCESS_KEY
+        - export AWS_SECRET_ACCESS_KEY=$MINIO_SECRET_KEY
+        - export AWS_REGION=us-east-1
+        - tusd -s3-endpoint http://localhost:9000 -s3-bucket myBucket &
+        
+        #Start Validate Api
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
+        
+        #Start Policy Api
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
         - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
+        
+        #Start Request Api
+        - NODE_ENV=test npm start &
+        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+        
+        #Start FrontEnd
+        - cd /home/travis/build/bcgov/OCWA/frontend
+        - NODE_ENV=test yarn start &
 
         #Katalon requires OpenJDK 8 installed separately
         - sudo apt-get install -y openjdk-8-jre openjdk-8-jdk
@@ -112,6 +125,7 @@ env:
   - CXX=g++-4.8
   - MONGODB=4.1.1
   - KATALON_VERSION=5.9.0
+  - TUSD_VERSION=0.11.0
   - SONAR_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/
   - SONAR_APP=sonar-scanner
   - SONAR_VERSION=3.2.0.1227-linux
