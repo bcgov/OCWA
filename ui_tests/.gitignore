@@ -4,6 +4,6 @@ ReportFolder/*
 Profiles/default.glbl
 .classpath
 .settings
-/bin/
+*.class
 Libs/TempTest*.groovy
 Libs/TempTemp*.groovy

@@ -57,9 +57,10 @@ class Requester_step_def_ks {
 	@Given("requester has logged in")
 	def requester_login() {
 		WebUI.openBrowser('')
+		WebUI.delay(5)
 
 		//WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
-		WebUI.navigateToUrl("http://localhost:8000")
+		/*WebUI.navigateToUrl("http://localhost:8000")
 		TestObject loginButton = new TestObject("app-auth-login-button")
 		loginButton.addProperty("id", ConditionType.EQUALS, "app-auth-login-button", true)
 		WebUI.waitForElementClickable(loginButton, 30)
@@ -69,7 +70,7 @@ class Requester_step_def_ks {
 
 		WebUI.setEncryptedText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), 'EUKVYWz2orI=')
 
-		WebUI.click(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_login'))
+		WebUI.click(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_login'))*/
 	}
 
 	@Given("requester has started a request")
