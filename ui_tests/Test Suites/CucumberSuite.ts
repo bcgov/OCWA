@@ -4,7 +4,7 @@
    <name>CucumberSuite</name>
    <tag></tag>
    <isRerun>false</isRerun>
-   <lastRun>2018-12-21T10:04:40</lastRun>
+   <lastRun>2018-12-21T12:54:35</lastRun>
    <mailRecipient></mailRecipient>
    <numberOfRerun>0</numberOfRerun>
    <pageLoadTimeout>30</pageLoadTimeout>

@@ -58,7 +58,8 @@ class Requester_step_def_ks {
 	def requester_login() {
 		WebUI.openBrowser('')
 
-		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+		//WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+		WebUI.navigateToUrl("http://localhost:8000")
 		TestObject loginButton = new TestObject("app-auth-login-button")
 		loginButton.addProperty("id", ConditionType.EQUALS, "app-auth-login-button", true)
 		WebUI.waitForElementClickable(loginButton, 30)
