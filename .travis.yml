@@ -86,29 +86,18 @@ matrix:
         - sudo pip3 install -e .
         - python3 wsgi.py &
 
-        #Katalon requires OpenJDK 8 installed seperately
+        #Katalon requires OpenJDK 8 installed separately
         - sudo apt-get install -y openjdk-8-jre openjdk-8-jdk
 
-        #Install Katalon Studios
-        - cd /home/travis/build/bcgov/OCWA/ui_tests
-        - chmod ugo+x runTests.sh
-        #- chmod ugo+x runTestsTesting.sh
-        #added line to install Katalon a directory up
-        #- cd /home/travis/build/bcgov
+        #Install Katalon Studios   
         - cd /usr/local/bin
         - sudo wget --quiet https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - sudo tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
         - sudo chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
         - sudo chmod -R 777 Katalon_Studio_Linux_64-${KATALON_VERSION}
-        #- export PATH=$PATH:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}
-        #- export CLASSPATH=/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/plugins/org.junit_4.12.0.jar:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/jre/lib/rt.jar
-        #- echo $CLASSPATH
+        
         #RUN Integration Tests
         - cd Katalon_Studio_Linux_64-${KATALON_VERSION}
-        #- cd /home/travis/build/bcgov/OCWA
-        #- xvfb-run --server-args="-screen 0 1440x900x24" ./KatalonCucumberBDD/runTests.sh
-        #- cat ./KatalonCucumberBDD/.classpath
-        #- xvfb-run --server-args="-screen 0 1440x900x24" ./runTests.sh
         - xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash  -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
 
     

@@ -206,3 +206,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+#Katalon
+config/.metadata
