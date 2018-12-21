@@ -90,16 +90,16 @@ matrix:
         - sudo apt-get install -y openjdk-8-jre openjdk-8-jdk
 
         #Install Katalon Studios
-        - cd /home/travis/build/bcgov/OCWA/KatalonCucumberBDD
+        - cd /home/travis/build/bcgov/OCWA/ui_tests
         - chmod ugo+x runTests.sh
         #- chmod ugo+x runTestsTesting.sh
         #added line to install Katalon a directory up
         #- cd /home/travis/build/bcgov
         - cd /usr/local/bin
-        - wget --quiet https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
-        - tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
-        - chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
-        - chmod -R 777 Katalon_Studio_Linux_64-${KATALON_VERSION}
+        - sudo wget --quiet https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
+        - sudo tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
+        - sudo chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
+        - sudo chmod -R 777 Katalon_Studio_Linux_64-${KATALON_VERSION}
         #- export PATH=$PATH:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}
         #- export CLASSPATH=/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/plugins/org.junit_4.12.0.jar:/home/travis/build/bcgov/Katalon_Studio_Linux_64-${KATALON_VERSION}/jre/lib/rt.jar
         #- echo $CLASSPATH
