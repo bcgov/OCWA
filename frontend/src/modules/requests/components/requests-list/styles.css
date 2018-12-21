@@ -15,5 +15,19 @@
 }
 
 .empty h3 {
-  margin-top: 10px;
+  margin: 10px 0;
+}
+
+.empty p {
+  margin: 10px 0;
+}
+
+.searchText {
+  text-decoration: underline;
+}
+
+.actionsColumn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

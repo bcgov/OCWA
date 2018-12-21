@@ -33,6 +33,19 @@ router.get('/session', (req, res) => {
   const jwtSecret = config.get('jwtSecret');
   let token = null;
 
+  if (process.env.NODE_ENV === 'development' && config.has('testJWT')) {
+    return res.json({
+      token: config.get('testJWT'),
+      expiresAt: new Date(Date.now() * 10000000),
+      user: {
+        displayName: 'Test User',
+        username: 'test_user',
+        email: 'test@gmail.com',
+        id: '1',
+      },
+    });
+  }
+
   // If there is no jwtSecret defined go with OCID only
   if (isEmpty(jwtSecret)) {
     if (req.isAuthenticated()) {

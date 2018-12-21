@@ -6,6 +6,24 @@
   border-radius: 3px;
 }
 
+.loading {
+
+}
+
+.loadingPost {
+  height: 130px;
+}
+
+.loadingPost > div {
+  border-radius: 5px;
+  color: #dfe1e6;
+}
+
+.list {
+  margin-bottom: 20px;
+}
+
+.loadingPost,
 .post {
   border-radius: 4px;
   margin-bottom: 20px;

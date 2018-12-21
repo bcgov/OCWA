@@ -4,11 +4,11 @@ import get from 'lodash/get';
 import keys from 'lodash/keys';
 
 import FileUploader from '../components/file-uploader/uploader';
-import { uploadFile } from '../actions';
+import { uploadSupportingFile } from '../actions';
 
 const mapStateToProps = (state, props) => {
-  const ids = keys(state.requests.files);
-  const files = get(props, 'data.files', []);
+  const ids = keys(state.requests.supportingFiles);
+  const files = get(props, 'data.supportingFiles', []);
   const data = difference(ids, files);
   const isUploading = data.length > 0;
 
@@ -20,5 +20,5 @@ const mapStateToProps = (state, props) => {
 };
 
 export default connect(mapStateToProps, {
-  onUpload: uploadFile,
+  onUpload: uploadSupportingFile,
 })(FileUploader);

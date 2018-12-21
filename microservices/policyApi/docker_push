@@ -8,10 +8,10 @@ echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
 
 if [ $TRAVIS_BRANCH == "master" ]; then
-    docker build -t bcgovimages/ocwa_policy_api:latest -t bcgovimages/ocwa_policy_api:$TRAVIS_COMMIT . .
+    docker build -t bcgovimages/ocwa_policy_api:latest -t bcgovimages/ocwa_policy_api:$TRAVIS_COMMIT .;
     echo "dockerfile built pushing now";
-    docker push bcgovimages/ocwa_policy_api:latest
-    docker push bcgovimages/ocwa_policy_api:$TRAVIS_COMMIT
+    docker push bcgovimages/ocwa_policy_api:latest;
+    docker push bcgovimages/ocwa_policy_api:$TRAVIS_COMMIT;
     echo "latest and $TRAVIS_COMMIT pushed successfully";
 fi
 

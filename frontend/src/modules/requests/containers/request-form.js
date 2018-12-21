@@ -4,7 +4,6 @@ import get from 'lodash/get';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
 import isNumber from 'lodash/isNumber';
-import keys from 'lodash/keys';
 import union from 'lodash/union';
 import values from 'lodash/values';
 import withRequest from '@src/modules/data/components/data-request';
@@ -14,30 +13,53 @@ import {
   createRequest,
   changeStep,
   closeDraftRequest,
+  reset,
   saveRequest,
-  uploadFile,
 } from '../actions';
 import { requestSchema } from '../schemas';
 
 const mapStateToProps = state => {
-  const { currentRequestId } = state.requests.viewState;
+  const { currentRequestId, filesToDelete } = state.requests.viewState;
   const keyPath = `data.entities.requests.${currentRequestId}`;
   const isNewRequest = !has(state, keyPath);
-  const data = get(state, keyPath, {});
-  const uploadedFiles = [];
-  forIn(state.requests.uploads, (value, key) => {
-    if (value === 'loaded') {
-      uploadedFiles.push(key);
+  const request = get(state, keyPath, {
+    files: [],
+    supportingFiles: [],
+  });
+
+  // Files (saved and current editing session files, uploaded or removed)
+  const queuedFiles = [];
+  const queuedSupportingFiles = [];
+  forIn(state.requests.files, (value, key) => {
+    if (state.requests.uploads[key] === 'loaded') {
+      queuedFiles.push(key);
     }
   });
-  const files = union(data.files, uploadedFiles);
+  forIn(state.requests.supportingFiles, (value, key) => {
+    if (state.requests.uploads[key] === 'loaded') {
+      queuedSupportingFiles.push(key);
+    }
+  });
+  const files = union(request.files, queuedFiles).filter(
+    id => !filesToDelete.includes(id)
+  );
+  const supportingFiles = union(
+    request.supportingFiles,
+    queuedSupportingFiles
+  ).filter(id => !filesToDelete.includes(id));
   const isUploading = values(state.requests.uploads).some(isNumber);
+  const data = {
+    ...request,
+    files,
+    supportingFiles,
+  };
 
   return {
     currentStep: state.requests.viewState.currentNewRequestStep,
     isNewRequest,
     data,
-    files,
+    queuedFiles,
+    queuedSupportingFiles,
     id: currentRequestId,
     isUploading,
     open: !isEmpty(currentRequestId),
@@ -65,5 +87,5 @@ export default connect(mapStateToProps, {
       url: `/api/v1/requests/submit/${meta.id}`,
       schema: { result: requestSchema },
     }),
-  onUploadFile: uploadFile,
+  onReset: reset,
 })(withRequest(NewRequest));

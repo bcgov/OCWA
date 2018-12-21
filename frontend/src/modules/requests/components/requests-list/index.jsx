@@ -1,19 +1,23 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import AttachmentIcon from '@atlaskit/icon/glyph/attachment';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { Link } from 'react-router-dom';
 import Date from '@src/components/date';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
 import DocumentsIcon from '@atlaskit/icon/glyph/documents';
+import ErrorIcon from '@atlaskit/icon/glyph/error';
 import { FieldTextStateless } from '@atlaskit/field-text';
+import get from 'lodash/get';
 import head from 'lodash/head';
 import last from 'lodash/last';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import SearchIcon from '@atlaskit/icon/glyph/search';
-import { akColorN70 } from '@atlaskit/util-shared-styles';
+import { colors } from '@atlaskit/theme';
 
 import RequestIcon from '../request-icon';
 import RequestMenu from '../../containers/request-menu';
+import NewRequest from '../../containers/new-request';
 import * as styles from './styles.css';
 
 const header = {
@@ -28,7 +32,7 @@ const header = {
     { key: 'submittedOn', content: 'Submitted On', isSortable: true },
     { key: 'updatedOn', content: 'Updated On', isSortable: true },
     { key: 'outputChecker', content: 'Output Checker', isSortable: true },
-    { key: 'more', shouldTruncate: true },
+    { key: 'more', shouldTruncate: true, width: 18 },
   ],
 };
 
@@ -44,6 +48,7 @@ const filters = [
 function RequestsList({
   data,
   filter,
+  isFailed,
   isLoading,
   isLoaded,
   onChangeFilter,
@@ -86,29 +91,54 @@ function RequestsList({
           content: '-',
         },
         {
-          content: <RequestMenu data={d} />,
+          content: (
+            <div className={styles.actionsColumn}>
+              <div>
+                <AttachmentIcon size="small" /> {get(d, 'files.length', 0)}
+              </div>
+              <RequestMenu data={d} />
+            </div>
+          ),
         },
       ],
     };
   });
 
   const renderEmpty = () => {
-    let text = 'You have no requests';
+    let textElement = null;
     let Icon = DocumentsIcon;
 
     if (search) {
       Icon = SearchIcon;
-      text = `No results match ${search}'`;
+      textElement = (
+        <h3>
+          No results match <em className={styles.searchText}>{search}</em>
+        </h3>
+      );
+    } else if (isFailed) {
+      Icon = ErrorIcon;
+      textElement = <h3>Failed to load requests</h3>;
     } else if (isLoaded && !filter) {
-      text = 'You have no requests!';
+      textElement = (
+        <div>
+          <h3>You have no requests yet</h3>
+          <p>Get started with OCWA by creating a new Request</p>
+          <div>
+            <NewRequest />
+          </div>
+        </div>
+      );
     } else if (isLoaded && !!filter) {
-      text = 'No requests match this filter';
+      textElement = <h3>No requests match this filter</h3>;
     }
 
     return (
       <div className={styles.empty}>
-        <Icon size="xlarge" primaryColor={akColorN70} />
-        <h3>{text}</h3>
+        <Icon
+          size="xlarge"
+          primaryColor={isFailed ? colors.R500 : colors.N70}
+        />
+        {textElement}
       </div>
     );
   };
@@ -175,6 +205,7 @@ RequestsList.propTypes = {
     PropTypes.number,
     PropTypes.arrayOf(PropTypes.number),
   ]),
+  isFailed: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   onChangeFilter: PropTypes.func.isRequired,

@@ -35,8 +35,13 @@ export const viewDraftRequest = id => ({
   payload: id,
 });
 
+export const editRequest = request => ({
+  type: 'requests/view/request',
+  payload: request,
+});
+
 export const closeDraftRequest = () => ({
-  type: 'requests/close/draft',
+  type: 'request/close/draft',
 });
 
 // Request File Upload Actions
@@ -48,39 +53,58 @@ export const uploadFile = (file, requestId) => ({
   payload: file,
 });
 
-export const uploadFileProgress = (file, url, progress) => ({
+// Same as above, but with some extra flags for separate upload features.
+export const uploadSupportingFile = (file, requestId) => ({
+  type: 'request/file/upload',
+  meta: {
+    requestId,
+    isSupportingFile: true,
+  },
+  payload: file,
+});
+
+export const uploadFileProgress = (file, progress) => ({
   type: 'request/file/upload/progress',
   meta: {
     file,
-    url,
   },
   payload: progress,
 });
 
-export const uploadFileFailure = (file, url, error) => ({
+export const uploadFileFailure = (file, error) => ({
   type: 'request/file/upload/failed',
   meta: {
     file,
-    url,
   },
   error: true,
   payload: error,
 });
 
-export const uploadFileSuccess = (file, url) => ({
+export const uploadFileSuccess = file => ({
   type: 'request/file/upload/success',
-  meta: {
-    url,
-  },
   payload: file,
 });
+
+export const uploadFileReset = id => ({
+  type: 'request/file/upload/reset',
+  payload: id,
+});
+
+export const reset = () => ({ type: 'request/reset' });
+
+export const removeFile = id => ({ type: 'request/remove-file', payload: id });
 
 export default {
   createRequest,
   changeStep,
   closeDraftRequest,
   fetchRequests,
+  removeFile,
   saveRequest,
   sortRequests,
   viewDraftRequest,
+  uploadSupportingFile,
+  uploadFile,
+  uploadFileReset,
+  reset,
 };

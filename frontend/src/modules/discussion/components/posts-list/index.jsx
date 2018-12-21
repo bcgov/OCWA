@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import EmptyChatIcon from '@atlaskit/icon/glyph/media-services/add-comment';
-import Spinner from '@atlaskit/spinner';
+import { Code } from 'react-content-loader';
 import { akColorN70 } from '@atlaskit/util-shared-styles';
 
 import Post from './post';
@@ -19,11 +19,19 @@ function PostsList({ data, fetchStatus }) {
   }
 
   if (fetchStatus === 'loading') {
-    return <Spinner size="large" />;
+    return (
+      <div className={styles.loading}>
+        {[1, 2, 3].map(n => (
+          <div key={n} className={styles.loadingPost}>
+            <Code />
+          </div>
+        ))}
+      </div>
+    );
   }
 
   return (
-    <div id="discussion-posts-list">
+    <div id="discussion-posts-list" className={styles.list}>
       {data.map(d => <Post key={d._id} data={d} />)}
     </div>
   );

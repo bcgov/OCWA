@@ -7,8 +7,11 @@ from v1.db.db import Db
 from config import Config
 import requests
 import hcl
+import sys
 from v1.validator.validator import Validator
 from v1.auth.auth import auth
+import logging
+log = logging.getLogger(__name__)
 
 validate = Blueprint('validate', 'validate')
 
@@ -41,10 +44,19 @@ def validate_policy(fileId: str) -> object:
 
     db=Db()
 
+    log.debug("Policies")
+    log.debug(policy)
     for i in range(len(policy)):
+        log.debug("rule")
+        log.debug(policy[i])
         results = db.Results.objects(file_id=fileId, rule_id=policy[i]['name'])
 
+        log.debug("checking result length")
+        log.debug(fileId)
+        log.debug(policy[i]['name'])
+        log.debug(results)
         if (len(results) == 0):
+            log.debug("no results")
             result = db.Results(
                 file_id=fileId,
                 message="",
@@ -52,9 +64,11 @@ def validate_policy(fileId: str) -> object:
                 state=2,
                 mandatory=policy[i]['mandatory']
             )
-
+            log.debug("pre save")
             result.save()
+            log.debug("creating validator")
             v = Validator(policy[i], result)
+            log.debug("calling start validate")
             v.start_validate()
             
 

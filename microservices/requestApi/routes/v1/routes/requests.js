@@ -229,6 +229,15 @@ router.put("/save/:requestId", function(req, res, next){
             return;
         }
 
+        var objectDelta = {};
+        if ( (typeof(req.body.files) !== "undefined") && (JSON.stringify(req.body.files) !== JSON.stringify(findRes.files)) ){
+            objectDelta['files'] = findRes.files;
+        }
+
+        if ( (typeof(req.body.supportingFiles) !== "undefined") && (JSON.stringify(req.body.supportingFiles) !== JSON.stringify(findRes.supportingFiles)) ){
+            objectDelta['supportingFiles'] = findRes.supportingFiles;
+        }
+
         findRes.name = (typeof(req.body.name) !== "undefined") ? req.body.name : findRes.name;
         findRes.tags = (typeof(req.body.tags) !== "undefined") ? req.body.tags : findRes.tags;
         findRes.purpose = (typeof(req.body.purpose) !== "undefined") ? req.body.purpose : findRes.purpose;
@@ -238,12 +247,13 @@ router.put("/save/:requestId", function(req, res, next){
         findRes.freq = (typeof(req.body.freq) !== "undefined") ? req.body.freq : findRes.freq;
         findRes.confidentiality = (typeof(req.body.confidentiality) !== "undefined") ? req.body.confidentiality : findRes.confidentiality;
         findRes.files = (typeof(req.body.files) !== "undefined") ? req.body.files : findRes.files;
+        findRes.supportingFiles = (typeof(req.body.supportingFiles) !== "undefined") ? req.body.supportingFiles : findRes.supportingFiles;
 
-        var setChrono = findRes.state!==db.Request.WIP_STATE;
+        var setChrono = (findRes.state!==db.Request.WIP_STATE) || (Object.keys(objectDelta).length > 0 );
         findRes.state = db.Request.WIP_STATE;
 
         if (setChrono) {
-            db.Request.setChrono(findRes, req.user.id);
+            db.Request.setChrono(findRes, req.user.id, objectDelta);
         }
 
         db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
@@ -255,13 +265,14 @@ router.put("/save/:requestId", function(req, res, next){
             var httpReq = require('request');
 
             for (var i=0; i<findRes.files.length; i++) {
+                var myFile = findRes.files[i];
                 httpReq.put({
-                    url: config.get('validationApi') + '/v1/validate/' + findRes.files[i],
+                    url: config.get('validationApi') + '/v1/validate/' + myFile,
                     headers: {
                         'x-api-key': config.get('validationApiSecret')
                     }
                 }, function (apiErr, apiRes, body) {
-                    logger.debug("put file " + findRes.files[i] + " up for validation", apiErr, apiRes, body);
+                    logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
                     if (apiErr) {
                         logger.debug("Error validating file: ", apiErr);
                     }
@@ -431,9 +442,6 @@ router.put('/submit/:requestId', function(req, res, next){
                 return;
             });
         }
-
-
-
     });
 });
 
@@ -769,8 +777,9 @@ router.delete('/:requestId', function(req, res){
         }
 
         reqRes = reqRes[0];
+        var topicId = reqRes.topic;
 
-        if (reqRes.author = req.user.id){
+        if (reqRes.author == req.user.id){
             if (reqRes.state > db.Request.WIP_STATE){
                 res.status(403);
                 res.json({error: "You cannot delete a request that isn't in the draft/wip state"});
@@ -791,6 +800,22 @@ router.delete('/:requestId', function(req, res){
                     res.json({error: err});
                     return;
                 }
+
+                var httpReq = require('request');
+
+                httpReq.delete({
+                    url: config.get('forumApi')+'/v1/'+topicId,
+                    headers: {
+                        'Authorization': "Bearer "+req.user.jwt
+                    }
+                }, function(apiErr, apiRes, body){
+                    if ((!apiErr) && (apiRes.statusCode === 200)){
+                        logger.debug("Deleted request topic");
+                    }else{
+                        logger.error("Error deleting topic: ", apiErr, body);
+                    }
+                });
+
                 res.json({message: "Record successfully deleted"});
             });
 

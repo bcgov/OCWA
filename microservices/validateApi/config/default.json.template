@@ -1,6 +1,8 @@
 {
   "apiPort": 3003,
 
+  "logLevel": "debug",
+
   "database": {
     "host": "localhost",
     "port": 27017,

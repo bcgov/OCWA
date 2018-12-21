@@ -7,7 +7,7 @@ printf "\"logLevel\": \"${LOG_LEVEL}\",\n" >> ./config/default.json
 
 printf "\"database\": {\n" >> ./config/default.json
 printf "\"host\": \"${DB_HOST}\",\n" >> ./config/default.json
-printf "\"port\": \"${DB_PORT}\",\n" >> ./config/default.json
+printf "\"port\": ${DB_PORT},\n" >> ./config/default.json
 printf "\"username\": \"${DB_USERNAME}\",\n" >> ./config/default.json
 printf "\"password\": \"${DB_PASSWORD}\",\n" >> ./config/default.json
 printf "\"dbName\": \"${DB_NAME}\"\n" >> ./config/default.json
@@ -16,8 +16,8 @@ printf "},\n" >> ./config/default.json
 printf "\"storage\": {\n" >> ./config/default.json
 printf "\"endpoint\": \"${STORAGE_HOST}\",\n" >> ./config/default.json
 printf "\"bucket\": \"${STORAGE_BUCKET}\",\n" >> ./config/default.json
-printf "\"access_key_id\": \"${STORAGE_ACCESS_KEY}\",\n" >> ./config/default.json
-printf "\"access_secret_id\": \"${STORAGE_ACCESS_SECRET}\"\n" >> ./config/default.json
+printf "\"access_key\": \"${STORAGE_ACCESS_KEY}\",\n" >> ./config/default.json
+printf "\"secret_key\": \"${STORAGE_ACCESS_SECRET}\"\n" >> ./config/default.json
 printf "},\n" >> ./config/default.json
 
 printf "\"policyApi\": \"${POLICY_URL}\",\n" >> ./config/default.json
