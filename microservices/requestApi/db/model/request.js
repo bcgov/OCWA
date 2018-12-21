@@ -142,13 +142,9 @@ var getAllTopics = function(user, callback, page, existingTopics){
 
             if (topicResults.length >= limit) {
                 getAllTopics(user, function (err, topicR) {
-                    console.log("DEBUG", page, topics.length, topicR.length);
                     if (typeof(topicR) === "object") {
-                        console.log("PRE PUSH");
                         topics.push.apply(topicR);
-                        console.log("POST PUSH");
                     }
-                    console.log("DEBUG2", page, topics.length, topicR.length);
                     if (err) {
                         callback(err, topics);
                         return;
