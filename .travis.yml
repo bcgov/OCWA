@@ -29,7 +29,7 @@ matrix:
         - cp terraform.tfvars.example terraform.tfvars
         - /home/travis/build/bcgov/terraform init
         - /home/travis/build/bcgov/terraform plan -var hostRootPath=`pwd`/_tmp
-        - /home/travis/build/bcgov/terraform apply -auto-approve
+        - /home/travis/build/bcgov/terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
 
     - name: "Forum Api"
       language: node_js
