@@ -25,9 +25,10 @@ matrix:
         - chmod +x terraform
 
         - cd /home/travis/build/bcgov/OCWA/terraform
+        - mkdir _tmp
         - cp terraform.tfvars.example terraform.tfvars
         - /home/travis/build/bcgov/terraform init
-        - /home/travis/build/bcgov/terraform plan
+        - /home/travis/build/bcgov/terraform plan -var hostRootPath=`pwd`/_tmp
         - /home/travis/build/bcgov/terraform apply -auto-approve
 
     - name: "Forum Api"
