@@ -24,7 +24,6 @@ variable "authHost" {
 
 variable "hostRootPath" {
   type = "string"
-  default = "${path.root}"
 }
 
 variable "sslCertificate" {
