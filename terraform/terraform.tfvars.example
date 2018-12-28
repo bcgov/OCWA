@@ -1,4 +1,3 @@
-hostRootPath = "/work/tmp/ocwa"
 
 mongodb = {
     username = "appuser"
