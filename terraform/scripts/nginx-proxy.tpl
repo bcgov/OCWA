@@ -5,7 +5,7 @@ map $http_upgrade $connection_upgrade {
 
 server {
   listen                    443 ssl;
-  server_name               authdev.popdata.bc.ca;
+  server_name               ${authHostname};
 
   ssl_certificate           ${sslCertificate};
   ssl_certificate_key       ${sslCertificateKey};
@@ -16,6 +16,7 @@ server {
 
   # Proxy everything over to the service
   location /auth/ {
+    resolver 127.0.0.11 valid=30s;
     proxy_set_header        Host            $host;
     proxy_set_header        X-Real-IP       $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -30,7 +31,7 @@ server {
 
 server {
   listen                    443 ssl;
-  server_name               ocwadev.popdata.bc.ca;
+  server_name               ${ocwaHostname};
 
   ssl_certificate           ${sslCertificate};
   ssl_certificate_key       ${sslCertificateKey};
@@ -41,6 +42,7 @@ server {
   }
   
   location /minio/ {
+    resolver 127.0.0.11 valid=30s;
     proxy_set_header        Host            $host;
     proxy_set_header        X-Real-IP       $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -53,6 +55,7 @@ server {
   }
 
   location /files {
+    resolver 127.0.0.11 valid=30s;
     proxy_pass http://ocwa_tusd:1080/files;
 
     # Disable request and response buffering
@@ -74,6 +77,7 @@ server {
 
   # Proxy everything else to the frontend
   location /socket {
+    resolver 127.0.0.11 valid=30s;
     proxy_set_header        Host            $host;
     proxy_set_header        X-Real-IP       $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -87,6 +91,7 @@ server {
 
   # Proxy everything else to the frontend
   location / {
+    resolver 127.0.0.11 valid=30s;
     proxy_set_header        Host            $host;
     proxy_set_header        X-Real-IP       $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
