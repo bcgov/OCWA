@@ -37,6 +37,7 @@ matrix:
         - /home/travis/build/bcgov/terraform show
         - ls -l _tmp
         - docker ps
+        - sleep 5
         - curl -v -k https://auth.example.demo
         - curl -v -k https://ocwa.example.demo
 
