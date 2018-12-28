@@ -21,13 +21,13 @@ matrix:
         - cd /home/travis/build/bcgov
         - curl -L -O https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip
         - unzip -o terraform_0.11.8_linux_amd64.zip
-        - mv terraform /usr/local/bin/terraform
         - rm -rf terraform_0.11.8_linux_amd64.zip
+        - chmod +x terraform
 
         - cd /home/travis/build/bcgov/OCWA/terraform
-        - terraform init
-        - terraform plan
-        - terraform apply -auto-approve
+        - /home/travis/build/bcgov/terraform init
+        - /home/travis/build/bcgov/terraform plan
+        - /home/travis/build/bcgov/terraform apply -auto-approve
 
     - name: "Forum Api"
       language: node_js
