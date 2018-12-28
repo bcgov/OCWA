@@ -11,15 +11,21 @@ keycloak = {
     username = "kcadmin"
 }
 
-ocwaHost = "https://ocwa.example.com"
+ocwaHostname = "ocwa.example.demo"
+ocwaHost = "https://ocwa.example.demo"
 
-ocwaWebSocketHost = "wss://ocwa.example.com/socket"
+ocwaWebSocketHost = "wss://ocwa.example.demo/socket"
 
-authHost = "https://auth.example.com"
+authHostname = "auth.example.demo"
+authHost = "https://auth.example.demo"
 
-sslCertificate = "/ssl/cert.pem"
-sslCertificateKey = "/ssl/key.pem"
+sslCertificate = "/ssl/example.crt"
+sslCertificateKey = "/ssl/example.key"
 
 images = {
-    request_api = ":latest"
+    request_api = ":edge"
+    validate_api = ":edge"
+    forum_api = ":edge"
+    policy_api = ":edge"
+    frontend = ":edge"
 }

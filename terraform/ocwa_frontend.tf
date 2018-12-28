@@ -4,8 +4,7 @@ data "docker_registry_image" "ocwa_frontend" {
 }
 
 resource "docker_image" "ocwa_frontend" {
-  name          = "${data.docker_registry_image.ocwa_frontend.name}"
-  pull_triggers = ["${data.docker_registry_image.ocwa_frontend.sha256_digest}"]
+  name          = "bcgovimages/ocwa_frontend${var.images["frontend"]}"
 }
 
 resource "docker_container" "ocwa_frontend" {
@@ -17,6 +16,13 @@ resource "docker_container" "ocwa_frontend" {
     internal = 8000
     external = 8000
   }
+  host = [
+    {
+      host = "${var.authHostname}"
+      ip = "${docker_container.ocwa_nginx.ip_address}"
+    }
+  ]
+
   env = [
       "COOKIE_SECRET=${random_string.cookie.result}",
       "JWT_SECRET=${random_string.jwtSecret.result}",
@@ -40,6 +46,11 @@ resource "docker_container" "ocwa_frontend" {
       "STORAGE_SSL=false",
       "STORAGE_BUCKET=bucket",
       "STORAGE_ACCESS_KEY=${random_id.accessKey.hex}",
-      "STORAGE_SECRET_KEY=${random_string.secretKey.result}"
+      "STORAGE_SECRET_KEY=${random_string.secretKey.result}",
+      "NODE_TLS_REJECT_UNAUTHORIZED=0"
+  ]
+
+  depends_on = [
+    "docker_container.ocwa_nginx"
   ]
 }
