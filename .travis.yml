@@ -13,6 +13,16 @@ addons:
 
 matrix:
   include:
+    - name: "Deploy for Integration Testing"
+      language: node_js
+      node_js:
+        - "node"
+      script:
+        - cd /home/travis/build/bcgov/OCWA/terraform
+        - terraform init
+        - terraform plan
+        - terraform apply -auto-approve
+
     - name: "Forum Api"
       language: node_js
       node_js:
@@ -366,6 +376,7 @@ matrix:
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
         - cd /home/travis/build/bcgov/OCWA
         - helm lint helm/ocwa
+
 
 env:
   global:
