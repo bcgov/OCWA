@@ -27,6 +27,11 @@ authHost = "https://auth.example.com"
 
 sslCertificate = "/ssl/cert.pem"
 sslCertificateKey = "/ssl/key.pem"
+
+images = {
+    request_api = ":latest"
+}
+
 ```
 
 Run the following commands:
