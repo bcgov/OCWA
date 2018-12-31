@@ -9,4 +9,14 @@
       <initValue>'http://localhost:8000'</initValue>
       <name>OCWA_URL</name>
    </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'/home/travis/build/bcgov/OCWA/ui_tests/testfile1.csv'</initValue>
+      <name>TestFile1Path</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'/home/travis/build/bcgov/OCWA/ui_tests/testfile2.csv'</initValue>
+      <name>TestFile2Path</name>
+   </GlobalVariableEntity>
 </GlobalVariableEntities>
