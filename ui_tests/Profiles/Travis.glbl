@@ -11,12 +11,17 @@
    </GlobalVariableEntity>
    <GlobalVariableEntity>
       <description></description>
-      <initValue>'/home/travis/build/bcgov/OCWA/ui_tests/testfile1.csv'</initValue>
-      <name>TestFile1Path</name>
+      <initValue>'/home/travis/build/bcgov/OCWA/ui_tests/'</initValue>
+      <name>TestFilePath</name>
    </GlobalVariableEntity>
    <GlobalVariableEntity>
       <description></description>
-      <initValue>'/home/travis/build/bcgov/OCWA/ui_tests/testfile2.csv'</initValue>
-      <name>TestFile2Path</name>
+      <initValue>'testfile1.csv'</initValue>
+      <name>TestFile1Name</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'testfile2.csv'</initValue>
+      <name>TestFile2Name</name>
    </GlobalVariableEntity>
 </GlobalVariableEntities>

@@ -7,17 +7,15 @@ Feature: create a new request
 	Scenario: A valid request
 		Given the output files do not violate any blocking rules
 		When requester submits their request 
-		Then the requester's request is put in awaiting review
+		Then the request status is changed to "Awaiting review"
 	Scenario: A request has no data
-		Given requester does not provide any data they wish to export
-		When requester submits their request 
 		Then the requester should not be able to submit the request
 		
 	Scenario Outline: A request violates blocking rule
-		Given a request violates blocking rule: <blocking_rule> 
+		Given request violates given blocking rule <blocking_rule> 
 		When requester submits their request 
-		Then requester should not be able to submit the request
-		And the requester should be informed that <blocking_rule> has been violated
+		Then the requester should not be able to submit the request
+		And requester should be informed that given blocking rule <blocking_rule> has been violated
 		
 		Examples:
 			| blocking_rule |
@@ -27,10 +25,10 @@ Feature: create a new request
 			| A request has a file with a StudyID in it |
 			
 	Scenario Outline: A request violates warning rule
-		Given a request violates blocking rule: <warning_rule> 
+		Given request violates given warning rule <warning_rule> 
 		When requester submits their request 
-		Then requester should be able to submit the request
-		And the requester should be informed that <warning_rule> has been violated
+		Then the requester should be able to submit the request
+		And requester should be informed that given warning rule <warning_rule> has been violated
 			
 		Examples:
 			| warning_rule |
