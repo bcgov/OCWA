@@ -63,12 +63,12 @@ class Requester_step_def_ks {
 	final String REQUEST_PURPOSE_TXT_ID = "purpose"
 	final String REQUEST_WITHDRAW_BTN_ID = "request-sidebar-withdraw-button"
 	final String REQUEST_CANCEL_BTN_ID = "request-sidebar-cancel-button"
-	
+
 	String g_requestName = ""
 	TestObject g_newRequestButtonObject = null
 	TestObject g_requestFormSaveCloseButtonObject = null
 	String g_fileToUpload = "$GlobalVariable.TestFilePath$GlobalVariable.TestFile1Name"
-	
+
 	/**
 	 * The step definitions below match with Katalon sample Gherkin steps
 	 */
@@ -96,7 +96,7 @@ class Requester_step_def_ks {
 
 		g_newRequestButtonObject = new TestObject(NEW_REQUEST_BTN_ID)
 		g_newRequestButtonObject.addProperty("id", ConditionType.EQUALS, NEW_REQUEST_BTN_ID, true)
-		
+
 		TestObject purposeTextbox = new TestObject(REQUEST_PURPOSE_TXT_ID)
 		purposeTextbox.addProperty("id", ConditionType.EQUALS, REQUEST_PURPOSE_TXT_ID, true)
 
@@ -107,7 +107,7 @@ class Requester_step_def_ks {
 		WebUI.click(g_newRequestButtonObject)
 		g_requestName = CustomKeywords.'test_OCWA_keywords.random_test_request_name.gen_random_test_request_name'()
 		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/input_Request Name_name'), g_requestName)
-		
+
 		WebUI.setText(purposeTextbox, PURPOSE_TEXT)
 		WebUI.delay(2)
 	}
@@ -128,27 +128,26 @@ class Requester_step_def_ks {
 		WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$GlobalVariable.TestFile1Name")
 
 		WebUI.delay(5)
-
 	}
 
 	@Given("the output files do not violate any blocking rules")
 	def output_files_do_not_violate_blocking_rules(){}
-	
+
 	@Given("request violates given warning rule (.+)")
 	def request_violates_warning_rule(String warningRule){
-//		switch (warningRule) {
-//			case "":
-//				
-//				break
-//		}
+		//		switch (warningRule.toLowerCase()) {
+		//			case "":
+		//
+		//				break
+		//		}
 	}
 	@Given("request violates given blocking rule (.+)")
 	def request_violates_blocking_rule(String blockingRule){
-//		switch (blockingRule) {
-//			case "":
-//				
-//				break
-//		}
+		//		switch (blockingRule.toLowerCase()) {
+		//			case "":
+		//
+		//				break
+		//		}
 	}
 
 	@Given("the requester affirms the output is safe for release and protects the confidentiality of data, to the best of their knowledge")
@@ -161,7 +160,7 @@ class Requester_step_def_ks {
 		requester_adds_output_files()
 		requester_submits_request()
 	}
-	
+
 	@Given("request was last updated within the last month")
 	def request_updated_within_last_month() {}
 
@@ -170,31 +169,34 @@ class Requester_step_def_ks {
 		//request_is_review_in_progress()
 		requester_has_a_request_of_status("Review in progress")
 	}
-	
+
 	@Given('requester has a request of status "(.+)"')
 	def requester_has_a_request_of_status(String status) {
-		switch (status) {
-			case "Draft":
+		switch (status.toLowerCase()) {
+			case "draft":
 				requester_starts_new_request()
 				requester_adds_output_files()
 				requester_saves_new_request()
 				break
-			case "Awaiting review":
+			case "awaiting review":
 				requester_has_submitted_a_request()
 				break
-			case "Review in progress":
+			case "review in progress":
 				requester_has_submitted_a_request()
-				//output checker needs to claim
+			//output checker needs to claim
 				break
-			case "Work in progress":
+			case "work in progress":
 				requester_has_submitted_a_request()
 				requester_withdraws_request()
 				break
-			case "Approved":
+			case "approved":
 				requester_has_submitted_a_request()
-				//output checker needs to claim
-				//output checker needs to approve
-			break
+			//output checker needs to claim
+			//output checker needs to approve
+				break
+			default:
+				throw new Exception("status $status not found")
+				break
 		}
 	}
 
@@ -228,7 +230,7 @@ class Requester_step_def_ks {
 	def requester_views_request_they_created(){
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 	}
-	
+
 	@When("the requester cancels the request")
 	def requester_cancels_request(){
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
@@ -236,7 +238,7 @@ class Requester_step_def_ks {
 		cancelButtonObject.addProperty("id", ConditionType.EQUALS, REQUEST_CANCEL_BTN_ID, true)
 		WebUI.click(cancelButtonObject)
 	}
-	
+
 	@When("the requester withdraws the request")
 	def requester_withdraws_request(){
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
@@ -244,27 +246,31 @@ class Requester_step_def_ks {
 		withdrawButtonObject.addProperty("id", ConditionType.EQUALS, REQUEST_WITHDRAW_BTN_ID, true)
 		WebUI.click(withdrawButtonObject)
 	}
-	
+
 	@When("requester views (.+) requests")
 	def requester_views_requests_of_given_status(String status){
 		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
-		switch (status) {
-			case "Draft":
-			 	WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Draft'))
+		switch (status.toLowerCase()) {
+			case "draft":
+				WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Draft'))
 				break
-			case "Submitted":
+			case "submitted":
 				WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_QueuedIn Review'))
 				break
-			case "Approved":
+			case "approved":
 			//stub for when a filter for approved requests is added to UI
-			break	
+				break
+			default: 
+				throw new Exception("status $status not found")
+				break
 		}
 	}
-	
+
 
 	@Then("the requester should be able to re-open the request and pick up where they left off")
 	def confirm_draft_save_was_successful() {
 		WebUI.waitForPageLoad(20)
+		WebUI.delay(5)
 		WebUI.verifyTextPresent(g_requestName, false)
 		WebUI.closeBrowser()
 	}
@@ -293,28 +299,28 @@ class Requester_step_def_ks {
 		WebUI.delay(5)
 		WebUI.closeBrowser()
 	}
-	
+
 	@Then('the request status is changed to "(.+)"')
 	def request_should_be_in_given_status(String status){
 		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 		WebUI.verifyTextPresent(status, false)
 		WebUI.closeBrowser()
 	}
-	
+
 	@Then('requests of status "(.+)" should be displayed')
 	def requests_of_given_status_should_be_displayed(String status){
 		WebUI.verifyTextPresent(g_requestName, false)
 		WebUI.closeBrowser()
 	}
-	
+
 	@Then("requests with updates older than a month should not be displayed")
 	def no_old_requests_should_be_displayed(){}
-	
+
 	@Then("requester should see their new comment displayed")
 	def requester_should_see_their_new_comment_displayed(){
 		WebUI.verifyTextPresent(TEST_COMMENT, false)
 	}
-	
+
 	@Then("requester should be able to make changes to the request")
 	def requester_should_be_able_to_make_changes_to_the_request(){
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
@@ -322,7 +328,7 @@ class Requester_step_def_ks {
 		editButtonObject.addProperty("id", ConditionType.EQUALS, REQUEST_EDIT_BTN_ID, true)
 		WebUI.click(editButtonObject)
 		TestObject purposeTextbox = new TestObject(REQUEST_PURPOSE_TXT_ID)
-		purposeTextbox.addProperty("id", ConditionType.EQUALS, REQUEST_PURPOSE_TXT_ID, true)		
+		purposeTextbox.addProperty("id", ConditionType.EQUALS, REQUEST_PURPOSE_TXT_ID, true)
 		WebUI.setText(purposeTextbox, EDITED_PURPOSE_TEXT)
 	}
 	@Then("requester should be able to re-submit the request")
@@ -333,15 +339,14 @@ class Requester_step_def_ks {
 		request_should_be_in_given_status("Review in progress")
 		WebUI.closeBrowser()
 	}
-	
+
 	@Then("requester should be informed that given blocking rule (.+) has been violated")
 	def request_should_be_informed_of_blocking_rule_violation(){
 		//unclear how this is displayed in the UI
 	}
-	
+
 	@Then("requester should be informed that given warning rule (.+) has been violated")
 	def request_should_be_informed_of_warning_rule_violation(){
 		//unclear how this is displayed in the UI
 	}
-
 }

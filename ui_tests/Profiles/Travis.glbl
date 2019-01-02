@@ -16,7 +16,7 @@
    </GlobalVariableEntity>
    <GlobalVariableEntity>
       <description></description>
-      <initValue>'testfile1.csv'</initValue>
+      <initValue>'testfile1.txt'</initValue>
       <name>TestFile1Name</name>
    </GlobalVariableEntity>
    <GlobalVariableEntity>
