@@ -18,16 +18,28 @@ public class GlobalVariable {
      */
     public static Object OCWA_URL
      
+    /**
+     * <p></p>
+     */
+    public static Object TestFile1Path
+     
+    /**
+     * <p></p>
+     */
+    public static Object TestFile2Path
+     
 
     static {
         def allVariables = [:]        
-        allVariables.put('default', ['OCWA_URL' : 'http://ocwa-cddi-dlt-dev.pathfinder.gov.bc.ca'])
-        allVariables.put('Travis', allVariables['default'] + ['OCWA_URL' : 'http://localhost:8000'])
+        allVariables.put('default', ['OCWA_URL' : 'http://ocwa-cddi-dlt-dev.pathfinder.gov.bc.ca', 'TestFile1Path' : 'C:\\\\\\\\Users\\\\PaulR\\\\\\\\Documents\\\\\\\\2 - Metadata\\\\\\\\HAS project\\\\\\\\hospital_visits_bc_2017.csv', 'TestFile2Path' : 'C:\\\\\\\\Users\\\\PaulR\\\\\\\\Documents\\\\\\\\2 - Metadata\\\\\\\\HAS project\\\\\\\\sports_accidents_bc_2017.csv'])
+        allVariables.put('Travis', allVariables['default'] + ['OCWA_URL' : 'http://localhost:8000', 'TestFile1Path' : '/home/travis/build/bcgov/OCWA/ui_tests/testfile1.csv', 'TestFile2Path' : '/home/travis/build/bcgov/OCWA/ui_tests/testfile2.csv'])
         
         String profileName = RunConfiguration.getExecutionProfile()
         
         def selectedVariables = allVariables[profileName]
         OCWA_URL = selectedVariables['OCWA_URL']
+        TestFile1Path = selectedVariables['TestFile1Path']
+        TestFile2Path = selectedVariables['TestFile2Path']
         
     }
 }

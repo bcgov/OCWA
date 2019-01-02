@@ -24,6 +24,6 @@ public class random_test_request_name {
 	def gen_random_test_request_name() {
 		Date today = new Date()
 		String todaysDate = today.format('MMddyy-hhmm-ss')
-		return 'auto_eng ' + todaysDate
+		return 'auto_eng' + todaysDate
 	}
 }

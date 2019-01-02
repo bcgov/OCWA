@@ -2,7 +2,7 @@ Feature: Notifications
 As an requester / output checker I want to be notified when events related to my requests occur so that I know I need to take action
 
 	Scenario Outline: requester notifications
-		Given requester has a submitted request
+		Given requester has submitted a request
 		When <event> occurs
 		Then the requester should receive an email notifying them of the <event>
 		But the email should not contain specifics of the request
