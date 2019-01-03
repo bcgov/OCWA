@@ -6,7 +6,7 @@
    <defaultProfile>false</defaultProfile>
    <GlobalVariableEntity>
       <description></description>
-      <initValue>'http://localhost:8000'</initValue>
+      <initValue>'https://ocwa.example.demo'</initValue>
       <name>OCWA_URL</name>
    </GlobalVariableEntity>
    <GlobalVariableEntity>

@@ -11,6 +11,16 @@
    </GlobalVariableEntity>
    <GlobalVariableEntity>
       <description></description>
+      <initValue>'researcher_1'</initValue>
+      <name>OCWA_USER_RESEARCHER</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'researcher_1_password'</initValue>
+      <name>OCWA_USER_RESEARCHER_PSWD</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
       <initValue>'/home/travis/build/bcgov/OCWA/ui_tests/test_files/'</initValue>
       <name>TestFilePath</name>
    </GlobalVariableEntity>

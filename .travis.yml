@@ -31,8 +31,8 @@ matrix:
             - g++-4.8
       before_script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - cp config/test.json.example config/test.json
-        - cp config/default.json.example config/default.json
+        - cp config/test.json.template config/test.json
+        - cp config/default.json.template config/default.json
         - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
         - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
         - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
@@ -93,13 +93,13 @@ matrix:
         - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
         - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-        - cp config/test.json.example config/test.json
-        - cp config/default.json.example config/default.json
+        - cp config/test.json.template config/test.json
+        - cp config/default.json.template config/default.json
         - npm install
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm install
-        - cp config/default.json.example config/default.json
-        - cp config/test.json.example config/test.json
+        - cp config/default.json.template config/default.json
+        - cp config/test.json.template config/test.json
         - NODE_ENV=test npm start &
         - wget https://dl.minio.io/server/minio/release/linux-amd64/minio
         - chmod +x minio
@@ -109,13 +109,13 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
@@ -154,7 +154,7 @@ matrix:
 
       script:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo pytest
         - wget -q ${HELM_URL}/${HELM_TGZ}
@@ -207,11 +207,11 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - helm lint helm/validate-api
@@ -254,13 +254,13 @@ matrix:
 
       script:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - sudo coverage xml
 
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1 -m pytest
         - sudo coverage xml
@@ -302,17 +302,17 @@ matrix:
 
       script:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-        - cp config/test.json.example config/test.json
-        - cp config/default.json.example config/default.json
+        - cp config/test.json.template config/test.json
+        - cp config/default.json.template config/default.json
         - yarn
 
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - cp config/test.json.example config/test.json
-        - cp config/default.json.example config/default.json
+        - cp config/test.json.template config/test.json
+        - cp config/default.json.template config/default.json
         - yarn
 
         - cd /home/travis/build/bcgov/OCWA/frontend
-        - cp config/test.json.example config/test.json
+        - cp config/test.json.template config/test.json
         - yarn
 
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
@@ -327,13 +327,13 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
@@ -457,7 +457,7 @@ matrix:
 
           script:
           - cd /home/travis/build/bcgov/OCWA/frontend
-          - cp config/test.json.example config/test.json
+          - cp config/test.json.template config/test.json
           - yarn
           - npm test
           - helm lint helm/ocwa-frontend

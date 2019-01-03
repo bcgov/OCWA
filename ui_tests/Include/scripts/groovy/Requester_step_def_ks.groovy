@@ -64,13 +64,13 @@ class Requester_step_def_ks {
 	String REQUEST_WITHDRAW_BTN_ID = "request-sidebar-withdraw-button"
 	String REQUEST_CANCEL_BTN_ID = "request-sidebar-cancel-button"
 	String LOGOUT_URL = "/auth/logout"
-	
+
 	String g_requestName = ""
-	
+
 	/**
 	 * The step definitions below match with Katalon sample Gherkin steps
 	 */
-	
+
 	@Given("requester has logged in")
 	def requester_login() {
 		WebUI.openBrowser('')
@@ -82,9 +82,9 @@ class Requester_step_def_ks {
 		WebUI.waitForElementClickable(loginButton, 30)
 		WebUI.click(loginButton)
 
-		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Username or email_userna'), LOGIN_USERNAME)
+		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Username or email_userna'), GlobalVariables.OCWA_USER_RESEARCHER)
 
-		WebUI.setEncryptedText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), LOGIN_PWD)
+		WebUI.setEncryptedText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), GlobalVariables.OCWA_USER_RESEARCHER_PSWD)
 
 		WebUI.click(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_login'))
 	}
@@ -113,18 +113,18 @@ class Requester_step_def_ks {
 	def requester_adds_output_file(String fileToUpload, String secondFile="", String thirdFile="") {
 
 		TestObject requestFormSaveFilesButton = get_test_object_by_id(REQUEST_SAVE_FILES_BTN_ID)
-		
+
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
 		WebUI.click(requestFormSaveFilesButton)
 		TestObject uploadFileButton = get_test_object_by_id(REQUEST_FILES_UPLOAD_BTN_ID)
-		
+
 		WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$fileToUpload")
 		WebUI.delay(5)
 		if (secondFile != "") {
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$secondFile")
 			WebUI.delay(5)
 		}
-		
+
 		if (thirdFile != "") {
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$thirdFile")
 			WebUI.delay(5)
@@ -147,11 +147,11 @@ class Requester_step_def_ks {
 				requester_adds_output_file(GlobalVariable.WarningMaxSizeLimitFileName)
 				break
 			case "the summation of all output file sizes exceeds the request file size warning threshold":
-				//need to add output files that pass the warning limit individually but together surpass the combined size threshold
-				//requester_adds_output_file(GlobalVariable.WarningMaxSizeLimitFileName)
+			//need to add output files that pass the warning limit individually but together surpass the combined size threshold
+			//requester_adds_output_file(GlobalVariable.WarningMaxSizeLimitFileName)
 				break
 			default:
-			throw new Exception("warning rule $warningRule not found")
+				throw new Exception("warning rule $warningRule not found")
 				break
 		}
 	}
@@ -166,11 +166,11 @@ class Requester_step_def_ks {
 				requester_adds_output_file(GlobalVariable.BlockedMaxSizeLimitFileName)
 				break
 			case "the summation of all output file sizes exceeds the request file size limit":
-				//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
-				//requester_adds_output_file(GlobalVariable.BlockedMaxSizeLimitFileName)
+			//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
+			//requester_adds_output_file(GlobalVariable.BlockedMaxSizeLimitFileName)
 				break
 			default:
-			throw new Exception("block rule $blockingRule not found")
+				throw new Exception("block rule $blockingRule not found")
 				break
 		}
 	}
@@ -270,7 +270,7 @@ class Requester_step_def_ks {
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 		WebUI.click(get_test_object_by_id(REQUEST_WITHDRAW_BTN_ID))
 	}
-	
+
 	@When("requester views (.+) requests")
 	def requester_views_requests_of_given_status(String status){
 		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
@@ -372,7 +372,7 @@ class Requester_step_def_ks {
 	def request_should_be_informed_of_warning_rule_violation(){
 		//unclear how this is displayed in the UI
 	}
-	
+
 	//Helper function for getting TestObject from the id of an html element
 	def get_test_object_by_id(String id) {
 		TestObject tObject = new TestObject(id)
