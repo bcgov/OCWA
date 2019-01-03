@@ -415,6 +415,9 @@ matrix:
         - "node"
       addons:
         chrome: stable
+        hosts:
+          - auth.example.demo
+          - ocwa.example.demo        
         apt:
           sources:
             - ubuntu-toolchain-r-test
