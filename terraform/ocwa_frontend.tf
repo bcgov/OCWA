@@ -1,10 +1,11 @@
 
 data "docker_registry_image" "ocwa_frontend" {
-  name = "bcgovimages/ocwa_frontend:latest"
+  name = "bcgovimages/ocwa_frontend${var.images["frontend"]}"
 }
 
 resource "docker_image" "ocwa_frontend" {
-  name          = "bcgovimages/ocwa_frontend${var.images["frontend"]}"
+  name          = "${data.docker_registry_image.ocwa_frontend.name}"
+  pull_triggers = ["${data.docker_registry_image.ocwa_frontend.sha256_digest}"]
 }
 
 resource "docker_container" "ocwa_frontend" {

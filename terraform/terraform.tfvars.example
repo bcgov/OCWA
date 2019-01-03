@@ -28,4 +28,6 @@ images = {
     forum_api = ":edge"
     policy_api = ":edge"
     frontend = ":edge"
+    minio = ":latest"
+    tusd = ":latest"
 }
