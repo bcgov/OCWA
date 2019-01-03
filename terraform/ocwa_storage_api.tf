@@ -1,6 +1,6 @@
 
 data "docker_registry_image" "minio" {
-  name = "minio/minio:latest"
+  name = "minio/minio${var.images["minio"]}"
 }
 
 resource "docker_image" "minio" {
@@ -29,7 +29,7 @@ resource "docker_container" "minio" {
 
 
 data "docker_registry_image" "tusd" {
-  name = "tusproject/tusd:latest"
+  name = "tusproject/tusd${var.images["tusd"]}"
 }
 
 resource "docker_image" "tusd" {

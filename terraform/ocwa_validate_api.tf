@@ -1,10 +1,11 @@
 
 data "docker_registry_image" "ocwa_validate_api" {
-  name = "bcgovimages/ocwa_validate_api:latest"
+  name = "bcgovimages/ocwa_validate_api${var.images["validate_api"]}"
 }
 
 resource "docker_image" "ocwa_validate_api" {
-  name          = "bcgovimages/ocwa_validate_api${var.images["validate_api"]}"
+  name          = "${data.docker_registry_image.ocwa_validate_api.name}"
+  pull_triggers = ["${data.docker_registry_image.ocwa_validate_api.sha256_digest}"]
 }
 
 resource "docker_container" "ocwa_validate_api" {

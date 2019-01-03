@@ -1,10 +1,11 @@
 
 data "docker_registry_image" "ocwa_forum_api" {
-  name = "bcgovimages/ocwa_forum_api:latest"
+  name = "bcgovimages/ocwa_forum_api${var.images["forum_api"]}"
 }
 
 resource "docker_image" "ocwa_forum_api" {
-  name          = "bcgovimages/ocwa_forum_api${var.images["forum_api"]}"
+  name          = "${data.docker_registry_image.ocwa_forum_api.name}"
+  pull_triggers = ["${data.docker_registry_image.ocwa_forum_api.sha256_digest}"]
 }
 
 resource "docker_container" "ocwa_forum_api" {

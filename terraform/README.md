@@ -2,7 +2,7 @@
 
 # Terraform-Based deployment
 
-Create a terraform.tfvars file:
+Create a terraform.tfvars file (see terraform.tfvars.example):
 
 ```
 hostRootPath = "/var/ocwa"
@@ -29,7 +29,13 @@ sslCertificate = "/ssl/cert.pem"
 sslCertificateKey = "/ssl/key.pem"
 
 images = {
-    request_api = ":latest"
+    request_api = ":edge"
+    validate_api = ":edge"
+    forum_api = ":edge"
+    policy_api = ":edge"
+    frontend = ":edge"
+    minio = ":latest"
+    tusd = ":latest"
 }
 
 ```
@@ -39,8 +45,7 @@ Run the following commands:
 ```
 terraform init
 
-terraform plan
+terraform plan -var hostRootPath=`pwd`/_tmp
 
-terraform apply
+terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
 ```
-
