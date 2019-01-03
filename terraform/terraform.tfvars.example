@@ -1,0 +1,33 @@
+
+mongodb = {
+    username = "appuser"
+}
+
+postgres = {
+    username = "kcuser"
+}
+
+keycloak = {
+    username = "kcadmin"
+}
+
+ocwaHostname = "ocwa.example.demo"
+ocwaHost = "https://ocwa.example.demo"
+
+ocwaWebSocketHost = "wss://ocwa.example.demo/socket"
+
+authHostname = "auth.example.demo"
+authHost = "https://auth.example.demo"
+
+sslCertificate = "/ssl/example.crt"
+sslCertificateKey = "/ssl/example.key"
+
+images = {
+    request_api = ":edge"
+    validate_api = ":edge"
+    forum_api = ":edge"
+    policy_api = ":edge"
+    frontend = ":edge"
+    minio = ":latest"
+    tusd = ":latest"
+}
