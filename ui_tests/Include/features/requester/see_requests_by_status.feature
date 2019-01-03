@@ -16,3 +16,4 @@ As an requester I want to be able to see a history of my requests so that I can 
 			| Review in progress | Submitted |
 			| Draft | Draft |
 			| Work in progress | Draft |
+			| Cancelled | Cancelled |
