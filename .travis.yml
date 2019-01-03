@@ -105,13 +105,13 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
@@ -150,7 +150,7 @@ matrix:
 
       script:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - sudo pip3 install -e .
         - sudo pytest
         - wget -q ${HELM_URL}/${HELM_TGZ}
@@ -203,11 +203,11 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - helm lint helm/validate-api
@@ -250,13 +250,13 @@ matrix:
 
       script:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - sudo coverage xml
 
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1 -m pytest
         - sudo coverage xml
@@ -323,13 +323,13 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
@@ -427,7 +427,7 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         
@@ -435,19 +435,19 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         
         #Start Request Api
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-        - cp config/default.json.template config/default.json
-        - cp config/test.json.template config/test.json
+        - cp config/default.json.example config/default.json
+        - cp config/test.json.example config/test.json
         - NODE_ENV=test npm start &
         
         #Start FrontEnd
         - cd /home/travis/build/bcgov/OCWA/frontend
-        - cp config/default.json.template config/default.json
+        - cp config/default.json.example config/default.json
         - yarn
         - NODE_ENV=test yarn start &
 
@@ -516,7 +516,7 @@ env:
   - YAMLLINT_VERSION=1.8.1
   - CXX=g++-4.8
   - MONGODB=4.1.1
-  - KATALON_VERSION=5.9.0
+  - KATALON_VERSION=5.10.1
   - TUSD_VERSION=0.11.0
   - SONAR_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/
   - SONAR_APP=sonar-scanner
