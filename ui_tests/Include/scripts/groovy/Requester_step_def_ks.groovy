@@ -76,8 +76,8 @@ class Requester_step_def_ks {
 		WebUI.openBrowser('')
 		WebUI.delay(5)
 
-		//WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
-		WebUI.navigateToUrl("http://localhost:8000")
+		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+		//WebUI.navigateToUrl("http://localhost:8000")
 		TestObject loginButton = get_test_object_by_id(LOGIN_BTN_ID)
 		WebUI.waitForElementClickable(loginButton, 30)
 		WebUI.click(loginButton)
