@@ -76,8 +76,8 @@ class Requester_step_def_ks {
 		WebUI.openBrowser('')
 		WebUI.delay(5)
 
-		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
-		//WebUI.navigateToUrl("http://localhost:8000")
+		//WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+		WebUI.navigateToUrl("http://localhost:8000")
 		TestObject loginButton = get_test_object_by_id(LOGIN_BTN_ID)
 		WebUI.waitForElementClickable(loginButton, 30)
 		WebUI.click(loginButton)
@@ -217,6 +217,10 @@ class Requester_step_def_ks {
 				requester_has_submitted_a_request()
 				requester_withdraws_request()
 				break
+			case "cancelled":
+				requester_has_submitted_a_request()
+				requester_cancels_request()
+				break
 			case "approved":
 				requester_has_submitted_a_request()
 			//output checker needs to claim
@@ -280,6 +284,9 @@ class Requester_step_def_ks {
 			case "approved":
 			//stub for when a filter for approved requests is added to UI
 				break
+			case "cancelled":
+				WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Cancelled'))
+				break
 			default:
 				throw new Exception("status $status not found")
 				break
@@ -315,7 +322,6 @@ class Requester_step_def_ks {
 		WebUI.verifyTextPresent(PURPOSE_TEXT, false)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_Discussion'))
 		WebUI.delay(2)
-		//WebUI.verifyTextPresent(TEST_COMMENT, false)
 		requester_should_see_their_new_comment_displayed()
 		WebUI.delay(5)
 		WebUI.closeBrowser()
