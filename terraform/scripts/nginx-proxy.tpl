@@ -5,7 +5,7 @@ map $http_upgrade $connection_upgrade {
 
 server {
   listen                    443 ssl;
-  server_name               authdev.popdata.bc.ca;
+  server_name               ${authHostname};
 
   ssl_certificate           ${sslCertificate};
   ssl_certificate_key       ${sslCertificateKey};
@@ -16,6 +16,7 @@ server {
 
   # Proxy everything over to the service
   location /auth/ {
+    resolver 127.0.0.11 valid=30s;
     proxy_set_header        Host            $host;
     proxy_set_header        X-Real-IP       $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -30,7 +31,7 @@ server {
 
 server {
   listen                    443 ssl;
-  server_name               ocwadev.popdata.bc.ca;
+  server_name               ${ocwaHostname};
 
   ssl_certificate           ${sslCertificate};
   ssl_certificate_key       ${sslCertificateKey};
@@ -41,6 +42,7 @@ server {
   }
   
   location /minio/ {
+    resolver 127.0.0.11 valid=30s;
     proxy_set_header        Host            $host;
     proxy_set_header        X-Real-IP       $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -49,35 +51,47 @@ server {
     proxy_set_header         Upgrade $http_upgrade;
     proxy_set_header         Connection $connection_upgrade;
 
-    proxy_pass http://ocwa_minio:9000;
-  }
-
-  location /api/v1/files {
-    proxy_set_header        Host            $host;
-    proxy_set_header        X-Real-IP       $remote_addr;
-    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header        X-Forwarded-Proto $scheme;
-    proxy_http_version      1.1;
-    proxy_set_header         Upgrade $http_upgrade;
-    proxy_set_header         Connection $connection_upgrade;
-
-    proxy_pass ${ocwaHost}/files;
+    proxy_pass http://ocwaminio:9000;
   }
 
   location /files {
+    resolver 127.0.0.11 valid=30s;
+    proxy_pass http://ocwa_tusd:1080/files;
+
+    # Disable request and response buffering
+    proxy_request_buffering  off;
+    proxy_buffering          off;
+    proxy_http_version       1.1;
+
+    # Add X-Forwarded-* headers
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    proxy_set_header        Host            $host;
+    proxy_set_header        X-Real-IP       $remote_addr;
+
+    proxy_set_header         Upgrade $http_upgrade;
+    proxy_set_header         Connection $connection_upgrade;
+    client_max_body_size     0;
+  }
+
+  # Proxy everything else to the frontend
+  location /socket {
+    resolver 127.0.0.11 valid=30s;
     proxy_set_header        Host            $host;
     proxy_set_header        X-Real-IP       $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header        X-Forwarded-Proto $scheme;
     proxy_http_version      1.1;
-    proxy_set_header         Upgrade $http_upgrade;
-    proxy_set_header         Connection $connection_upgrade;
+    proxy_set_header        Upgrade $http_upgrade;
+    proxy_set_header        Connection $connection_upgrade;
 
-    proxy_pass http://ocwa_tusd:1080/files;
+    proxy_pass http://ocwa_forum_api:3001/;
   }
 
   # Proxy everything else to the frontend
   location / {
+    resolver 127.0.0.11 valid=30s;
     proxy_set_header        Host            $host;
     proxy_set_header        X-Real-IP       $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -102,30 +116,5 @@ server {
 server {
   listen                    80 default;
 
-  location /files {
-    proxy_set_header        Host            $host;
-    proxy_set_header        X-Real-IP       $remote_addr;
-    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header        X-Forwarded-Proto $scheme;
-    proxy_http_version      1.1;
-    proxy_set_header         Upgrade $http_upgrade;
-    proxy_set_header         Connection $connection_upgrade;
-
-    proxy_pass http://ocwa_tusd:1080/files;
-  }
-
-  # Proxy everything else to the frontend
-  location / {
-    proxy_set_header        Host            $host;
-    proxy_set_header        X-Real-IP       $remote_addr;
-    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header        X-Forwarded-Proto $scheme;
-    proxy_http_version      1.1;
-    proxy_set_header         Upgrade $http_upgrade;
-    proxy_set_header         Connection $connection_upgrade;
-
-    proxy_pass http://ocwa_frontend:8000;
-  }
-
-  # return 301 ${ocwaHost};
+  return 301 ${ocwaHost};
 }

@@ -1,6 +1,6 @@
 
 data "docker_registry_image" "minio" {
-  name = "minio/minio:latest"
+  name = "minio/minio${var.images["minio"]}"
 }
 
 resource "docker_image" "minio" {
@@ -10,7 +10,8 @@ resource "docker_image" "minio" {
 
 resource "docker_container" "minio" {
   image = "${docker_image.minio.latest}"
-  name = "ocwa_minio"
+  name = "ocwaminio"
+  restart = "on-failure"
   command = [ "server", "/data" ]
   networks_advanced = { name = "${docker_network.private_network.name}" }
   volumes = [{
@@ -28,7 +29,7 @@ resource "docker_container" "minio" {
 
 
 data "docker_registry_image" "tusd" {
-  name = "tusproject/tusd:latest"
+  name = "tusproject/tusd${var.images["tusd"]}"
 }
 
 resource "docker_image" "tusd" {
@@ -39,7 +40,8 @@ resource "docker_image" "tusd" {
 resource "docker_container" "tusd" {
   image = "${docker_image.tusd.latest}"
   name = "ocwa_tusd"
-  command = [ "-s3-bucket", "bucket", "-s3-endpoint", "http://ocwa_minio:9000" ]
+  restart = "on-failure"
+  command = [ "-behind-proxy", "-s3-bucket", "bucket", "-s3-endpoint", "http://ocwaminio:9000" ]
   networks_advanced = { name = "${docker_network.private_network.name}" }
   env = [
       "AWS_ACCESS_KEY=${random_id.accessKey.hex}",
@@ -50,9 +52,15 @@ resource "docker_container" "tusd" {
 
 resource "null_resource" "minio_first_install" {
   provisioner "local-exec" {
+    command = "scripts/wait-for-healthy.sh ocwaminio"
+  }
+
+  provisioner "local-exec" {
     environment = {
-        MC_HOSTS_PRIMARY = "http://${random_id.accessKey.hex}:${random_string.secretKey.result}@ocwa_minio:9000"
+        MC_HOSTS_PRIMARY = "http://${random_id.accessKey.hex}:${random_string.secretKey.result}@ocwaminio:9000"
     }
     command = "docker run -e MC_HOSTS_PRIMARY --net=ocwa_vnet minio/mc mb PRIMARY/bucket"
   }
+
+  depends_on = [ "docker_container.minio" ]
 }
