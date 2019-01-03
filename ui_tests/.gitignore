@@ -1,7 +1,7 @@
 # Katalon Studio
 Reports/*
 ReportFolder/*
-Profiles/default.glbl
+Profiles/local.glbl
 .classpath
 .settings
 *.class
