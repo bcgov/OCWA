@@ -47,31 +47,30 @@ import cucumber.api.java.en.When
 
 
 class Requester_step_def_ks {
-	final String TEST_COMMENT = "test"
-	final String PURPOSE_TEXT = "The purpose of my project is X"
-	final String EDITED_PURPOSE_TEXT = "Edited the purpose to be Y"
-	final String REQUEST_PATH = "/requests/"
-	final String LOGIN_BTN_ID = "app-auth-login-button"
-	final String LOGIN_USERNAME = "pripley"
-	final String LOGIN_PWD = "EUKVYWz2orI="
-	final String NEW_REQUEST_BTN_ID = "new-request-button"
-	final String REQUEST_SAVE_FILES_BTN_ID = "request-form-save-files-button"
-	final String REQUEST_FILES_UPLOAD_BTN_ID = "file-uploader-input"
-	final String REQUEST_SAVE_BTN_ID = "request-form-save-button"
-	final String REQUEST_SAVE_CLOSE_BTN_ID = "request-form-save-close-button"
-	final String REQUEST_EDIT_BTN_ID = "request-sidebar-edit-button"
-	final String REQUEST_PURPOSE_TXT_ID = "purpose"
-	final String REQUEST_WITHDRAW_BTN_ID = "request-sidebar-withdraw-button"
-	final String REQUEST_CANCEL_BTN_ID = "request-sidebar-cancel-button"
-
+	String TEST_COMMENT = "test"
+	String PURPOSE_TEXT = "The purpose of my project is X"
+	String EDITED_PURPOSE_TEXT = "Edited the purpose to be Y"
+	String REQUEST_PATH = "/requests/"
+	String LOGIN_BTN_ID = "app-auth-login-button"
+	String LOGIN_USERNAME = "pripley"
+	String LOGIN_PWD = "EUKVYWz2orI="
+	String NEW_REQUEST_BTN_ID = "new-request-button"
+	String REQUEST_SAVE_FILES_BTN_ID = "request-form-save-files-button"
+	String REQUEST_FILES_UPLOAD_BTN_ID = "file-uploader-input"
+	String REQUEST_SAVE_BTN_ID = "request-form-save-button"
+	String REQUEST_SAVE_CLOSE_BTN_ID = "request-form-save-close-button"
+	String REQUEST_EDIT_BTN_ID = "request-sidebar-edit-button"
+	String REQUEST_PURPOSE_TXT_ID = "purpose"
+	String REQUEST_WITHDRAW_BTN_ID = "request-sidebar-withdraw-button"
+	String REQUEST_CANCEL_BTN_ID = "request-sidebar-cancel-button"
+	String LOGOUT_URL = "/auth/logout"
+	
 	String g_requestName = ""
-	TestObject g_newRequestButtonObject = null
-	TestObject g_requestFormSaveCloseButtonObject = null
-	String g_fileToUpload = "$GlobalVariable.TestFilePath$GlobalVariable.TestFile1Name"
-
+	
 	/**
 	 * The step definitions below match with Katalon sample Gherkin steps
 	 */
+	
 	@Given("requester has logged in")
 	def requester_login() {
 		WebUI.openBrowser('')
@@ -79,8 +78,7 @@ class Requester_step_def_ks {
 
 		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 		//WebUI.navigateToUrl("http://localhost:8000")
-		TestObject loginButton = new TestObject(LOGIN_BTN_ID)
-		loginButton.addProperty("id", ConditionType.EQUALS, LOGIN_BTN_ID, true)
+		TestObject loginButton = get_test_object_by_id(LOGIN_BTN_ID)
 		WebUI.waitForElementClickable(loginButton, 30)
 		WebUI.click(loginButton)
 
@@ -94,21 +92,17 @@ class Requester_step_def_ks {
 	@Given("requester has started a request")
 	def requester_starts_new_request() {
 
-		g_newRequestButtonObject = new TestObject(NEW_REQUEST_BTN_ID)
-		g_newRequestButtonObject.addProperty("id", ConditionType.EQUALS, NEW_REQUEST_BTN_ID, true)
-
-		TestObject purposeTextbox = new TestObject(REQUEST_PURPOSE_TXT_ID)
-		purposeTextbox.addProperty("id", ConditionType.EQUALS, REQUEST_PURPOSE_TXT_ID, true)
+		TestObject newRequestButtonObject = get_test_object_by_id(NEW_REQUEST_BTN_ID)
 
 		WebUI.waitForPageLoad(30)
 		WebUI.delay(5)
 
-		WebUI.waitForElementClickable(g_newRequestButtonObject, 30)
-		WebUI.click(g_newRequestButtonObject)
+		WebUI.waitForElementClickable(newRequestButtonObject, 30)
+		WebUI.click(newRequestButtonObject)
 		g_requestName = CustomKeywords.'test_OCWA_keywords.random_test_request_name.gen_random_test_request_name'()
 		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/input_Request Name_name'), g_requestName)
 
-		WebUI.setText(purposeTextbox, PURPOSE_TEXT)
+		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), PURPOSE_TEXT)
 		WebUI.delay(2)
 	}
 
@@ -116,53 +110,87 @@ class Requester_step_def_ks {
 	def requester_has_not_submitted_new_request() {
 	}
 
-	@Given("requester add output files to the request")
-	def requester_adds_output_files() {
+	def requester_adds_output_file(String fileToUpload, String secondFile="", String thirdFile="") {
 
-		TestObject requestFormSaveFilesButton = new TestObject(REQUEST_SAVE_FILES_BTN_ID)
-		requestFormSaveFilesButton.addProperty("id", ConditionType.EQUALS, REQUEST_SAVE_FILES_BTN_ID, true)
+		TestObject requestFormSaveFilesButton = get_test_object_by_id(REQUEST_SAVE_FILES_BTN_ID)
+		
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
 		WebUI.click(requestFormSaveFilesButton)
-		TestObject uploadFileButton = new TestObject(REQUEST_FILES_UPLOAD_BTN_ID)
-		uploadFileButton.addProperty("id", ConditionType.EQUALS, REQUEST_FILES_UPLOAD_BTN_ID, true)
-		WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$GlobalVariable.TestFile1Name")
-
+		TestObject uploadFileButton = get_test_object_by_id(REQUEST_FILES_UPLOAD_BTN_ID)
+		
+		WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$fileToUpload")
 		WebUI.delay(5)
+		if (secondFile != "") {
+			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$secondFile")
+			WebUI.delay(5)
+		}
+		
+		if (thirdFile != "") {
+			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$thirdFile")
+			WebUI.delay(5)
+		}
 	}
 
-	@Given("the output files do not violate any blocking rules")
-	def output_files_do_not_violate_blocking_rules(){}
+	@Given("requester adds an output file that does not violate any blocking or warning rules")
+	def requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules(){
+		requester_adds_output_file(GlobalVariable.ValidFileName)
+	}
 
 	@Given("request violates given warning rule (.+)")
 	def request_violates_warning_rule(String warningRule){
-		//		switch (warningRule.toLowerCase()) {
-		//			case "":
-		//
-		//				break
-		//		}
+		requester_starts_new_request()
+		switch (warningRule.toLowerCase()) {
+			case "an output file has a warning file extension":
+				requester_adds_output_file(GlobalVariable.WarningExtensionFileName)
+				break
+			case "a request that has a file that exceeds the file size warning threshold":
+				requester_adds_output_file(GlobalVariable.WarningMaxSizeLimitFileName)
+				break
+			case "the summation of all output file sizes exceeds the request file size warning threshold":
+				//need to add output files that pass the warning limit individually but together surpass the combined size threshold
+				//requester_adds_output_file(GlobalVariable.WarningMaxSizeLimitFileName)
+				break
+			default:
+			throw new Exception("warning rule $warningRule not found")
+				break
+		}
 	}
 	@Given("request violates given blocking rule (.+)")
 	def request_violates_blocking_rule(String blockingRule){
-		//		switch (blockingRule.toLowerCase()) {
-		//			case "":
-		//
-		//				break
-		//		}
+		requester_starts_new_request()
+		switch (blockingRule.toLowerCase()) {
+			case "an output file has a blocked file extension":
+				requester_adds_output_file(GlobalVariable.BlockedExtensionFileName)
+				break
+			case "a request that has a file that is too big":
+				requester_adds_output_file(GlobalVariable.BlockedMaxSizeLimitFileName)
+				break
+			case "the summation of all output file sizes exceeds the request file size limit":
+				//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
+				//requester_adds_output_file(GlobalVariable.BlockedMaxSizeLimitFileName)
+				break
+			default:
+			throw new Exception("block rule $blockingRule not found")
+				break
+		}
 	}
 
 	@Given("the requester affirms the output is safe for release and protects the confidentiality of data, to the best of their knowledge")
 	def requester_affirms_output_is_safe() {
+		//stubbed in case we need to check a box in the UI to support this
 	}
 
 	@Given("requester has submitted a request")
 	def requester_has_submitted_a_request(){
 		requester_starts_new_request()
-		requester_adds_output_files()
+		requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules()
 		requester_submits_request()
 	}
 
 	@Given("request was last updated within the last month")
-	def request_updated_within_last_month() {}
+	def request_updated_within_last_month() {
+		//stubbed because newly created requests will always have an update date within the last month
+	}
 
 	@Given("the request has been claimed by an output checker")
 	def request_has_been_claimed_by_a_oc(){
@@ -175,7 +203,7 @@ class Requester_step_def_ks {
 		switch (status.toLowerCase()) {
 			case "draft":
 				requester_starts_new_request()
-				requester_adds_output_files()
+				requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules()
 				requester_saves_new_request()
 				break
 			case "awaiting review":
@@ -202,16 +230,12 @@ class Requester_step_def_ks {
 
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
-		g_requestFormSaveCloseButtonObject = new TestObject(REQUEST_SAVE_CLOSE_BTN_ID)
-		g_requestFormSaveCloseButtonObject.addProperty("id", ConditionType.EQUALS, REQUEST_SAVE_CLOSE_BTN_ID, true)
-		WebUI.click(g_requestFormSaveCloseButtonObject)
+		WebUI.click(get_test_object_by_id(REQUEST_SAVE_CLOSE_BTN_ID))
 	}
 
 	@When("requester submits their request")
 	def requester_submits_request() {
-		TestObject requestFormSaveButtonObject = new TestObject(REQUEST_SAVE_BTN_ID)
-		requestFormSaveButtonObject.addProperty("id", ConditionType.EQUALS, REQUEST_SAVE_BTN_ID, true)
-		WebUI.click(requestFormSaveButtonObject)
+		WebUI.click(get_test_object_by_id(REQUEST_SAVE_BTN_ID))
 		WebUI.delay(15)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
@@ -234,19 +258,15 @@ class Requester_step_def_ks {
 	@When("the requester cancels the request")
 	def requester_cancels_request(){
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
-		TestObject cancelButtonObject = new TestObject(REQUEST_CANCEL_BTN_ID)
-		cancelButtonObject.addProperty("id", ConditionType.EQUALS, REQUEST_CANCEL_BTN_ID, true)
-		WebUI.click(cancelButtonObject)
+		WebUI.click(get_test_object_by_id(REQUEST_CANCEL_BTN_ID))
 	}
 
 	@When("the requester withdraws the request")
 	def requester_withdraws_request(){
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
-		TestObject withdrawButtonObject = new TestObject(REQUEST_WITHDRAW_BTN_ID)
-		withdrawButtonObject.addProperty("id", ConditionType.EQUALS, REQUEST_WITHDRAW_BTN_ID, true)
-		WebUI.click(withdrawButtonObject)
+		WebUI.click(get_test_object_by_id(REQUEST_WITHDRAW_BTN_ID))
 	}
-
+	
 	@When("requester views (.+) requests")
 	def requester_views_requests_of_given_status(String status){
 		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
@@ -260,7 +280,7 @@ class Requester_step_def_ks {
 			case "approved":
 			//stub for when a filter for approved requests is added to UI
 				break
-			default: 
+			default:
 				throw new Exception("status $status not found")
 				break
 		}
@@ -272,6 +292,7 @@ class Requester_step_def_ks {
 		WebUI.waitForPageLoad(20)
 		WebUI.delay(5)
 		WebUI.verifyTextPresent(g_requestName, false)
+		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$LOGOUT_URL")
 		WebUI.closeBrowser()
 	}
 
@@ -289,9 +310,9 @@ class Requester_step_def_ks {
 
 	@Then("the requester should see the complete record of the request including export files, supporting files/text, discussion, and status changes")
 	def submitted_request_info_matches_what_was_submitted(){
-		WebUI.verifyTextPresent(GlobalVariable.TestFile1Path.toString(), false)
+		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		WebUI.verifyTextPresent(g_requestName, false)
-		WebUI.verifyTextPresent(g_purpose, false)
+		WebUI.verifyTextPresent(PURPOSE_TEXT, false)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_Discussion'))
 		WebUI.delay(2)
 		//WebUI.verifyTextPresent(TEST_COMMENT, false)
@@ -324,12 +345,8 @@ class Requester_step_def_ks {
 	@Then("requester should be able to make changes to the request")
 	def requester_should_be_able_to_make_changes_to_the_request(){
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
-		TestObject editButtonObject = new TestObject("edit-button")
-		editButtonObject.addProperty("id", ConditionType.EQUALS, REQUEST_EDIT_BTN_ID, true)
-		WebUI.click(editButtonObject)
-		TestObject purposeTextbox = new TestObject(REQUEST_PURPOSE_TXT_ID)
-		purposeTextbox.addProperty("id", ConditionType.EQUALS, REQUEST_PURPOSE_TXT_ID, true)
-		WebUI.setText(purposeTextbox, EDITED_PURPOSE_TEXT)
+		WebUI.click(get_test_object_by_id(REQUEST_EDIT_BTN_ID))
+		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), EDITED_PURPOSE_TEXT)
 	}
 	@Then("requester should be able to re-submit the request")
 	def requester_should_be_able_to_resubmit_request(){
@@ -349,4 +366,12 @@ class Requester_step_def_ks {
 	def request_should_be_informed_of_warning_rule_violation(){
 		//unclear how this is displayed in the UI
 	}
+	
+	//Helper function for getting TestObject from the id of an html element
+	def get_test_object_by_id(String id) {
+		TestObject tObject = new TestObject(id)
+		tObject.addProperty("id", ConditionType.EQUALS, id, true)
+		return tObject
+	}
+
 }

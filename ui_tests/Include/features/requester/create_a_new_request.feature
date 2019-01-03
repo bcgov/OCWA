@@ -5,7 +5,7 @@ Feature: create a new request
 		And requester has started a request
 		And the requester affirms the output is safe for release and protects the confidentiality of data, to the best of their knowledge
 	Scenario: A valid request
-		Given the output files do not violate any blocking rules
+		Given requester adds an output file that does not violate any blocking or warning rules
 		When requester submits their request 
 		Then the request status is changed to "Awaiting review"
 	Scenario: A request has no data
@@ -20,8 +20,8 @@ Feature: create a new request
 		Examples:
 			| blocking_rule |
 			| A request that has a file that is too big | 
-			| The summation of all export file sizes exceeds the request file size limit |
-			| An export file has a blocked file extension |
+			| The summation of all output file sizes exceeds the request file size limit |
+			| An output file has a blocked file extension |
 			| A request has a file with a StudyID in it |
 			
 	Scenario Outline: A request violates warning rule
@@ -33,5 +33,5 @@ Feature: create a new request
 		Examples:
 			| warning_rule |
 			| A request that has a file that exceeds the file size warning threshold | 
-			| The summation of all export file sizes exceeds the request file size warning threshold |
-			| An export file has a warning file extension |
+			| The summation of all output file sizes exceeds the request file size warning threshold |
+			| An output file has a warning file extension |
