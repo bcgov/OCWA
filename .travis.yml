@@ -11,37 +11,8 @@ addons:
     token:
       secure: yoqO9/QRJlT4mcpgQ4RMSg6h97PRnql70EVCcPaBr6nGNaxSmea8K1AxdqFZcC5PMrj+i4oRFrIQIEmOPeJAzh+5wvygXhwsavXR2S0LcTcScXZQQ8ZWXw9exYl5ELt3Ee6BUF4TIGnR3iztp6VGm9mv992Pi7NqYwdIN9z1rVodb/rH3vlBRzxIH6p+eo4cs/rpUatFNDjRnCVvHxDWy2reC43r3Vf61jGR3FFALcah/PrIUDVemY9wqbdqA78HGB97o5UU6Jgwk2qmvUXTxJcyN+7dSi0bhr8SHEGN1TTr7TmOOxFIKy+fPs9krCF8Ll4CruAXu1YLaTRD6Ilxb4U5yUJgjANnsYbR7klD/DC4pwRx1L90cCVbgsNRzrsq+Qvn57bdSoyHGFCSWqQdkW6EG9xcqogMP6y9/DBcgb4SYIMNLjaoqSgunSmDFTFgidHBTcLN6e4mvM89FRDY64i+DINp9gginqHak/LxhNct6LTREx8bcoOA4J28eHY02Cwrtu2pful7uOonZD49XrGW+OfOAQY2c1b91hNJUK+tWPh0B/0CgWyKNize3WclV3pBedFDYzbzeni3TkqoN7Na22xQTl95mrV9vZ7VQpIft0Jlf+OFS+I8s3G2W/Wp/Rhk9tXfxcEa6yvDwxFMv3QsQrs7No3yTRNFw6U3QWs=
 
-  hosts:
-    - auth.example.demo
-    - ocwa.example.demo
-    
 matrix:
   include:
-    - name: "Deploy for Integration Testing"
-      language: node_js
-      node_js:
-        - "node"
-      script:
-        - cd /home/travis/build/bcgov
-        - curl -L -O https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip
-        - unzip -o terraform_0.11.8_linux_amd64.zip
-        - rm -rf terraform_0.11.8_linux_amd64.zip
-        - chmod +x terraform
-
-        - cd /home/travis/build/bcgov/OCWA/terraform
-        - mkdir _tmp
-        - cp terraform.tfvars.example terraform.tfvars
-        - /home/travis/build/bcgov/terraform init
-        - /home/travis/build/bcgov/terraform plan -var hostRootPath=`pwd`/_tmp
-        - /home/travis/build/bcgov/terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
-        - /home/travis/build/bcgov/terraform show
-        - ls -l _tmp
-        - docker ps
-        - sleep 5
-        - curl -v -k https://auth.example.demo
-        - curl -v -k https://ocwa.example.demo
-
-
     - name: "Forum Api"
       language: node_js
       node_js:
@@ -424,7 +395,6 @@ matrix:
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
         - cd /home/travis/build/bcgov/OCWA
         - helm lint helm/ocwa
-
 
 env:
   global:
