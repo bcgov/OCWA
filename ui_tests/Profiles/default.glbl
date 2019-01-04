@@ -36,7 +36,7 @@
    </GlobalVariableEntity>
    <GlobalVariableEntity>
       <description></description>
-      <initValue>'test_blocked_file_extension.scr'</initValue>
+      <initValue>'test_blocked_file_extension.zip'</initValue>
       <name>BlockedExtensionFileName</name>
    </GlobalVariableEntity>
    <GlobalVariableEntity>
