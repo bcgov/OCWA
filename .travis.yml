@@ -11,10 +11,6 @@ addons:
     token:
       secure: yoqO9/QRJlT4mcpgQ4RMSg6h97PRnql70EVCcPaBr6nGNaxSmea8K1AxdqFZcC5PMrj+i4oRFrIQIEmOPeJAzh+5wvygXhwsavXR2S0LcTcScXZQQ8ZWXw9exYl5ELt3Ee6BUF4TIGnR3iztp6VGm9mv992Pi7NqYwdIN9z1rVodb/rH3vlBRzxIH6p+eo4cs/rpUatFNDjRnCVvHxDWy2reC43r3Vf61jGR3FFALcah/PrIUDVemY9wqbdqA78HGB97o5UU6Jgwk2qmvUXTxJcyN+7dSi0bhr8SHEGN1TTr7TmOOxFIKy+fPs9krCF8Ll4CruAXu1YLaTRD6Ilxb4U5yUJgjANnsYbR7klD/DC4pwRx1L90cCVbgsNRzrsq+Qvn57bdSoyHGFCSWqQdkW6EG9xcqogMP6y9/DBcgb4SYIMNLjaoqSgunSmDFTFgidHBTcLN6e4mvM89FRDY64i+DINp9gginqHak/LxhNct6LTREx8bcoOA4J28eHY02Cwrtu2pful7uOonZD49XrGW+OfOAQY2c1b91hNJUK+tWPh0B/0CgWyKNize3WclV3pBedFDYzbzeni3TkqoN7Na22xQTl95mrV9vZ7VQpIft0Jlf+OFS+I8s3G2W/Wp/Rhk9tXfxcEa6yvDwxFMv3QsQrs7No3yTRNFw6U3QWs=
 
-  hosts:
-    - auth.example.demo
-    - ocwa.example.demo
-
 matrix:
   include:
     - name: "Forum Api"
@@ -443,7 +439,7 @@ matrix:
         - npm install -g yarn --cache-min 999999999
 
       script:
-        - cd /home/travis/build/bcgov
+        - cd /usr/local/bin
         - curl -L -O https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip
         - unzip -o terraform_0.11.8_linux_amd64.zip
         - rm -rf terraform_0.11.8_linux_amd64.zip
@@ -452,10 +448,10 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/terraform
         - mkdir _tmp
         - cp terraform.tfvars.example terraform.tfvars
-        - /home/travis/build/bcgov/terraform init
-        - /home/travis/build/bcgov/terraform plan -var hostRootPath=`pwd`/_tmp
-        - /home/travis/build/bcgov/terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
-        - /home/travis/build/bcgov/terraform show
+        - terraform init
+        - terraform plan -var hostRootPath=`pwd`/_tmp
+        - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
+        - terraform show
         - ls -l _tmp
         - docker ps
         - sleep 5
@@ -474,7 +470,7 @@ matrix:
         
         #RUN Integration Tests
         - cd Katalon_Studio_Linux_64-${KATALON_VERSION}
-        - xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash  -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="default" -browserType="Chrome (headless)"
+        - xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash  -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
 
  
 env:
