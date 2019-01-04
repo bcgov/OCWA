@@ -82,9 +82,9 @@ class Requester_step_def_ks {
 		WebUI.waitForElementClickable(loginButton, 30)
 		WebUI.click(loginButton)
 
-		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Username or email_userna'), LOGIN_USERNAME)
+		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Username or email_userna'), GlobalVariable.OCWA_USER_RESEARCHER)
 
-		WebUI.setEncryptedText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), LOGIN_PWD)
+		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
 
 		WebUI.click(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_login'))
 	}

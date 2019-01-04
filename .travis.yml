@@ -105,13 +105,13 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
@@ -150,7 +150,7 @@ matrix:
 
       script:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo pytest
         - wget -q ${HELM_URL}/${HELM_TGZ}
@@ -203,11 +203,11 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - helm lint helm/validate-api
@@ -215,6 +215,48 @@ matrix:
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+
+      deploy:
+        provider: script
+        script: bash docker_push
+        on:
+          all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^master|develop$
+
+    - name: "Front End"
+      stage: "Frontend"
+      language: node_js
+      node_js:
+      - "node"
+      cache: npm
+      addons:
+        apt:
+          sources:
+          - ubuntu-toolchain-r-test
+          packages:
+          - g++-4.8
+
+      before_script:
+      - cd /home/travis/build/bcgov/OCWA/frontend
+      - wget -q ${HELM_URL}/${HELM_TGZ}
+      - tar xzfv ${HELM_TGZ}
+      - PATH=`pwd`/linux-amd64/:$PATH
+      - helm init --client-only
+      # Installig pip deps
+      - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+      before_install:
+      - npm install -g yarn --cache-min 999999999
+
+      script:
+      - cd /home/travis/build/bcgov/OCWA/frontend
+      - cp config/test.json.example config/test.json
+      - yarn
+      - npm test
+      - helm lint helm/ocwa-frontend
+      - bash docker_quayio_push ocwa_frontend
+
+      before_deploy:
+      - cd /home/travis/build/bcgov/OCWA/frontend
 
       deploy:
         provider: script
@@ -250,13 +292,13 @@ matrix:
 
       script:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - sudo coverage xml
 
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1 -m pytest
         - sudo coverage xml
@@ -323,13 +365,13 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
         - sudo pip3 install -U setuptools
         - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
+        - cp config/default.json.template config/default.json
         - sudo pip3 install -e .
         - python3 wsgi.py &
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
@@ -369,6 +411,9 @@ matrix:
         - "node"
       addons:
         chrome: stable
+        hosts:
+          - auth.example.demo
+          - ocwa.example.demo        
         apt:
           sources:
             - ubuntu-toolchain-r-test
@@ -390,66 +435,28 @@ matrix:
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
-
       before_install:
         - npm install -g yarn --cache-min 999999999
 
       script:
-        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-        - cp config/test.json.example config/test.json
-        - cp config/default.json.example config/default.json
-        - yarn
+        - cd /usr/local/bin
+        - curl -L -O https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip
+        - unzip -o terraform_0.11.8_linux_amd64.zip
+        - rm -rf terraform_0.11.8_linux_amd64.zip
+        - chmod +x terraform
 
-        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - cp config/test.json.example config/test.json
-        - cp config/default.json.example config/default.json
-        - yarn
-
-        #Start Forum Api
-        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - NODE_ENV=test npm start &
-
-        #Start Minio
-        - wget --quiet https://dl.minio.io/server/minio/release/linux-amd64/minio
-        - chmod +x minio
-        - export MINIO_ACCESS_KEY="myKey"
-        - export MINIO_SECRET_KEY="mySecret"
-        - ./minio server /tmp &
-        
-        #Start TusD
-        - wget --quiet https://github.com/tus/tusd/releases/download/$TUSD_VERSION/tusd_linux_amd64.tar.gz
-        - export AWS_ACCESS_KEY_ID=$MINIO_ACCESS_KEY
-        - export AWS_SECRET_ACCESS_KEY=$MINIO_SECRET_KEY
-        - export AWS_REGION=us-east-1
-        - tusd -s3-endpoint http://localhost:9000 -s3-bucket myBucket &
-        
-        #Start Validate Api
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - sudo pip3 install -U setuptools
-        - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
-        - sudo pip3 install -e .
-        - python3 wsgi.py &
-        
-        #Start Policy Api
-        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - sudo pip3 install -U setuptools
-        - sudo pip3 install -r requirements.txt
-        - cp config/default.json.example config/default.json
-        - sudo pip3 install -e .
-        - python3 wsgi.py &
-        
-        #Start Request Api
-        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-        - cp config/default.json.example config/default.json
-        - cp config/test.json.example config/test.json
-        - NODE_ENV=test npm start &
-        
-        #Start FrontEnd
-        - cd /home/travis/build/bcgov/OCWA/frontend
-        - cp config/default.json.example config/default.json
-        - yarn
-        - NODE_ENV=test yarn start &
+        - cd /home/travis/build/bcgov/OCWA/terraform
+        - mkdir _tmp
+        - cp terraform.tfvars.example terraform.tfvars
+        - terraform init
+        - terraform plan -var hostRootPath=`pwd`/_tmp
+        - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
+        - terraform show
+        - ls -l _tmp
+        - docker ps
+        - sleep 5
+        - curl -v -k https://auth.example.demo
+        - curl -v -k https://ocwa.example.demo
 
         #Katalon requires OpenJDK 8 installed separately
         - sudo apt-get install -y openjdk-8-jre openjdk-8-jdk
@@ -463,49 +470,9 @@ matrix:
         
         #RUN Integration Tests
         - cd Katalon_Studio_Linux_64-${KATALON_VERSION}
-        - xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash  -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="default" -browserType="Chrome (headless)"
+        - xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash  -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
 
-        - name: "Front End"
-          stage: "Frontend"
-          language: node_js
-          node_js:
-          - "node"
-          cache: npm
-          addons:
-            apt:
-              sources:
-              - ubuntu-toolchain-r-test
-              packages:
-              - g++-4.8
-
-          before_script:
-          - cd /home/travis/build/bcgov/OCWA/frontend
-          - wget -q ${HELM_URL}/${HELM_TGZ}
-          - tar xzfv ${HELM_TGZ}
-          - PATH=`pwd`/linux-amd64/:$PATH
-          - helm init --client-only
-          # Installig pip deps
-          - sudo pip install yamllint=="${YAMLLINT_VERSION}"
-          before_install:
-          - npm install -g yarn --cache-min 999999999
-
-          script:
-          - cd /home/travis/build/bcgov/OCWA/frontend
-          - cp config/test.json.example config/test.json
-          - yarn
-          - npm test
-          - helm lint helm/ocwa-frontend
-          - bash docker_quayio_push ocwa_frontend
-
-          before_deploy:
-          - cd /home/travis/build/bcgov/OCWA/frontend
-
-          deploy:
-            provider: script
-            script: bash docker_push
-            on:
-              all_branches: true
-              condition: $TRAVIS_BRANCH =~ ^master|develop$		  
+ 
 env:
   global:
   - HELM_URL=https://storage.googleapis.com/kubernetes-helm
