@@ -64,13 +64,13 @@ class Requester_step_def_ks {
 	String REQUEST_WITHDRAW_BTN_ID = "request-sidebar-withdraw-button"
 	String REQUEST_CANCEL_BTN_ID = "request-sidebar-cancel-button"
 	String LOGOUT_URL = "/auth/logout"
-	
+
 	String g_requestName = ""
-	
+
 	/**
 	 * The step definitions below match with Katalon sample Gherkin steps
 	 */
-	
+
 	@Given("requester has logged in")
 	def requester_login() {
 		WebUI.openBrowser('')
@@ -110,21 +110,24 @@ class Requester_step_def_ks {
 	def requester_has_not_submitted_new_request() {
 	}
 
-	def requester_adds_output_file(String fileToUpload, String secondFile="", String thirdFile="") {
+	// parameterized function for uploading 1 to 3 output or supporting files
+	def requester_uploads_files(String fileToUpload, boolean isUploadScreenAlreadyOpen = false, String secondFile="", String thirdFile="") {
 
-		TestObject requestFormSaveFilesButton = get_test_object_by_id(REQUEST_SAVE_FILES_BTN_ID)
-		
-		WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
-		WebUI.click(requestFormSaveFilesButton)
+		if (!isUploadScreenAlreadyOpen) {
+			TestObject requestFormSaveFilesButton = get_test_object_by_id(REQUEST_SAVE_FILES_BTN_ID)
+			WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
+			WebUI.click(requestFormSaveFilesButton)
+		}
+
+		//Upload files
 		TestObject uploadFileButton = get_test_object_by_id(REQUEST_FILES_UPLOAD_BTN_ID)
-		
 		WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$fileToUpload")
 		WebUI.delay(5)
 		if (secondFile != "") {
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$secondFile")
 			WebUI.delay(5)
 		}
-		
+
 		if (thirdFile != "") {
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$thirdFile")
 			WebUI.delay(5)
@@ -133,7 +136,13 @@ class Requester_step_def_ks {
 
 	@Given("requester adds an output file that does not violate any blocking or warning rules")
 	def requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules(){
-		requester_adds_output_file(GlobalVariable.ValidFileName)
+		requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.BlockedExtensionFileName)
+	}
+
+	@Given("requester adds supporting files")
+	def requester_adds_supporting_files(){
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/div_Supporting Files'))
+		requester_uploads_files(GlobalVariable.WarningExtensionFileName, true, GlobalVariable.BlockedMaxSizeLimitFileName)
 	}
 
 	@Given("request violates given warning rule (.+)")
@@ -141,17 +150,17 @@ class Requester_step_def_ks {
 		requester_starts_new_request()
 		switch (warningRule.toLowerCase()) {
 			case "an output file has a warning file extension":
-				requester_adds_output_file(GlobalVariable.WarningExtensionFileName)
+				requester_uploads_files(GlobalVariable.WarningExtensionFileName)
 				break
 			case "a request that has a file that exceeds the file size warning threshold":
-				requester_adds_output_file(GlobalVariable.WarningMaxSizeLimitFileName)
+				requester_uploads_files(GlobalVariable.WarningMaxSizeLimitFileName)
 				break
 			case "the summation of all output file sizes exceeds the request file size warning threshold":
-				//need to add output files that pass the warning limit individually but together surpass the combined size threshold
-				//requester_adds_output_file(GlobalVariable.WarningMaxSizeLimitFileName)
+			//need to add output files that pass the warning limit individually but together surpass the combined size threshold
+			//requester_adds_output_file(GlobalVariable.WarningMaxSizeLimitFileName)
 				break
 			default:
-			throw new Exception("warning rule $warningRule not found")
+				throw new Exception("warning rule $warningRule not found")
 				break
 		}
 	}
@@ -160,17 +169,17 @@ class Requester_step_def_ks {
 		requester_starts_new_request()
 		switch (blockingRule.toLowerCase()) {
 			case "an output file has a blocked file extension":
-				requester_adds_output_file(GlobalVariable.BlockedExtensionFileName)
+				requester_uploads_files(GlobalVariable.BlockedExtensionFileName)
 				break
 			case "a request that has a file that is too big":
-				requester_adds_output_file(GlobalVariable.BlockedMaxSizeLimitFileName)
+				requester_uploads_files(GlobalVariable.BlockedMaxSizeLimitFileName)
 				break
 			case "the summation of all output file sizes exceeds the request file size limit":
-				//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
-				//requester_adds_output_file(GlobalVariable.BlockedMaxSizeLimitFileName)
+			//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
+			//requester_adds_output_file(GlobalVariable.BlockedMaxSizeLimitFileName)
 				break
 			default:
-			throw new Exception("block rule $blockingRule not found")
+				throw new Exception("block rule $blockingRule not found")
 				break
 		}
 	}
@@ -270,7 +279,7 @@ class Requester_step_def_ks {
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 		WebUI.click(get_test_object_by_id(REQUEST_WITHDRAW_BTN_ID))
 	}
-	
+
 	@When("requester views (.+) requests")
 	def requester_views_requests_of_given_status(String status){
 		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
@@ -293,15 +302,28 @@ class Requester_step_def_ks {
 		}
 	}
 
-
-	@Then("the requester should be able to re-open the request and pick up where they left off")
-	def confirm_draft_save_was_successful() {
-		WebUI.waitForPageLoad(20)
-		WebUI.delay(5)
+	@Then("the requester should see their saved request(.*)")
+	def confirm_draft_save_was_successful(String additionalCriteria){
+		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+		//WebUI.waitForPageLoad(20)
+		//WebUI.delay(5)
 		WebUI.verifyTextPresent(g_requestName, false)
-		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$LOGOUT_URL")
-		WebUI.closeBrowser()
+
+		if (additionalCriteria != null) {
+			WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
+			WebUI.verifyTextPresent(GlobalVariable.WarningExtensionFileName, false)
+			WebUI.verifyTextPresent(GlobalVariable.BlockedExtensionFileName, false)
+			WebUI.verifyTextPresent(GlobalVariable.BlockedMaxSizeLimitFileName, false)
+		}
 	}
+
+	//	@Then("the requester should be able to re-open the request and pick up where they left off")
+	//	def confirm_request_editable() {
+	//
+	//		WebUI.delay(3)
+	//		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$LOGOUT_URL")
+	//		WebUI.closeBrowser()
+	//	}
 
 	@Then("the requester should not be able to submit the request")
 	def requester_is_not_able_to_submit_request(){
@@ -372,7 +394,7 @@ class Requester_step_def_ks {
 	def request_should_be_informed_of_warning_rule_violation(){
 		//unclear how this is displayed in the UI
 	}
-	
+
 	//Helper function for getting TestObject from the id of an html element
 	def get_test_object_by_id(String id) {
 		TestObject tObject = new TestObject(id)
