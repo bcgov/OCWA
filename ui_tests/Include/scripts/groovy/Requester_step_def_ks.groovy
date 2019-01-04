@@ -267,6 +267,8 @@ class Requester_step_def_ks {
 	@When("the requester views the request")
 	def requester_views_request_they_created(){
 		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+		WebUI.waitForPageLoad(20)
+		WebUI.delay(2)
 		WebUI.click(get_test_object_by_text(g_requestName))
 		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 	}
