@@ -136,7 +136,7 @@ class Requester_step_def_ks {
 
 	@Given("requester adds an output file that does not violate any blocking or warning rules")
 	def requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules(){
-		requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.BlockedExtensionFileName)
+		requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2)
 	}
 
 	@Given("requester adds supporting files")
@@ -311,15 +311,15 @@ class Requester_step_def_ks {
 	def confirm_draft_save_was_successful(String additionalCriteria){
 		requester_views_request_they_created()
 		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
-		//WebUI.waitForPageLoad(20)
-		//WebUI.delay(5)
+		WebUI.waitForPageLoad(20)
+		WebUI.delay(5)
 		WebUI.verifyTextPresent(g_requestName, false)
 
 		if (additionalCriteria != null) {
 			WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
-			WebUI.verifyTextPresent(GlobalVariable.WarningExtensionFileName, false)
-			WebUI.verifyTextPresent(GlobalVariable.BlockedExtensionFileName, false)
-			WebUI.verifyTextPresent(GlobalVariable.BlockedMaxSizeLimitFileName, false)
+			//WebUI.verifyTextPresent(GlobalVariable.WarningExtensionFileName, false)
+			WebUI.verifyTextPresent(GlobalVariable.ValidFileName2, false)
+			//WebUI.verifyTextPresent(GlobalVariable.BlockedMaxSizeLimitFileName, false)
 		}
 	}
 
