@@ -257,7 +257,8 @@ class Requester_step_def_ks {
 
 	@When("requester writes and submits a new comment")
 	def requester_creates_a_new_comment(){
-		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+		requester_views_request_they_created()
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_Discussion'))
 		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/div_'), TEST_COMMENT)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Save (1)'))
@@ -265,18 +266,22 @@ class Requester_step_def_ks {
 
 	@When("the requester views the request")
 	def requester_views_request_they_created(){
-		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+		WebUI.click(get_test_object_by_text(g_requestName))
+		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 	}
 
 	@When("the requester cancels the request")
 	def requester_cancels_request(){
-		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+		requester_views_request_they_created()
 		WebUI.click(get_test_object_by_id(REQUEST_CANCEL_BTN_ID))
 	}
 
 	@When("the requester withdraws the request")
 	def requester_withdraws_request(){
-		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+		requester_views_request_they_created()
 		WebUI.click(get_test_object_by_id(REQUEST_WITHDRAW_BTN_ID))
 	}
 
@@ -304,7 +309,8 @@ class Requester_step_def_ks {
 
 	@Then("the requester should see their saved request(.*)")
 	def confirm_draft_save_was_successful(String additionalCriteria){
-		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+		requester_views_request_they_created()
+		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 		//WebUI.waitForPageLoad(20)
 		//WebUI.delay(5)
 		WebUI.verifyTextPresent(g_requestName, false)
@@ -372,7 +378,8 @@ class Requester_step_def_ks {
 
 	@Then("requester should be able to make changes to the request")
 	def requester_should_be_able_to_make_changes_to_the_request(){
-		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+		requester_views_request_they_created()
 		WebUI.click(get_test_object_by_id(REQUEST_EDIT_BTN_ID))
 		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), EDITED_PURPOSE_TEXT)
 	}
@@ -399,6 +406,12 @@ class Requester_step_def_ks {
 	def get_test_object_by_id(String id) {
 		TestObject tObject = new TestObject(id)
 		tObject.addProperty("id", ConditionType.EQUALS, id, true)
+		return tObject
+	}
+	//Helper function for getting TestObject from the text of an html element
+	def get_test_object_by_text(String t) {
+		TestObject tObject = new TestObject(t)
+		tObject.addProperty("text", ConditionType.EQUALS, t, true)
 		return tObject
 	}
 
