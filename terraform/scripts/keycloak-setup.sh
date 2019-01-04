@@ -35,4 +35,4 @@ TUID=$(kcadm.sh create users -r ocwa -s username=researcher_1 -s enabled=true -s
 
 kcadm.sh update users/$TUID/groups/$GID1 -r ocwa -s realm=ocwa -s userId=$TUID -s groupId=$GID1 -n
 kcadm.sh update users/$TUID/groups/$GID2 -r ocwa -s realm=ocwa -s userId=$TUID -s groupId=$GID2 -n
-kcadm.sh set-password -r ocwa --username testuser --new-password researcher_1_password
+kcadm.sh set-password -r ocwa --username researcher_1 --new-password researcher_1_password
