@@ -14,3 +14,10 @@
 .statusRow > span:first-child {
   margin-right: 10px;
 }
+
+
+.removeButton {
+  display: flex;
+  align-items: center;
+  jusitfy-content: flex-end;
+}

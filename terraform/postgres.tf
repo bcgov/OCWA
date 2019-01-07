@@ -19,6 +19,14 @@ resource "docker_container" "ocwa_postgres" {
       "POSTGRES_PASSWORD=${random_string.postgresSuperPassword.result}"
   ]
   networks_advanced = { name = "${docker_network.private_network.name}" }
+
+  healthcheck = {
+    test = ["CMD-SHELL", "pg_isready -U padmin"]
+    interval = "5s"
+    timeout = "5s"
+    start_period = "5s"
+    retries = 20
+  }
 }
 
 data "template_file" "postgres_script" {
@@ -35,6 +43,10 @@ resource "local_file" "postgres_script" {
 }
 
 resource "null_resource" "postgres_first_time_install" {
+  provisioner "local-exec" {
+    command = "scripts/wait-for-healthy.sh ocwa_postgres"
+  }
+
   provisioner "local-exec" {
     environment = {
       SCRIPT_PATH = "${var.hostRootPath}"

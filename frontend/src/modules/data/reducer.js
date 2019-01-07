@@ -7,8 +7,19 @@ import isArray from 'lodash/isArray';
 import isString from 'lodash/isString';
 import last from 'lodash/last';
 import merge from 'lodash/merge';
+import mergeWith from 'lodash/mergeWith';
 import omit from 'lodash/omit';
 import uniqueId from 'lodash/uniqueId';
+
+/* eslint-disable consistent-return */
+function mergeStrategy(objValue, srcValue) {
+  if (isArray(objValue)) {
+    if (objValue.length > 0 && srcValue.length === 0) {
+      return [];
+    }
+  }
+}
+/* eslint-enable consistent-return */
 
 function handleFetchStatus(state, action, fetchStatus) {
   let entityFetchStatus = {};
@@ -60,10 +71,15 @@ function handleFetchStatus(state, action, fetchStatus) {
     };
   }
 
-  return merge({}, state, {
-    entities: entityFetchStatus,
-    dataTypes: dataTypesFetchStatus,
-  });
+  return mergeWith(
+    {},
+    state,
+    {
+      entities: entityFetchStatus,
+      dataTypes: dataTypesFetchStatus,
+    },
+    mergeStrategy
+  );
 }
 
 const handlePostStatus = (state, action) => {
@@ -91,7 +107,7 @@ const handlePostStatus = (state, action) => {
 
 const entities = (state = {}, action) => {
   if (/\w+\/(get|post|put)\/success$/.test(action.type)) {
-    return merge({}, state, action.payload.entities);
+    return mergeWith({}, state, action.payload.entities, mergeStrategy);
   }
 
   if (/\w+\/delete\/success$/.test(action.type)) {

@@ -2,8 +2,10 @@ import { all, call, fork, put, take } from 'redux-saga/effects';
 import { channel, delay, eventChannel, END } from 'redux-saga';
 import { getToken } from '@src/services/auth';
 import head from 'lodash/head';
+import { normalize } from 'normalizr';
 import tus from 'tus-js-client';
 
+import { fileSchema } from './schemas';
 import {
   uploadFileFailure,
   uploadFileProgress,
@@ -34,19 +36,19 @@ function uploadChannel(file, metadata) {
         emitter({
           error,
           file,
-          url: sanitizeURL(upload.url),
+          id: sanitizeURL(upload.url),
         }),
       onProgress: (bytesUploaded, bytesTotal) =>
         emitter({
           file,
           progress: bytesUploaded / bytesTotal * 100,
-          url: sanitizeURL(upload.url),
+          id: sanitizeURL(upload.url),
         }),
       onSuccess: () => {
         emitter({
           file,
           success: true,
-          url: sanitizeURL(upload.url),
+          id: sanitizeURL(upload.url),
         });
         emitter(END);
       },
@@ -62,8 +64,8 @@ function uploadChannel(file, metadata) {
 function* uploadFileChannel(item) {
   const token = getToken();
   const file = {
-    filename: item.name,
-    filetype: item.type,
+    fileName: item.name,
+    fileType: item.type,
     lastModified: item.lastModified,
     size: item.size,
   };
@@ -76,28 +78,36 @@ function* uploadFileChannel(item) {
 
   while (true) {
     // File upload states from TUS, the file is from the upload above
-    const { error, progress = 0, success, url } = yield take(chan);
+    const { error, progress = 0, success, id } = yield take(chan);
     const payload = {
       ...file,
-      id: url,
+      id,
       progress,
     };
 
     if (error) {
-      yield put(uploadFileFailure(payload, url, error));
+      yield put(uploadFileFailure(payload, error));
       yield call(delay, 5000);
       yield put(uploadFileReset());
       return;
     }
 
     if (success) {
-      yield put(uploadFileSuccess(payload, url));
-      yield call(delay, 5000);
-      yield put(uploadFileReset());
+      yield put(uploadFileSuccess(payload));
+      // Workaround to update the internal data store
+      yield put({
+        type: 'files/get/success',
+        meta: {
+          dataType: 'files',
+        },
+        payload: normalize(payload, fileSchema),
+      });
+      yield call(delay, 1500);
+      yield put(uploadFileReset(payload.id));
       return;
     }
 
-    yield put(uploadFileProgress(payload, url, progress));
+    yield put(uploadFileProgress(payload, progress));
   }
 }
 

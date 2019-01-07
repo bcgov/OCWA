@@ -229,6 +229,15 @@ router.put("/save/:requestId", function(req, res, next){
             return;
         }
 
+        var objectDelta = {};
+        if ( (typeof(req.body.files) !== "undefined") && (JSON.stringify(req.body.files) !== JSON.stringify(findRes.files)) ){
+            objectDelta['files'] = findRes.files;
+        }
+
+        if ( (typeof(req.body.supportingFiles) !== "undefined") && (JSON.stringify(req.body.supportingFiles) !== JSON.stringify(findRes.supportingFiles)) ){
+            objectDelta['supportingFiles'] = findRes.supportingFiles;
+        }
+
         findRes.name = (typeof(req.body.name) !== "undefined") ? req.body.name : findRes.name;
         findRes.tags = (typeof(req.body.tags) !== "undefined") ? req.body.tags : findRes.tags;
         findRes.purpose = (typeof(req.body.purpose) !== "undefined") ? req.body.purpose : findRes.purpose;
@@ -238,12 +247,13 @@ router.put("/save/:requestId", function(req, res, next){
         findRes.freq = (typeof(req.body.freq) !== "undefined") ? req.body.freq : findRes.freq;
         findRes.confidentiality = (typeof(req.body.confidentiality) !== "undefined") ? req.body.confidentiality : findRes.confidentiality;
         findRes.files = (typeof(req.body.files) !== "undefined") ? req.body.files : findRes.files;
+        findRes.supportingFiles = (typeof(req.body.supportingFiles) !== "undefined") ? req.body.supportingFiles : findRes.supportingFiles;
 
-        var setChrono = findRes.state!==db.Request.WIP_STATE;
+        var setChrono = (findRes.state!==db.Request.WIP_STATE) || (Object.keys(objectDelta).length > 0 );
         findRes.state = db.Request.WIP_STATE;
 
         if (setChrono) {
-            db.Request.setChrono(findRes, req.user.id);
+            db.Request.setChrono(findRes, req.user.id, objectDelta);
         }
 
         db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
@@ -432,9 +442,6 @@ router.put('/submit/:requestId', function(req, res, next){
                 return;
             });
         }
-
-
-
     });
 });
 

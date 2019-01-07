@@ -12,7 +12,8 @@ const CANCELLED_STATE = 6;
 var chronologySchema = new Schema({
     timestamp: {type: Date, default: Date.now(), required: true},
     enteredState: {type: Number, required: true, default: DRAFT_STATE},
-    change_by: {type: String, required: true}
+    change_by: {type: String, required: true},
+    changes: {type: Map, of: Schema.Types.Mixed, required: false}
 },{_id: false});
 
 
@@ -38,7 +39,7 @@ var requestSchema = new Schema({
 var model = mongoose.model('request', requestSchema);
 
 
-model.setChrono = function(doc, userId){
+model.setChrono = function(doc, userId, objectDelta){
     if (typeof(doc.chronology) === "undefined"){
         doc.chronology = [];
     }
@@ -50,6 +51,11 @@ model.setChrono = function(doc, userId){
             enteredState: doc.state,
             change_by: userId
         };
+
+        if (typeof(objectDelta !== "undefined")){
+            chrono['changes'] = objectDelta;
+        }
+
         doc.chronology.push(chrono);
     }
 };
@@ -136,13 +142,9 @@ var getAllTopics = function(user, callback, page, existingTopics){
 
             if (topicResults.length >= limit) {
                 getAllTopics(user, function (err, topicR) {
-                    console.log("DEBUG", page, topics.length, topicR.length);
                     if (typeof(topicR) === "object") {
-                        console.log("PRE PUSH");
                         topics.push.apply(topicR);
-                        console.log("POST PUSH");
                     }
-                    console.log("DEBUG2", page, topics.length, topicR.length);
                     if (err) {
                         callback(err, topics);
                         return;

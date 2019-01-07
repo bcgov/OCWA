@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import get from 'lodash/get';
 import mapKeys from 'lodash/mapKeys';
 import uniqueId from 'lodash/uniqueId';
+import union from 'lodash/union';
 
 const uploadIdMapper = (action, value, key) => {
   if (action.meta.file.filename === value.filename) {
@@ -15,6 +16,7 @@ const initialViewState = {
   currentRequestId: null,
   currentNewRequestStep: 0,
   filter: null,
+  filesToDelete: [],
   sortKey: 'state',
   sortOrder: 'DESC',
   search: '',
@@ -40,6 +42,7 @@ const viewState = (state = initialViewState, action = {}) => {
         search: action.payload,
       };
 
+    case 'requests/view/request':
     case 'requests/view/draft':
       return {
         ...state,
@@ -47,9 +50,10 @@ const viewState = (state = initialViewState, action = {}) => {
       };
 
     case 'request/reset':
-    case 'requests/close/draft':
+    case 'request/close/draft':
       return {
         ...state,
+        filesToDelete: [],
         currentRequestId: null,
         currentNewRequestStep: 0,
       };
@@ -63,6 +67,7 @@ const viewState = (state = initialViewState, action = {}) => {
     case 'request/put/success':
       return {
         ...state,
+        filesToDelete: [],
         currentRequestId: action.meta.quitEditing
           ? null
           : state.currentRequestId,
@@ -82,6 +87,12 @@ const viewState = (state = initialViewState, action = {}) => {
           : state.currentNewRequestStep,
       };
 
+    case 'request/remove-file':
+      return {
+        ...state,
+        filesToDelete: union(state.filesToDelete, [action.payload]),
+      };
+
     default:
       return state;
   }
@@ -95,9 +106,9 @@ const files = (state = {}, action = {}) => {
         (prev, file) => ({
           ...prev,
           [uniqueId('file')]: {
-            filename: file.name,
+            fileName: file.name,
             size: file.size,
-            filetype: file.type,
+            fileType: file.type,
             lastModified: file.lastModified,
           },
         }),
@@ -128,9 +139,9 @@ const supportingFiles = (state = {}, action = {}) => {
         (prev, file) => ({
           ...prev,
           [uniqueId('supporting-file')]: {
-            filename: file.name,
+            fileName: file.name,
             size: file.size,
-            filetype: file.type,
+            fileType: file.type,
             lastModified: file.lastModified,
           },
         }),
@@ -158,19 +169,19 @@ const uploads = (state = {}, action = {}) => {
     case 'request/file/upload/progress':
       return {
         ...state,
-        [action.meta.url]: action.payload,
+        [action.meta.file.id]: action.payload,
       };
 
     case 'request/file/upload/success':
       return {
         ...state,
-        [action.meta.url]: 'loaded',
+        [action.payload.id]: 'loaded',
       };
 
     case 'request/file/upload/failed':
       return {
         ...state,
-        [action.meta.url]: 'failed',
+        [action.meta.file.id]: 'failed',
       };
 
     case 'request/put/success':

@@ -2,6 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
 import cx from 'classnames';
+import CopyIcon from '@atlaskit/icon/glyph/copy';
+import InfoIcon from '@atlaskit/icon/glyph/info';
 import UploadIcon from '@atlaskit/icon/glyph/upload';
 
 import * as styles from './styles.css';
@@ -74,10 +76,9 @@ class Uploader extends React.Component {
         >
           <div className={cx('file-uploader-text', styles.uploadText)}>
             <div>
-              <p>
-                Make sure you save your request after uploading to enable
-                submission.
-              </p>
+              <div>
+                <CopyIcon primaryColor="#ccc" size="xlarge" />
+              </div>
               <p>{isDragging ? 'Drop your files' : uploadText}</p>
               <small>Or</small>
               <Button
@@ -93,6 +94,11 @@ class Uploader extends React.Component {
                   onChange={this.onFileInputChange}
                 />
               </Button>
+              <small>
+                <InfoIcon size="small" />
+                <strong>Heads up!</strong> Make sure you save your request after
+                uploading to enable submission.
+              </small>
             </div>
           </div>
         </div>
@@ -106,7 +112,7 @@ class Uploader extends React.Component {
           {files.length > 0 && (
             <div className={styles.loadedFiles}>
               <h5>Uploaded Files</h5>
-              <Files ids={files} />
+              <Files showRemoveButton ids={files} />
             </div>
           )}
         </div>
