@@ -54,7 +54,7 @@ function sendTopicMessage(topic){
     var conns = websockets.getConnections();
     var keys = Object.keys(conns);
     for (var i=0; i<keys.length; i++){
-        checkTopicPermissions(conns[keys[i]].user, topic._id, function(send, sock) {
+        checkTopicPermissions(conns[keys[i]].user, topic._id, conns[keys[i]], function(send, sock) {
             if (send) {
                 sock.send({topic: JSON.stringify(topic)});
             }
