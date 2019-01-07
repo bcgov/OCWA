@@ -55,7 +55,7 @@ util.getFileStatus = function(fileIds, callback){
     for (var i = 0; i < fileIds.length; i++) {
         var index = i;
         httpReq.get({
-            url: config.get('validationApi') + '/v1/validate/' + fileIds[i],
+            url: config.get('validationApi') + '/v1/validate/' + fileIds[index],
             headers: {
                 'X-API-KEY': config.get('validationApiSecret')
             }
