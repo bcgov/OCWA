@@ -7,9 +7,11 @@ Feature: Discussion about a request
 		And the request has been claimed by an output checker
 		When requester writes and submits a new comment
 		Then requester should see their new comment displayed
-		And the output checker assigned to the request should be notified of the new comment
+		And output checker assigned to the request should be notified of the new comment
+		And output checker should be able to see the new comment
 	Scenario: Output checker adds a new comment about request
 		Given output checker has logged in
 		When output checker writes and submits a new comment
-		Then the output checker should see their new comment displayed
-		And the requester(s) associated to the request should be notified of the new comment
+		Then output checker should see their new comment displayed
+		And requester associated to the request should be notified of the new comment
+		And requester should be able to see the new comment

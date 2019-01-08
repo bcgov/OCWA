@@ -64,4 +64,24 @@
       <initValue>'test_valid_file_upload2.txt'</initValue>
       <name>ValidFileName2</name>
    </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'test_supporting_file.txt'</initValue>
+      <name>SupportingFileName</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'test_supporting_file2.txt'</initValue>
+      <name>SupportingFileName2</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'team_member_1'</initValue>
+      <name>OCWA_USER_TEAM_MEMBER</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'team_member_1_password'</initValue>
+      <name>OCWA_USER_TEAM_MEMBER_PSWD</name>
+   </GlobalVariableEntity>
 </GlobalVariableEntities>

@@ -73,6 +73,10 @@ class Requester_step_def_ks {
 
 	@Given("requester has logged in")
 	def requester_login() {
+		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
+	}
+
+	def login(String username, String password){
 		WebUI.openBrowser('')
 		WebUI.delay(5)
 
@@ -82,11 +86,12 @@ class Requester_step_def_ks {
 		WebUI.waitForElementClickable(loginButton, 30)
 		WebUI.click(loginButton)
 
-		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Username or email_userna'), GlobalVariable.OCWA_USER_RESEARCHER)
+		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Username or email_userna'), username)
 
-		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
+		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), password)
 
 		WebUI.click(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_login'))
+
 	}
 
 	@Given("requester has started a request")
@@ -99,10 +104,11 @@ class Requester_step_def_ks {
 
 		WebUI.waitForElementClickable(newRequestButtonObject, 30)
 		WebUI.click(newRequestButtonObject)
+		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), PURPOSE_TEXT)
 		g_requestName = CustomKeywords.'test_OCWA_keywords.random_test_request_name.gen_random_test_request_name'()
 		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/input_Request Name_name'), g_requestName)
 
-		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), PURPOSE_TEXT)
+
 		WebUI.delay(2)
 	}
 
@@ -134,15 +140,25 @@ class Requester_step_def_ks {
 		}
 	}
 
-	@Given("requester adds an output file that does not violate any blocking or warning rules")
-	def requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules(){
-		requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2)
+	@Given("requester adds (.+) output file that does not violate any blocking or warning rules")
+	def requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules(String numOutputFilesToUpload){
+		if (numOutputFilesToUpload == "2") { //add 2 valid output files
+			requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2)
+		}
+		else { //add 1 valid output file
+			requester_uploads_files(GlobalVariable.ValidFileName, false)
+		}
 	}
 
-	@Given("requester adds supporting files")
-	def requester_adds_supporting_files(){
+	@Given("requester adds (.+) supporting files")
+	def requester_adds_supporting_files(String numSupportingFilesToUpload){
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/div_Supporting Files'))
-		requester_uploads_files(GlobalVariable.WarningExtensionFileName, true, GlobalVariable.BlockedMaxSizeLimitFileName)
+		if (numSupportingFilesToUpload == "1") {
+			requester_uploads_files(GlobalVariable.SupportingFileName, true)
+		}
+		else { //add 2 supporting files
+			requester_uploads_files(GlobalVariable.SupportingFileName, true, GlobalVariable.SupportingFileName2)
+		}
 	}
 
 	@Given("request violates given warning rule (.+)")
@@ -192,7 +208,7 @@ class Requester_step_def_ks {
 	@Given("requester has submitted a request")
 	def requester_has_submitted_a_request(){
 		requester_starts_new_request()
-		requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules()
+		requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
 		requester_submits_request()
 	}
 
@@ -212,7 +228,7 @@ class Requester_step_def_ks {
 		switch (status.toLowerCase()) {
 			case "draft":
 				requester_starts_new_request()
-				requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules()
+				requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
 				requester_saves_new_request()
 				break
 			case "awaiting review":
@@ -241,6 +257,19 @@ class Requester_step_def_ks {
 		}
 	}
 
+	@Given("a project team member has created a request")
+	def project_team_member_has_created_request() {
+		login(GlobalVariable.OCWA_USER_TEAM_MEMBER, GlobalVariable.OCWA_USER_TEAM_MEMBER_PSWD)
+		requester_has_a_request_of_status("draft")
+		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$LOGOUT_URL")
+	}
+	
+	@Given("requester's project allows for editing of team member's requests")
+	def project_allows_for_team_sharing(){}
+	
+	@Given("requester's project does not allow for editing of team member's requests")
+	def project_does_not_allow_for_team_sharing(){}
+
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
 		WebUI.click(get_test_object_by_id(REQUEST_SAVE_CLOSE_BTN_ID))
@@ -257,7 +286,6 @@ class Requester_step_def_ks {
 
 	@When("requester writes and submits a new comment")
 	def requester_creates_a_new_comment(){
-		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 		requester_views_request_they_created()
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_Discussion'))
 		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/div_'), TEST_COMMENT)
@@ -270,19 +298,16 @@ class Requester_step_def_ks {
 		WebUI.waitForPageLoad(20)
 		WebUI.delay(2)
 		WebUI.click(get_test_object_by_text(g_requestName))
-		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 	}
 
 	@When("the requester cancels the request")
 	def requester_cancels_request(){
-		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 		requester_views_request_they_created()
 		WebUI.click(get_test_object_by_id(REQUEST_CANCEL_BTN_ID))
 	}
 
 	@When("the requester withdraws the request")
 	def requester_withdraws_request(){
-		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 		requester_views_request_they_created()
 		WebUI.click(get_test_object_by_id(REQUEST_WITHDRAW_BTN_ID))
 	}
@@ -303,35 +328,37 @@ class Requester_step_def_ks {
 			case "cancelled":
 				WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Cancelled'))
 				break
+			case "their": //essentially viewing all their requests
+				break
 			default:
 				throw new Exception("status $status not found")
 				break
 		}
 	}
 
-	@Then("the requester should see their saved request(.*)")
-	def confirm_draft_save_was_successful(String additionalCriteria){
+	@Then("the requester should see their saved request including (.+) output file (.+) supporting file")
+	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles){
 		requester_views_request_they_created()
-		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
+
 		WebUI.waitForPageLoad(20)
 		WebUI.delay(5)
 		WebUI.verifyTextPresent(g_requestName, false)
 
-		if (additionalCriteria != null) {
+		if (numOutputFiles == "1") {
 			WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
-			//WebUI.verifyTextPresent(GlobalVariable.WarningExtensionFileName, false)
+		}
+		if (numOutputFiles == "2") {
 			WebUI.verifyTextPresent(GlobalVariable.ValidFileName2, false)
-			//WebUI.verifyTextPresent(GlobalVariable.BlockedMaxSizeLimitFileName, false)
+			WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
+		}
+		if (numSupportingFiles == "1") {
+			WebUI.verifyTextPresent(GlobalVariable.SupportingFileName, false)
+		}
+		if (numSupportingFiles == "2") {
+			WebUI.verifyTextPresent(GlobalVariable.SupportingFileName2, false)
+			WebUI.verifyTextPresent(GlobalVariable.SupportingFileName, false)
 		}
 	}
-
-	//	@Then("the requester should be able to re-open the request and pick up where they left off")
-	//	def confirm_request_editable() {
-	//
-	//		WebUI.delay(3)
-	//		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$LOGOUT_URL")
-	//		WebUI.closeBrowser()
-	//	}
 
 	@Then("the requester should not be able to submit the request")
 	def requester_is_not_able_to_submit_request(){
@@ -359,7 +386,6 @@ class Requester_step_def_ks {
 
 	@Then('the request status is changed to "(.+)"')
 	def request_should_be_in_given_status(String status){
-		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 		WebUI.verifyTextPresent(status, false)
 		WebUI.closeBrowser()
 	}
@@ -380,7 +406,6 @@ class Requester_step_def_ks {
 
 	@Then("requester should be able to make changes to the request")
 	def requester_should_be_able_to_make_changes_to_the_request(){
-		//WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$REQUEST_PATH$g_requestName")
 		requester_views_request_they_created()
 		WebUI.click(get_test_object_by_id(REQUEST_EDIT_BTN_ID))
 		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), EDITED_PURPOSE_TEXT)
@@ -402,6 +427,17 @@ class Requester_step_def_ks {
 	@Then("requester should be informed that given warning rule (.+) has been violated")
 	def request_should_be_informed_of_warning_rule_violation(){
 		//unclear how this is displayed in the UI
+	}
+
+	@Then("the team member's request should be visible and editable")
+	def team_members_request_should_be_editable() {
+		requester_should_be_able_to_make_changes_to_the_request()
+	}
+	
+	@Then("the team member's request should not be visible")
+	def team_members_request_should_not_be_visible(){
+		WebUI.verifyTextNotPresent(g_requestName, false)
+		WebUI.closeBrowser()
 	}
 
 	//Helper function for getting TestObject from the id of an html element
