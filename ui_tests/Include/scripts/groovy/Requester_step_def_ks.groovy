@@ -173,7 +173,7 @@ class Requester_step_def_ks {
 				break
 			case "the summation of all output file sizes exceeds the request file size warning threshold":
 			//need to add output files that pass the warning limit individually but together surpass the combined size threshold
-			//requester_adds_output_file(GlobalVariable.WarningMaxSizeLimitFileName)
+				requester_uploads_files(GlobalVariable.ValidFileName, GlobalVariable.ValidFileName2, GlobalVariable.ValidFileName3)
 				break
 			default:
 				throw new Exception("warning rule $warningRule not found")
@@ -192,7 +192,7 @@ class Requester_step_def_ks {
 				break
 			case "the summation of all output file sizes exceeds the request file size limit":
 			//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
-			//requester_adds_output_file(GlobalVariable.BlockedMaxSizeLimitFileName)
+				requester_uploads_files(GlobalVariable.ValidFileName, GlobalVariable.ValidFileName2, GlobalVariable.WarningMaxSizeLimitFileName)
 				break
 			default:
 				throw new Exception("block rule $blockingRule not found")
@@ -263,18 +263,20 @@ class Requester_step_def_ks {
 		requester_has_a_request_of_status("draft")
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$LOGOUT_URL")
 	}
-	
+
 	@Given("requester's project allows for editing of team member's requests")
 	def project_allows_for_team_sharing(){}
-	
+
 	@Given("requester's project does not allow for editing of team member's requests")
 	def project_does_not_allow_for_team_sharing(){}
 
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
+		//WebUI.delay(2)
 		TestObject saveCloseBtn = get_test_object_by_id(REQUEST_SAVE_CLOSE_BTN_ID)
 		WebUI.waitForElementClickable(saveCloseBtn, 30)
 		WebUI.click(saveCloseBtn)
+		WebUI.delay(3)
 	}
 
 	@When("requester submits their request")
@@ -299,7 +301,9 @@ class Requester_step_def_ks {
 		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 		WebUI.waitForPageLoad(20)
 		WebUI.delay(2)
-		WebUI.click(get_test_object_by_text(g_requestName))
+		TestObject linkToRequest = get_test_object_by_text(g_requestName)
+		WebUI.waitForElementClickable(linkToRequest, 20)
+		WebUI.click(linkToRequest)
 	}
 
 	@When("the requester cancels the request")
@@ -340,10 +344,16 @@ class Requester_step_def_ks {
 
 	@Then("the requester should see their saved request including (.+) output file (.+) supporting file")
 	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles){
-		requester_views_request_they_created()
+		//requester_views_request_they_created()
+		WebUI.comment("current page (should be main page):${WebUI.getUrl()}l")
+		TestObject linkToRequest = get_test_object_by_text(g_requestName)
+		WebUI.waitForElementClickable(linkToRequest, 20)
+		WebUI.click(linkToRequest)
+		
 
 		WebUI.waitForPageLoad(20)
-		WebUI.delay(5)
+		//WebUI.delay(5)
+		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
 		WebUI.verifyTextPresent(g_requestName, false)
 
 		if (numOutputFiles == "1") {
@@ -376,6 +386,7 @@ class Requester_step_def_ks {
 
 	@Then("the requester should see the complete record of the request including export files, supporting files/text, discussion, and status changes")
 	def submitted_request_info_matches_what_was_submitted(){
+		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
 		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		WebUI.verifyTextPresent(g_requestName, false)
 		WebUI.verifyTextPresent(PURPOSE_TEXT, false)
@@ -408,7 +419,8 @@ class Requester_step_def_ks {
 
 	@Then("requester should be able to make changes to the request")
 	def requester_should_be_able_to_make_changes_to_the_request(){
-		requester_views_request_they_created()
+		//requester_views_request_they_created()
+		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
 		WebUI.click(get_test_object_by_id(REQUEST_EDIT_BTN_ID))
 		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), EDITED_PURPOSE_TEXT)
 	}
@@ -435,7 +447,7 @@ class Requester_step_def_ks {
 	def team_members_request_should_be_editable() {
 		requester_should_be_able_to_make_changes_to_the_request()
 	}
-	
+
 	@Then("the team member's request should not be visible")
 	def team_members_request_should_not_be_visible(){
 		WebUI.verifyTextNotPresent(g_requestName, false)

@@ -84,4 +84,9 @@
       <initValue>'team_member_1_password'</initValue>
       <name>OCWA_USER_TEAM_MEMBER_PSWD</name>
    </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'test_valid_file_upload3.txt'</initValue>
+      <name>ValidFileName3</name>
+   </GlobalVariableEntity>
 </GlobalVariableEntities>
