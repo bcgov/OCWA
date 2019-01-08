@@ -272,7 +272,9 @@ class Requester_step_def_ks {
 
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
-		WebUI.click(get_test_object_by_id(REQUEST_SAVE_CLOSE_BTN_ID))
+		TestObject saveCloseBtn = get_test_object_by_id(REQUEST_SAVE_CLOSE_BTN_ID)
+		WebUI.waitForElementClickable(saveCloseBtn, 30)
+		WebUI.click(saveCloseBtn)
 	}
 
 	@When("requester submits their request")
