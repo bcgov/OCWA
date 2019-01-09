@@ -30,6 +30,7 @@ const strategy = new OpenIDConnectStrategy(
       displayName: profile.displayName,
       username: jwtClaims.preferred_username,
       email: jwtClaims.email,
+      groups: jwtClaims.groups,
       accessToken,
       refreshToken,
       expires: jwtClaims.exp,

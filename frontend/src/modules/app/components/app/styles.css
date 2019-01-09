@@ -4,9 +4,27 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .container {
   flex: 1;
   overflow-y: auto;
+}
+
+
+.loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background-color: #036;
+}
+
+.loading > div {
+  max-width: 400px;
+  text-align: center;
 }

@@ -8,8 +8,25 @@ const merge = require('lodash/merge');
 const passport = require('passport');
 const pick = require('lodash/pick');
 const request = require('request');
+const addMonths = require('date-fns/add_months');
 
 const router = express.Router();
+
+// Test token generator
+function generateTestSession(req) {
+  const group = config.get('testGroup');
+  const testToken = config.get(`testJWT:${group.replace('/', '')}`); // groups contain slashes
+  const user = jwt.decode(testToken);
+  const expiresAt = addMonths(new Date(), 1);
+
+  req.user = user;
+
+  return {
+    token: testToken,
+    expiresAt,
+    user,
+  };
+}
 
 router.get(
   '/',
@@ -33,17 +50,9 @@ router.get('/session', (req, res) => {
   const jwtSecret = config.get('jwtSecret');
   let token = null;
 
-  if (process.env.NODE_ENV === 'development' && config.has('testJWT')) {
-    return res.json({
-      token: config.get('testJWT'),
-      expiresAt: new Date(Date.now() * 10000000),
-      user: {
-        displayName: 'Test User',
-        username: 'test_user',
-        email: 'test@gmail.com',
-        id: '1',
-      },
-    });
+  if (process.env.NODE_ENV === 'development' && config.has('testGroup')) {
+    const session = generateTestSession(req);
+    return res.json(session);
   }
 
   // If there is no jwtSecret defined go with OCID only
@@ -61,6 +70,7 @@ router.get('/session', (req, res) => {
       'username',
       'id',
       'email',
+      'groups',
     ]);
     res.json({
       token,
