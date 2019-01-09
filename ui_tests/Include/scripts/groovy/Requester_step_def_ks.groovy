@@ -64,6 +64,7 @@ class Requester_step_def_ks {
 	String REQUEST_WITHDRAW_BTN_ID = "request-sidebar-withdraw-button"
 	String REQUEST_CANCEL_BTN_ID = "request-sidebar-cancel-button"
 	String LOGOUT_URL = "/auth/logout"
+	String NEW_REQUEST_DIALOG_HEADER_TEXT = "Initiate a New Request"
 
 	String g_requestName = ""
 
@@ -345,11 +346,14 @@ class Requester_step_def_ks {
 	@Then("the requester should see their saved request including (.+) output file (.+) supporting file")
 	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles){
 		//requester_views_request_they_created()
-		WebUI.comment("current page (should be main page):${WebUI.getUrl()}l")
+		WebUI.comment("current page (should be main page):${WebUI.getUrl()}")
+		if (is_new_request_dialog_window_open()) { WebUI.comment("the new request dialog is still open (and it shouldn't be at this point)") }
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementClickable(linkToRequest, 20)
+		//WebUI.comment("request link url:${linkToRequest.findPropertyValue("href")}")
 		WebUI.click(linkToRequest)
-		
+		WebUI.comment("clicked on the request link that contains text: $g_requestName")
+
 
 		WebUI.waitForPageLoad(20)
 		//WebUI.delay(5)
@@ -466,5 +470,16 @@ class Requester_step_def_ks {
 		tObject.addProperty("text", ConditionType.EQUALS, t, true)
 		return tObject
 	}
+	//Helper function to determine if dialog window is open
+	def is_new_request_dialog_window_open() {
+		try {
+			WebUI.verifyTextPresent(NEW_REQUEST_DIALOG_HEADER_TEXT, false) 
+			return true
+		}
+		catch(Exception e) { 
+			return false 
+		}
+	}
+
 
 }
