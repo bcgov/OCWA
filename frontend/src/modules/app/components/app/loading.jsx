@@ -4,12 +4,12 @@ import Spinner from '@atlaskit/spinner';
 
 import * as styles from './styles.css';
 
-function Loading({ role }) {
+function Loading({ text }) {
   return (
-    <div className={styles.loading}>
+    <div className={styles.splashContainer}>
       <div>
         <Spinner invertColor size="large" />
-        <h2>{`Loading ${role} interface`}</h2>
+        <h2>{text}</h2>
         <small>This should just be a moment...</small>
       </div>
     </div>
@@ -17,7 +17,7 @@ function Loading({ role }) {
 }
 
 Loading.propTypes = {
-  role: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
 };
 
 export default Loading;

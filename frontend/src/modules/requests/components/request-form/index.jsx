@@ -164,7 +164,7 @@ class NewRequestDialog extends React.Component {
       <ModalTransition>
         {open && (
           <Modal
-            autoFocus
+            autoFocus={false}
             id="request-form"
             footer={this.renderFooter}
             heading={`Initiate a New Request (Step ${currentStep + 1}/2)`}

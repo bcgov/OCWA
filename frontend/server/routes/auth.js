@@ -65,21 +65,26 @@ router.get('/session', (req, res) => {
   }
 
   if (token) {
-    const userFields = pick(req.user, [
-      'displayName',
-      'username',
-      'id',
-      'email',
-      'groups',
-    ]);
-    res.json({
-      token,
-      refreshToken: req.user.refreshToken,
-      expiresAt: new Date(req.user.expires * 1000),
-      user: userFields,
+    jwt.verify(token, jwtSecret, (err, claims) => {
+      if (err) {
+        res.status(401).end();
+      }
+
+      const userFields = pick(req.user, [
+        'displayName',
+        'username',
+        'id',
+        'email',
+        'groups',
+      ]);
+
+      res.json({
+        token,
+        refreshToken: req.user.refreshToken,
+        expiresAt: new Date(claims.exp * 1000),
+        user: userFields,
+      });
     });
-  } else {
-    res.status(401).end();
   }
 });
 
@@ -114,6 +119,7 @@ router.post('/refresh', (req, res) => {
 
         // Update the passport session manually
         req.session.passport.user = merge({}, currentUser, claims, {
+          expires: claims.exp,
           accessToken: token,
           refreshToken: json.refresh_token,
         });

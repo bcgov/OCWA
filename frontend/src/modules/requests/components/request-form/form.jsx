@@ -22,7 +22,7 @@ class NewRequestForm extends React.PureComponent {
     return (
       <div id="request-form">
         <Form ref={this.formRef}>
-          <Field validateOnChange isRequired label="Request Name" id="name">
+          <Field isRequired label="Request Name" id="name">
             <FieldText
               shouldFitContainer
               name="name"
