@@ -46,7 +46,7 @@ router.get(
 );
 
 // Return the session token
-router.get('/session', (req, res) => {
+router.get('/session', (req, res, done) => {
   const jwtSecret = config.get('jwtSecret');
   let token = null;
 
@@ -78,13 +78,15 @@ router.get('/session', (req, res) => {
         'groups',
       ]);
 
-      res.json({
+      return res.json({
         token,
         refreshToken: req.user.refreshToken,
         expiresAt: new Date(claims.exp * 1000),
         user: userFields,
       });
     });
+  } else {
+    res.status(401).end();
   }
 });
 
