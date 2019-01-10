@@ -10,28 +10,3 @@ Feature: create a new request
 		Then the request status is changed to "Awaiting review"
 	Scenario: A request has no data
 		Then the requester should not be able to submit the request
-		
-	Scenario Outline: A request violates blocking rule
-		Given request violates given blocking rule <blocking_rule> 
-		When requester submits their request 
-		Then the requester should not be able to submit the request
-		And requester should be informed that given blocking rule <blocking_rule> has been violated
-		
-		Examples:
-			| blocking_rule |
-			| A request that has a file that is too big | 
-			| The summation of all output file sizes exceeds the request file size limit |
-			| An output file has a blocked file extension |
-			| A request has a file with a StudyID in it |
-			
-	Scenario Outline: A request violates warning rule
-		Given request violates given warning rule <warning_rule> 
-		When requester submits their request 
-		Then the requester should be able to submit the request
-		And requester should be informed that given warning rule <warning_rule> has been violated
-			
-		Examples:
-			| warning_rule |
-			| A request that has a file that exceeds the file size warning threshold | 
-			| The summation of all output file sizes exceeds the request file size warning threshold |
-			| An output file has a warning file extension |

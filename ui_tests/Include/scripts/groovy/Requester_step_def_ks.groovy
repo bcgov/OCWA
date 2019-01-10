@@ -103,6 +103,8 @@ class Requester_step_def_ks {
 		WebUI.waitForPageLoad(30)
 		WebUI.delay(5)
 
+		WebUI.switchToDefaultContent()
+		WebUI.waitForElementVisible(newRequestButtonObject, 20)
 		WebUI.waitForElementClickable(newRequestButtonObject, 30)
 		WebUI.click(newRequestButtonObject)
 		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), PURPOSE_TEXT)
@@ -275,8 +277,11 @@ class Requester_step_def_ks {
 	def requester_saves_new_request() {
 		//WebUI.delay(2)
 		TestObject saveCloseBtn = get_test_object_by_id(REQUEST_SAVE_CLOSE_BTN_ID)
-		WebUI.waitForElementClickable(saveCloseBtn, 30)
+		if (!WebUI.waitForElementClickable(saveCloseBtn, 30)) {
+			WebUI.comment("waiting for Save and Close button to be clickable timed out")
+		}
 		WebUI.click(saveCloseBtn)
+		WebUI.waitForElementNotVisible(get_test_object_by_text(NEW_REQUEST_DIALOG_HEADER_TEXT), 20)
 		WebUI.delay(3)
 	}
 
@@ -303,7 +308,13 @@ class Requester_step_def_ks {
 		WebUI.waitForPageLoad(20)
 		WebUI.delay(2)
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
-		WebUI.waitForElementClickable(linkToRequest, 20)
+		WebUI.waitForElementVisible(linkToRequest, 20)
+		if (!WebUI.verifyTextPresent(linkToRequest)) {
+			WebUI.comment("request text:$g_requestName not found")
+		}
+		if (!WebUI.waitForElementClickable(linkToRequest, 20)) {
+			WebUI.comment("waiting for request link to be clickable timed out")
+		}
 		WebUI.click(linkToRequest)
 	}
 
@@ -348,12 +359,15 @@ class Requester_step_def_ks {
 		//requester_views_request_they_created()
 		WebUI.comment("current page (should be main page):${WebUI.getUrl()}")
 		if (is_new_request_dialog_window_open()) { WebUI.comment("the new request dialog is still open (and it shouldn't be at this point)") }
+		if (!WebUI.verifyTextPresent(g_requestName, false)) {
+			WebUI.comment("unable to find the text:$g_requestName on the page.  This text is used to find the request link")
+		}
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
-		WebUI.waitForElementClickable(linkToRequest, 20)
-		//WebUI.comment("request link url:${linkToRequest.findPropertyValue("href")}")
+		if (!WebUI.waitForElementClickable(linkToRequest, 20)) {
+			WebUI.comment("waiting for the link to the request to be clickable on the main page timed out")
+		}
 		WebUI.click(linkToRequest)
 		WebUI.comment("clicked on the request link that contains text: $g_requestName")
-
 
 		WebUI.waitForPageLoad(20)
 		//WebUI.delay(5)
@@ -378,6 +392,10 @@ class Requester_step_def_ks {
 
 	@Then("the requester should not be able to submit the request")
 	def requester_is_not_able_to_submit_request(){
+		TestObject requestFormSaveFilesButton = get_test_object_by_id(REQUEST_SAVE_FILES_BTN_ID)
+		WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
+		WebUI.click(requestFormSaveFilesButton)
+		WebUI.delay(2)
 		WebUI.verifyElementNotClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), FailureHandling.STOP_ON_FAILURE)
 		WebUI.closeBrowser()
 	}
@@ -397,7 +415,7 @@ class Requester_step_def_ks {
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_Discussion'))
 		WebUI.delay(2)
 		requester_should_see_their_new_comment_displayed()
-		WebUI.delay(5)
+		//WebUI.delay(5)
 		WebUI.closeBrowser()
 	}
 
@@ -473,11 +491,11 @@ class Requester_step_def_ks {
 	//Helper function to determine if dialog window is open
 	def is_new_request_dialog_window_open() {
 		try {
-			WebUI.verifyTextPresent(NEW_REQUEST_DIALOG_HEADER_TEXT, false) 
+			WebUI.verifyTextPresent(NEW_REQUEST_DIALOG_HEADER_TEXT, false, FailureHandling.OPTIONAL)
 			return true
 		}
-		catch(Exception e) { 
-			return false 
+		catch(Exception e) {
+			return false
 		}
 	}
 
