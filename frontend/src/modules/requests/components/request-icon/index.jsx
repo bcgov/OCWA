@@ -24,7 +24,7 @@ function RequestIcon({ color, size, value }) {
       break;
     case 1:
       Icon = EditFilledIcon;
-      name = 'WIP';
+      name = 'Work in Progress';
       break;
     case 2:
       Icon = RecentIcon;

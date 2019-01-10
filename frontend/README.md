@@ -13,12 +13,11 @@ Make sure instead of `Roles` you assign `Groups`, e.g.
     "exp": 1568411344,
     "aud": "www.example.com",
     "sub": "username@example.com",
-    "GivenName": "User",
-    "Surname": "Name",
-    "Email": "username@example.com",
-    "Groups": [
-        "Manager",
-        "Project Administrator"
+    "givenName": "User",
+    "surname": "Name",
+    "email": "username@example.com",
+    "groups": [
+      "/exporter"
     ]
 }
 ```
@@ -29,9 +28,17 @@ in the values for jwt and jwtSecret
 `$ yarn install`
 `$ yarn start`
 
+Note that if you want to use a test user, ensure the `default.json` config has the following fields:
+
+* `testGroup`: set to either `/exporter` or `/oc`
+* `testJWT:exporter`: A JWT that matches the above format (make sure the group array includes '/exporter')
+* `testJWT:oc`: A JWT that matches the above format (make sure the group array includes '/oc**)
+
+**DO NOT INCLUDE THESE VALUES IN PRODUCTION**
+
 ### For Docker environment
-You will need to
-`$ docker build .`
+You will need to `$ docker build .`
+
 ```
 $ hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
 $ port=8000

@@ -23,7 +23,7 @@ function RequestDetails({ data }) {
         </p>
       </div>
       <div id="request-export-files" className={styles.section}>
-        <div className={styles.sectionHeader}>Export Files</div>
+        <div className={styles.sectionHeader}>Output Files</div>
         <div className={styles.sectionContent}>
           {files.length > 0 && (
             <Files ids={files} fileStatus={data.fileStatus} />
