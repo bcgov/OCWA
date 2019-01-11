@@ -106,11 +106,11 @@ spec:
           livenessProbe:
             httpGet:
               path: /
-              port: 1080
+              port: tusd
           readinessProbe:
             httpGet:
               path: /
-              port: 1080
+              port: tusd
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
