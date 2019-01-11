@@ -130,14 +130,17 @@ class Requester_step_def_ks {
 
 		//Upload files
 		TestObject uploadFileButton = get_test_object_by_id(REQUEST_FILES_UPLOAD_BTN_ID)
+		WebUI.waitForElementClickable(uploadFileButton, 30)
 		WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$fileToUpload")
 		WebUI.delay(5)
 		if (secondFile != "") {
+			WebUI.waitForElementClickable(uploadFileButton, 30)
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$secondFile")
 			WebUI.delay(5)
 		}
 
 		if (thirdFile != "") {
+			WebUI.waitForElementClickable(uploadFileButton, 30)
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$thirdFile")
 			WebUI.delay(5)
 		}
@@ -275,7 +278,7 @@ class Requester_step_def_ks {
 
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
-		//WebUI.delay(2)
+		WebUI.delay(5)
 		TestObject saveCloseBtn = get_test_object_by_id(REQUEST_SAVE_CLOSE_BTN_ID)
 		if (!WebUI.waitForElementClickable(saveCloseBtn, 30)) {
 			WebUI.comment("waiting for Save and Close button to be clickable timed out")
@@ -358,7 +361,7 @@ class Requester_step_def_ks {
 	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles){
 		//requester_views_request_they_created()
 		WebUI.comment("current page (should be main page):${WebUI.getUrl()}")
-		if (is_new_request_dialog_window_open()) { WebUI.comment("the new request dialog is still open (and it shouldn't be at this point)") }
+		if (!WebUI.verifyTextNotPresent(NEW_REQUEST_DIALOG_HEADER_TEXT, false, FailureHandling.OPTIONAL)) { WebUI.comment("the new request dialog is still open (and it shouldn't be at this point)") }
 		if (!WebUI.verifyTextPresent(g_requestName, false)) {
 			WebUI.comment("unable to find the text:$g_requestName on the page.  This text is used to find the request link")
 		}
@@ -488,16 +491,6 @@ class Requester_step_def_ks {
 		tObject.addProperty("text", ConditionType.EQUALS, t, true)
 		return tObject
 	}
-	//Helper function to determine if dialog window is open
-	def is_new_request_dialog_window_open() {
-		try {
-			WebUI.verifyTextPresent(NEW_REQUEST_DIALOG_HEADER_TEXT, false, FailureHandling.OPTIONAL)
-			return true
-		}
-		catch(Exception e) {
-			return false
-		}
-	}
-
+	
 
 }
