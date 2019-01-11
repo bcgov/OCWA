@@ -101,16 +101,16 @@ spec:
               value: "{{ .Values.tus.region }}"
           ports:
             - name: tusd
-              containerPort: 1080
+              containerPort: 80
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: tusd
+              port: 1080
           readinessProbe:
             httpGet:
               path: /
-              port: tusd
+              port: 1080
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
