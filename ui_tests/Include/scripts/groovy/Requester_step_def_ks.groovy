@@ -104,6 +104,8 @@ class Requester_step_def_ks {
 		WebUI.delay(5)
 
 		WebUI.switchToDefaultContent()
+		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", 10)
+
 		WebUI.waitForElementVisible(newRequestButtonObject, 20)
 		WebUI.waitForElementClickable(newRequestButtonObject, 30)
 		WebUI.click(newRequestButtonObject)
@@ -130,19 +132,22 @@ class Requester_step_def_ks {
 
 		//Upload files
 		TestObject uploadFileButton = get_test_object_by_id(REQUEST_FILES_UPLOAD_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
 		WebUI.waitForElementClickable(uploadFileButton, 30)
 		WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$fileToUpload")
-		WebUI.delay(5)
+		//WebUI.delay(5)
 		if (secondFile != "") {
+			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
 			WebUI.waitForElementClickable(uploadFileButton, 30)
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$secondFile")
-			WebUI.delay(5)
+			//WebUI.delay(5)
 		}
 
 		if (thirdFile != "") {
+			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
 			WebUI.waitForElementClickable(uploadFileButton, 30)
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$thirdFile")
-			WebUI.delay(5)
+			//WebUI.delay(5)
 		}
 	}
 
@@ -278,8 +283,9 @@ class Requester_step_def_ks {
 
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
-		WebUI.delay(5)
+		//WebUI.delay(5)
 		TestObject saveCloseBtn = get_test_object_by_id(REQUEST_SAVE_CLOSE_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(saveCloseBtn, "disabled", 10)
 		if (!WebUI.waitForElementClickable(saveCloseBtn, 30)) {
 			WebUI.comment("waiting for Save and Close button to be clickable timed out")
 		}
@@ -290,8 +296,12 @@ class Requester_step_def_ks {
 
 	@When("requester submits their request")
 	def requester_submits_request() {
-		WebUI.click(get_test_object_by_id(REQUEST_SAVE_BTN_ID))
-		WebUI.delay(15)
+		TestObject saveBtn = get_test_object_by_id(REQUEST_SAVE_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
+		WebUI.waitForElementClickable(saveBtn, 30)
+		WebUI.click(saveBtn)
+		//WebUI.delay(15)
+		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
 		WebUI.delay(3)
@@ -312,13 +322,14 @@ class Requester_step_def_ks {
 		WebUI.delay(2)
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementVisible(linkToRequest, 20)
-		if (!WebUI.verifyTextPresent(linkToRequest)) {
+		if (!WebUI.verifyTextPresent(g_requestName, false)) {
 			WebUI.comment("request text:$g_requestName not found")
 		}
 		if (!WebUI.waitForElementClickable(linkToRequest, 20)) {
 			WebUI.comment("waiting for request link to be clickable timed out")
 		}
 		WebUI.click(linkToRequest)
+		WebUI.waitForPageLoad(20)
 	}
 
 	@When("the requester cancels the request")
@@ -366,6 +377,7 @@ class Requester_step_def_ks {
 			WebUI.comment("unable to find the text:$g_requestName on the page.  This text is used to find the request link")
 		}
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
+		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
 		if (!WebUI.waitForElementClickable(linkToRequest, 20)) {
 			WebUI.comment("waiting for the link to the request to be clickable on the main page timed out")
 		}
@@ -399,13 +411,16 @@ class Requester_step_def_ks {
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
 		WebUI.click(requestFormSaveFilesButton)
 		WebUI.delay(2)
-		WebUI.verifyElementNotClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), FailureHandling.STOP_ON_FAILURE)
+		//WebUI.verifyElementNotClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.verifyElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
+
 		WebUI.closeBrowser()
 	}
 
 	@Then("the requester should be able to submit the request")
 	def requester_is_able_to_submit_request(){
-		WebUI.verifyElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), FailureHandling.STOP_ON_FAILURE)
+		WebUI.verifyElementHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'),"disabled", 10)
+		//WebUI.verifyElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), FailureHandling.STOP_ON_FAILURE)
 		WebUI.closeBrowser()
 	}
 
@@ -423,8 +438,9 @@ class Requester_step_def_ks {
 	}
 
 	@Then('the request status is changed to "(.+)"')
-	def request_should_be_in_given_status(String status){
-		WebUI.verifyTextPresent(status, false)
+	def request_should_be_in_given_status(String statusTxt){
+		requester_views_request_they_created()
+		WebUI.verifyTextPresent(statusTxt, false)
 		WebUI.closeBrowser()
 	}
 
@@ -491,6 +507,6 @@ class Requester_step_def_ks {
 		tObject.addProperty("text", ConditionType.EQUALS, t, true)
 		return tObject
 	}
-	
+
 
 }
