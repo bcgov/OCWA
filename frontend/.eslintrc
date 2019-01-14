@@ -7,7 +7,8 @@
   },
   "globals": {
     "__DEV__": true,
-    "FILES_API_HOST": true
+    "FILES_API_HOST": true,
+    "SOCKET_HOST": true
   },
   "parser": "babel-eslint",
   "rules": {

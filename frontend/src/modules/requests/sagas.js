@@ -61,7 +61,7 @@ function uploadChannel(file, metadata) {
 }
 
 // Upload Saga
-function* uploadFileChannel(item) {
+function* uploadFileChannel(item, meta) {
   const token = getToken();
   const file = {
     fileName: item.name,
@@ -86,7 +86,7 @@ function* uploadFileChannel(item) {
     };
 
     if (error) {
-      yield put(uploadFileFailure(payload, error));
+      yield put(uploadFileFailure({ ...meta, file: payload }, error));
       yield call(delay, 5000);
       yield put(uploadFileReset());
       return;
@@ -98,6 +98,7 @@ function* uploadFileChannel(item) {
       yield put({
         type: 'files/get/success',
         meta: {
+          ...meta,
           dataType: 'files',
         },
         payload: normalize(payload, fileSchema),
@@ -107,15 +108,15 @@ function* uploadFileChannel(item) {
       return;
     }
 
-    yield put(uploadFileProgress(payload, progress));
+    yield put(uploadFileProgress({ ...meta, file: payload }, progress));
   }
 }
 
 // Responsible for forking the worker threads to the uploadFile channel
 function* uploadDispatcher(chan) {
   while (true) {
-    const file = yield take(chan);
-    yield call(uploadFileChannel, file);
+    const { payload, meta } = yield take(chan);
+    yield call(uploadFileChannel, payload, meta);
   }
 }
 
@@ -129,9 +130,9 @@ function* uploadFileWatcher() {
   }
 
   while (true) {
-    const { payload } = yield take('request/file/upload');
+    const { meta, payload } = yield take('request/file/upload');
     // The upload action sends an array (not FileList) of Files
-    yield all(payload.map(file => put(chan, file)));
+    yield all(payload.map(file => put(chan, { payload: file, meta })));
   }
 }
 

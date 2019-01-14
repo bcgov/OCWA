@@ -50,7 +50,6 @@ function* tokenWatcher() {
   } catch (err) {
     yield put({
       type: 'app/get/token/failed',
-      error: true,
       payload: err,
     });
   }
@@ -66,7 +65,6 @@ export function* refreshTokenWatcher() {
   } catch (err) {
     yield put({
       type: 'app/get/token/failed',
-      error: true,
       payload: err,
     });
   }

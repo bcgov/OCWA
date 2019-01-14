@@ -63,19 +63,15 @@ export const uploadSupportingFile = (file, requestId) => ({
   payload: file,
 });
 
-export const uploadFileProgress = (file, progress) => ({
+export const uploadFileProgress = (meta, progress) => ({
   type: 'request/file/upload/progress',
-  meta: {
-    file,
-  },
+  meta,
   payload: progress,
 });
 
-export const uploadFileFailure = (file, error) => ({
+export const uploadFileFailure = (meta, error) => ({
   type: 'request/file/upload/failed',
-  meta: {
-    file,
-  },
+  meta,
   error: true,
   payload: error,
 });

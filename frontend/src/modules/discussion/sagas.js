@@ -1,4 +1,4 @@
-import { call, take, takeLatest, put, fork } from 'redux-saga/effects';
+import { call, take, takeLatest, put } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 import { normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
@@ -25,6 +25,7 @@ function createSocketChannel(socket) {
       });
 
       if (json) {
+        debugger;
         const { topicId } = json.comment;
         const payload = normalize(json.comment, postSchema);
         emit({

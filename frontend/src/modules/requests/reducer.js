@@ -117,7 +117,10 @@ const files = (state = {}, action = {}) => {
     }
   }
 
-  if (/request\/file\/upload\/(failed|progress)$/.test(action.type)) {
+  if (
+    /request\/file\/upload\/(failed|progress)$/.test(action.type) &&
+    !action.meta.isSupportingFile
+  ) {
     return mapKeys(state, uploadIdMapper.bind(null, action));
   }
 
@@ -150,7 +153,10 @@ const supportingFiles = (state = {}, action = {}) => {
     }
   }
 
-  if (/request\/file\/upload\/(failed|progress)$/.test(action.type)) {
+  if (
+    /request\/file\/upload\/(failed|progress)$/.test(action.type) &&
+    action.meta.isSupportingFile
+  ) {
     return mapKeys(state, uploadIdMapper.bind(null, action));
   }
 

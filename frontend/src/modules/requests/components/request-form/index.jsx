@@ -197,7 +197,7 @@ class NewRequestDialog extends React.PureComponent {
             onCloseComplete={this.onReset}
             width="x-large"
           >
-            <div id="request-form">
+            <div id="request-form-container">
               {currentStep === 0 && <Form ref={this.formRef} data={formData} />}
               {currentStep === 1 && <FileUploader data={data} />}
             </div>
