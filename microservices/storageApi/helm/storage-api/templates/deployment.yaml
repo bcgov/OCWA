@@ -103,7 +103,7 @@ spec:
               value: "{{ .Values.tus.region }}"
           ports:
             - name: tusd
-              containerPort: 80
+              containerPort: 8888
               protocol: TCP
           livenessProbe:
             httpGet:
