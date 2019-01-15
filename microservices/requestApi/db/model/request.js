@@ -139,12 +139,13 @@ var getAllTopics = function(user, callback, page, existingTopics){
             topicResults = topicResults.map(x => x._id);
             topics = topics.concat(topicResults);
 
-
             if (topicResults.length >= limit) {
                 getAllTopics(user, function (err, topicR) {
-                    if (typeof(topicR) === "object") {
-                        topics.push.apply(topicR);
+
+                    for (var i=0; i<topicR.length; i++){
+                        topics.push(topicR[i]);
                     }
+
                     logger.verbose("Got all topics for a page", page, topicR, topics);
                     if (err) {
                         callback(err, topics);
