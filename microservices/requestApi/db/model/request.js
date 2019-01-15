@@ -139,12 +139,14 @@ var getAllTopics = function(user, callback, page, existingTopics){
             topicResults = topicResults.map(x => x._id);
             topics = topics.concat(topicResults);
 
-
             if (topicResults.length >= limit) {
                 getAllTopics(user, function (err, topicR) {
-                    if (typeof(topicR) === "object") {
-                        topics.push.apply(topicR);
+
+                    for (var i=0; i<topicR.length; i++){
+                        topics.push(topicR[i]);
                     }
+
+                    logger.verbose("Got all topics for a page", page, topicR, topics);
                     if (err) {
                         callback(err, topics);
                         return;
@@ -155,6 +157,7 @@ var getAllTopics = function(user, callback, page, existingTopics){
                 return;
             }
 
+            logger.verbose("get all topics Terminal callback", page, topics);
             callback(null, topics);
         }catch(ex){
             logger.error("Error handling topic results", ex);
@@ -171,6 +174,7 @@ model.getAll = function(query, limit, page, user, callback){
     logger.verbose("request get all, skip, limit", skip, limit);
 
     getAllTopics(user, function(err, topicR){
+        logger.verbose("get all topics model get all", topicR);
 
         db.Request.aggregate([
             {

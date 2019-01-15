@@ -215,7 +215,7 @@ router.put("/save/:requestId", function(req, res, next){
     var logger = require('npmlog');
 
     db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, findRes){
-        if (findErr || !findRes){
+        if (findErr || !findRes || findRes.length <= 0){
             res.status(400);
             res.json({error: "No such request"});
             return;

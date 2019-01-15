@@ -78,7 +78,7 @@ spec:
             - name: S3_ENDPOINT
               value: '{{.Values.minio.proto}}://{{ template "ocwaStorageApi.fullname" . }}.{{ .Release.Namespace }}:{{ .Values.service.minioPort }}'
             - name: S3_BUCKET
-              value: "{{ .Values.tus.bucket }} -behind-proxy"
+              value: "{{ .Values.tus.bucket }}"
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
