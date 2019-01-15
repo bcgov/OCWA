@@ -76,9 +76,10 @@ export const uploadFileFailure = (meta, error) => ({
   payload: error,
 });
 
-export const uploadFileSuccess = file => ({
+export const uploadFileSuccess = (meta, payload) => ({
   type: 'request/file/upload/success',
-  payload: file,
+  meta,
+  payload,
 });
 
 export const uploadFileReset = id => ({

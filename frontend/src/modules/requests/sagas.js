@@ -93,7 +93,7 @@ function* uploadFileChannel(item, meta) {
     }
 
     if (success) {
-      yield put(uploadFileSuccess(payload));
+      yield put(uploadFileSuccess({ ...meta, file: payload }, payload));
       // Workaround to update the internal data store
       yield put({
         type: 'files/get/success',
