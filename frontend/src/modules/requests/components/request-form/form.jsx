@@ -2,13 +2,20 @@ import * as React from 'react';
 import FieldText from '@atlaskit/field-text';
 import FieldTextArea from '@atlaskit/field-text-area';
 import Form, { Field, FormSection } from '@atlaskit/form';
+import isEqual from 'lodash/isEqual';
 
 import { RequestSchema } from '../../types';
 
-class NewRequestForm extends React.PureComponent {
+class NewRequestForm extends React.Component {
   constructor(props) {
     super(props);
     this.formRef = React.createRef();
+  }
+
+  shouldComponentUpdate(nextProps) {
+    const { data } = this.props;
+
+    return !isEqual(data, nextProps.data);
   }
 
   validate = () => {
@@ -22,7 +29,7 @@ class NewRequestForm extends React.PureComponent {
     return (
       <div id="request-form">
         <Form ref={this.formRef}>
-          <Field validateOnChange isRequired label="Request Name" id="name">
+          <Field isRequired label="Request Name" id="name">
             <FieldText
               shouldFitContainer
               name="name"

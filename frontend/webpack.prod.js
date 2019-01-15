@@ -1,14 +1,24 @@
 const merge = require('webpack-merge');
+// NOTE: Turn on BundleAnalyzerPlugin to inspect the size if things get too big and slow
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const TerserPlugin = require('terser-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 const webpack = require('webpack');
 
 const common = require('./webpack.common');
 
+const DIST_PATH = path.resolve(__dirname, 'dist');
+
 module.exports = merge(common, {
-  entry: ['@babel/polyfill', './src/index.js'],
   mode: 'production',
+  entry: ['@babel/polyfill', './src/index.js'],
+  output: {
+    filename: '[name].[hash].js',
+    path: DIST_PATH,
+    publicPath: '/',
+  },
   module: {
     rules: [
       {
@@ -36,7 +46,10 @@ module.exports = merge(common, {
     }),
     // new BundleAnalyzerPlugin(), // Turn on if you want view where the bundle size comes from
     new MiniCssExtractPlugin({
-      filename: 'main.css',
+      filename: '[name].[hash].css',
+    }),
+    new ManifestPlugin({
+      writeToFileEmit: true,
     }),
   ],
   optimization: {

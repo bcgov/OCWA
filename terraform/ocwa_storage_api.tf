@@ -27,9 +27,17 @@ resource "docker_container" "minio" {
   ]
 }
 
+data "local_file" "pre_create_py" {
+    filename = "${path.module}/scripts/pre-create.py"
+}
+
+resource "local_file" "pre_create" {
+    content = "${data.local_file.pre_create_py.content}"
+    filename = "${var.hostRootPath}/config/tusd/pre-create"
+}
 
 data "docker_registry_image" "tusd" {
-  name = "tusproject/tusd${var.images["tusd"]}"
+  name = "h3brandon/tusd_py3${var.images["tusd"]}"
 }
 
 resource "docker_image" "tusd" {
@@ -40,13 +48,19 @@ resource "docker_image" "tusd" {
 resource "docker_container" "tusd" {
   image = "${docker_image.tusd.latest}"
   name = "ocwa_tusd"
+  volumes = { 
+    host_path = "${var.hostRootPath}/config/tusd"
+    container_path = "/srv/tusd-hooks"
+  }
   restart = "on-failure"
-  command = [ "-behind-proxy", "-s3-bucket", "bucket", "-s3-endpoint", "http://ocwaminio:9000" ]
+  command = [ "--hooks-dir", "/srv/tusd-hooks", "-behind-proxy", "-s3-bucket", "bucket", "-s3-endpoint", "http://ocwaminio:9000" ]
   networks_advanced = { name = "${docker_network.private_network.name}" }
   env = [
       "AWS_ACCESS_KEY=${random_id.accessKey.hex}",
       "AWS_SECRET_ACCESS_KEY=${random_string.secretKey.result}",
-      "AWS_REGION=not_applicable"
+      "AWS_REGION=not_applicable",
+      "JWT_SECRET=${random_string.jwtSecret.result}",
+      "JWT_AUD=outputchecker"
   ]
 }
 
