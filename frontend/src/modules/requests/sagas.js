@@ -31,6 +31,7 @@ function uploadChannel(file, metadata) {
     const upload = new tus.Upload(file, {
       endpoint: `${FILES_API_HOST}/files/`,
       retryDelays: [0, 1000, 3000, 5000],
+      chunkSize: 50000,
       metadata,
       onError: error =>
         emitter({
@@ -38,6 +39,14 @@ function uploadChannel(file, metadata) {
           file,
           id: sanitizeURL(upload.url),
         }),
+      onChunkComplete: () => {
+        emitter({
+          file,
+          success: true,
+          id: sanitizeURL(upload.url),
+        });
+        emitter(END);
+      },
       onProgress: (bytesUploaded, bytesTotal) =>
         emitter({
           file,

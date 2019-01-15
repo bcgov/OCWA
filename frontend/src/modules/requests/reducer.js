@@ -5,7 +5,7 @@ import uniqueId from 'lodash/uniqueId';
 import union from 'lodash/union';
 
 const uploadIdMapper = (action, value, key) => {
-  if (action.meta.file.filename === value.filename) {
+  if (action.meta.file.fileName === value.fileName) {
     return action.meta.file.id;
   }
 
