@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import AppIcon from '@atlaskit/icon/glyph/jira/labs';
 import PropTypes from 'prop-types';
 
 import * as styles from './styles.css';
 
-function AppBar({ children, title }) {
+function AppBar({ children, icon, title }) {
   return (
     <div className={styles.container}>
       <Link id="app-bar-brand" to="/" className={styles.brand}>
-        <AppIcon size="large" />
+        {icon}
         {title}
       </Link>
       <div className={styles.actions}>{children}</div>
@@ -18,8 +17,9 @@ function AppBar({ children, title }) {
 }
 
 AppBar.propTypes = {
-  title: PropTypes.string.isRequired,
   children: PropTypes.node,
+  icon: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 AppBar.defaultProps = {

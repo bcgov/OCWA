@@ -74,9 +74,11 @@ spec:
             - name: tus-config
               mountPath: /srv/tusd-hooks
           {{ end }}
-          command: ["/go/bin/tusd"]
-          args: ["--hooks-dir", "/srv/tusd-hooks", "-s3-endpoint", '{{.Values.minio.proto}}://{{ template "ocwaStorageApi.fullname" . }}.{{ .Release.Namespace }}:{{ .Values.service.minioPort }}', "-s3-bucket", "{{ .Values.tus.bucket }}"]
           env:
+            - name: S3_ENDPOINT
+              value: '{{.Values.minio.proto}}://{{ template "ocwaStorageApi.fullname" . }}.{{ .Release.Namespace }}:{{ .Values.service.minioPort }}'
+            - name: S3_BUCKET
+              value: "{{ .Values.tus.bucket }}"
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -101,16 +103,16 @@ spec:
               value: "{{ .Values.tus.region }}"
           ports:
             - name: tusd
-              containerPort: 1080
+              containerPort: 8888
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: tusd
+              port: 1080
           readinessProbe:
             httpGet:
               path: /
-              port: tusd
+              port: 1080
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}

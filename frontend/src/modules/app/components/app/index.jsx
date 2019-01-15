@@ -1,19 +1,24 @@
 import React from 'react';
-import AppBar from '@src/components/app-bar';
-import Avatar from '@atlaskit/avatar';
-import Dropdown, { DropdownItem } from '@atlaskit/dropdown-menu';
 import LayerManager from '@atlaskit/layer-manager';
+import Loadable from 'react-loadable';
+import includes from 'lodash/includes';
 import Messages from '@src/modules/data/containers/messages';
-import NewRequest from '@src/modules/requests/containers/new-request';
-import Requests from '@src/modules/requests/containers/requests-list';
-import Request from '@src/modules/requests/containers/request';
-import RequestForm from '@src/modules/requests/containers/request-form';
-import { Switch, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '@atlaskit/css-reset';
 
 import Auth from '../auth';
+import Loading from './loading';
+import Unauthorized from './unauthorized';
 import * as styles from './styles.css';
+
+const Exporter = Loadable({
+  loader: () => import('../../../exporter/components/app'),
+  loading: () => <Loading text="Initializing Loading Exporter interface" />,
+});
+const OutputChecker = Loadable({
+  loader: () => import('../../../output-checker/components/app'),
+  loading: () => <Loading text="Initializing Output Checker interface" />,
+});
 
 class App extends React.Component {
   componentDidMount() {
@@ -29,41 +34,40 @@ class App extends React.Component {
     }
   }
 
-  render() {
+  renderMain = () => {
     const { authFetchStatus, isAuthenticated, user } = this.props;
+    let el = null;
+
+    if (isAuthenticated) {
+      const hasExporterRole = includes(user.groups, '/exporter');
+      const hasOcRole = includes(user.groups, '/oc');
+
+      // Load bundle for output checker if that's the only role, otherwise always send exporter
+      if (hasOcRole && !hasExporterRole) {
+        el = <OutputChecker user={user} />;
+      } else {
+        el = <Exporter user={user} />;
+      }
+    } else if (authFetchStatus === 'loaded') {
+      el = <Unauthorized />;
+    }
+
+    return el;
+  };
+
+  render() {
+    const { authFetchStatus, isAuthenticated } = this.props;
+    const mainElement = this.renderMain();
 
     return (
       <LayerManager>
         <main id="app-main" className={styles.main}>
+          <Messages />
           <Auth
             fetchStatus={authFetchStatus}
             isAuthenticated={isAuthenticated}
           />
-          {isAuthenticated && (
-            <React.Fragment>
-              <Messages />
-              <RequestForm />
-              <AppBar title="OCWA Export Tool">
-                <NewRequest />
-                <Dropdown
-                  position="bottom right"
-                  trigger={
-                    <Avatar borderColor="#0052CC" name={user.displayName} />
-                  }
-                >
-                  <DropdownItem>{`Howdy, ${user.displayName}`}</DropdownItem>
-                  <DropdownItem href="/auth/logout">Logout</DropdownItem>
-                </Dropdown>
-              </AppBar>
-              <div id="app-content" className={styles.container}>
-                <Switch>
-                  <Route exact path="/" component={Requests} />
-                  <Route path="/requests/:requestId" component={Request} />
-                  <Route render={() => '404'} />
-                </Switch>
-              </div>
-            </React.Fragment>
-          )}
+          {mainElement}
         </main>
       </LayerManager>
     );

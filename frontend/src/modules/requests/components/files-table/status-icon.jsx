@@ -4,7 +4,6 @@ import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import EditorWarningIcon from '@atlaskit/icon/glyph/editor/warning';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import EmojiFrequentIcon from '@atlaskit/icon/glyph/emoji/frequent';
-import get from 'lodash/get';
 import has from 'lodash/has';
 import InlineDialog from '@atlaskit/inline-dialog';
 import { colors } from '@atlaskit/theme';
@@ -91,7 +90,11 @@ class StatusIcon extends React.Component {
         content={this.renderContent()}
         isOpen={open}
       >
-        <div role="button" onClick={this.onOpen}>
+        <div
+          className="file-upload-status-icon"
+          role="button"
+          onClick={this.onOpen}
+        >
           {iconElement}
         </div>
       </InlineDialog>

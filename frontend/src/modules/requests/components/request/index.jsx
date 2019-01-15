@@ -44,8 +44,9 @@ function Request({ data, isLoaded, updatedAt, match }) {
               <nav className={styles.tabs}>
                 <NavLink
                   exact
-                  className={styles.tab}
                   activeClassName={styles.tabActive}
+                  className={styles.tab}
+                  id="request-details-tab"
                   to={match.url}
                 >
                   <InfoIcon size="small" />
@@ -53,8 +54,9 @@ function Request({ data, isLoaded, updatedAt, match }) {
                 </NavLink>
                 <NavLink
                   exact
-                  className={styles.tab}
                   activeClassName={styles.tabActive}
+                  className={styles.tab}
+                  id="request-discussion-tab"
                   to={`${match.url}/discussion`}
                 >
                   <CommentIcon size="small" />
