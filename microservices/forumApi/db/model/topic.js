@@ -38,9 +38,11 @@ model.getAll = function(query, limit, page, user, callback){
             checkGroups.splice(index,1);
         }
     }
-    defaultPermOverride = {
-        author_groups: {$in: checkGroups}
-    };
+    if (defaultPermIsGroup) {
+        defaultPermOverride = {
+            author_groups: {$in: checkGroups}
+        };
+    }
 
 
     var agg = [
