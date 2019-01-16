@@ -2,6 +2,8 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import AttachmentIcon from '@atlaskit/icon/glyph/attachment';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import ChevronLeftLargeIcon from '@atlaskit/icon/glyph/chevron-left-large';
+import ChevronRightLargeIcon from '@atlaskit/icon/glyph/chevron-right-large';
 import { Link } from 'react-router-dom';
 import Date from '@src/components/date';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
@@ -14,6 +16,7 @@ import last from 'lodash/last';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import { colors } from '@atlaskit/theme';
+import { limit } from '@src/services/config';
 
 import RequestIcon from '../request-icon';
 import RequestMenu from '../../containers/request-menu';
@@ -47,6 +50,7 @@ const filters = [
 
 function RequestsList({
   data,
+  fetchRequests,
   filter,
   isFailed,
   isLoading,
@@ -54,6 +58,7 @@ function RequestsList({
   onChangeFilter,
   onSearch,
   onSort,
+  page,
   search,
   sortKey,
   sortOrder,
@@ -94,7 +99,8 @@ function RequestsList({
           content: (
             <div className={styles.actionsColumn}>
               <div>
-                <AttachmentIcon size="small" /> {get(d, 'files.length', 0)}
+                <AttachmentIcon size="small" />
+                {` ${get(d, 'files.length', 0)}`}
               </div>
               <RequestMenu data={d} />
             </div>
@@ -112,13 +118,14 @@ function RequestsList({
       Icon = SearchIcon;
       textElement = (
         <h3>
-          No results match <em className={styles.searchText}>{search}</em>
+          {'No results match '}
+          <em className={styles.searchText}>{search}</em>
         </h3>
       );
     } else if (isFailed) {
       Icon = ErrorIcon;
       textElement = <h3>Failed to load requests</h3>;
-    } else if (isLoaded && !filter) {
+    } else if (isLoaded && !filter && page <= 1) {
       textElement = (
         <div>
           <h3>You have no requests yet</h3>
@@ -128,6 +135,8 @@ function RequestsList({
           </div>
         </div>
       );
+    } else if (isLoaded && page > 1) {
+      textElement = <h3>No requests could be loaded for this page</h3>;
     } else if (isLoaded && !!filter) {
       textElement = <h3>No requests match this filter</h3>;
     }
@@ -142,6 +151,7 @@ function RequestsList({
       </div>
     );
   };
+  const isPaginationVisible = data.length > 0 && data.length >= limit;
 
   return (
     <Page>
@@ -186,6 +196,26 @@ function RequestsList({
               sortOrder={sortOrder}
               onSort={sortProps => onSort(sortProps)}
             />
+            {isPaginationVisible && (
+              <nav className={styles.pagination}>
+                <Button
+                  appearance="subtle"
+                  iconBefore={<ChevronLeftLargeIcon />}
+                  isDisabled={page <= 1}
+                  onClick={() => fetchRequests(page - 1)}
+                >
+                  Previous Page
+                </Button>
+                <Button
+                  appearance="subtle"
+                  iconAfter={<ChevronRightLargeIcon />}
+                  isDisabled={data.length < limit * page}
+                  onClick={() => fetchRequests(page + 1)}
+                >
+                  Next Page
+                </Button>
+              </nav>
+            )}
           </div>
         </GridColumn>
       </Grid>
@@ -201,6 +231,7 @@ RequestsList.propTypes = {
       state: PropTypes.number,
     })
   ),
+  fetchRequests: PropTypes.func.isRequired,
   filter: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.arrayOf(PropTypes.number),
@@ -211,7 +242,8 @@ RequestsList.propTypes = {
   onChangeFilter: PropTypes.func.isRequired,
   onSort: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
-  onSelect: PropTypes.func.isRequired,
+  // onSelect: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
   search: PropTypes.string.isRequired,
   sortKey: PropTypes.string.isRequired,
   sortOrder: PropTypes.oneOf(['DESC', 'ASC']).isRequired,

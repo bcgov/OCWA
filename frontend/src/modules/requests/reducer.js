@@ -20,6 +20,7 @@ const initialViewState = {
   sortKey: 'state',
   sortOrder: 'DESC',
   search: '',
+  page: 1,
 };
 
 const viewState = (state = initialViewState, action = {}) => {
@@ -28,6 +29,7 @@ const viewState = (state = initialViewState, action = {}) => {
       return {
         ...state,
         filter: action.payload,
+        page: 1,
       };
 
     case 'requests/sort':
@@ -91,6 +93,20 @@ const viewState = (state = initialViewState, action = {}) => {
       return {
         ...state,
         filesToDelete: union(state.filesToDelete, [action.payload]),
+      };
+
+    case 'requests/get':
+      return {
+        ...state,
+        page: action.payload.page,
+      };
+
+    // If the result is empty it means there is exactly 100 items in the DB
+    // Since we don't know the total, we'll just go back to the previous page
+    case 'requests/get/success':
+      return {
+        ...state,
+        page: action.payload.result.length > 0 ? state.page : state.page - 1,
       };
 
     default:
