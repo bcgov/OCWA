@@ -184,8 +184,14 @@ model.getAll = function(query, limit, page, user, callback){
             },
             {
                 $match: query
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: limit
             }
-        ]).limit(limit).skip(skip).exec(callback);
+        ]).exec(callback);
     });
 };
 
