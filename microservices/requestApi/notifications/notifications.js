@@ -2,14 +2,15 @@ var notifications = {};
 
 var fs = require('fs');
 
-var template = fs.readFileSync('./emailTemplate.html');
+var path = require('path');
+var template = fs.readFileSync(path.resolve(__dirname, 'emailTemplate.html'));
 
 var setTemplate = function(request, user, triggeringUser){
 
     var config = require('config');
     var email = template;
 
-    email = email.replace("{{name}}", user.['name']);
+    email = email.replace("{{name}}", user['name']);
     email = email.replace("{{updater}}", triggeringUser['name']);
     email = email.replace("{{url}}", config.get("ocwaUrl")+"/requests/"+request._id);
     email = email.replace("{{requestId}}", request._id);
@@ -24,8 +25,8 @@ notifications.notify = function(request, user){
     var config = require('config');
     var logger = require('npmlog');
 
-    var notifiyWho = request.reviewers.slice(0);
-    notifyWho.append(request.author);
+    var notifyWho = request.reviewers.slice(0);
+    notifyWho.push(request.author);
 
     for (var i=0; i<notifyWho.length; i++){
 
@@ -34,6 +35,8 @@ notifications.notify = function(request, user){
         if (who !== user.id){
             //id could be name or email so either way we need userinfo for all who are not the active user
             //and we don't notify the active user at all as they made the change
+            logger.debug("auth userinfo url");
+            logger.debug(config.get('authUrl')+'/userinfo');
 
             var httpReq = require('request');
 
@@ -43,6 +46,7 @@ notifications.notify = function(request, user){
                     'Authorization': "Bearer "+req.user.jwt
                 }
             }, function(apiErr, apiRes, body) {
+                logger.debug("notify - userinfo resp", body);
                 if ((!apiErr) && (apiRes.statusCode === 200)) {
                     var info = body;
 

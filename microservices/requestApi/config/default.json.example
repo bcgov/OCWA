@@ -26,6 +26,7 @@
       },
 
     "jwtSecret": "jwtSecret",
+    "authUrl": "URL_REQUIRED",
 
     "requiredRoleToCreateRequest": "exporter",
     "outputCheckerGroup": "oc",
