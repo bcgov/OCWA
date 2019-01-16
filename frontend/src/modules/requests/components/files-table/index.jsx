@@ -15,10 +15,12 @@ import { FileStatusSchema } from '../../types';
 import StatusIcon from './status-icon';
 import * as styles from './styles.css';
 
-const renderEmpty = isFailed => {
-  let text = <p>No files have been added yet. Edit to add.</p>;
+const renderEmpty = (isFailed, isLoaded) => {
+  let text = '';
 
-  if (isFailed) {
+  if (isLoaded) {
+    text = <p>No files have been added yet. Edit to add.</p>;
+  } else if (isFailed) {
     text = (
       <div>
         <div>
@@ -31,9 +33,11 @@ const renderEmpty = isFailed => {
 
   return <div className={styles.empty}>{text}</div>;
 };
+
 function FilesTable({
   data,
   isLoading,
+  isLoaded,
   isFailed,
   fileStatus,
   onRemove,
@@ -83,7 +87,9 @@ function FilesTable({
           content: (
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <FileIcon type={file.fileType} />
-              <span style={{ marginLeft: 10 }}>{file.fileName}</span>
+              <span style={{ marginLeft: 10 }}>
+                {file.fileName || 'File not found'}
+              </span>
             </div>
           ),
         },
@@ -136,7 +142,7 @@ function FilesTable({
 
   return (
     <DynamicTable
-      emptyView={renderEmpty(isFailed)}
+      emptyView={renderEmpty(isFailed, isLoaded)}
       isLoading={isLoading}
       head={head}
       rows={rows}
@@ -158,6 +164,7 @@ FilesTable.propTypes = {
   ).isRequired,
   fileStatus: PropTypes.objectOf(PropTypes.arrayOf(FileStatusSchema)),
   isLoading: PropTypes.bool.isRequired,
+  isLoaded: PropTypes.bool.isRequired,
   isFailed: PropTypes.bool.isRequired,
   showRemoveButton: PropTypes.bool,
   onRemove: PropTypes.func,

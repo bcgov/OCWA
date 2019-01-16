@@ -52,7 +52,11 @@ class Uploader extends React.Component {
     const payload = [];
 
     for (let i = 0; i < files.length; i += 1) {
-      payload.push(files[i]);
+      const file = files[i];
+
+      if (file.size > 0) {
+        payload.push(files[i]);
+      }
     }
 
     if (files.length > 0) {

@@ -14,17 +14,25 @@ import { FileSchema } from '../../types';
 import * as styles from './styles.css';
 
 function FileItem({ data, progress, uploadStatus }) {
+  const isQueued = uploadStatus === 'queued';
+  const isUploading = uploadStatus === 'uploading';
+  const isFailed = uploadStatus === 'failed';
+  const isLoaded = uploadStatus === 'loaded';
+
   return (
     <div key={data.id} className={cx('file-item', styles.fileItem)}>
-      <div className={styles.fileItemStatusIcon}>
-        {uploadStatus === 'queued' && <Spinner />}
-        {uploadStatus === 'uploading' && (
-          <ArrowUpCircleIcon primaryColor={colors.B500} />
-        )}
-        {uploadStatus === 'failed' && <ErrorIcon primaryColor={colors.R500} />}
-        {uploadStatus === 'loaded' && (
-          <CheckCircleIcon primaryColor={colors.G500} />
-        )}
+      <div
+        className={cx(styles.fileItemStatusIcon, {
+          'file-item-queued-icon': isQueued,
+          'file-item-uploading-icon': isUploading,
+          'file-item-failed-icon': isFailed,
+          'file-item-loaded-icon': isLoaded,
+        })}
+      >
+        {isQueued && <Spinner />}
+        {isUploading && <ArrowUpCircleIcon primaryColor={colors.B500} />}
+        {isFailed && <ErrorIcon primaryColor={colors.R500} />}
+        {isLoaded && <CheckCircleIcon primaryColor={colors.G500} />}
       </div>
       <div className={styles.fileItemIcon}>
         <FileIcon type={data.fileType} />
@@ -32,7 +40,7 @@ function FileItem({ data, progress, uploadStatus }) {
       <div className={styles.fileItemName}>{data.fileName}</div>
       <div className={styles.fileItemSize}>
         {startCase(uploadStatus)}{' '}
-        {uploadStatus === 'uploading' && `${progress}% of `}
+        {isUploading && `${Math.round(progress)}% of `}
         {filesize(data.size || 0)}
       </div>
     </div>

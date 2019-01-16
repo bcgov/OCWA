@@ -53,7 +53,7 @@ class Form extends React.Component {
             contentTransformerProvider={schema =>
               new WikiMarkupTransformer(schema)
             }
-            onSave={this.onSav}
+            onSave={this.onSave}
             onCancel={this.onCancel}
           />
         </CollapsedEditor>

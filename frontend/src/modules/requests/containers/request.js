@@ -30,6 +30,7 @@ const mapStateToProps = (state, props) => {
 
   return {
     data,
+    isOutputChecker: state.app.auth.user.groups.includes('/oc'),
     updatedAt,
     fetchStatus: get(state, `data.fetchStatus.entities.requests.${requestId}`),
   };
