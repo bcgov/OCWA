@@ -151,7 +151,7 @@ function RequestsList({
       </div>
     );
   };
-  const isPaginationVisible = data.length > 0 && data.length >= limit;
+  const isPaginationVisible = data.length > 0 && !search;
 
   return (
     <Page>

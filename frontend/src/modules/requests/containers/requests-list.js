@@ -21,15 +21,12 @@ const mapStateToProps = state => {
   const entities = get(state, 'data.entities.requests', {});
   const ids = keys(entities);
   const regex = new RegExp(search, 'i');
-  const sliceStartIndex = page === 1 ? 0 : page * limit;
-  const dataEntities = ids
-    .map(id => get(entities, id, {}))
-    .filter(d => {
-      if (isNull(filter)) return true;
-      if (isArray(filter)) return filter.includes(d.state);
-      return d.state === filter;
-    })
-    .slice(sliceStartIndex, sliceStartIndex + limit);
+  const sliceStartIndex = Math.max((page - 1) * limit, 0);
+  const dataEntities = ids.map(id => get(entities, id, {})).filter(d => {
+    if (isNull(filter)) return true;
+    if (isArray(filter)) return filter.includes(d.state);
+    return d.state === filter;
+  });
 
   const data = dataEntities.filter(d => {
     if (!search) return true;
@@ -37,7 +34,7 @@ const mapStateToProps = state => {
   });
 
   return {
-    data,
+    data: search ? data : data.slice(sliceStartIndex, sliceStartIndex + limit),
     fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests'),
     filter,
     page,
