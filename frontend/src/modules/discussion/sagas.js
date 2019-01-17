@@ -1,8 +1,10 @@
-import { call, take, takeLatest, put, fork } from 'redux-saga/effects';
+import { call, take, takeLatest, put, select } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 import { normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
 import { getToken } from '@src/services/auth';
+import has from 'lodash/has';
+import get from 'lodash/get';
 
 import { postSchema } from './schemas';
 
@@ -14,7 +16,7 @@ function createSocket() {
   return socket;
 }
 
-function createSocketChannel(socket) {
+function createSocketChannel(socket, email) {
   return eventChannel(emit => {
     socket.onmessage = event => {
       const parsedJson = JSON.parse(event.data);
@@ -24,16 +26,20 @@ function createSocketChannel(socket) {
         },
       });
 
-      if (json) {
-        const { topicId } = json.comment;
-        const payload = normalize(json.comment, postSchema);
-        emit({
-          payload,
-          meta: {
-            dataType: 'posts',
-            topicId,
-          },
-        });
+      if (has(json, 'comment')) {
+        const { topicId, authorUser } = json.comment;
+
+        if (authorUser !== email) {
+          const payload = normalize(json.comment, postSchema);
+
+          emit({
+            payload,
+            meta: {
+              dataType: 'posts',
+              topicId,
+            },
+          });
+        }
       }
     };
 
@@ -46,7 +52,8 @@ function createSocketChannel(socket) {
 function* authWatcher() {
   try {
     const socket = yield call(createSocket);
-    const channel = yield call(createSocketChannel, socket);
+    const email = yield select(state => get(state, 'app.auth.user.email'));
+    const channel = yield call(createSocketChannel, socket, email);
 
     while (true) {
       const { payload, meta } = yield take(channel);

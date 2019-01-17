@@ -50,19 +50,24 @@ class StatusIcon extends React.Component {
     const hasWarning = nonMandatoryRules.some(d => !d.pass);
     const isPassing = data.length > 0 && !hasError && !hasWarning;
     const label = 'Click to view file status';
+    let className = 'file-table-item-';
     let element = null;
 
     if (isPassing) {
+      className += 'passing-icon';
       element = <CheckCircleIcon primaryColor={colors.G500} label={label} />;
     } else if (hasError || has(data, '[0].error')) {
+      className += 'error-icon';
       element = <ErrorIcon primaryColor={colors.R500} label={label} />;
     } else if (hasWarning) {
+      className += 'warning-icon';
       element = <EditorWarningIcon primaryColor={colors.Y500} label={label} />;
     } else {
+      className += 'processing-icon';
       element = <EmojiFrequentIcon primaryColor={colors.N70} label={label} />;
     }
 
-    return element;
+    return <span className={className}>{element}</span>;
   };
 
   onOpen = () => {

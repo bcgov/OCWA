@@ -14,10 +14,15 @@ const bucket = config.get('storage.bucket');
 
 async function fetchIds(ids) {
   const result = [];
+
   for (const id of ids) {
-    const { metaData } = await minioClient.statObject(bucket, id);
-    const { jwt, ...file } = metaData;
-    result.push({ id, ...file });
+    try {
+      const { metaData } = await minioClient.statObject(bucket, id);
+      const { jwt, ...file } = metaData;
+      result.push({ id, ...file });
+    } catch (err) {
+      console.log('files break', err);
+    }
   }
 
   return result;

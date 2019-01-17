@@ -5,7 +5,7 @@ import uniqueId from 'lodash/uniqueId';
 import union from 'lodash/union';
 
 const uploadIdMapper = (action, value, key) => {
-  if (action.meta.file.filename === value.filename) {
+  if (action.meta.file.fileName === value.fileName) {
     return action.meta.file.id;
   }
 
@@ -117,7 +117,10 @@ const files = (state = {}, action = {}) => {
     }
   }
 
-  if (/request\/file\/upload\/(failed|progress)$/.test(action.type)) {
+  if (
+    /request\/file\/upload\/(failed|progress|success)$/.test(action.type) &&
+    !action.meta.isSupportingFile
+  ) {
     return mapKeys(state, uploadIdMapper.bind(null, action));
   }
 
@@ -150,7 +153,10 @@ const supportingFiles = (state = {}, action = {}) => {
     }
   }
 
-  if (/request\/file\/upload\/(failed|progress)$/.test(action.type)) {
+  if (
+    /request\/file\/upload\/(failed|progress|success)$/.test(action.type) &&
+    action.meta.isSupportingFile
+  ) {
     return mapKeys(state, uploadIdMapper.bind(null, action));
   }
 
