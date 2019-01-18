@@ -8,6 +8,7 @@ class Db:
         config = Config()
         self.db = {}
         self.Results = Results
+        self.createClient = createClient
         self.initConnection(config)
 
     def initConnection(self, config):
@@ -18,4 +19,4 @@ class Db:
             username=config.data['database']['username'],
             password=config.data['database']['password'],
             authentication_source=config.data['database']['dbName'],
-            connect=createClient)
+            connect=self.createClient)

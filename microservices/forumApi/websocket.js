@@ -22,9 +22,17 @@ websocket.init = function(){
                     if (err){
                         cb(false, 401, "Unauthorized");
                     }else{
-                        var userConf = config.get('user');
-                        decoded.id = decoded[userConf.idField];
-                        info.req.user = decoded;
+                        var userConf =  config.get('user')
+                        var user = {
+                            jwt: token,
+                            email: decoded[userConf.emailField],
+                            firstName: decoded[userConf.givenNameField],
+                            lastName: decoded[userConf.surNameField],
+                            name: decoded[userConf.givenNameField] + " " + decoded[userConf.surNameField],
+                            groups: decoded[userConf.groupField],
+                            id: decoded[userConf.idField]
+                        };
+                        info.req.user = user;
                         cb(true);
                     }
                 })

@@ -1,0 +1,40 @@
+.header .title {
+  margin: 30px 0;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 15px;
+  border-bottom: 2px solid #DFE1E6;
+}
+
+.filters > div:last-child {
+  flex: none;
+}
+
+.empty h3 {
+  margin: 10px 0;
+}
+
+.empty p {
+  margin: 10px 0;
+}
+
+.searchText {
+  text-decoration: underline;
+}
+
+.actionsColumn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pagination {
+  margin: 10px 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

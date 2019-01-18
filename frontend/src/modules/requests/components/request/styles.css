@@ -1,0 +1,75 @@
+.container {
+  flex: 1;
+}
+
+.header {
+  padding: 30px 0 0;
+  border-bottom: 1px solid #dee2e6;
+  background-color: #f5f5f5;
+}
+
+.tabs {
+  height: 28px;
+  padding-top: 30px;
+}
+
+.tab {
+  margin-right: 5px;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 3px 3px 0 0;
+  text-decoration: none;
+}
+
+.tab:hover,
+.tab:active,
+.tab:focus {
+  text-decoration: none;
+  outline: none !important;
+}
+
+.tabActive {
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-bottom-color: white;
+}
+
+.main {
+  margin-top: 30px;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.sectionHeader,
+.sectionContent {
+  border: 1px solid #dee2e6;
+}
+
+.sectionHeader {
+  font-weight: bold;
+  padding: 8px 10px;
+  border-radius: 3px 3px 0 0;
+  background-color: #f5f5f5;
+}
+
+.sectionContent {
+  border-radius: 0 0 3px 3px;
+  border-top: none;
+}
+
+.empty {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sectionContent > div > div {
+  margin-bottom: 0;
+}
+
+.sectionContent > div > div tbody {
+  border-bottom: none !important;
+}

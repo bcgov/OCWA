@@ -1,6 +1,6 @@
 const presets = [
   [
-    '@babel/env',
+    '@babel/preset-env',
     {
       targets: {
         edge: '17',
@@ -23,6 +23,7 @@ const plugins = [
     },
   ],
   '@babel/plugin-proposal-class-properties',
+  '@babel/plugin-syntax-dynamic-import',
 ];
 
 module.exports = { presets, plugins };

@@ -33,7 +33,7 @@ export AWS_SECRET_ACCESS_KEY=azureaccountkey;
 export AWS_REGION=us-east-1;
 tusd -s3-endpoint http://localhost:9000 -s3-bucket blobContainerName
 ```
-
+Before you start the demo modify demo/public/js/demo.js with a JWT that your tusd server will accept (if it requires one).
 Start the demo with the following commands
 ```
 cd demo;
