@@ -42,7 +42,7 @@ RUN touch /var/lib/nginx/logs/error.log && \
     chmod -R 777 /var/lib/nginx && \
     chmod -R 777 /var/log/nginx && \
     chmod -R 777 /run/nginx
-    chmod -R 777 /var/tmp/nginx/client_body
+    chmod -R 777 /var/tmp/nginx
 
 # Bundle app source
 COPY . .
