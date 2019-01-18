@@ -4,8 +4,10 @@ import Avatar from '@atlaskit/avatar';
 import Button from '@atlaskit/button';
 import { withRouter } from 'react-router-dom';
 // Icons
+import CheckIcon from '@atlaskit/icon/glyph/check';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled';
+import FlagFilledIcon from '@atlaskit/icon/glyph/flag-filled';
 import SignInIcon from '@atlaskit/icon/glyph/sign-in';
 import SignOutIcon from '@atlaskit/icon/glyph/sign-out';
 import TrashIcon from '@atlaskit/icon/glyph/trash';
@@ -14,6 +16,7 @@ import { RequestSchema } from '../../types';
 
 function RequestSidebar({
   data,
+  isOutputChecker,
   isSaving,
   history,
   onCancel,
@@ -40,6 +43,29 @@ function RequestSidebar({
       {data.state >= 2 &&
         data.state < 4 && (
           <React.Fragment>
+            {isOutputChecker &&
+              false && (
+                <React.Fragment>
+                  <div>
+                    <Button
+                      appearance="link"
+                      id="request-sidebar-approve-button"
+                      iconBefore={<CheckIcon primaryColor="green" />}
+                    >
+                      Approve Request
+                    </Button>
+                  </div>
+                  <div>
+                    <Button
+                      appearance="link"
+                      id="request-sidebar-reject-button"
+                      iconBefore={<FlagFilledIcon primaryColor="red" />}
+                    >
+                      Request Revisions
+                    </Button>
+                  </div>
+                </React.Fragment>
+              )}
             <div>
               <Button
                 appearance="link"
@@ -112,6 +138,7 @@ RequestSidebar.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
+  isOutputChecker: PropTypes.bool.isRequired,
   isSaving: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,

@@ -48,6 +48,10 @@ router.get('/', function(req, res, next) {
         q['name'] = req.query.name;
     }
 
+    if (typeof(req.query.topic_id) !== "undefined"){
+        q['topic'] = req.query.topic_id;
+    }
+
 
     db.Request.getAll(q, limit, page, req.user, function(err, requestRes){
         if (err || !requestRes){
