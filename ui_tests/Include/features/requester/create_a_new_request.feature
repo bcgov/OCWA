@@ -7,6 +7,6 @@ Feature: create a new request
 	Scenario: A valid request
 		Given requester adds an output file that does not violate any blocking or warning rules
 		When requester submits their request 
-		Then the request status is changed to "Awaiting review"
+		Then the request status is changed to "Awaiting Review"
 	Scenario: A request has no data
 		Then the requester should not be able to submit the request
