@@ -14,6 +14,7 @@ chai.use(chaiHttp);
 describe("Comments", function() {
 
     var topic = null;
+    var perm = null;
 
     before(function(done){
         var p = new db.Permission();
@@ -22,6 +23,7 @@ describe("Comments", function() {
         p.allow = true;
         p.topic_id = "*";
         p.save(function(e, r) {
+            perm = r;
             var t = new db.Topic();
             t.name = "Comment Test Topic";
             t.save(function (err, result) {
@@ -32,7 +34,7 @@ describe("Comments", function() {
     });
 
     after(function(done){
-        db.Permission.deleteMany({}, function(e) {
+        db.Permission.deleteMany({_id: perm._id}, function(e) {
             db.Topic.deleteOne({_id: topic._id}, function (err) {
                 done();
             });
@@ -83,7 +85,7 @@ describe("Comments", function() {
                 .set("Authorization", "Bearer "+jwt)
                 .send({})
                 .end(function (err, res) {
-                    res.should.have.status(200);
+                    res.should.have.status(500);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
                     res.body.error.should.be.a('object');

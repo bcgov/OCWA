@@ -1,0 +1,120 @@
+.container {
+  height: 100%;
+  min-height: 300px;
+}
+
+.uploadContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav {
+  margin-bottom: 20px;
+}
+
+.uploadQueueList,
+.loadedFiles {
+  margin-top: 20px;
+}
+
+.dropZone {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 3px dashed #e3e3e3;
+  border-radius: 4px;
+}
+
+.dropZoneDragOver {
+  border-color: #777;
+}
+
+.uploadText {
+  text-align: center;
+}
+
+.uploadText small {
+  display: block;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploadButton {
+  position: relative;
+}
+
+.uploadButton input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 9;
+}
+
+.fileUploaderList {
+  flex: 1;
+}
+
+.uploadQueueList h5 {
+  margin-bottom: 10px;
+}
+
+.uploadQueueList .fileItem:first-of-type {
+  border-top: 2px solid #DFE1E6;
+}
+
+.fileItem {
+  height: 30px;
+  padding: 5px 0;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #DFE1E6;
+}
+
+.fileItem > div {
+  margin: 0 5px;
+}
+
+.fileItem > div:first-child {
+  margin-left: 0;
+}
+
+.fileItem > div:last-child {
+  margin-right: 0;
+}
+
+.fileItemIcon {
+  margin-right: 10px;
+}
+
+.fileItemIcon > span {
+  display: inherit;
+}
+
+.fileItemName {
+  flex: 2;
+}
+
+.fileItemSize {
+  padding-right: 10px;
+  flex: 1;
+  text-align: right;
+}
+
+.fileItemState {
+  flex: 1;
+}
+
+.fileItemStatusIcon {
+  padding: 0 10px;
+}

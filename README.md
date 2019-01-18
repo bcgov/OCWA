@@ -49,7 +49,26 @@ helm install --name ocwa --namespace ocwa ./helm/ocwa -f ./helm/ocwa/config.yaml
 
 ### Helm update (Kubernetes)
 helm dep up ./helm/ocwa
-helm upgrade --name ocwa ./helm/ocwa  -f ./helm/ocwa/config.yaml
+helm upgrade ocwa ./helm/ocwa  -f ./helm/ocwa/config.yaml
+
+### Openshift (OCP)
+Openshift is a bit of a different deployment as helm is not supported by the test deployment area. Additionally due to the way 
+Openshift runs containers as a random UID many of the images that work for Kubernetes/Docker and are standard do not work on OpenShift.
+As a result the following changes are required.
+
+Mongo Image (forum-api: mongoImage: repository: ) registry.access.redhat.com/rhscl/mongodb-34-rhel7
+Because the mongo image is different the below must also change
+```
+forum-api:
+    dbPod:
+          persistence: /var/lib/mongodb/data
+          adminEnv: MONGODB_USER
+          passEnv: MONGODB_PASSWORD
+          dbEnv: MONGODB_DATABASE
+          addAdminPassEnv: true
+          adminPassEnv: MONGODB_ADMIN_PASSWORD
+          initDb: false
+```
 
 ## Contributing
 If you update apis that changes the signature at all, it is required to be under a new release (ie /v2 instead of /v1). The APIs are written specifically to make this easy.

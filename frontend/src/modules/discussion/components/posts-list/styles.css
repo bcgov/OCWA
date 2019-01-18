@@ -1,0 +1,32 @@
+.empty {
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+  border: 1px solid #dee2e6;
+  border-radius: 3px;
+}
+
+.loading {
+
+}
+
+.loadingPost {
+  height: 130px;
+}
+
+.loadingPost > div {
+  border-radius: 5px;
+  color: #dfe1e6;
+}
+
+.list {
+  margin-bottom: 20px;
+}
+
+.loadingPost,
+.post {
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #dfe1e6;
+}

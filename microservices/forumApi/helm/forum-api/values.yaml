@@ -12,31 +12,66 @@ image:
 service:
   type: ClusterIP
   port: 80
+
+wsService:
+  type: ClusterIp
   websocketPort: 3001
+
 
 ingress:
   enabled: false
-  annotations: {}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.org/websocket-services: ocwa-forum-api-ws
   path: /
   hosts:
-    - chart-example.local
+    - name: chart-example.local
+      service: ocwa-forum-api-ws
+      port: 3001
   tls: []
 
 ##Configuration for OCWA Forum Api
 apiPort: 3000
 wsPort: 3001
 logLevel: error
+
+global:
+  jwtSecret: "ssh this is a secret"
+
 database:
   host: ocwa-forum-api-mongo.ocwa
   username: forumApi
   password: password
   dbName: forumApi
 
-jwtSecret: "ssh this is a secret"
+defaultAccessIsGroup: true
+requiredRoleToCreateTopic: "exporter"
+ignoreGroups: "\"/oc\""
+
 user:
   idField: Email
+  emailField: Email
+  givenNameField: GivenName
+  surNameField: Surname
+  groupField: Groups
 
 createDatabase: true
+storageClassName: default
+dbPod:
+  persistence: /data/db
+  adminEnv: MONGO_INITDB_ROOT_USERNAME
+  admin: root
+  passEnv: MONGO_INITDB_ROOT_PASSWORD
+  pass: root
+  dbEnv: MONGO_INITDB_DATABASE
+  addAdminPassEnv: false
+  adminPassEnv: MONGODB_ADMIN_PASSWORD
+  initDb: true
+
+mongoImage:
+  repository: mongo
+  tag: 4.1
+
 
 
 resources: {}

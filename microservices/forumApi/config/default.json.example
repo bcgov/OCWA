@@ -13,8 +13,17 @@
   },
 
   "jwtSecret": "superSecretHere",
+
+  "defaultAccessIsGroup": true,
+  "requiredRoleToCreateTopic": "exporter",
+  "ignoreGroupsFromConsideration": [],
+
   "user":{
-      "idField": "Email"
+    "idField": "Email",
+    "emailField": "Email",
+    "givenNameField": "GivenName",
+    "surNameField": "Surname",
+    "groupField": "Groups"
   }
 
 }

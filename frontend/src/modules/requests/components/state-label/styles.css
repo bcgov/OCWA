@@ -1,0 +1,12 @@
+.container {
+  padding: 5px 8px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 3px;
+  color: white;
+}
+
+.container > div:first-child {
+  margin-right: 10px;
+  display: inherit;
+}

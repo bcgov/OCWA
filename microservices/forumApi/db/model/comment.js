@@ -15,6 +15,7 @@ model.getAll = function(query, limit, page, user, callback){
     var db = require('../db');
     var skip = limit * (page - 1);
     logger.verbose("Comment get all, skip, limit", skip, limit);
+
     db.Comment.aggregate([
         {
             $lookup:{
@@ -54,8 +55,17 @@ model.getAll = function(query, limit, page, user, callback){
         },
         {
             $project: {"permissions": 0}
+        },
+        {
+            $match: query
+        },
+        {
+            $skip: skip
+        },
+        {
+            $limit: limit
         }
-    ]).limit(limit).skip(skip).exec(callback);
+    ]).exec(callback);
 };
 
 module.exports = model;

@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "ocwaStorageApi.fullname" . }}
@@ -19,12 +19,29 @@ spec:
         app: {{ template "ocwaStorageApi.name" . }}
         release: {{ .Release.Name }}
     spec:
+      volumes:
+      - name: minio-config
+        emptyDir: {}
+      {{ if .Values.tus.jwtHook }}
+      - name: tus-config
+        configMap:
+          name: {{ template "ocwaForumApi.fullname" . }}-tusd-configmap
+          defaultMode: 511
+      {{ end }}
+
       containers:
         - name: {{ template "ocwaStorageApi.name" . }}-minio
           image: "{{ .Values.minio.image }}:{{ .Values.minio.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["minio"]
+          {{ if .Values.minio.server }}
+          args: ["server", "{{ .Values.minio.serverPath }}"]
+          {{ else }}
           args: ["gateway", "{{ .Values.minio.gatewayType }}"]
+          {{ end }}
+          volumeMounts:
+          - mountPath: /.minio
+            name: minio-config
           env:
             - name: MINIO_ACCESS_KEY
               valueFrom:
@@ -52,9 +69,26 @@ spec:
         - name: {{ template "ocwaStorageApi.name" . }}-tusd
           image: "{{ .Values.tus.image }}:{{ .Values.tus.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/go/bin/tusd"]
-          args: ["--hooks-dir", "/srv/tusd-hooks", "-s3-endpoint", '{{ template "ocwaStorageApi.fullname" . }}.{{ .Release.Namespace }}:{{ .Values.service.minioPort }}', "-s3-bucket", "{{ .Values.tus.bucket }}"]
+          {{ if .Values.tus.jwtHook }}
+          volumeMounts:
+            - name: tus-config
+              mountPath: /srv/tusd-hooks
+          {{ end }}
           env:
+            - name: S3_ENDPOINT
+              value: '{{.Values.minio.proto}}://{{ template "ocwaStorageApi.fullname" . }}.{{ .Release.Namespace }}:{{ .Values.service.minioPort }}'
+            - name: S3_BUCKET
+              value: "{{ .Values.tus.bucket }}"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaStorageApi.fullname" . }}-secrets
+                  key: jwt_secret
+            - name: JWT_AUD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaStorageApi.fullname" . }}-secrets
+                  key: jwt_aud
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -69,16 +103,16 @@ spec:
               value: "{{ .Values.tus.region }}"
           ports:
             - name: tusd
-              containerPort: 1080
+              containerPort: 8888
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: tusd
+              port: 1080
           readinessProbe:
             httpGet:
               path: /
-              port: tusd
+              port: 1080
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
