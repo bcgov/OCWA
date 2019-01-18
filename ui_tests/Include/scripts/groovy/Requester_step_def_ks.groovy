@@ -127,6 +127,7 @@ class Requester_step_def_ks {
 		WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
 		WebUI.waitForElementClickable(uploadFileButton, 30)
 		WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$fileToUpload")
+		WebUI.delay(10)
 		if (secondFile != "") {
 			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
 			WebUI.waitForElementClickable(uploadFileButton, 30)
