@@ -4,7 +4,6 @@ import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import EditorWarningIcon from '@atlaskit/icon/glyph/editor/warning';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import EmojiFrequentIcon from '@atlaskit/icon/glyph/emoji/frequent';
-import get from 'lodash/get';
 import has from 'lodash/has';
 import InlineDialog from '@atlaskit/inline-dialog';
 import { colors } from '@atlaskit/theme';
@@ -51,19 +50,24 @@ class StatusIcon extends React.Component {
     const hasWarning = nonMandatoryRules.some(d => !d.pass);
     const isPassing = data.length > 0 && !hasError && !hasWarning;
     const label = 'Click to view file status';
+    let className = 'file-table-item-';
     let element = null;
 
     if (isPassing) {
+      className += 'passing-icon';
       element = <CheckCircleIcon primaryColor={colors.G500} label={label} />;
     } else if (hasError || has(data, '[0].error')) {
+      className += 'error-icon';
       element = <ErrorIcon primaryColor={colors.R500} label={label} />;
     } else if (hasWarning) {
+      className += 'warning-icon';
       element = <EditorWarningIcon primaryColor={colors.Y500} label={label} />;
     } else {
+      className += 'processing-icon';
       element = <EmojiFrequentIcon primaryColor={colors.N70} label={label} />;
     }
 
-    return element;
+    return <span className={className}>{element}</span>;
   };
 
   onOpen = () => {
@@ -91,7 +95,11 @@ class StatusIcon extends React.Component {
         content={this.renderContent()}
         isOpen={open}
       >
-        <div role="button" onClick={this.onOpen}>
+        <div
+          className="file-upload-status-icon"
+          role="button"
+          onClick={this.onOpen}
+        >
           {iconElement}
         </div>
       </InlineDialog>

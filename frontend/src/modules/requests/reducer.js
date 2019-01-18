@@ -5,7 +5,7 @@ import uniqueId from 'lodash/uniqueId';
 import union from 'lodash/union';
 
 const uploadIdMapper = (action, value, key) => {
-  if (action.meta.file.filename === value.filename) {
+  if (action.meta.file.fileName === value.fileName) {
     return action.meta.file.id;
   }
 
@@ -20,6 +20,7 @@ const initialViewState = {
   sortKey: 'state',
   sortOrder: 'DESC',
   search: '',
+  page: 1,
 };
 
 const viewState = (state = initialViewState, action = {}) => {
@@ -28,6 +29,7 @@ const viewState = (state = initialViewState, action = {}) => {
       return {
         ...state,
         filter: action.payload,
+        page: 1,
       };
 
     case 'requests/sort':
@@ -93,6 +95,20 @@ const viewState = (state = initialViewState, action = {}) => {
         filesToDelete: union(state.filesToDelete, [action.payload]),
       };
 
+    case 'requests/get':
+      return {
+        ...state,
+        page: action.payload.page,
+      };
+
+    // If the result is empty it means there is exactly 100 items in the DB
+    // Since we don't know the total, we'll just go back to the previous page
+    case 'requests/get/success':
+      return {
+        ...state,
+        page: action.payload.result.length > 0 ? state.page : state.page - 1,
+      };
+
     default:
       return state;
   }
@@ -117,7 +133,10 @@ const files = (state = {}, action = {}) => {
     }
   }
 
-  if (/request\/file\/upload\/(failed|progress)$/.test(action.type)) {
+  if (
+    /request\/file\/upload\/(failed|progress|success)$/.test(action.type) &&
+    !action.meta.isSupportingFile
+  ) {
     return mapKeys(state, uploadIdMapper.bind(null, action));
   }
 
@@ -150,7 +169,10 @@ const supportingFiles = (state = {}, action = {}) => {
     }
   }
 
-  if (/request\/file\/upload\/(failed|progress)$/.test(action.type)) {
+  if (
+    /request\/file\/upload\/(failed|progress|success)$/.test(action.type) &&
+    action.meta.isSupportingFile
+  ) {
     return mapKeys(state, uploadIdMapper.bind(null, action));
   }
 

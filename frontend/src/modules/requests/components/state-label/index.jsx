@@ -14,7 +14,7 @@ function StateLabel({ value }) {
       name = 'Draft';
       break;
     case 1:
-      name = 'WIP';
+      name = 'Work in Progress';
       break;
     case 2:
       name = 'Awaiting Review';

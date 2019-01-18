@@ -4,10 +4,17 @@ html
     meta(charset="utf-8")
     meta(name="viewport" content="width=device-width, initial-scale=1")
     title= title
-    link(rel="stylesheet" href="/main.css")
+    if isDevelopment
+      link(rel="stylesheet" href="/main.css")
+    else
+      != stylesheetTag("main.css")
   body
     #main
   script.
     window.FILES_API_HOST = !{JSON.stringify(filesApiHost)};
     window.SOCKET_HOST = !{JSON.stringify(socketHost)};
-  script(src="/main.js")
+
+  if isDevelopment
+    script(src="/main.js")
+  else
+    != javascriptTag("main.js")

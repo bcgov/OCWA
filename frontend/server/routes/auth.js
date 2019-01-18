@@ -8,8 +8,25 @@ const merge = require('lodash/merge');
 const passport = require('passport');
 const pick = require('lodash/pick');
 const request = require('request');
+const addMonths = require('date-fns/add_months');
 
 const router = express.Router();
+
+// Test token generator
+function generateTestSession(req) {
+  const group = config.get('testGroup');
+  const testToken = config.get(`testJWT:${group.replace('/', '')}`); // groups contain slashes
+  const user = jwt.decode(testToken);
+  const expiresAt = addMonths(new Date(), 1);
+
+  req.user = user;
+
+  return {
+    token: testToken,
+    expiresAt,
+    user,
+  };
+}
 
 router.get(
   '/',
@@ -29,21 +46,13 @@ router.get(
 );
 
 // Return the session token
-router.get('/session', (req, res) => {
+router.get('/session', (req, res, done) => {
   const jwtSecret = config.get('jwtSecret');
   let token = null;
 
-  if (process.env.NODE_ENV === 'development' && config.has('testJWT')) {
-    return res.json({
-      token: config.get('testJWT'),
-      expiresAt: new Date(Date.now() * 10000000),
-      user: {
-        displayName: 'Test User',
-        username: 'test_user',
-        email: 'test@gmail.com',
-        id: '1',
-      },
-    });
+  if (process.env.NODE_ENV === 'development' && config.has('testGroup')) {
+    const session = generateTestSession(req);
+    return res.json(session);
   }
 
   // If there is no jwtSecret defined go with OCID only
@@ -56,17 +65,25 @@ router.get('/session', (req, res) => {
   }
 
   if (token) {
-    const userFields = pick(req.user, [
-      'displayName',
-      'username',
-      'id',
-      'email',
-    ]);
-    res.json({
-      token,
-      refreshToken: req.user.refreshToken,
-      expiresAt: new Date(req.user.expires * 1000),
-      user: userFields,
+    jwt.verify(token, jwtSecret, (err, claims) => {
+      if (err) {
+        res.status(401).end();
+      }
+
+      const userFields = pick(req.user, [
+        'displayName',
+        'username',
+        'id',
+        'email',
+        'groups',
+      ]);
+
+      return res.json({
+        token,
+        refreshToken: req.user.refreshToken,
+        expiresAt: new Date(claims.exp * 1000),
+        user: userFields,
+      });
     });
   } else {
     res.status(401).end();
@@ -104,6 +121,7 @@ router.post('/refresh', (req, res) => {
 
         // Update the passport session manually
         req.session.passport.user = merge({}, currentUser, claims, {
+          expires: claims.exp,
           accessToken: token,
           refreshToken: json.refresh_token,
         });

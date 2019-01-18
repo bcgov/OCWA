@@ -6,6 +6,7 @@ const isFunction = require('lodash/isFunction');
 const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
+const manifestHelpers = require('express-manifest-helpers');
 const MemoryStore = require('memorystore')(session);
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
@@ -45,6 +46,12 @@ if (isDevelopment) {
 // Express config
 app.set('view engine', 'pug');
 app.set('views', `${__dirname}/views`);
+app.use(
+  manifestHelpers.default({
+    manifestPath: path.resolve(__dirname, '..', 'dist', 'manifest.json'),
+    cache: !isDevelopment,
+  })
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'dist')));
@@ -78,6 +85,7 @@ app.get('/hello', (req, res) => {
 
 app.get(/^((?!.json|__webpack_hmr).)*$/, (req, res) => {
   res.render('index', {
+    isDevelopment,
     title: 'OCWA [Development Version]',
     filesApiHost: parseApiHost(filesApiHost),
     socketHost: parseWsHost(forumSocket),

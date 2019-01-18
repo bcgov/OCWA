@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Button, { ButtonGroup } from '@atlaskit/button';
 import {
   CollapsedEditor,
   Editor,
@@ -61,13 +62,16 @@ class Form extends React.Component {
   }
 }
 
-EditorContext.propTypes = {
+Form.propTypes = {
+  actions: PropTypes.shape({
+    clear: PropTypes.func,
+    getValue: PropTypes.func,
+  }).isRequired,
   isSending: PropTypes.bool,
+  onSave: PropTypes.func.isRequired,
 };
 
-EditorContext.defaultProps = {
-  actions: PropTypes.object.isRequired,
-  onSave: PropTypes.func.isRequired,
+Form.defaultProps = {
   isSending: false,
 };
 

@@ -16,7 +16,7 @@ import Sidebar from '../../containers/sidebar';
 import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
-function Request({ data, isLoaded, updatedAt, match }) {
+function Request({ data, isLoaded, isOutputChecker, updatedAt, match }) {
   if (!isLoaded && isEmpty(data)) {
     return null;
   }
@@ -44,8 +44,9 @@ function Request({ data, isLoaded, updatedAt, match }) {
               <nav className={styles.tabs}>
                 <NavLink
                   exact
-                  className={styles.tab}
                   activeClassName={styles.tabActive}
+                  className={styles.tab}
+                  id="request-details-tab"
                   to={match.url}
                 >
                   <InfoIcon size="small" />
@@ -53,8 +54,9 @@ function Request({ data, isLoaded, updatedAt, match }) {
                 </NavLink>
                 <NavLink
                   exact
-                  className={styles.tab}
                   activeClassName={styles.tabActive}
+                  className={styles.tab}
+                  id="request-discussion-tab"
                   to={`${match.url}/discussion`}
                 >
                   <CommentIcon size="small" />
@@ -83,7 +85,7 @@ function Request({ data, isLoaded, updatedAt, match }) {
               </Switch>
             </GridColumn>
             <GridColumn medium={3}>
-              <Sidebar data={data} />
+              <Sidebar data={data} isOutputChecker={isOutputChecker} />
             </GridColumn>
           </Grid>
         </div>
@@ -94,6 +96,7 @@ function Request({ data, isLoaded, updatedAt, match }) {
 
 Request.propTypes = {
   data: RequestSchema.isRequired,
+  isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   updatedAt: PropTypes.string.isRequired,
   match: PropTypes.shape({
