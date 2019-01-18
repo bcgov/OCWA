@@ -14,7 +14,7 @@ function Dashboard({ data }) {
               <h4>Unclaimed</h4>
             </header>
             <div className={styles.cardsContainer}>
-              {data.map(d => <Card key={d._id} data={d} />)}
+              <div>{data.map(d => <Card key={d._id} data={d} />)}</div>
             </div>
           </div>
           <div className={styles.column}>
