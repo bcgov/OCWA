@@ -25,7 +25,7 @@ assignees: BrandonSharratt
 ## Test Case
 
 # ENV
-`PROD`, `CAT`, `CAD`
+`PROD`, `DEV`, `TEST`
 
 # TESTCASE
 *
