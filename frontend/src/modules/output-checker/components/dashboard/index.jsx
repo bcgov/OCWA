@@ -1,12 +1,32 @@
 import * as React from 'react';
+import Select from '@atlaskit/select';
+import TextField from '@atlaskit/field-text';
 
-import Card from './card';
+import Card from '../request-card';
 import * as styles from './styles.css';
 
 function Dashboard({ data }) {
   return (
     <div className={styles.container}>
-      <div className={styles.toolbar}>Toolbar</div>
+      <div className={styles.toolbar}>
+        <div>
+          <Select
+            options={[
+              { label: 'Show All Requests' },
+              { label: 'Show My Requests' },
+              { label: 'Show Unassigned' },
+            ]}
+            placeholder="Display: Show All Requests"
+          />
+        </div>
+        <div>
+          <TextField
+            shouldFitContainer
+            isLabelHidden
+            placeholder="Search export requests..."
+          />
+        </div>
+      </div>
       <div className={styles.board}>
         <div>
           <div className={styles.column}>

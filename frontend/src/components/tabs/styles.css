@@ -1,0 +1,32 @@
+.container {
+  position: relative;
+  bottom: -1px;
+  padding-top: 30px;
+}
+
+.tab {
+  margin-right: 5px;
+  padding: 8px 10px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 3px 3px 0 0;
+  text-decoration: none;
+}
+
+.icon {
+  margin-right: 4px;
+}
+
+.tab:hover,
+.tab:active,
+.tab:focus {
+  text-decoration: none;
+  outline: none !important;
+}
+
+.tabActive {
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-bottom-color: white;
+}

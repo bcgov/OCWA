@@ -1,0 +1,41 @@
+.container {
+  padding: 8px;
+  border-bottom: 1px solid #dee2e6;
+  background: #fff;
+}
+
+.draggable {
+  margin: 0 10px 10px;
+  border: 1px solid #dee2e6;
+  border-radius: 3px;
+}
+
+.title {
+  margin-bottom: 10px;
+  font-weight: 600;
+  hyphens: auto;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  margin-right: 5px;
+}
+
+.detailsRow {
+  margin: 0 0 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.detailsRow small {
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.author {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
