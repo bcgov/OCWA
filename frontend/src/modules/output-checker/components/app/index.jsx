@@ -4,10 +4,10 @@ import AppBar from '@src/components/app-bar';
 import Avatar from '@atlaskit/avatar';
 import Dropdown, { DropdownItem } from '@atlaskit/dropdown-menu';
 import Issue24Icon from '@atlaskit/icon-object/glyph/issue/24';
-import Requests from '@src/modules/requests/containers/requests-list';
 import Request from '@src/modules/requests/containers/request';
 import { Switch, Route } from 'react-router-dom';
 
+import Dashboard from '../../containers/dashboard';
 import * as styles from './styles.css';
 
 function App({ user }) {
@@ -24,7 +24,7 @@ function App({ user }) {
       </AppBar>
       <div id="app-content" className={styles.container}>
         <Switch>
-          <Route exact path="/" component={Requests} />
+          <Route exact path="/" component={Dashboard} />
           <Route path="/requests/:requestId" component={Request} />
           <Route render={() => '404'} />
         </Switch>
