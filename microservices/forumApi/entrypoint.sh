@@ -3,7 +3,7 @@
 mkdir -p ./config
 printf "{\n" > ./config/default.json
 printf "\"apiPort\": 3000,\n" >> ./config/default.json
-printf "\"wsPort\": 3001,\n" >> ./config/default.json
+printf "\"wsPort\": 2999,\n" >> ./config/default.json
 printf "\"logLevel\": \"${LOG_LEVEL}\",\n" >> ./config/default.json
 printf "\"morganLogType\": \"dev\",\n" >> ./config/default.json
 printf "\"database\": {\n" >> ./config/default.json
@@ -26,4 +26,5 @@ printf "\"groupField\": \"${GROUP_FIELD}\"\n" >> ./config/default.json
 printf "}\n" >> ./config/default.json
 printf "}" >> ./config/default.json
 
+nginx -c /etc/nginx/nginx.conf
 npm start
