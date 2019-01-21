@@ -28,6 +28,8 @@ notifications.notify = function(request, user){
     var notifyWho = request.reviewers.slice(0);
     notifyWho.push(request.author);
 
+    logger.debug("Notification triggered", request, user);
+
     for (var i=0; i<notifyWho.length; i++){
 
         var who = notifyWho[i];
