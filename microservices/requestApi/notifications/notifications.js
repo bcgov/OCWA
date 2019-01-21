@@ -26,6 +26,19 @@ notifications.notify = function(request, user){
 
     var config = require('config');
     var logger = require('npmlog');
+
+    if (!config.has('email')){
+        logger.debug("Notifications - Triggered but not configured");
+        return;
+    }
+
+    var emailConfig = config.get('email');
+    if (!emailConfig.enabled){
+        return;
+    }
+
+
+    var nodemailer = require("nodemailer");
     var db = require('../db/db');
 
     var notifyWho = request.reviewers.slice(0);
@@ -53,9 +66,7 @@ notifications.notify = function(request, user){
 
                 var emailContent = setTemplate(request, userInfo, user);
 
-                var nodemailer = require("nodemailer");
 
-                var emailConfig = config.get('email');
 
                 var transporter = nodemailer.createTransport({
                     service: emailConfig.service,

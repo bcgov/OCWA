@@ -29,13 +29,26 @@ RUN apk update && \
     printf "    fastcgi_temp_path /tmp/nginx-fastcgi;\n" >> /etc/nginx/nginx.conf && \
     printf "    uwsgi_temp_path /tmp/nginx-uwsgi;\n" >> /etc/nginx/nginx.conf && \
     printf "    scgi_temp_path /tmp/nginx-scgi;\n" >> /etc/nginx/nginx.conf && \
+
+    printf "    map \$http_upgrade \$connection_upgrade {\n" >> /etc/nginx/nginx.conf && \
+    printf "        default upgrade;\n" >> /etc/nginx/nginx.conf && \
+    printf "        '' close;\n" >> /etc/nginx/nginx.conf && \
+    printf "    }\n" >> /etc/nginx/nginx.conf && \
+
+
+    printf "    upstream websocket {\n" >> /etc/nginx/nginx.conf && \
+    printf "        server 127.0.0.1:2999;\n" >> /etc/nginx/nginx.conf && \
+    printf "    }\n" >> /etc/nginx/nginx.conf && \
+
+    printf "    \n" >> /etc/nginx/nginx.conf && \
+
     printf "    server {\n" >> /etc/nginx/nginx.conf && \
     printf "        listen 3001;\n" >> /etc/nginx/nginx.conf && \
     printf "        location / {\n" >> /etc/nginx/nginx.conf && \
-    printf "            proxy_pass http://127.0.0.1:3001/;\n" >> /etc/nginx/nginx.conf && \
+    printf "            proxy_pass http://websocket;\n" >> /etc/nginx/nginx.conf && \
     printf "            proxy_http_version 1.1;\n" >> /etc/nginx/nginx.conf && \
     printf "            proxy_set_header Upgrade \$http_upgrade;\n" >> /etc/nginx/nginx.conf && \
-    printf "            proxy_set_header Connection \"Upgrade\";\n" >> /etc/nginx/nginx.conf && \
+    printf "            proxy_set_header Connection \$connection_upgrade;\n" >> /etc/nginx/nginx.conf && \
     printf "        }\n" >> /etc/nginx/nginx.conf && \
     printf "    }\n" >> /etc/nginx/nginx.conf && \
     printf "}\n" >> /etc/nginx/nginx.conf
