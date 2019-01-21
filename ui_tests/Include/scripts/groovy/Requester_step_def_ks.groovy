@@ -66,6 +66,7 @@ class Requester_step_def_ks {
 	String LOGOUT_URL = "/auth/logout"
 	//String NEW_REQUEST_DIALOG_HEADER_TEXT = "Initiate a New Request"
 	String NEW_REQUEST_DIALOG_ID = "request-form"
+	String SEARCH_BOX_ID = "requests-list-search"
 
 	String g_requestName = ""
 
@@ -273,7 +274,11 @@ class Requester_step_def_ks {
 
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
-
+		
+		// may not make a difference
+		TestObject uploadFileButton = get_test_object_by_id(REQUEST_FILES_UPLOAD_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
+		
 		TestObject saveCloseBtn = get_test_object_by_id(REQUEST_SAVE_CLOSE_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(saveCloseBtn, "disabled", 10)
 		WebUI.waitForElementVisible(saveCloseBtn, 10)
@@ -281,7 +286,7 @@ class Requester_step_def_ks {
 			WebUI.comment("waiting for Save and Close button to be clickable timed out")
 		}
 		WebUI.click(saveCloseBtn)
-
+		//WebUI.waitForElementNotHasAttribute(saveCloseBtn, "disabled", 10) // may not be necessary
 		WebUI.waitForElementNotPresent(saveCloseBtn, 10) //wait for the modal window to close
 	}
 
@@ -294,7 +299,7 @@ class Requester_step_def_ks {
 		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
-		
+
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
 
 		WebUI.waitForElementNotPresent(saveBtn, 10) //wait for the modal window to close
@@ -312,9 +317,12 @@ class Requester_step_def_ks {
 	def requester_views_request_they_created(){
 		if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
 			WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
-			
+
 		}
 		WebUI.waitForPageLoad(20)
+		TestObject searchBox = get_test_object_by_id(SEARCH_BOX_ID)
+		WebUI.setText(searchBox, g_requestName)
+
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementVisible(linkToRequest, 20)
 
@@ -365,8 +373,9 @@ class Requester_step_def_ks {
 	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles){
 		//requester_views_request_they_created()
 		WebUI.comment("current page (should be main page):${WebUI.getUrl()}")
-		//if (!WebUI.verifyTextNotPresent(NEW_REQUEST_DIALOG_HEADER_TEXT, false, FailureHandling.OPTIONAL)) { WebUI.comment("the new request dialog is still open (and it shouldn't be at this point)") }
-		//if (WebUI.verifyElementNotInViewport(get_test_object_by_id(NEW_REQUEST_DIALOG_ID), 1, FailureHandling.OPTIONAL))
+		TestObject searchBox = get_test_object_by_id(SEARCH_BOX_ID)
+		WebUI.setText(searchBox, g_requestName)
+
 		if (!WebUI.verifyTextPresent(g_requestName, false)) {
 			WebUI.comment("unable to find the text:$g_requestName on the page.  This text is used to find the request link")
 		}
@@ -380,7 +389,7 @@ class Requester_step_def_ks {
 
 		WebUI.waitForPageLoad(20)
 		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
-		//WebUI.waitForAngularLoad(10)
+
 		WebUI.verifyTextPresent(g_requestName, false)
 
 		if (numOutputFiles == "1") {
