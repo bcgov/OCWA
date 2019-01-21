@@ -20,13 +20,13 @@ RUN apk update && \
     printf "user                            www;\n" > /etc/nginx/nginx.conf && \
     printf "worker_processes                auto;\n" >> /etc/nginx/nginx.conf && \
     printf "error_log                       /var/log/nginx/error.log warn;\n" >> /etc/nginx/nginx.conf && \
-    printf "client_body_in_file_only off;\n"  >> /etc/nginx/nginx.conf && \
     printf "events {\n" >> /etc/nginx/nginx.conf && \
     printf "    worker_connections          1024;\n" >> /etc/nginx/nginx.conf && \
     printf "}\n" >> /etc/nginx/nginx.conf && \
     printf "http {\n" >> /etc/nginx/nginx.conf && \
     printf "    server {\n" >> /etc/nginx/nginx.conf && \
     printf "        listen 3001;\n" >> /etc/nginx/nginx.conf && \
+    printf "        client_body_in_file_only off;\n"  >> /etc/nginx/nginx.conf && \
     printf "        location / {\n" >> /etc/nginx/nginx.conf && \
     printf "            proxy_pass http://127.0.0.1:3001/;\n" >> /etc/nginx/nginx.conf && \
     printf "            proxy_http_version 1.1;\n" >> /etc/nginx/nginx.conf && \
