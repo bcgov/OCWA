@@ -20,11 +20,15 @@ RUN apk update && \
     printf "user                            www;\n" > /etc/nginx/nginx.conf && \
     printf "worker_processes                auto;\n" >> /etc/nginx/nginx.conf && \
     printf "error_log                       /var/log/nginx/error.log warn;\n" >> /etc/nginx/nginx.conf && \
-    printf "client_body_in_file_only off;\n"  >> /etc/nginx/nginx.conf && \
     printf "events {\n" >> /etc/nginx/nginx.conf && \
     printf "    worker_connections          1024;\n" >> /etc/nginx/nginx.conf && \
     printf "}\n" >> /etc/nginx/nginx.conf && \
     printf "http {\n" >> /etc/nginx/nginx.conf && \
+    printf "    client_body_temp_path /tmp/nginx 1 2;\n" >> /etc/nginx/nginx.conf && \
+    printf "    proxy_temp_path /tmp/nginx-proxy;\n" >> /etc/nginx/nginx.conf && \
+    printf "    fastcgi_temp_path /tmp/nginx-fastcgi;\n" >> /etc/nginx/nginx.conf && \
+    printf "    uwsgi_temp_path /tmp/nginx-uwsgi;\n" >> /etc/nginx/nginx.conf && \
+    printf "    scgi_temp_path /tmp/nginx-scgi;\n" >> /etc/nginx/nginx.conf && \
     printf "    server {\n" >> /etc/nginx/nginx.conf && \
     printf "        listen 3001;\n" >> /etc/nginx/nginx.conf && \
     printf "        location / {\n" >> /etc/nginx/nginx.conf && \

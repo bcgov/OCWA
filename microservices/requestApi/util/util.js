@@ -54,7 +54,7 @@ util.getFileStatus = function(fileIds, callback){
 
     for (var i = 0; i < fileIds.length; i++) {
         (function(index){
-            log.debug("Attempting to get status for " + fileIds[index]);
+            log.verbose("Attempting to get status for " + fileIds[index]);
             httpReq.get({
                 url: config.get('validationApi') + '/v1/validate/' + fileIds[index],
                 headers: {
@@ -70,7 +70,7 @@ util.getFileStatus = function(fileIds, callback){
                     try {
                         var json = JSON.parse(body);
                         body = json;
-                        log.debug("Got status for "+fileIds[index]+": ", body);
+                        log.verbose("Got status for "+fileIds[index]+": ", body);
 
                         for (var j = 0; j < body.length; j++) {
 
@@ -94,7 +94,7 @@ util.getFileStatus = function(fileIds, callback){
                 }
                 numResults++;
                 if (numResults === fileIds.length) {
-                    log.debug("Returning all file statuses of:", status);
+                    log.verbose("Returning all file statuses of:", status);
                     callback(status, fullPass);
                     return;
                 }
