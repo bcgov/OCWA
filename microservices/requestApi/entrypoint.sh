@@ -35,8 +35,8 @@ printf "\"enabled\": \"${EMAIL_ENABLED}\",\n" >> ./config/default.json
 printf "\"service\": \"${EMAIL_SERVICE}\",\n" >> ./config/default.json
 printf "\"user\": \"${EMAIL_USER}\",\n" >> ./config/default.json
 printf "\"pass\": \"${EMAIL_PASSWORD}\",\n" >> ./config/default.json
-printf "\"from\": \"${EMAIL_FROM}\",\n" >> ./config/default.json
-printf "}\n" >> ./config/default.json
+printf "\"from\": \"${EMAIL_FROM}\"\n" >> ./config/default.json
+printf "},\n" >> ./config/default.json
 
 
 printf "\"autoAccept\": ${AUTO_APPROVE},\n" >> ./config/default.json
