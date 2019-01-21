@@ -114,8 +114,9 @@ class NewRequestDialog extends React.PureComponent {
       isSaving,
       isUploading,
       onCancel,
+      open,
     } = this.props;
-    const isDisabled = isCreating || isUploading;
+    const isDisabled = isCreating || isUploading || isSaving || !open;
     const isDraft = data.state === 0;
 
     return (
