@@ -28,6 +28,7 @@ db.init = function(){
         logger.debug("Db connection established");
     });
     db.Request = require('./model/request');
+    db.User = require('./model/user');
 
     var collections = Object.keys(db.db.collections);
 

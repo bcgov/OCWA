@@ -3,16 +3,18 @@ var notifications = {};
 var fs = require('fs');
 
 var path = require('path');
-var template = fs.readFileSync(path.resolve(__dirname, 'emailTemplate.html'));
+var template = fs.readFileSync(path.resolve(__dirname, 'emailTemplate.html'), 'utf8');
 
 var setTemplate = function(request, user, triggeringUser){
 
     var config = require('config');
     var email = template;
 
+    console.log("SET TEMPLATE", user);
+
     email = email.replace("{{name}}", user['name']);
     email = email.replace("{{updater}}", triggeringUser['name']);
-    email = email.replace("{{url}}", config.get("ocwaUrl")+"/requests/"+request._id);
+    email = email.replace("{{url}}", config.get("ocwaUrl")+"requests/"+request._id);
     email = email.replace("{{requestId}}", request._id);
 
     return email
@@ -24,70 +26,62 @@ notifications.notify = function(request, user){
 
     var config = require('config');
     var logger = require('npmlog');
+    var db = require('../db/db');
 
     var notifyWho = request.reviewers.slice(0);
     notifyWho.push(request.author);
 
-    logger.debug("Notification triggered", request, user);
+    logger.verbose("Notification triggered", user);
 
     for (var i=0; i<notifyWho.length; i++){
 
         var who = notifyWho[i];
 
-        if (who !== user.id){
+        if ((true) || (who !== user.id)){
             //id could be name or email so either way we need userinfo for all who are not the active user
             //and we don't notify the active user at all as they made the change
-            logger.debug("auth userinfo url");
-            logger.debug(config.get('authUrl')+'/userinfo');
 
-            var httpReq = require('request');
+            db.User.findOne({id: user.id}, function(err, userInfo) {
 
-            httpReq.post({
-                url: config.get('authUrl')+'/userinfo',
-                headers: {
-                    'Authorization': "Bearer "+req.user.jwt
-                }
-            }, function(apiErr, apiRes, body) {
-                logger.debug("notify - userinfo resp", body);
-                if ((!apiErr) && (apiRes.statusCode === 200)) {
-                    var info = body;
-
-                    var emailContent = setTemplate(request, info, user);
-
-                    var nodemailer = require("nodemailer");
-
-                    var emailConfig = config.get('email');
-
-                    var transporter = nodemailer.createTransport({
-                        service: emailConfig.service,
-                        auth: {
-                            user: emailConfig.user,
-                            pass: emailConfig.pass
-                        }
-                    });
-
-                    var mailOptions = {
-                        from: emailConfig.from,
-                        to: info['email'],
-                        subject: "OCWA - Request Update",
-                        html: emailContent
-                    };
-
-                    transporter.sendMail(mailOptions, function(error, info){
-                        if (error){
-                            logger.error("Error sending email to " + mailOptions.to, error);
-                            return;
-                        }
-                        logger.debug("Email sent: " + info.response);
-                    });
+                if (err){
+                    logger.error("Notifications - Error getting user info", err);
+                    return;
+                }else if (!userInfo){
+                    logger.error("Notifications - No user info");
                     return;
                 }
-                logger.error("Error getting userinfo for " + who + " for emailing");
+
+                var emailContent = setTemplate(request, userInfo, user);
+
+                var nodemailer = require("nodemailer");
+
+                var emailConfig = config.get('email');
+
+                var transporter = nodemailer.createTransport({
+                    service: emailConfig.service,
+                    auth: {
+                        user: emailConfig.user,
+                        pass: emailConfig.pass
+                    }
+                });
+
+                var mailOptions = {
+                    from: emailConfig.from,
+                    to: who,
+                    subject: "OCWA - Request Update",
+                    html: emailContent
+                };
+
+                transporter.sendMail(mailOptions, function (error, info) {
+                    if (error) {
+                        logger.error("Error sending email to " + mailOptions.to, error);
+                        return;
+                    }
+                    logger.debug("Email sent: " + info.response);
+                });
             });
         }
-
     }
-
 };
 
 module.exports = notifications;
