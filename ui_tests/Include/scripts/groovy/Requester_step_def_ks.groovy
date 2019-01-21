@@ -291,8 +291,10 @@ class Requester_step_def_ks {
 		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
 		WebUI.waitForElementClickable(saveBtn, 30)
 		WebUI.click(saveBtn)
+		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
+		
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
 
 		WebUI.waitForElementNotPresent(saveBtn, 10) //wait for the modal window to close
@@ -310,8 +312,9 @@ class Requester_step_def_ks {
 	def requester_views_request_they_created(){
 		if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
 			WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
-			WebUI.waitForPageLoad(20)
+			
 		}
+		WebUI.waitForPageLoad(20)
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementVisible(linkToRequest, 20)
 
@@ -377,7 +380,7 @@ class Requester_step_def_ks {
 
 		WebUI.waitForPageLoad(20)
 		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
-		WebUI.waitForAngularLoad(10)
+		//WebUI.waitForAngularLoad(10)
 		WebUI.verifyTextPresent(g_requestName, false)
 
 		if (numOutputFiles == "1") {

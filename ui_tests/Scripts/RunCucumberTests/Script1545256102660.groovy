@@ -13,9 +13,9 @@ import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import internal.GlobalVariable as GlobalVariable
 
-CucumberKW.runFeatureFile('Include/features/requester/draft_requests.feature')
+not_run: CucumberKW.runFeatureFile('Include/features/requester/draft_requests.feature')
 
-not_run: CucumberKW.runFeatureFile('Include/features/requester/create_a_new_request.feature')
+CucumberKW.runFeatureFile('Include/features/requester/create_a_new_request.feature')
 
 not_run: CucumberKW.runFeatureFile('Include/features/requester/view_request_details.feature')
 
