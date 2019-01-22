@@ -50,7 +50,7 @@ notifications.notify = function(request, user){
 
         var who = notifyWho[i];
 
-        if ((true) || (who !== user.id)){
+        if (who !== user.id){
             //id could be name or email so either way we need userinfo for all who are not the active user
             //and we don't notify the active user at all as they made the change
 
@@ -66,10 +66,13 @@ notifications.notify = function(request, user){
 
                 var emailContent = setTemplate(request, userInfo, user);
 
-
+                var emailPort = (typeof(emailConfig.port) === "undefined") ? 25 : emailConfig.port;
+                var emailSecure = (typeof(emailConfig.secure) === "undefined") ? false : emailConfig.secure;
 
                 var transporter = nodemailer.createTransport({
-                    service: emailConfig.service,
+                    host: emailConfig.service,
+                    port: emailPort,
+                    secure: emailSecure,
                     auth: {
                         user: emailConfig.user,
                         pass: emailConfig.pass
