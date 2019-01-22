@@ -38,7 +38,6 @@ printf "\"pass\": \"${EMAIL_PASSWORD}\",\n" >> ./config/default.json
 printf "\"from\": \"${EMAIL_FROM}\"\n" >> ./config/default.json
 printf "},\n" >> ./config/default.json
 
-
 printf "\"autoAccept\": ${AUTO_APPROVE},\n" >> ./config/default.json
 
 printf "\"requiredRoleToCreateRequest\": \"${CREATE_ROLE}\",\n" >> ./config/default.json
