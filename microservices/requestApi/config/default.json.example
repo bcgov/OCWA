@@ -26,6 +26,15 @@
       },
 
     "jwtSecret": "jwtSecret",
+    "ocwaUrl": "http://localhost:8000/",
+
+    "email":{
+      "enabled": false,
+      "service": "gmail",
+      "user": "ocwa@gmail.com",
+      "pass": "ocwaPassword",
+      "from": "ocwa@donotreply.com"
+    },
 
     "requiredRoleToCreateRequest": "exporter",
     "outputCheckerGroup": "oc",
@@ -34,10 +43,10 @@
     "autoAccept": false,
 
     "user":{
-    "idField": "Email",
-    "emailField": "Email",
-    "givenNameField": "GivenName",
-    "surNameField": "Surname",
-    "groupField": "Groups"
+        "idField": "Email",
+        "emailField": "Email",
+        "givenNameField": "GivenName",
+        "surNameField": "Surname",
+        "groupField": "Groups"
   }
 }

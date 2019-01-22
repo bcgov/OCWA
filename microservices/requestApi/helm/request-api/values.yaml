@@ -62,6 +62,12 @@ autoApprove: false
 validationApi: http://ocwa-validation-api.ocwa
 validationApiSecret: validateApiSecret
 
+ocwaUrl: http://ocwa-ui.ocwa
+emailEnabled: false
+emailService: gmail
+emailUser: me@ocwa.com
+emailPassword: myPass
+emailFrom: donotreply@ocwa.com
 
 resources: {}
   # If you want to specify resources, uncomment the following
