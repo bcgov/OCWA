@@ -15,7 +15,7 @@ import { RequestSchema } from '@src/modules/requests/types';
 
 import * as styles from './styles.css';
 
-function RequestCard({ data, draggable }) {
+function RequestCard({ activeId, data, draggable }) {
   const totalCheckers = data.reviewers.length;
   const lastChronology = last(data.chronology);
   const now = new Date();
@@ -26,6 +26,7 @@ function RequestCard({ data, draggable }) {
     <div
       className={cx(styles.container, {
         [styles.draggable]: draggable,
+        [styles.active]: data._id === activeId,
       })}
     >
       <div className={styles.title}>
@@ -59,6 +60,7 @@ function RequestCard({ data, draggable }) {
 }
 
 RequestCard.propTypes = {
+  activeId: PropTypes.string.isRequired,
   data: RequestSchema.isRequired,
   draggable: PropTypes.bool,
 };

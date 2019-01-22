@@ -1,17 +1,22 @@
 import * as React from 'react';
 import CommentIcon from '@atlaskit/icon/glyph/comment';
+import Discussion from '@src/modules/discussion/containers/discussion';
 import DocumentsIcon from '@atlaskit/icon/glyph/documents';
 import InfoIcon from '@atlaskit/icon/glyph/info';
 import Tab from '@src/components/tabs/tab';
 import Tabs from '@src/components/tabs';
+import { Route, Switch } from 'react-router-dom';
+import Spinner from '@atlaskit/spinner';
 
+import Details from './details';
+import Files from './files';
 import RequestsNav from '../../containers/requests-nav';
 import * as styles from './styles.css';
 
 function Request({ data, match }) {
   return (
     <div className={styles.container}>
-      <RequestsNav />
+      <RequestsNav activeId={match.params.requestId} />
       <div className={styles.request}>
         <header className={styles.header}>
           <h2>{data.name}</h2>
@@ -30,22 +35,25 @@ function Request({ data, match }) {
           </Tabs>
         </header>
         <div className={styles.main}>
-          <div>
-            <h6>Description</h6>
-            <p>{data.description || 'No Description provided'}</p>
-            <h6>Confidentiality</h6>
-            <p>{data.confidentiality || 'No Confidentiality provided'}</p>
-            <h6>Frequency</h6>
-            <p>{data.freq || 'No Frequency provided'}</p>
-            <h6>Purpose</h6>
-            <p>{data.purpose || 'No Purpose provided'}</p>
-            <h6>Selection Criteria</h6>
-            <p>{data.selectionCriteria || 'No Selection Criteria provided'}</p>
-            <h6>Variable Description</h6>
-            <p>
-              {data.variableDescription || 'No Variable Description provided'}
-            </p>
-          </div>
+          <Switch>
+            <Route
+              exact
+              path={match.url}
+              render={() => <Details data={data} />}
+            />
+            <Route
+              exact
+              path={`${match.url}/files`}
+              render={() => <Files data={data} />}
+            />
+            <Route
+              exact
+              path={`${match.url}/discussion`}
+              render={() =>
+                data.topic ? <Discussion id={data.topic} /> : <Spinner />
+              }
+            />
+          </Switch>
         </div>
       </div>
     </div>

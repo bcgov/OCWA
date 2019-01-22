@@ -4,6 +4,10 @@
   background: #fff;
 }
 
+.active {
+  background-color: #dee2e6;
+}
+
 .draggable {
   margin: 0 10px 10px;
   border: 1px solid #dee2e6;

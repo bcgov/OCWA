@@ -3,10 +3,17 @@ import * as React from 'react';
 import RequestCard from '../request-card';
 import * as styles from './styles.css';
 
-function RequestsNav({ data }) {
+function RequestsNav({ activeId, data }) {
   return (
     <nav className={styles.nav}>
-      {data.map(d => <RequestCard key={d._id} data={d} draggable={false} />)}
+      {data.map(d => (
+        <RequestCard
+          key={d._id}
+          activeId={activeId}
+          data={d}
+          draggable={false}
+        />
+      ))}
     </nav>
   );
 }
