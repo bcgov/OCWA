@@ -32,7 +32,7 @@
       "enabled": false,
       "service": "smtp.gmail.com",
       "secure": true,
-      "port": 465
+      "port": 465,
       "user": "ocwa@gmail.com",
       "pass": "ocwaPassword",
       "from": "ocwa@donotreply.com"
