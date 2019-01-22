@@ -72,16 +72,19 @@ notifications.notify = function(request, user){
                 var transportOpts = {
                     host: emailConfig.service,
                     port: emailPort,
-                    secure: emailSecure,
-                    auth: {
-                        user: emailConfig.user,
-                        pass: emailConfig.pass
-                    }
+                    secure: emailSecure
                 };
 
                 if (!emailSecure){
                     transportOpts['tls'] = {
                         rejectUnauthorized: false
+                    }
+                }
+
+                if ( (emailConfig.user !== "") && (emailConfig.pass !== "") ){
+                    transportOpts['auth'] = {
+                        user: emailConfig.user,
+                        pass: emailConfig.pass
                     }
                 }
 
