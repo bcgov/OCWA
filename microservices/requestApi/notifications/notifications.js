@@ -69,7 +69,7 @@ notifications.notify = function(request, user){
                 var emailPort = (typeof(emailConfig.port) === "undefined") ? 25 : emailConfig.port;
                 var emailSecure = (typeof(emailConfig.secure) === "undefined") ? false : emailConfig.secure;
 
-                var transporter = nodemailer.createTransport({
+                var transportOpts = {
                     host: emailConfig.service,
                     port: emailPort,
                     secure: emailSecure,
@@ -77,7 +77,15 @@ notifications.notify = function(request, user){
                         user: emailConfig.user,
                         pass: emailConfig.pass
                     }
-                });
+                };
+
+                if (!emailSecure){
+                    transportOpts['tls'] = {
+                        rejectUnauthorized: false
+                    }
+                }
+
+                var transporter = nodemailer.createTransport(transportOpts);
 
                 var mailOptions = {
                     from: emailConfig.from,
