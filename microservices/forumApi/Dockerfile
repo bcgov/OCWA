@@ -49,6 +49,7 @@ RUN apk update && \
     printf "            proxy_http_version 1.1;\n" >> /etc/nginx/nginx.conf && \
     printf "            proxy_set_header Upgrade \$http_upgrade;\n" >> /etc/nginx/nginx.conf && \
     printf "            proxy_set_header Connection \$connection_upgrade;\n" >> /etc/nginx/nginx.conf && \
+    printf "            proxy_pass_request_headers      on;\n" >> /etc/nginx/nginx.conf && \
     printf "        }\n" >> /etc/nginx/nginx.conf && \
     printf "    }\n" >> /etc/nginx/nginx.conf && \
     printf "}\n" >> /etc/nginx/nginx.conf
