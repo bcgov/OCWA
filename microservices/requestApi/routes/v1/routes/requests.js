@@ -41,7 +41,7 @@ router.get('/', function(req, res, next) {
 
     var q = {};
     if (typeof(req.query.state) !== "undefined"){
-        q['state'] = req.query.state;
+        q['state'] = Number(req.query.state);
     }
 
     if (typeof(req.query.name) !== "undefined"){

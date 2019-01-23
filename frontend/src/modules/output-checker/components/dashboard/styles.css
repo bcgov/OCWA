@@ -33,8 +33,7 @@
 }
 
 .column {
-  min-width: 200px;
-  max-width: 350px;
+  width: 300px;
   margin: 20px;
   flex: 1;
   display: flex;
@@ -46,9 +45,4 @@
 
 .column header {
   margin: 10px 20px;
-}
-
-.cardsContainer {
-  flex: 1;
-  overflow-y: auto;
 }

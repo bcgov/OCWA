@@ -2,10 +2,11 @@ import * as React from 'react';
 import Select from '@atlaskit/select';
 import TextField from '@atlaskit/field-text';
 
+import RequestsList from '../../containers/requests';
 import Card from '../request-card';
 import * as styles from './styles.css';
 
-function Dashboard({ data }) {
+function Dashboard() {
   return (
     <div className={styles.container}>
       <div className={styles.toolbar}>
@@ -31,26 +32,53 @@ function Dashboard({ data }) {
         <div>
           <div className={styles.column}>
             <header>
-              <h4>Unclaimed</h4>
+              <h4>Submitted</h4>
             </header>
             <div className={styles.cardsContainer}>
-              <div>{data.map(d => <Card key={d._id} data={d} />)}</div>
+              <div>
+                <RequestsList params={{ state: 2 }} />
+              </div>
             </div>
           </div>
           <div className={styles.column}>
             <header>
               <h4>In Review</h4>
             </header>
+            <div className={styles.cardsContainer}>
+              <div>
+                <RequestsList params={{ state: 3 }} />
+              </div>
+            </div>
           </div>
           <div className={styles.column}>
             <header>
               <h4>Approved</h4>
             </header>
+            <div className={styles.cardsContainer}>
+              <div>
+                <RequestsList params={{ state: 4 }} />
+              </div>
+            </div>
           </div>
           <div className={styles.column}>
             <header>
-              <h4>Flagged</h4>
+              <h4>Denied</h4>
             </header>
+            <div className={styles.cardsContainer}>
+              <div>
+                <RequestsList params={{ state: 5 }} />
+              </div>
+            </div>
+          </div>
+          <div className={styles.column}>
+            <header>
+              <h4>Cancelled</h4>
+            </header>
+            <div className={styles.cardsContainer}>
+              <div>
+                <RequestsList params={{ state: 6 }} />
+              </div>
+            </div>
           </div>
         </div>
       </div>
