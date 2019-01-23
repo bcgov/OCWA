@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import { RequestSchema } from '@src/modules/requests/types';
+
 function Details({ data }) {
   return (
     <div>
@@ -18,5 +20,9 @@ function Details({ data }) {
     </div>
   );
 }
+
+Details.propTypes = {
+  data: RequestSchema.isRequired,
+};
 
 export default Details;

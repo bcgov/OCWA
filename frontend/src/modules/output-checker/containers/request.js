@@ -11,6 +11,7 @@ const mapStateToProps = (state, props) => {
 
   return {
     data: get(state, `data.entities.requests.${requestId}`, {}),
+    fetchStatus: get(state, `data.fetchStatus.entities.requests.${requestId}`),
   };
 };
 

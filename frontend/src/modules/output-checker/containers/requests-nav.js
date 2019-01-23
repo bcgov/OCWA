@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import get from 'lodash/get';
 import keys from 'lodash/keys';
 import withRequest from '@src/modules/data/components/data-request';
 import { fetchRequests } from '@src/modules/requests/actions';
@@ -12,6 +13,7 @@ const mapStateToProps = state => {
 
   return {
     data,
+    fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests', 'idle'),
   };
 };
 

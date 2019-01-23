@@ -11,6 +11,18 @@
   border-right: 1px solid #dee2e6;
 }
 
+.loadingListItem {
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+  padding: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.loadingListItem svg {
+  flex: 1;
+}
+
 .request {
   display: flex;
   flex-direction: column;
@@ -24,11 +36,22 @@
 }
 
 .main {
+  position: relative;
+  display: flex;
   flex: 1;
   overflow-y: auto;
   background-color: #fff;
 }
 
 .main > div {
-  margin: 20px;
+  flex: 1;
+  margin: 20px 300px 20px 20px;
+}
+
+.sidebar {
+  width: 300px;
+  padding: 20px;
+  position: fixed;
+  right: 0;
+  box-sizing: border-box;
 }
