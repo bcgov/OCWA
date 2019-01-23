@@ -389,9 +389,11 @@ class Requester_step_def_ks {
 
 		WebUI.waitForPageLoad(20)
 		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
+		
 
 		WebUI.verifyTextPresent(g_requestName, false)
-
+		WebUI.delay(5) // we need to do a hard delay here to give time for the inline ajax to finish
+		
 		if (numOutputFiles == "1") {
 			WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		}
