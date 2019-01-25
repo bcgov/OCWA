@@ -1,30 +1,36 @@
 import * as React from 'react';
-import Select from '@atlaskit/select';
+import PropTypes from 'prop-types';
+import { CreatableSelect } from '@atlaskit/select';
 import TextField from '@atlaskit/field-text';
 
 import RequestsList from '../../containers/requests';
-import Card from '../request-card';
 import * as styles from './styles.css';
 
-function Dashboard() {
+function Dashboard({ filter, onFilterChange, onSearchChange, search }) {
+  const filterOptions = [
+    { label: 'Show All Requests', value: 'all' },
+    { label: 'Show My Requests', value: 'mine' },
+    { label: 'Show Unassigned', value: 'unassigned' },
+  ];
+
   return (
     <div className={styles.container}>
       <div className={styles.toolbar}>
         <div>
-          <Select
-            options={[
-              { label: 'Show All Requests' },
-              { label: 'Show My Requests' },
-              { label: 'Show Unassigned' },
-            ]}
-            placeholder="Display: Show All Requests"
+          <CreatableSelect
+            options={filterOptions}
+            placeholder="Filter Requests"
+            onChange={({ value }) => onFilterChange(value)}
+            value={filterOptions.find(d => d.value === filter)}
           />
         </div>
         <div>
           <TextField
             shouldFitContainer
             isLabelHidden
+            onChange={event => onSearchChange(event.target.value)}
             placeholder="Search export requests..."
+            value={search}
           />
         </div>
       </div>
@@ -85,5 +91,12 @@ function Dashboard() {
     </div>
   );
 }
+
+Dashboard.propTypes = {
+  filter: PropTypes.string.isRequired,
+  onFilterChange: PropTypes.func.isRequired,
+  onSearchChange: PropTypes.func.isRequired,
+  search: PropTypes.string.isRequired,
+};
 
 export default Dashboard;

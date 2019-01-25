@@ -6,9 +6,20 @@
 
 .nav {
   width: 370px;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
   background-color: #fff;
   border-right: 1px solid #dee2e6;
+}
+
+.navHeader {
+  padding: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.navScroll {
+  flex: 1;
+  overflow-y: auto;
 }
 
 .loadingListItem {

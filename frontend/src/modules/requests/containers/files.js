@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import withRequest from '@src/modules/data/components/data-request';
 import get from 'lodash/get';
 
-import { fetchFiles, removeFile } from '../actions';
+import { downloadFile, fetchFiles, removeFile } from '../actions';
 import FilesTable from '../components/files-table';
 import { filesListSchema } from '../schemas';
 
@@ -22,5 +22,6 @@ export default connect(mapStateToProps, {
       url: `/api/v1/files?ids=${ids.join(',')}`,
       schema: filesListSchema,
     }),
+  onDownload: downloadFile,
   onRemove: removeFile,
 })(withRequest(FilesTable));

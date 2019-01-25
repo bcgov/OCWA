@@ -42,13 +42,13 @@ function RequestCard({ activeId, data, draggable }) {
         </small>
         <small>
           <EditorFileIcon />
-          {`${data.files.length} Files`}
+          {`${data.files.length} ${data.files.length > 1 ? 'Files' : 'File'}`}
         </small>
       </div>
       <div className={styles.detailsRow}>
         <small>
           {totalCheckers > 0 ? <CheckboxIcon /> : <PresenceUnavailableIcon />}
-          {totalCheckers > 0 ? `${totalCheckers} assigned` : 'Unclaimed'}
+          {totalCheckers > 0 ? 'Assigned' : 'Unclaimed'}
         </small>
         <small>
           <EditorDateIcon />
@@ -60,12 +60,13 @@ function RequestCard({ activeId, data, draggable }) {
 }
 
 RequestCard.propTypes = {
-  activeId: PropTypes.string.isRequired,
+  activeId: PropTypes.string,
   data: RequestSchema.isRequired,
   draggable: PropTypes.bool,
 };
 
 RequestCard.defaultProps = {
+  activeId: null,
   draggable: true,
 };
 

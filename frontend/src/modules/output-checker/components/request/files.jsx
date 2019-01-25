@@ -10,10 +10,12 @@ function RequestFiles({ data }) {
         <h4>Export Files</h4>
         <Files ids={data.files} fileStatus={data.fileStatus} />
       </div>
-      <div>
-        <h4>Supporting Files</h4>
-        <Files ids={data.supportingFiles} />
-      </div>
+      {data.supportingFiles.length > 0 && (
+        <div>
+          <h4>Supporting Files</h4>
+          <Files ids={data.supportingFiles} />
+        </div>
+      )}
     </div>
   );
 }
