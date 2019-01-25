@@ -51,10 +51,9 @@ notifications.notify = function(request, user){
         var who = notifyWho[i];
 
         if (who !== user.id){
-            //id could be name or email so either way we need userinfo for all who are not the active user
-            //and we don't notify the active user at all as they made the change
+            //we don't notify the active user at all as they made the change
 
-            db.User.findOne({id: user.id}, function(err, userInfo) {
+            db.User.findOne({id: who}, function(err, userInfo) {
 
                 if (err){
                     logger.error("Notifications - Error getting user info", err);
