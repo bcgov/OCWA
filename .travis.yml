@@ -422,22 +422,6 @@ matrix:
             - g++-4.8
             - python3-pip
 
-      before_script:
-        - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
-        - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
-        - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
-        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
-        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
-
-        - cd /home/travis/build/bcgov/OCWA
-        - wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
-        - unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
-        - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
-
-      before_install:
-        - npm install -g yarn --cache-min 999999999
-
       script:
         - cd /usr/local/bin
         - sudo curl -L -O https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip
@@ -451,7 +435,7 @@ matrix:
         - terraform init
         - terraform plan -var hostRootPath=`pwd`/_tmp
         - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
-        - terraform show
+        - docker exec ocwa_frontend wget http://ocwa_request_api:3002
         - ls -l _tmp
         - docker ps
         - sleep 5
@@ -468,7 +452,7 @@ matrix:
         - sudo chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
         - sudo chmod -R 777 Katalon_Studio_Linux_64-${KATALON_VERSION}
         
-        #RUN Integration Tests
+        #RUN Integration
         - cd Katalon_Studio_Linux_64-${KATALON_VERSION}
         - xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash  -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
 

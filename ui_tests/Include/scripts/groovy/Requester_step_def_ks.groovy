@@ -466,13 +466,18 @@ class Requester_step_def_ks {
 		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
 		WebUI.click(get_test_object_by_id(REQUEST_EDIT_BTN_ID))
 		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), EDITED_PURPOSE_TEXT)
+		
+		// click Add Files button
+		TestObject requestFormSaveFilesButton = get_test_object_by_id(REQUEST_SAVE_FILES_BTN_ID)
+		WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
+		WebUI.click(requestFormSaveFilesButton)
 	}
 	@Then("requester should be able to re-submit the request")
 	def requester_should_be_able_to_resubmit_request(){
+		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
-		//WebUI.delay(5)
-		request_should_be_in_given_status("Review in progress")
+		request_should_be_in_given_status("Awaiting Review")
 		WebUI.closeBrowser()
 	}
 
