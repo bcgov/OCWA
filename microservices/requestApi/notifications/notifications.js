@@ -50,11 +50,10 @@ notifications.notify = function(request, user){
 
         var who = notifyWho[i];
 
-        if ((true) || (who !== user.id)){
-            //id could be name or email so either way we need userinfo for all who are not the active user
-            //and we don't notify the active user at all as they made the change
+        if (who !== user.id){
+            //we don't notify the active user at all as they made the change
 
-            db.User.findOne({id: user.id}, function(err, userInfo) {
+            db.User.findOne({id: who}, function(err, userInfo) {
 
                 if (err){
                     logger.error("Notifications - Error getting user info", err);
@@ -66,15 +65,29 @@ notifications.notify = function(request, user){
 
                 var emailContent = setTemplate(request, userInfo, user);
 
+                var emailPort = (typeof(emailConfig.port) === "undefined") ? 25 : emailConfig.port;
+                var emailSecure = (typeof(emailConfig.secure) === "undefined") ? false : emailConfig.secure;
 
+                var transportOpts = {
+                    host: emailConfig.service,
+                    port: emailPort,
+                    secure: emailSecure
+                };
 
-                var transporter = nodemailer.createTransport({
-                    service: emailConfig.service,
-                    auth: {
+                if (!emailSecure){
+                    transportOpts['tls'] = {
+                        rejectUnauthorized: false
+                    }
+                }
+
+                if ( (emailConfig.user !== "") && (emailConfig.pass !== "") ){
+                    transportOpts['auth'] = {
                         user: emailConfig.user,
                         pass: emailConfig.pass
                     }
-                });
+                }
+
+                var transporter = nodemailer.createTransport(transportOpts);
 
                 var mailOptions = {
                     from: emailConfig.from,
