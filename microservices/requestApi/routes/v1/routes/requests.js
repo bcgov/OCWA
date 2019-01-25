@@ -581,7 +581,7 @@ router.put('/approve/:requestId', function(req, res){
             return;
         }
 
-        if (req.user.groups.indexOf(config.get("outputCheckerGroup"))) {
+        if (req.user.groups.indexOf(config.get("outputCheckerGroup")) !== -1) {
             var reviewers = reqRes.reviewers;
 
             if (reviewers.indexOf(req.user.id) === -1) {
@@ -643,7 +643,7 @@ router.put('/deny/:requestId', function(req, res){
             return;
         }
 
-        if (req.user.groups.indexOf(config.get("outputCheckerGroup"))) {
+        if (req.user.groups.indexOf(config.get("outputCheckerGroup")) !== -1) {
             var reviewers = reqRes.reviewers;
 
             if (reviewers.indexOf(req.user.id) === -1) {
@@ -670,7 +670,7 @@ router.put('/deny/:requestId', function(req, res){
             });
         }else{
             res.status(403);
-            res.json("You do not have the necessary permissions to approve an output request");
+            res.json("You do not have the necessary permissions to deny an output request");
             logger.error("User " + req.user.id + " tried to deny an output request but lacks the required permission");
             return;
         }
@@ -698,7 +698,7 @@ router.put('/requestRevisions/:requestId', function(req, res){
             return;
         }
 
-        if (req.user.groups.indexOf(config.get("outputCheckerGroup"))) {
+        if (req.user.groups.indexOf(config.get("outputCheckerGroup")) !== -1) {
             var reviewers = reqRes.reviewers;
 
             if (reviewers.indexOf(req.user.id) === -1) {
@@ -722,7 +722,7 @@ router.put('/requestRevisions/:requestId', function(req, res){
             });
         }else{
             res.status(403);
-            res.json("You do not have the necessary permissions to approve an output request");
+            res.json("You do not have the necessary permissions to request revisions on an output request");
             logger.error("User " + req.user.id + " tried to request revisions but lacks the required permission");
             return;
         }
