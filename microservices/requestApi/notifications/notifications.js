@@ -91,7 +91,7 @@ notifications.notify = function(request, user){
 
                 var mailOptions = {
                     from: emailConfig.from,
-                    to: who,
+                    to: userInfo['email'],
                     subject: "OCWA - Request Update",
                     html: emailContent
                 };
