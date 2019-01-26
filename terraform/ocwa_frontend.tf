@@ -17,12 +17,6 @@ resource "docker_container" "ocwa_frontend" {
     internal = 8000
     external = 8000
   }
-  host = [
-    {
-      host = "${var.authHostname}"
-      ip = "${docker_container.ocwa_nginx.ip_address}"
-    }
-  ]
 
   env = [
       "COOKIE_SECRET=${random_string.cookie.result}",
