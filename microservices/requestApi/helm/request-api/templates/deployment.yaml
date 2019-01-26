@@ -95,6 +95,25 @@ spec:
               value: {{ .Values.storageBucket }}
             - name: AUTO_APPROVE
               value: "{{ .Values.autoApprove }}"
+            - name: OCWA_URL
+              value: "{{ .Values.ocwaUrl }}"
+            - name: EMAIL_ENABLED
+              value: "{{ .Values.emailEnabled }}"
+            - name: EMAIL_SERVICE
+              value: "{{ .Values.emailService }}"
+            - name: EMAIL_SECURE
+              value: "{{ .Values.emailSecure }}"
+            - name: EMAIL_PORT
+              value: "{{ .Values.emailPort }}"
+            - name: EMAIL_USER
+              value: "{{ .Values.emailUser }}"
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaRequestApi.fullname" . }}-secrets
+                  key: emailPassword
+            - name: EMAIL_FROM
+              value: "{{ .Values.emailFrom }}"
 
           ports:
             - name: http

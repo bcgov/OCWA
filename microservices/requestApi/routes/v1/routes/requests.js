@@ -41,7 +41,7 @@ router.get('/', function(req, res, next) {
 
     var q = {};
     if (typeof(req.query.state) !== "undefined"){
-        q['state'] = req.query.state;
+        q['state'] = Number(req.query.state);
     }
 
     if (typeof(req.query.name) !== "undefined"){
@@ -79,7 +79,6 @@ router.post("/", function(req, res, next){
             res.json({error: "Lack required role to create a request"});
             return;
         }
-
     }
 
     var request = new db.Request;
@@ -386,6 +385,8 @@ router.put('/submit/:requestId', function(req, res, next){
                         db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                             if (!updateErr) {
                                 reqRes.fileStatus = status;
+                                var notify = require('../notifications/notifications');
+                                notify.notify(reqRes, req.user);
                                 if (autoAccept) {
                                     logRequestFinalState(reqRes, req.user);
                                     res.json({message: "Request approved", result: reqRes});
@@ -426,6 +427,8 @@ router.put('/submit/:requestId', function(req, res, next){
                     db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                         if (!updateErr) {
                             reqRes.fileStatus = status;
+                            var notify = require('../notifications/notifications');
+                            notify.notify(reqRes, req.user);
                             if (autoAccept) {
                                 logRequestFinalState(reqRes, req.user);
                                 res.json({message: "Request approved", result: reqRes});
@@ -483,6 +486,8 @@ router.put('/cancel/:requestId', function(req, res){
                 if (!updateErr) {
                     //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
                     reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
+                    var notify = require('../notifications/notifications');
+                    notify.notify(reqRes, req.user);
 
                     logRequestFinalState(reqRes, req.user);
                     res.json({message: "Request cancelled successfully", result: reqRes});
@@ -539,6 +544,8 @@ router.put('/withdraw/:requestId', function(req, res){
         if (reqRes.author === req.user.id) {
             db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                 if (!updateErr) {
+                    var notify = require('../notifications/notifications');
+                    notify.notify(reqRes, req.user);
                     res.json({message: "Request withdrawn successfully", result: reqRes});
                     return;
                 }
@@ -574,7 +581,7 @@ router.put('/approve/:requestId', function(req, res){
             return;
         }
 
-        if (req.user.groups.indexOf(config.get("outputCheckerGroup"))) {
+        if (req.user.groups.indexOf(config.get("outputCheckerGroup")) !== -1) {
             var reviewers = reqRes.reviewers;
 
             if (reviewers.indexOf(req.user.id) === -1) {
@@ -589,6 +596,8 @@ router.put('/approve/:requestId', function(req, res){
                 if (!updateErr) {
                     //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
                     reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
+                    var notify = require('../notifications/notifications');
+                    notify.notify(reqRes, req.user);
                     logRequestFinalState(reqRes, req.user);
                     res.json({message: "Request approved successfully", result: reqRes});
                     return;
@@ -634,7 +643,7 @@ router.put('/deny/:requestId', function(req, res){
             return;
         }
 
-        if (req.user.groups.indexOf(config.get("outputCheckerGroup"))) {
+        if (req.user.groups.indexOf(config.get("outputCheckerGroup")) !== -1) {
             var reviewers = reqRes.reviewers;
 
             if (reviewers.indexOf(req.user.id) === -1) {
@@ -649,6 +658,8 @@ router.put('/deny/:requestId', function(req, res){
                 if (!updateErr) {
                     //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
                     reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
+                    var notify = require('../notifications/notifications');
+                    notify.notify(reqRes, req.user);
                     logRequestFinalState(reqRes, req.user);
                     res.json({message: "Request denied successfully", result: reqRes});
                     return;
@@ -659,7 +670,7 @@ router.put('/deny/:requestId', function(req, res){
             });
         }else{
             res.status(403);
-            res.json("You do not have the necessary permissions to approve an output request");
+            res.json("You do not have the necessary permissions to deny an output request");
             logger.error("User " + req.user.id + " tried to deny an output request but lacks the required permission");
             return;
         }
@@ -687,7 +698,7 @@ router.put('/requestRevisions/:requestId', function(req, res){
             return;
         }
 
-        if (req.user.groups.indexOf(config.get("outputCheckerGroup"))) {
+        if (req.user.groups.indexOf(config.get("outputCheckerGroup")) !== -1) {
             var reviewers = reqRes.reviewers;
 
             if (reviewers.indexOf(req.user.id) === -1) {
@@ -700,6 +711,8 @@ router.put('/requestRevisions/:requestId', function(req, res){
 
             db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                 if (!updateErr) {
+                    var notify = require('../notifications/notifications');
+                    notify.notify(reqRes, req.user);
                     res.json({message: "Requested revision(s) successfully", result: reqRes});
                     return;
                 }
@@ -709,7 +722,7 @@ router.put('/requestRevisions/:requestId', function(req, res){
             });
         }else{
             res.status(403);
-            res.json("You do not have the necessary permissions to approve an output request");
+            res.json("You do not have the necessary permissions to request revisions on an output request");
             logger.error("User " + req.user.id + " tried to request revisions but lacks the required permission");
             return;
         }

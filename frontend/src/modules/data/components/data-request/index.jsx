@@ -1,6 +1,8 @@
 import * as React from 'react';
+import at from 'lodash/at';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import compact from 'lodash/compact';
 import get from 'lodash/get';
 
 import ErrorComponent from '../error';
@@ -12,10 +14,10 @@ function withRequest(Component) {
     };
 
     componentDidMount() {
-      const { id, ids, match, initialRequest } = this.props;
+      const { id, ids, initialRequest } = this.props;
 
       if (initialRequest) {
-        const params = get(match, 'params', {});
+        const params = this.getParams();
         initialRequest({ ...params, id, ids });
       }
     }
@@ -29,12 +31,23 @@ function withRequest(Component) {
       });
     }
 
+    getParams = () => {
+      const values = compact(at(this.props, ['match.params', 'params']));
+      let params = {};
+
+      values.forEach(d => {
+        params = { ...params, ...d };
+      });
+
+      return params;
+    };
+
     sendAction = (action, payload, options = {}) => {
-      const { id, ids, match } = this.props;
+      const { id, ids } = this.props;
       const proxyAction = get(this.props, action);
 
       if (proxyAction) {
-        const params = get(match, 'params', {});
+        const params = this.getParams();
         proxyAction(payload, { id, ids, ...options, ...params });
       } else {
         console.error(

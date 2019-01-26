@@ -76,8 +76,9 @@ You must pass the travis ci builds to be able to submit a pull request that is p
 
 ## Notes
 ```Default Port list:
+Forum WS: 2999
 Forum Api: 3000
-Forum WS: 3001
+Forum WS(Nginx): 3001
 Request Api: 3002
 Validate Api: 3003
 Policy Api: 3004

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
 import DateTime from '@src/components/date';
 import DynamicTable from '@atlaskit/dynamic-table';
+import DownloadIcon from '@atlaskit/icon/glyph/download';
 import FileIcon from '@src/components/file-icon';
 import filesize from 'filesize';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
@@ -41,6 +42,7 @@ function FilesTable({
   isFailed,
   fileStatus,
   onRemove,
+  showDownloadButton,
   showRemoveButton,
 }) {
   // Keep head in the render method so we can dynamically add remove
@@ -113,6 +115,22 @@ function FilesTable({
       ],
     };
 
+    if (showDownloadButton) {
+      row.cells.push({
+        key: file.id,
+        content: (
+          <div className={styles.downloadButton}>
+            <Button
+              appearance="subtle"
+              spacing="none"
+              iconBefore={<DownloadIcon />}
+              onClick={() => onDownload(file.id)}
+            />
+          </div>
+        ),
+      });
+    }
+
     if (showRemoveButton) {
       row.cells.push({
         key: file.id,
@@ -166,13 +184,17 @@ FilesTable.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   isFailed: PropTypes.bool.isRequired,
+  showDownloadButton: PropTypes.bool,
   showRemoveButton: PropTypes.bool,
+  onDownload: PropTypes.func,
   onRemove: PropTypes.func,
 };
 
 FilesTable.defaultProps = {
   fileStatus: {},
+  showDownloadButton: false,
   showRemoveButton: false,
+  onDownload: () => null,
   onRemove: () => null,
 };
 
