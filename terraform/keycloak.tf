@@ -45,7 +45,7 @@ resource "null_resource" "keycloak_first_time_install" {
       "KEYCLOAK_PASSWORD" = "${random_string.keycloakAdminPassword.result}",
       "KEYCLOAK_CLIENT_SECRET" = "${random_uuid.outputcheckerClientSecret.result}"
     }
-    command = "docker run --net=ocwa_vnet -e TESTUSER_PASSWORD -e KEYCLOAK_USER -e KEYCLOAK_PASSWORD -e KEYCLOAK_CLIENT_SECRET -v $PWD:/work --entrypoint /bin/bash jboss/keycloak:4.1.0.Final -c /work/scripts/keycloak-setup.sh"
+    command = "docker run --net=ocwa_vnet -e TESTUSER_PASSWORD -e KEYCLOAK_USER -e KEYCLOAK_PASSWORD -e KEYCLOAK_CLIENT_SECRET -v \"$PWD:/work\" --entrypoint /bin/bash jboss/keycloak:4.1.0.Final -c /work/scripts/keycloak-setup.sh"
   }
 
   depends_on = ["docker_container.ocwa_keycloak"]

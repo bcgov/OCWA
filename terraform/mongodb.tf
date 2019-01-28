@@ -32,13 +32,10 @@ resource "local_file" "mongodb_script" {
 
 resource "null_resource" "mongodb_first_time_install" {
   provisioner "local-exec" {
-    command = "sleep 10"
-  }
-  provisioner "local-exec" {
     environment = {
         SCRIPT_PATH = "${var.hostRootPath}"
     }
-    command = "sleep 15; docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.1.3 mongo mongodb://ocwa_mongodb/oc_db /work/mongodb_script.js"
+    command = "sleep 30; docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.1.3 mongo mongodb://ocwa_mongodb/oc_db /work/mongodb_script.js"
   }
   depends_on = ["docker_container.ocwa_mongodb"]
 }
