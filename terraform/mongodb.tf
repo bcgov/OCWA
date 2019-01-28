@@ -38,7 +38,7 @@ resource "null_resource" "mongodb_first_time_install" {
     environment = {
         SCRIPT_PATH = "${var.hostRootPath}"
     }
-    command = "docker exec ocwa_mongodb mongo mongodb://ocwa_mongodb/oc_db ${data.template_file.mongodb_script.rendered}"
+    command = "docker exec ocwa_mongodb mongo mongodb://ocwa_mongodb/oc_db \"${data.template_file.mongodb_script.rendered}\""
   }
   depends_on = ["docker_container.ocwa_mongodb"]
 }
