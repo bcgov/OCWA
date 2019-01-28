@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import LayerManager from '@atlaskit/layer-manager';
 import Loadable from 'react-loadable';
 import includes from 'lodash/includes';
 import Messages from '@src/modules/data/containers/messages';
-import PropTypes from 'prop-types';
+import some from 'lodash/some';
 import '@atlaskit/css-reset';
 
 import Auth from '../auth';
@@ -36,11 +37,24 @@ class App extends React.Component {
 
   renderMain = () => {
     const { authFetchStatus, isAuthenticated, user } = this.props;
+    // TODO: These values should be in config.json
+    const exporterGroup = '/exporter';
+    const ocGroup = '/oc';
+    const validGroups = [exporterGroup, ocGroup];
     let el = null;
 
     if (isAuthenticated) {
-      const hasExporterRole = includes(user.groups, '/exporter');
-      const hasOcRole = includes(user.groups, '/oc');
+      // Using `includes` here incase groups isn't an array depending on the auth env
+      const hasExporterRole = includes(user.groups, exporterGroup);
+      const hasOcRole = includes(user.groups, ocGroup);
+      const hasValidGroupAccess = some(user.groups, g =>
+        validGroups.includes(g)
+      );
+      console.log(hasExporterRole, hasOcRole, hasValidGroupAccess);
+
+      if (!hasValidGroupAccess) {
+        return <Unauthorized />;
+      }
 
       // Load bundle for output checker if that's the only role, otherwise always send exporter
       if (hasOcRole && !hasExporterRole) {

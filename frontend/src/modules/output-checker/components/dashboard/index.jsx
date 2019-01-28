@@ -12,6 +12,13 @@ function Dashboard({ filter, onFilterChange, onSearchChange, search }) {
     { label: 'Show My Requests', value: 'mine' },
     { label: 'Show Unassigned', value: 'unassigned' },
   ];
+  const columns = [
+    { state: 2, title: 'Submitted' },
+    { state: 3, title: 'In Review' },
+    { state: 4, title: 'Approved' },
+    { state: 5, title: 'Denied' },
+    { state: 6, title: 'Cancelled' },
+  ];
 
   return (
     <div className={styles.container}>
@@ -36,56 +43,16 @@ function Dashboard({ filter, onFilterChange, onSearchChange, search }) {
       </div>
       <div className={styles.board}>
         <div>
-          <div className={styles.column}>
-            <header>
-              <h4>Submitted</h4>
-            </header>
-            <div className={styles.cardsContainer}>
-              <div>
-                <RequestsList params={{ state: 2 }} />
+          {columns.map(c => (
+            <div key={c.state} className={styles.column}>
+              <header>
+                <h4>{c.title}</h4>
+              </header>
+              <div className={styles.list}>
+                <RequestsList params={{ state: c.state }} />
               </div>
             </div>
-          </div>
-          <div className={styles.column}>
-            <header>
-              <h4>In Review</h4>
-            </header>
-            <div className={styles.cardsContainer}>
-              <div>
-                <RequestsList params={{ state: 3 }} />
-              </div>
-            </div>
-          </div>
-          <div className={styles.column}>
-            <header>
-              <h4>Approved</h4>
-            </header>
-            <div className={styles.cardsContainer}>
-              <div>
-                <RequestsList params={{ state: 4 }} />
-              </div>
-            </div>
-          </div>
-          <div className={styles.column}>
-            <header>
-              <h4>Denied</h4>
-            </header>
-            <div className={styles.cardsContainer}>
-              <div>
-                <RequestsList params={{ state: 5 }} />
-              </div>
-            </div>
-          </div>
-          <div className={styles.column}>
-            <header>
-              <h4>Cancelled</h4>
-            </header>
-            <div className={styles.cardsContainer}>
-              <div>
-                <RequestsList params={{ state: 6 }} />
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
