@@ -423,9 +423,6 @@ matrix:
             - python3-pip
 
       script:
-        - ips=($(hostname -I))
-        - sudo printf "$ips[0]\tauth.example.demo" > /etc/hosts
-        - sudo printf "$ips[0]\tocwa.example.demo" > /etc/hosts
         - cd /usr/local/bin
         - sudo curl -L -O https://releases.hashicorp.com/terraform/0.11.8/terraform_0.11.8_linux_amd64.zip
         - sudo unzip -o terraform_0.11.8_linux_amd64.zip
@@ -438,14 +435,8 @@ matrix:
         - terraform init
         - terraform plan -var hostRootPath=`pwd`/_tmp
         - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
-        - ls -l _tmp
-        - docker ps
         - sleep 30
         - docker ps
-        - docker logs ocwa_request_api
-        - docker logs ocwa_forum_api
-        - docker exec ocwa_frontend wget http://ocwa_request_api:3002
-        - docker exec ocwa_frontend wget http://ocwa_forum_api:3000
 
         #Katalon requires OpenJDK 8 installed separately
         - sudo apt-get install -y openjdk-8-jre openjdk-8-jdk

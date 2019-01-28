@@ -38,7 +38,8 @@ resource "docker_container" "ocwa_nginx" {
   depends_on = [
     "local_file.proxy",
     "null_resource.keycloak_first_time_install",
-    "null_resource.minio_first_install"
+    "null_resource.minio_first_install",
+    "docker_container.ocwa_frontend"
   ]
 }
 
