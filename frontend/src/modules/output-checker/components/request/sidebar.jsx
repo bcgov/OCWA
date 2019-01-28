@@ -39,38 +39,39 @@ function Sidebar({
           Assign to Me
         </Button>
       )}
-      {user.email === assignedUser && (
-        <React.Fragment>
-          <h6>Actions</h6>
-          <Button
-            appearance="link"
-            id="request-sidebar-approve-button"
-            iconBefore={<CheckCircleIcon primaryColor="green" />}
-            isDisabled={isSaving}
-            onClick={() => onApproveRequest(id)}
-          >
-            Approve Request
-          </Button>
-          <Button
-            appearance="link"
-            id="request-sidebar-approve-button"
-            iconBefore={<SelectClearIcon primaryColor="red" />}
-            isDisabled={isSaving}
-            onClick={() => onDenyRequest(id)}
-          >
-            Deny Request
-          </Button>
-          <Button
-            appearance="link"
-            id="request-sidebar-request-revisions-button"
-            iconBefore={<FlagFilledIcon primaryColor="orange" />}
-            isDisabled={isSaving}
-            onClick={() => onRequestRevisions(id)}
-          >
-            Request Revisions
-          </Button>
-        </React.Fragment>
-      )}
+      {user.email === assignedUser &&
+        data.state < 4 && (
+          <React.Fragment>
+            <h6>Actions</h6>
+            <Button
+              appearance="link"
+              id="request-sidebar-approve-button"
+              iconBefore={<CheckCircleIcon primaryColor="green" />}
+              isDisabled={isSaving}
+              onClick={() => onApproveRequest(id)}
+            >
+              Approve Request
+            </Button>
+            <Button
+              appearance="link"
+              id="request-sidebar-approve-button"
+              iconBefore={<SelectClearIcon primaryColor="red" />}
+              isDisabled={isSaving}
+              onClick={() => onDenyRequest(id)}
+            >
+              Deny Request
+            </Button>
+            <Button
+              appearance="link"
+              id="request-sidebar-request-revisions-button"
+              iconBefore={<FlagFilledIcon primaryColor="orange" />}
+              isDisabled={isSaving}
+              onClick={() => onRequestRevisions(id)}
+            >
+              Request Revisions
+            </Button>
+          </React.Fragment>
+        )}
     </aside>
   );
 }

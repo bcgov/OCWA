@@ -14,7 +14,7 @@ import * as styles from './styles.css';
 
 const Exporter = Loadable({
   loader: () => import('../../../exporter/components/app'),
-  loading: () => <Loading text="Initializing Loading Exporter interface" />,
+  loading: () => <Loading text="Initializing Exporter interface" />,
 });
 const OutputChecker = Loadable({
   loader: () => import('../../../output-checker/components/app'),
