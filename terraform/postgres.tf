@@ -53,8 +53,8 @@ resource "null_resource" "postgres_first_time_install" {
       POSTGRES_USER = "padmin"
       POSTGRES_PASSWORD = "${random_string.postgresSuperPassword.result}"
     }
-    command = "docker exec ocwa_postgres psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@ocwa_postgres \"${data.template_file.postgres_script.rendered}\""
+    command = "cat ${var.hostRootPath}/postgres_script.psql | docker exec ocwa_postgres psql postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@ocwa_postgres"
   }
 
-  depends_on = ["docker_container.ocwa_postgres"]
+  depends_on = ["docker_container.ocwa_postgres", "local_file.postgres_script"]
 }
