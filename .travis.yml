@@ -435,12 +435,12 @@ matrix:
         - terraform init
         - terraform plan -var hostRootPath=`pwd`/_tmp
         - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
-        - docker exec ocwa_frontend wget http://ocwa_request_api:3002
         - ls -l _tmp
         - docker ps
-        - sleep 5
-        - curl -v -k https://auth.example.demo
-        - curl -v -k https://ocwa.example.demo
+        - sleep 30
+        - docker ps
+        - docker exec ocwa_frontend wget http://ocwa_request_api:3002
+        - docker exec ocwa_frontend wget http://ocwa_forum_api:3000
 
         #Katalon requires OpenJDK 8 installed separately
         - sudo apt-get install -y openjdk-8-jre openjdk-8-jdk
