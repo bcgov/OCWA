@@ -15,4 +15,3 @@ db.rules.insert({name:"restricted_file_types", source:"print('$${file.extension}
 
 db.rules.insert({name:"file_size_under_3.5mb", source:"print($${file.size}<3500000)",mandatory:false });
 db.rules.insert({name:"file_size_under_5mb", source:"print($${file.size}<5000000)",mandatory:true });
-exit;

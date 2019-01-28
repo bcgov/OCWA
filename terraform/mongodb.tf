@@ -38,7 +38,7 @@ resource "null_resource" "mongodb_first_time_install" {
     environment = {
         SCRIPT_PATH = "${var.hostRootPath}"
     }
-    command = "cat ${var.hostRootPath}/mongodb_script.js | docker exec ocwa_mongodb mongo mongodb://ocwa_mongodb/oc_db"
+    command = "sleep 15; docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.1.3 mongo mongodb://ocwa_mongodb/oc_db /work/mongodb_script.js"
   }
   depends_on = ["docker_container.ocwa_mongodb"]
 }
