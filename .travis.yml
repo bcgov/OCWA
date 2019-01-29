@@ -60,8 +60,6 @@ matrix:
         #RUN Integration
         - cd Katalon_Studio_Linux_64-${KATALON_VERSION}
         - xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash  -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
-        - docker logs ocwa_frontend
-        - docker logs ocwa_request_api
 
     - name: "OCWA Master Helm Chart"
       stage: "Tests"
