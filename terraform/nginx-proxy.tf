@@ -20,7 +20,7 @@ resource "docker_container" "ocwa_nginx" {
   }]
   networks_advanced = {
      name = "${docker_network.private_network.name}"
-     ipv4_address = "4.4.4.4"
+#     ipv4_address = "4.4.4.4"
   }
   volumes = [{ 
     host_path = "${var.hostRootPath}/ssl"
@@ -41,8 +41,7 @@ resource "docker_container" "ocwa_nginx" {
   depends_on = [
     "local_file.proxy",
     "null_resource.keycloak_first_time_install",
-    "null_resource.minio_first_install",
-    "docker_container.ocwa_frontend"
+    "null_resource.minio_first_install"
   ]
 }
 
