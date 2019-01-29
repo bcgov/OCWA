@@ -53,10 +53,10 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm test
         - helm lint helm/forum-api
+        - bash docker_quayio_push
         - cd /home/travis/build/bcgov/OCWA
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
         - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_forum_api -Dsonar.projectName="OCWA Forum API" -Dsonar.modules=forumApi
-        - bash docker_quayio_push
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
@@ -128,11 +128,12 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - sleep 15
         - npm test
+        - bash docker_quayio_push
         - cd /home/travis/build/bcgov/OCWA
         - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
         - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_request_api -Dsonar.projectName="OCWA Request API" -Dsonar.modules=requestApi
         - helm lint helm/request-api
-        - bash docker_quayio_push
+        
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
@@ -183,8 +184,10 @@ matrix:
         # Installig pip deps
        
         - helm lint helm/policy-api
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_policy_api -Dsonar.projectName="OCWA Policy API" -Dsonar.modules=policyApi
         - bash docker_quayio_push 
+        - cd /home/travis/build/bcgov/OCWA
+        - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_policy_api -Dsonar.projectName="OCWA Policy API" -Dsonar.modules=policyApi
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi 
@@ -239,9 +242,12 @@ matrix:
         - sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - sudo coverage xml
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_validate_api -Dsonar.projectName="OCWA Validate API" -Dsonar.modules=validateApi
         - helm lint helm/validate-api
         - bash docker_quayio_push
+        - cd /home/travis/build/bcgov/OCWA
+        - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_validate_api -Dsonar.projectName="OCWA Validate API" -Dsonar.modules=validateApi
+        
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi 
@@ -286,11 +292,11 @@ matrix:
       - cp config/test.json.example config/test.json
       - yarn
       - npm test
+      - helm lint helm/ocwa-frontend
+      - bash docker_quayio_push ocwa_frontend 
       - cd /home/travis/build/bcgov/OCWA
       - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
       - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_frontend -Dsonar.projectName="OCWA Frontend" -Dsonar.modules=frontend
-      - helm lint helm/ocwa-frontend
-      - bash docker_quayio_push ocwa_frontend 
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/frontend
