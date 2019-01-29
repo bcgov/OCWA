@@ -5,6 +5,7 @@ data "docker_registry_image" "mongodb" {
 resource "docker_image" "mongodb" {
   name          = "${data.docker_registry_image.mongodb.name}"
   pull_triggers = ["${data.docker_registry_image.mongodb.sha256_digest}"]
+  keep_locally = true
 }
 
 resource "docker_container" "ocwa_mongodb" {
