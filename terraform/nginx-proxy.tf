@@ -18,7 +18,10 @@ resource "docker_container" "ocwa_nginx" {
     internal = 443
     external = 443
   }]
-  networks_advanced = { name = "${docker_network.private_network.name}" }
+  networks_advanced = {
+     name = "${docker_network.private_network.name}"
+     ipv4_address = "4.4.4.4"
+  }
   volumes = [{ 
     host_path = "${var.hostRootPath}/ssl"
     container_path = "/ssl"

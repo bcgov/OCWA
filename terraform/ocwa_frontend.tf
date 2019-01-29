@@ -20,7 +20,7 @@ resource "docker_container" "ocwa_frontend" {
   host = [
     {
       host = "${var.authHostname}"
-      ip = "${docker_container.ocwa_nginx.ip_address}"
+      ip = "4.4.4.4"
     }
   ]
 
