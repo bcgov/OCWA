@@ -1,10 +1,11 @@
 data "docker_registry_image" "keycloak" {
-  name = "jboss/keycloak:4.1.0.Final"
+  name = "jboss/keycloak:4.8.3.Final"
 }
 
 resource "docker_image" "keycloak" {
   name          = "${data.docker_registry_image.keycloak.name}"
   pull_triggers = ["${data.docker_registry_image.keycloak.sha256_digest}"]
+  keep_locally = true
 }
 
 resource "docker_container" "ocwa_keycloak" {
