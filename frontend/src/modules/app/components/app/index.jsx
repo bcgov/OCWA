@@ -7,6 +7,7 @@ import Messages from '@src/modules/data/containers/messages';
 import some from 'lodash/some';
 import '@atlaskit/css-reset';
 
+import About from '../../containers/about';
 import Auth from '../auth';
 import Loading from './loading';
 import Unauthorized from './unauthorized';
@@ -50,7 +51,6 @@ class App extends React.Component {
       const hasValidGroupAccess = some(user.groups, g =>
         validGroups.includes(g)
       );
-      console.log(hasExporterRole, hasOcRole, hasValidGroupAccess);
 
       if (!hasValidGroupAccess) {
         return <Unauthorized />;
@@ -76,6 +76,7 @@ class App extends React.Component {
     return (
       <LayerManager>
         <main id="app-main" className={styles.main}>
+          <About />
           <Messages />
           <Auth
             fetchStatus={authFetchStatus}

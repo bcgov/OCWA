@@ -1,5 +1,22 @@
 import { combineReducers } from 'redux';
 
+const initialViewState = {
+  isAboutOpen: false,
+};
+
+function viewState(state = initialViewState, action) {
+  switch (action.type) {
+    case 'app/about/toggle':
+      return {
+        ...state,
+        isAboutOpen: !state.isAboutOpen,
+      };
+
+    default:
+      return state;
+  }
+}
+
 const initialAuthState = {
   fetchStatus: 'idle',
   isAuthenticated: false,
@@ -35,4 +52,5 @@ function auth(state = initialAuthState, action) {
 
 export default combineReducers({
   auth,
+  viewState,
 });

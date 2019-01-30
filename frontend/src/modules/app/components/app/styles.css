@@ -28,3 +28,18 @@
   max-width: 400px;
   text-align: center;
 }
+
+.aboutList {
+  padding-left: 0;
+}
+
+.aboutList dt {
+  font-weight: 700;
+  float: left;
+}
+
+.aboutList dd {
+  padding-left: 40%;
+  clear: right;
+  font-family: Menlo, monospace;
+}
