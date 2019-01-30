@@ -1,6 +1,11 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const GitRevisionPlugin = require('git-revision-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
+
+const { version } = require('./package.json');
+
+const gitRevisionPlugin = new GitRevisionPlugin();
 
 module.exports = {
   resolve: {
@@ -20,7 +25,14 @@ module.exports = {
       },
     ],
   },
-  plugins: [new webpack.NamedModulesPlugin(), new CleanWebpackPlugin(['dist'])],
+  plugins: [
+    new webpack.NamedModulesPlugin(),
+    new CleanWebpackPlugin(['dist']),
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(version),
+      COMMIT: JSON.stringify(gitRevisionPlugin.version()),
+    }),
+  ],
   stats: {
     colors: true,
   },
