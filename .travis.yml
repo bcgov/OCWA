@@ -38,6 +38,16 @@ matrix:
         - sudo rm -rf terraform_0.11.8_linux_amd64.zip
         - sudo chmod +x terraform 
 
+        #Build images to not go to the repo
+        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+        - docker build -t bcgovimages/ocwa_forum_api:edge .
+        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+        - docker build -t bcgovimages/ocwa_policy_api:edge .
+        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+        - docker build -t bcgovimages/ocwa_request_api:edge .
+        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+        - docker build -t bcgovimages/ocwa_validate_api:edge .
+
         - cd /home/travis/build/bcgov/OCWA/terraform
         - mkdir _tmp
         - cp terraform.tfvars.example terraform.tfvars
