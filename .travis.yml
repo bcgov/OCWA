@@ -40,17 +40,17 @@ matrix:
 
         #Build images to not go to the repo
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - docker build -t bcgovimages/ocwa_forum_api:edge .
+        - docker build -t bcgovimages/ocwa_forum_api:tst .
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - docker build -t bcgovimages/ocwa_policy_api:edge .
+        - docker build -t bcgovimages/ocwa_policy_api:tst .
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-        - docker build -t bcgovimages/ocwa_request_api:edge .
+        - docker build -t bcgovimages/ocwa_request_api:tst .
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - docker build -t bcgovimages/ocwa_validate_api:edge .
+        - docker build -t bcgovimages/ocwa_validate_api:tst .
 
         - cd /home/travis/build/bcgov/OCWA/terraform
         - mkdir _tmp
-        - cp terraform.tfvars.example terraform.tfvars
+        - cp terraform.tfvars.tst terraform.tfvars
         - terraform init
         - terraform plan -var hostRootPath=`pwd`/_tmp
         - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
