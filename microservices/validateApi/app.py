@@ -87,7 +87,7 @@ def create_app(test_config=None):
         
 
         import pkg_resources  # part of setuptools
-        v = pkg_resources.require("policy")[0].version
+        v = pkg_resources.require("validate")[0].version
         
         version = v
         if hash != "":
