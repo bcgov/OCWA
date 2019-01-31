@@ -6,6 +6,8 @@ cd /home/travis/build/bcgov/OCWA/microservices/forumApi
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
+echo "ENV GITHASH $TRAVIS_COMMIT" >> Dockerfile
+cat Dockerfile
 
 if [ $TRAVIS_BRANCH == "master" ]; then
     docker build -t bcgovimages/ocwa_forum_api:latest -t bcgovimages/ocwa_forum_api:$TRAVIS_COMMIT .
