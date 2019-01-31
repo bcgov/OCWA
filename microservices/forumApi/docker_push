@@ -6,7 +6,7 @@ cd /home/travis/build/bcgov/OCWA/microservices/forumApi
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
-echo "ENV GITHASH $TRAVIS_COMMIT" >> Dockerfile
+printf "\nENV GITHASH $TRAVIS_COMMIT\n" >> Dockerfile
 cat Dockerfile
 
 if [ $TRAVIS_BRANCH == "master" ]; then
