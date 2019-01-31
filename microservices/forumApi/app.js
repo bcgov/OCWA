@@ -9,6 +9,23 @@ var config = require('config');
 var db = require('./db/db').init();
 var v1Router = require('./routes/v1/v1');
 
+app.get("/version", function(req, res){
+    var hash = (process.env.GITHASH) ? process.env.GITHASH : "";
+    var pjson = require('./package.json');
+    var v = pjson.version;
+
+    var version = v
+    if (hash !== ""){
+        version += "-"+hash
+    }
+
+    res.json({
+        v: v,
+        hash: hash,
+        version: version
+    })
+});
+
 var websockets = require('./websocket');
 var wss = websockets.init();
 

@@ -41,7 +41,15 @@ resource "docker_container" "ocwa_request_api" {
       "STORAGE_WARN_SIZE=10m",
       "STORAGE_MAX_SIZE=10m",
       "STORAGE_KEY=${random_id.accessKey.hex}",
-      "STORAGE_SECRET=${random_string.secretKey.result}"
+      "STORAGE_SECRET=${random_string.secretKey.result}",
+      "OCWA_URL=${var.ocwaHost}",
+      "EMAIL_ENABLED=false",
+      "EMAIL_SERVICE=na",
+      "EMAIL_SECURE=false",
+      "EMAIL_PORT=25",
+      "EMAIL_USER=user",
+      "EMAIL_PASSWORD=password",
+      "EMAIL_FROM=no-reply@gmail.com"
       
   ]
 }

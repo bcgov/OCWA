@@ -92,6 +92,7 @@ server {
   # Proxy everything else to the frontend
   location / {
     resolver 127.0.0.11 valid=30s;
+
     proxy_set_header        Host            $host;
     proxy_set_header        X-Real-IP       $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -100,7 +101,9 @@ server {
     proxy_set_header         Upgrade $http_upgrade;
     proxy_set_header         Connection $connection_upgrade;
 
-    proxy_pass http://ocwa_frontend:8000;
+    set $backend "http://ocwa_frontend:8000";
+
+    proxy_pass $backend;
   }
 }
 
