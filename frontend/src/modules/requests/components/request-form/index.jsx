@@ -30,6 +30,20 @@ class NewRequestDialog extends React.PureComponent {
     this.state = defaultFormValues;
   }
 
+  componentDidUpdate(prevProps) {
+    const { data, open } = this.props;
+    const isFilesTotalDiff = prevProps.data.files.length !== data.files.length;
+    const isSupportingFilesTotalDiff =
+      prevProps.data.supportingFiles.length !== data.supportingFiles.length;
+
+    // Fire off an update if files have been uploaded automatically
+    if (open && prevProps.open) {
+      if (isFilesTotalDiff || isSupportingFilesTotalDiff) {
+        this.save(data);
+      }
+    }
+  }
+
   validateForm = () => {
     if (!this.formRef.current) {
       return false;
