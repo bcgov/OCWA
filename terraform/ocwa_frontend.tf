@@ -17,6 +17,7 @@ resource "docker_container" "ocwa_frontend" {
     internal = 8000
     external = 8000
   }
+
   host = [
     {
       host = "${var.authHostname}"
@@ -51,7 +52,4 @@ resource "docker_container" "ocwa_frontend" {
       "NODE_TLS_REJECT_UNAUTHORIZED=0"
   ]
 
-  depends_on = [
-    "docker_container.ocwa_nginx"
-  ]
 }

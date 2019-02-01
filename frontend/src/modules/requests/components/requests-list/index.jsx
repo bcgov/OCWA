@@ -43,7 +43,7 @@ const filters = [
   { label: 'All', filter: null },
   { label: 'Draft', filter: [0, 1] },
   { label: 'Queued/In Review', filter: [2, 3, 9] },
-  { label: 'Flagged', filter: 4 },
+  { label: 'Approved', filter: 4 },
   { label: 'Denied', filter: 5 },
   { label: 'Cancelled', filter: 6 },
 ];

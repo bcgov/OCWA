@@ -1,10 +1,11 @@
 data "docker_registry_image" "keycloak" {
-  name = "jboss/keycloak:4.1.0.Final"
+  name = "jboss/keycloak:4.8.3.Final"
 }
 
 resource "docker_image" "keycloak" {
   name          = "${data.docker_registry_image.keycloak.name}"
   pull_triggers = ["${data.docker_registry_image.keycloak.sha256_digest}"]
+  keep_locally = true
 }
 
 resource "docker_container" "ocwa_keycloak" {
@@ -45,7 +46,7 @@ resource "null_resource" "keycloak_first_time_install" {
       "KEYCLOAK_PASSWORD" = "${random_string.keycloakAdminPassword.result}",
       "KEYCLOAK_CLIENT_SECRET" = "${random_uuid.outputcheckerClientSecret.result}"
     }
-    command = "docker run --net=ocwa_vnet -e TESTUSER_PASSWORD -e KEYCLOAK_USER -e KEYCLOAK_PASSWORD -e KEYCLOAK_CLIENT_SECRET -v $PWD:/work --entrypoint /bin/bash jboss/keycloak:4.1.0.Final -c /work/scripts/keycloak-setup.sh"
+    command = "docker run --net=ocwa_vnet -e TESTUSER_PASSWORD -e KEYCLOAK_USER -e KEYCLOAK_PASSWORD -e KEYCLOAK_CLIENT_SECRET -v \"$PWD:/work\" --entrypoint /bin/bash jboss/keycloak:4.1.0.Final -c /work/scripts/keycloak-setup.sh"
   }
 
   depends_on = ["docker_container.ocwa_keycloak"]

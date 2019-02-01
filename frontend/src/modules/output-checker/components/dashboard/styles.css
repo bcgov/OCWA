@@ -46,3 +46,8 @@
 .column header {
   margin: 10px 20px;
 }
+
+.list {
+  flex: 1;
+  overflow-y: auto;
+}

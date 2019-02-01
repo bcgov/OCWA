@@ -1,0 +1,4 @@
+Project Entity ID,Hospital Number,Fiscal Year,Province Issuing Health Care Number,Gender,Age in Years,Local Health Area,Triage date/time,Triage Level,Registration Date/Time,Physician Initial Assessment Date/Time,Disposition Date/Time
+3d3bc539-9aec-45e0-96a3-4e851068d5e2,111,2017,BC,M,23,Victoria,2017-10-20T21:32:52,5,2018-02-26T21:32:52,2018-02-26T23:32:52,2018-02-26T23:32:52
+a4832b32-25ac-41fc-96ca-7be5753b98b8,121,2017,BC,F,47,Kelowna,2017-11-26T21:32:53,4,2018-02-26T21:32:53,2018-02-26T23:32:53,2018-02-26T23:32:53
+2fc94c19-78d8-42a4-8e1a-0d8103340c72,134,2017,BC,F,62,Vancouver,2017-12-23T21:32:54,5,2018-02-26T21:32:54,2018-02-26T23:32:54,2018-02-26T23:32:54
