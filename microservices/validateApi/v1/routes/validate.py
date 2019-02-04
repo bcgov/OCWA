@@ -70,7 +70,7 @@ def validate_policy(fileId: str) -> object:
                 mandatory=policy[i]['mandatory']
             )
 
-            if alwaysScan:
+            if alwaysScan and len(results) > 0:
                 result = results[0]
 
             log.debug("pre save")
