@@ -25,8 +25,8 @@ printf "\"policyApi\": \"${POLICY_URL}\",\n" >> ./config/default.json
 printf "\"apiSecret\": \"${API_SECRET}\",\n" >> ./config/default.json
 printf "\"user\": {\n" >> ./config/default.json
 printf "\"idField\": \"${USER_ID_FIELD}\"\n" >> ./config/default.json
-printf "}\n" >> ./config/default.json
+printf "},\n" >> ./config/default.json
 printf "\"alwaysScanFiles\": ${ALWAYS_SCAN_FILES}\n" >> ./config/default.json
-printf "}," >> ./config/default.json
+printf "}" >> ./config/default.json
 
 python wsgi.py
