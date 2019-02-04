@@ -372,8 +372,9 @@ router.put('/submit/:requestId', function(req, res, next){
                         res.json({error: "Not all files were submitted for validation, did you let save finish?"});
                         return;
                     }
+
                     var pass = true;
-                    for (var i=0; i < reqRes.files; i++){
+                    for (var i=0; i < reqRes.files.length; i++) {
                         for (var j=0; j < status[reqRes.files[i]].length; j++) {
                             if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
                                 pass = false;
@@ -381,6 +382,7 @@ router.put('/submit/:requestId', function(req, res, next){
                             }
                         }
                     }
+
                     if (pass) {
                         db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                             if (!updateErr) {
@@ -415,7 +417,7 @@ router.put('/submit/:requestId', function(req, res, next){
                     return;
                 }
                 var pass = true;
-                for (var i=0; i < reqRes.files; i++){
+                for (var i=0; i < reqRes.files.length; i++){
                     for (var j=0; j < status[reqRes.files[i]].length; j++) {
                         if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
                             pass = false;
