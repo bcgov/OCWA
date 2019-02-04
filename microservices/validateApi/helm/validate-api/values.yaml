@@ -45,6 +45,8 @@ apiSecret: "ssh this is a secret"
 user:
   idField: Email
 
+alwaysScan: "true"
+
 
 resources: {}
   # If you want to specify resources, uncomment the following

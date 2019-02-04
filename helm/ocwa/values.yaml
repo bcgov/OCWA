@@ -356,6 +356,8 @@ validate-api:
   apiSecret: "ssh this is a secret"
   user:
     idField: Email
+    
+  alwaysScan: "true"
 
   createDatabase: false
 

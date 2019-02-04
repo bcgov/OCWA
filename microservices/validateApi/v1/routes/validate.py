@@ -55,7 +55,12 @@ def validate_policy(fileId: str) -> object:
         log.debug(fileId)
         log.debug(policy[i]['name'])
         log.debug(results)
-        if (len(results) == 0):
+
+        conf = Config().data
+
+        alwaysScan = conf.get('alwaysScanFiles', False)
+
+        if ( (len(results) == 0) or (alwaysScan) ):
             log.debug("no results")
             result = db.Results(
                 file_id=fileId,
@@ -64,6 +69,10 @@ def validate_policy(fileId: str) -> object:
                 state=2,
                 mandatory=policy[i]['mandatory']
             )
+
+            if alwaysScan:
+                result = results[0]
+
             log.debug("pre save")
             result.save()
             log.debug("creating validator")
