@@ -76,23 +76,23 @@ spec:
               value: {{ .Values.user.ignoreGroups }}
             - name: EMAIL_ENABLED
               value: "{{ .Values.emailEnabled }}"
-              - name: EMAIL_SERVICE
-                value: "{{ .Values.emailService }}"
-              - name: EMAIL_SECURE
-                value: "{{ .Values.emailSecure }}"
-              - name: EMAIL_PORT
-                value: "{{ .Values.emailPort }}"
-              - name: EMAIL_USER
-                value: "{{ .Values.emailUser }}"
-              - name: EMAIL_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ template "ocwaForumApi.fullname" . }}-secrets
-                    key: emailPassword
-              - name: EMAIL_FROM
-                value: "{{ .Values.emailFrom }}"
-              - name: EMAIL_SUBJECT
-                value: "{{ .Values.emailSubject }}"
+            - name: EMAIL_SERVICE
+              value: "{{ .Values.emailService }}"
+            - name: EMAIL_SECURE
+              value: "{{ .Values.emailSecure }}"
+            - name: EMAIL_PORT
+              value: "{{ .Values.emailPort }}"
+            - name: EMAIL_USER
+              value: "{{ .Values.emailUser }}"
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
+                  key: emailPassword
+            - name: EMAIL_FROM
+              value: "{{ .Values.emailFrom }}"
+            - name: EMAIL_SUBJECT
+              value: "{{ .Values.emailSubject }}"
 
           ports:
             - name: http
