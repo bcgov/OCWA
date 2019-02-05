@@ -5,24 +5,22 @@ var fs = require('fs');
 var path = require('path');
 var template = fs.readFileSync(path.resolve(__dirname, 'emailTemplate.html'), 'utf8');
 
-var setTemplate = function(request, user, triggeringUser){
+var setTemplate = function(topic, comment, user, triggeringUser){
 
     var config = require('config');
     var email = template;
 
-    console.log("SET TEMPLATE", user);
-
     email = email.replace("{{name}}", user['name']);
     email = email.replace("{{updater}}", triggeringUser['name']);
-    email = email.replace("{{url}}", config.get("ocwaUrl")+"requests/"+request._id);
-    email = email.replace("{{requestId}}", request._id);
+    email = email.replace("{{topic}}", topic.name);
+    email = email.replace("{{comment}}", comment.author_user);
 
     return email
 };
 
 
 //user is the user making the change
-notifications.notify = function(request, user){
+notifications.notify = function(topic, comment, user){
 
     var config = require('config');
     var logger = require('npmlog');
@@ -41,8 +39,7 @@ notifications.notify = function(request, user){
     var nodemailer = require("nodemailer");
     var db = require('../db/db');
 
-    var notifyWho = request.reviewers.slice(0);
-    notifyWho.push(request.author);
+    var notifyWho = topic.contributors;
 
     logger.verbose("Notification triggered", user);
 
@@ -63,7 +60,7 @@ notifications.notify = function(request, user){
                     return;
                 }
 
-                var emailContent = setTemplate(request, userInfo, user);
+                var emailContent = setTemplate(topic, comment, userInfo, user);
 
                 var emailPort = (typeof(emailConfig.port) === "undefined") ? 25 : emailConfig.port;
                 var emailSecure = (typeof(emailConfig.secure) === "undefined") ? false : emailConfig.secure;
@@ -92,7 +89,7 @@ notifications.notify = function(request, user){
                 var mailOptions = {
                     from: emailConfig.from,
                     to: userInfo['email'],
-                    subject: "OCWA - Request Update",
+                    subject: emailConfig.subject,
                     html: emailContent
                 };
 

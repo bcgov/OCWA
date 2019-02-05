@@ -15,10 +15,14 @@ docker run -e EMAIL_FIELD=Email -e GIVENNAME_FIELD=GivenName -e SURNAME_FIELD=Su
            -e DEFAULT_ACCESS_IS_GROUP=true -e REQUIRED_CREATE_ROLE=exporter -e LOG_LEVEL=info -e DB_USERNAME=mongoUser \
            -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e USER_ID_FIELD=Email  -e DB_HOST=docker \
            -e IGNORE_GROUPS="\"group1\", \"group2\"" \
+           -e EMAIL_SUBJECT=forumApi -e EMAIL_ENABLED=false -e EMAIL_USER=forum@ocwa.com -e EMAIL_PASSWORD=MYPASS -e EMAIL_FROM=forum@ocwa.com \
+           -e EMAIL_SERVICE=smtp.gmail.com -e EMAIL_PORT=465 =e EMAIL_SECURE=true \
            --add-host=docker:$hostip -p $apiport:3000 -p $wsport:2999 imageid
 ``` 
 replacing image id with the image id from docker build and the configuration values as necessary and $apiport and $wsport with the ports you want the api and websocket on locally respectively.
 
+## Emails
+To change the email template override (either directly or through a docker volume mount) ./notifications/emailTemplate.html
 
 ## Helm
 For both below helm commands make a copy of values.yaml within the helm/forum-api directory

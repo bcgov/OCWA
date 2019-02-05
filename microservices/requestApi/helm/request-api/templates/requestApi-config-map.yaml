@@ -1,0 +1,11 @@
+{{ if .Values.emailTemplateEnabled }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "ocwaRequestApi.fullname" . }}-requestApi-configmap
+data:
+  pre-create: {{ .Values.emailTemplate }}
+
+
+{{- end}}

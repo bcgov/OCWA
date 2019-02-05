@@ -19,10 +19,22 @@ spec:
         app: {{ template "ocwaRequestApi.name" . }}
         release: {{ .Release.Name }}
     spec:
+      {{ if .Values.emailTemplateEnabled }}
+      volumes:
+      - name: emailTemplate
+        configMap:
+          name: {{ template "ocwaRequestApi.fullname" . }}-forumApi-configmap
+          defaultMode: 511
+      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ if .Values.emailTemplateEnabled }}
+          volumeMounts:
+          - name: emailTemplate
+            mountPath: ./notifications
+          {{ end }}
           env:
             - name: API_PORT
               value: "{{ .Values.apiPort }}"

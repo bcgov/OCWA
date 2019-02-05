@@ -33,6 +33,7 @@ db.init = function(){
     db.Comment = require('./model/comment');
     db.Topic = require('./model/topic');
     db.Permission = require('./model/permission');
+    db.User = require('./model/user');
 
     var collections = Object.keys(db.db.collections);
 

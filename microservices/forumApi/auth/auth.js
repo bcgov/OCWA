@@ -21,6 +21,15 @@ passport.use(new JWTStrategy({
             id: jwtPayload[userConf.idField]
         };
 
+        var db = require('../db/db');
+        db.User.findOneAndUpdate({id: user.id}, user, {upsert: true, setDefaultsOnInsert: true, new: true}, function(err, userDoc){
+            if (err || !userDoc){
+                logger.error("Error upserting user:", err);
+                return;
+            }
+            logger.debug("User upserted successfully");
+        });
+
         cb(null, user);
     }
 ));
