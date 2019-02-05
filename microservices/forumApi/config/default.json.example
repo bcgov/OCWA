@@ -35,6 +35,6 @@
     "pass": "forumPassword",
     "from": "forum@donotreply.com",
     "subject": "Forum Api Topic"
-  },
+  }
 
 }
