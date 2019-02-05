@@ -85,19 +85,21 @@ class Uploader extends React.Component {
               </div>
               <p>{isDragging ? 'Drop your files' : uploadText}</p>
               <small>Or</small>
-              <Button
-                id="file-uploader-button"
-                className={styles.uploadButton}
-                iconBefore={<UploadIcon />}
+              <div
+                id="file-uploader-button-container"
+                className={styles.uploadButtonContainer}
               >
-                Upload Files
+                <Button id="file-uploader-button" iconBefore={<UploadIcon />}>
+                  Upload Files
+                </Button>
                 <input
                   multiple
                   id="file-uploader-input"
+                  className={styles.uploadInput}
                   type="file"
                   onChange={this.onFileInputChange}
                 />
-              </Button>
+              </div>
               <small>
                 <InfoIcon size="small" />
                 <strong>Heads up!</strong> Make sure you save your request after

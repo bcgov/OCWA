@@ -12,7 +12,7 @@ function posts(state = initialPostsState, action = {}) {
       return {
         ...state,
         [action.meta.topicId]: union(get(state, action.meta.topicId, []), [
-          action.payload.result.result,
+          action.payload.result.result || action.payload.result,
         ]),
       };
 

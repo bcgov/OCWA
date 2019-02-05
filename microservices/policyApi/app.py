@@ -72,5 +72,31 @@ def create_app(test_config=None):
         :return: JSON of valid API version endpoints
         """
         return jsonify([url_for(".v1.status", _external=True)])
+    
+
+    @app.route('/version', methods=['GET'], strict_slashes=False)
+    def version():
+        """
+        Get the current version of the api
+        """
+        from os import environ
+        hash = ""
+        if environ.get('GITHASH') is not None:
+            hash = environ.get("GITHASH")
+        
+
+        import pkg_resources  # part of setuptools
+        v = pkg_resources.require("policy")[0].version
+        
+        version = v
+        if hash != "":
+            version += "-"+hash
+
+        responseObj = {
+            "v": v,
+            "hash": hash,
+            "version": version
+        }
+        return jsonify(responseObj)
 
     return app

@@ -246,7 +246,9 @@ request-api:
 
   ocwaUrl: http://ocwa-ui.ocwa
   emailEnabled: false
-  emailService: gmail
+  emailService: smtp.gmail.com
+  emailSecure: true
+  emailPort: 465
   emailUser: me@ocwa.com
   emailPassword: myPass
   emailFrom: donotreply@ocwa.com
@@ -354,6 +356,8 @@ validate-api:
   apiSecret: "ssh this is a secret"
   user:
     idField: Email
+    
+  alwaysScan: "true"
 
   createDatabase: false
 

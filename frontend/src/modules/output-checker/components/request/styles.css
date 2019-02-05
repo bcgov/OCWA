@@ -1,0 +1,73 @@
+.container {
+  flex: 1;
+  display: flex;
+  background-color: #f5f5f5;
+}
+
+.nav {
+  width: 370px;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-right: 1px solid #dee2e6;
+}
+
+.navLoading {
+  display: block;
+}
+
+.navHeader {
+  padding: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.navScroll {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.loadingListItem {
+  display: flex;
+  align-items: center;
+  justify-content: stretch;
+  padding: 10px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.loadingListItem svg {
+  flex: 1;
+}
+
+.request {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.header {
+  position: relative;
+  padding: 20px 20px 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.main {
+  position: relative;
+  flex: 1;
+  overflow-y: auto;
+  background-color: #fff;
+}
+
+.main > div {
+  flex: 1;
+  padding: 0 0 20px;
+  margin: 20px 300px 20px 20px;
+}
+
+.sidebar {
+  width: 300px;
+  padding: 20px;
+  position: fixed;
+  top: 178px;
+  right: 0;
+  box-sizing: border-box;
+}

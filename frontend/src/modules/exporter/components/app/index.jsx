@@ -1,9 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@src/components/app-bar';
-import Avatar from '@atlaskit/avatar';
+import AppBarMenu from '@src/components/app-bar/menu';
 import Changes24Icon from '@atlaskit/icon-object/glyph/changes/24';
-import Dropdown, { DropdownItem } from '@atlaskit/dropdown-menu';
 import NewRequest from '@src/modules/requests/containers/new-request';
 import Requests from '@src/modules/requests/containers/requests-list';
 import Request from '@src/modules/requests/containers/request';
@@ -18,13 +17,7 @@ function App({ user }) {
       <RequestForm />
       <AppBar icon={<Changes24Icon />} title="OCWA Exporter Tool">
         <NewRequest />
-        <Dropdown
-          position="bottom right"
-          trigger={<Avatar borderColor="#0052CC" name={user.displayName} />}
-        >
-          <DropdownItem>{`Howdy, ${user.displayName}`}</DropdownItem>
-          <DropdownItem href="/auth/logout">Logout</DropdownItem>
-        </Dropdown>
+        <AppBarMenu user={user} />
       </AppBar>
       <div id="app-content" className={styles.container}>
         <Switch>

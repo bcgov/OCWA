@@ -27,15 +27,10 @@ function RequestSidebar({
 }) {
   return (
     <aside id="request-sidebar">
+      <h6>Exporter</h6>
+      <div id="request-reviewers">{data.author}</div>
       <h6>Output Checker</h6>
-      <div id="request-reviewers">
-        {data.reviewers.map(d => (
-          <p>
-            <Avatar key={d} size="small" />
-            {d}
-          </p>
-        ))}
-      </div>
+      <div id="request-reviewers">{data.reviewers.map(d => <p>{d}</p>)}</div>
       {data.reviewers.length <= 0 && (
         <p id="request-reviewers-empty">No reviewer has been assigned</p>
       )}

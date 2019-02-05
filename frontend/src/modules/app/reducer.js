@@ -1,5 +1,22 @@
 import { combineReducers } from 'redux';
 
+const initialViewState = {
+  isAboutOpen: false,
+};
+
+function viewState(state = initialViewState, action) {
+  switch (action.type) {
+    case 'app/about/toggle':
+      return {
+        ...state,
+        isAboutOpen: !state.isAboutOpen,
+      };
+
+    default:
+      return state;
+  }
+}
+
 const initialAuthState = {
   fetchStatus: 'idle',
   isAuthenticated: false,
@@ -33,6 +50,39 @@ function auth(state = initialAuthState, action) {
   }
 }
 
+const initialVersionsState = {
+  fetchStatus: 'idle',
+  entities: [],
+};
+
+function versions(state = initialVersionsState, action) {
+  switch (action.type) {
+    case 'app/versions/requested':
+      return {
+        ...state,
+        fetchStatus: 'loading',
+      };
+
+    case 'app/versions/success':
+      return {
+        ...state,
+        fetchStatus: 'loaded',
+        entities: action.payload,
+      };
+
+    case 'app/versions/failed':
+      return {
+        ...state,
+        fetchStatus: 'failed',
+      };
+
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   auth,
+  viewState,
+  versions,
 });

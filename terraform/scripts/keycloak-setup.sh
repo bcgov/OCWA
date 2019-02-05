@@ -30,3 +30,9 @@ kcadm.sh update users/$TUID/groups/$GID2 -r ocwa -s realm=ocwa -s userId=$TUID -
 kcadm.sh set-password -r ocwa --username testuser --new-password $TESTUSER_PASSWORD
 
 # kcadm.sh create users -r ocwa -s username=testuser3 -s enabled=true -s email=testuser3@nowhere.com -s firstName=TestF -s lastName=TestL
+
+TUID=$(kcadm.sh create users -r ocwa -s username=researcher_1 -s enabled=true -s email=researcher_1@nowhere.com -s firstName=ResF -s lastName=ResL -i)
+
+kcadm.sh update users/$TUID/groups/$GID1 -r ocwa -s realm=ocwa -s userId=$TUID -s groupId=$GID1 -n
+kcadm.sh update users/$TUID/groups/$GID2 -r ocwa -s realm=ocwa -s userId=$TUID -s groupId=$GID2 -n
+kcadm.sh set-password -r ocwa --username researcher_1 --new-password researcher_1_password

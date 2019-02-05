@@ -41,7 +41,7 @@ router.get('/', function(req, res, next) {
 
     var q = {};
     if (typeof(req.query.state) !== "undefined"){
-        q['state'] = req.query.state;
+        q['state'] = Number(req.query.state);
     }
 
     if (typeof(req.query.name) !== "undefined"){
@@ -372,8 +372,9 @@ router.put('/submit/:requestId', function(req, res, next){
                         res.json({error: "Not all files were submitted for validation, did you let save finish?"});
                         return;
                     }
+
                     var pass = true;
-                    for (var i=0; i < reqRes.files; i++){
+                    for (var i=0; i < reqRes.files.length; i++) {
                         for (var j=0; j < status[reqRes.files[i]].length; j++) {
                             if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
                                 pass = false;
@@ -381,6 +382,7 @@ router.put('/submit/:requestId', function(req, res, next){
                             }
                         }
                     }
+
                     if (pass) {
                         db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                             if (!updateErr) {
@@ -415,7 +417,7 @@ router.put('/submit/:requestId', function(req, res, next){
                     return;
                 }
                 var pass = true;
-                for (var i=0; i < reqRes.files; i++){
+                for (var i=0; i < reqRes.files.length; i++){
                     for (var j=0; j < status[reqRes.files[i]].length; j++) {
                         if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
                             pass = false;
@@ -581,7 +583,7 @@ router.put('/approve/:requestId', function(req, res){
             return;
         }
 
-        if (req.user.groups.indexOf(config.get("outputCheckerGroup"))) {
+        if (req.user.groups.indexOf(config.get("outputCheckerGroup")) !== -1) {
             var reviewers = reqRes.reviewers;
 
             if (reviewers.indexOf(req.user.id) === -1) {
@@ -643,7 +645,7 @@ router.put('/deny/:requestId', function(req, res){
             return;
         }
 
-        if (req.user.groups.indexOf(config.get("outputCheckerGroup"))) {
+        if (req.user.groups.indexOf(config.get("outputCheckerGroup")) !== -1) {
             var reviewers = reqRes.reviewers;
 
             if (reviewers.indexOf(req.user.id) === -1) {
@@ -670,7 +672,7 @@ router.put('/deny/:requestId', function(req, res){
             });
         }else{
             res.status(403);
-            res.json("You do not have the necessary permissions to approve an output request");
+            res.json("You do not have the necessary permissions to deny an output request");
             logger.error("User " + req.user.id + " tried to deny an output request but lacks the required permission");
             return;
         }
@@ -698,7 +700,7 @@ router.put('/requestRevisions/:requestId', function(req, res){
             return;
         }
 
-        if (req.user.groups.indexOf(config.get("outputCheckerGroup"))) {
+        if (req.user.groups.indexOf(config.get("outputCheckerGroup")) !== -1) {
             var reviewers = reqRes.reviewers;
 
             if (reviewers.indexOf(req.user.id) === -1) {
@@ -722,7 +724,7 @@ router.put('/requestRevisions/:requestId', function(req, res){
             });
         }else{
             res.status(403);
-            res.json("You do not have the necessary permissions to approve an output request");
+            res.json("You do not have the necessary permissions to request revisions on an output request");
             logger.error("User " + req.user.id + " tried to request revisions but lacks the required permission");
             return;
         }

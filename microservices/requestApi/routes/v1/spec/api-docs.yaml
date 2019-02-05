@@ -177,6 +177,6 @@ components:
       required:
         - error
       properties:
-        errpr:
+        error:
           type: string
           description: contains a message about the failure

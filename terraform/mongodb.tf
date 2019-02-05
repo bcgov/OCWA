@@ -5,6 +5,7 @@ data "docker_registry_image" "mongodb" {
 resource "docker_image" "mongodb" {
   name          = "${data.docker_registry_image.mongodb.name}"
   pull_triggers = ["${data.docker_registry_image.mongodb.sha256_digest}"]
+  keep_locally = true
 }
 
 resource "docker_container" "ocwa_mongodb" {
@@ -32,13 +33,10 @@ resource "local_file" "mongodb_script" {
 
 resource "null_resource" "mongodb_first_time_install" {
   provisioner "local-exec" {
-    command = "sleep 10"
-  }
-  provisioner "local-exec" {
     environment = {
         SCRIPT_PATH = "${var.hostRootPath}"
     }
-    command = "docker run --net=ocwa_vnet -v $SCRIPT_PATH:/work mongo:4.1.3 mongo mongodb://ocwa_mongodb/oc_db /work/mongodb_script.js"
+    command = "sleep 30; docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.1.3 mongo mongodb://ocwa_mongodb/oc_db /work/mongodb_script.js"
   }
   depends_on = ["docker_container.ocwa_mongodb"]
 }
