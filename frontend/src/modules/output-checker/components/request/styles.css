@@ -12,6 +12,10 @@
   border-right: 1px solid #dee2e6;
 }
 
+.navLoading {
+  display: block;
+}
+
 .navHeader {
   padding: 10px;
   border-bottom: 1px solid #dee2e6;

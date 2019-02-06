@@ -22,7 +22,8 @@ app.get("/version", function(req, res){
     res.json({
         v: v,
         hash: hash,
-        version: version
+        version: version,
+        name: 'Request API'
     })
 });
 

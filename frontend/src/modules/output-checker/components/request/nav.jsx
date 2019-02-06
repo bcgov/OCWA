@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import { CreatableSelect } from '@atlaskit/select';
 import { Code } from 'react-content-loader';
 import range from 'lodash/range';
@@ -17,7 +18,7 @@ function RequestsNav({
 }) {
   const options = [
     {
-      label: 'Unclaimed',
+      label: 'Submitted',
       value: 2,
     },
     {
@@ -40,7 +41,10 @@ function RequestsNav({
   if (isLoading) {
     const elements = range(20);
     return (
-      <nav className={styles.nav} style={{ overflowY: 'hidden' }}>
+      <nav
+        className={cx(styles.nav, styles.navLoading)}
+        style={{ overflowY: 'hidden' }}
+      >
         {elements.map(n => (
           <div key={n} className={styles.loadingListItem}>
             <Code height={60} width={350} />

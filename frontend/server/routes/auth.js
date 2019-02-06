@@ -35,13 +35,18 @@ router.get(
     // Clean up the token on first successful sign in
     const jwtSecret = config.get('jwtSecret');
     const jwtClaims = get(req, 'user.claims');
+    const { redirectTo } = req.session;
+
+    if (redirectTo) {
+      delete req.session.redirectTo;
+    }
 
     if (jwtClaims) {
       // Passport/KeyCloak doesn't sign the token correctly, sign here
       req.user.accessToken = jwt.sign(jwtClaims, jwtSecret);
     }
 
-    res.redirect('/');
+    res.redirect(redirectTo || '/');
   }
 );
 

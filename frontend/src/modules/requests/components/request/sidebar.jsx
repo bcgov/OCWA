@@ -27,6 +27,8 @@ function RequestSidebar({
 }) {
   return (
     <aside id="request-sidebar">
+      <h6>Exporter</h6>
+      <div id="request-reviewers">{data.author}</div>
       <h6>Output Checker</h6>
       <div id="request-reviewers">{data.reviewers.map(d => <p>{d}</p>)}</div>
       {data.reviewers.length <= 0 && (

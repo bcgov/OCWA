@@ -67,6 +67,9 @@ class Requester_step_def_ks {
 	//String NEW_REQUEST_DIALOG_HEADER_TEXT = "Initiate a New Request"
 	String NEW_REQUEST_DIALOG_ID = "request-form"
 	String SEARCH_BOX_ID = "requests-list-search"
+	String VALID_FILE_ICON = "file-table-item-passing-icon"
+	String WARNING_FILE_ICON = "file-table-item-warning-icon"
+	String ERROR_FILE_ICON = "file-table-item-error-icon"
 
 	String g_requestName = ""
 
@@ -274,9 +277,6 @@ class Requester_step_def_ks {
 
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
-
-		
-
 		TestObject saveCloseBtn = get_test_object_by_id(REQUEST_SAVE_CLOSE_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(saveCloseBtn, "disabled", 10)
 		WebUI.waitForElementVisible(saveCloseBtn, 10)
@@ -307,7 +307,9 @@ class Requester_step_def_ks {
 	def requester_creates_a_new_comment(){
 		requester_views_request_they_created()
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_Discussion'))
-		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/div_'), TEST_COMMENT)
+		//WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/div_'), TEST_COMMENT)
+		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/div_Normal text_ak-editor-cont'), TEST_COMMENT)
+		//WebUI.setText(get_test_object_by_id("discussion-form"), TEST_COMMENT)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Save (1)'))
 	}
 
@@ -387,11 +389,11 @@ class Requester_step_def_ks {
 
 		WebUI.waitForPageLoad(20)
 		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
-		
+
 
 		WebUI.verifyTextPresent(g_requestName, false)
 		WebUI.delay(5) // we need to do a hard delay here to give time for the inline ajax to finish
-		
+
 		if (numOutputFiles == "1") {
 			WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		}
@@ -466,7 +468,7 @@ class Requester_step_def_ks {
 		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
 		WebUI.click(get_test_object_by_id(REQUEST_EDIT_BTN_ID))
 		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), EDITED_PURPOSE_TEXT)
-		
+
 		// click Add Files button
 		TestObject requestFormSaveFilesButton = get_test_object_by_id(REQUEST_SAVE_FILES_BTN_ID)
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
@@ -482,13 +484,15 @@ class Requester_step_def_ks {
 	}
 
 	@Then("requester should be informed that given blocking rule (.+) has been violated")
-	def request_should_be_informed_of_blocking_rule_violation(){
-		//unclear how this is displayed in the UI
+	def request_should_be_informed_of_blocking_rule_violation(String rule){
+		WebUI.comment("checking that file was successfully blocked")
+		WebUI.verifyElementPresent(get_test_object_by_class(ERROR_FILE_ICON), 10)
 	}
 
 	@Then("requester should be informed that given warning rule (.+) has been violated")
-	def request_should_be_informed_of_warning_rule_violation(){
-		//unclear how this is displayed in the UI
+	def request_should_be_informed_of_warning_rule_violation(String rule){
+		WebUI.comment("checking that file successfully triggered warning")
+		WebUI.verifyElementPresent(get_test_object_by_class(WARNING_FILE_ICON), 10)
 	}
 
 	@Then("the team member's request should be visible and editable")
@@ -514,6 +518,11 @@ class Requester_step_def_ks {
 		tObject.addProperty("text", ConditionType.EQUALS, t, true)
 		return tObject
 	}
-
+	//Helper function for getting TestObject from the class of an html element
+	def get_test_object_by_class(String t) {
+		TestObject tObject = new TestObject(t)
+		tObject.addProperty("class", ConditionType.EQUALS, t, true)
+		return tObject
+	}
 
 }

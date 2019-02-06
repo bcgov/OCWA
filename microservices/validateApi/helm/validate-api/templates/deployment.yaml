@@ -64,6 +64,8 @@ spec:
                   key: apiSecret
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
+            - name: ALWAYS_SCAN_FILES
+              value: "{{ .Values.alwaysScan }}"
           ports:
             - name: http
               containerPort: {{ .Values.apiPort }}

@@ -47,11 +47,11 @@
   justify-content: center;
 }
 
-.uploadButton {
+.uploadButtonContainer {
   position: relative;
 }
 
-.uploadButton input {
+.uploadInput {
   position: absolute;
   top: 0;
   left: 0;

@@ -13,10 +13,11 @@ const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
 require('./auth');
-const { parseApiHost, parseWsHost } = require('./utils');
+const { parseApiHost, parseWsHost, storeUrl } = require('./utils');
 const proxy = require('./proxy');
 const authRoute = require('./routes/auth');
 const filesRoute = require('./routes/files');
+const versionsRoute = require('./routes/versions');
 const webpackConfig = require('../webpack.dev');
 
 // Main constants and setup
@@ -78,12 +79,13 @@ app.get('/login', passport.authenticate('openidconnect'));
 app.use('/api/v1/forums', proxy.forum);
 app.use('/api/v1/requests', proxy.request);
 app.use('/api/v1/files', filesRoute);
+app.use('/versions', versionsRoute);
 
 app.get('/hello', (req, res) => {
   res.status(200).send('hi');
 });
 
-app.get(/^((?!.json|__webpack_hmr).)*$/, (req, res) => {
+app.get('*', storeUrl, (req, res) => {
   res.render('index', {
     isDevelopment,
     title: 'OCWA [Development Version]',

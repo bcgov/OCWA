@@ -8,7 +8,9 @@
   "globals": {
     "__DEV__": true,
     "FILES_API_HOST": true,
-    "SOCKET_HOST": true
+    "SOCKET_HOST": true,
+    "VERSION": true,
+    "COMMIT": true
   },
   "parser": "babel-eslint",
   "rules": {
