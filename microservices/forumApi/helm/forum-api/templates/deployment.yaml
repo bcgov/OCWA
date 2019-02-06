@@ -34,6 +34,7 @@ spec:
           volumeMounts:
           - name: emailTemplate
             mountPath: ./notifications
+            subPath: "emailTemplate"
           {{ end }}
           env:
             - name: API_PORT

@@ -5,7 +5,7 @@ kind: ConfigMap
 metadata:
   name: {{ template "ocwaForumApi.fullname" . }}-forumApi-configmap
 data:
-  pre-create: {{ .Values.emailTemplate }}
+  emailTemplate.html: {{ .Values.emailTemplate }}
 
 
 {{- end}}
