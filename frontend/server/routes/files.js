@@ -40,4 +40,15 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.get('/:fileId', (req, res) => {
+  const { fileId } = req.params;
+  minioClient.presignedGetObject(bucket, fileId, (err, url) => {
+    if (err) {
+      return res.status(500).send({ error: err });
+    }
+
+    return res.redirect(url);
+  });
+});
+
 module.exports = router;
