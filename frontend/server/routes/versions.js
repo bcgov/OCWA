@@ -1,24 +1,26 @@
 const config = require('config');
 const express = require('express');
 const request = require('request');
+const { parseApiHost } = require('../utils');
 
 const router = express.Router();
 
 const forumApiHost = config.get('forumApiHost');
 const requestApiHost = config.get('requestApiHost');
 
-router.get('/', (req, res) => {
-  const versionRequest = url =>
-    new Promise((resolve, reject) => {
-      request.get(`${url}/version`, (err, resp, body) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(JSON.parse(body));
-        }
-      });
+function versionRequest(url) {
+  return new Promise((resolve, reject) => {
+    request.get(`${parseApiHost(url)}/version`, (err, resp, body) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(JSON.parse(body));
+      }
     });
+  });
+}
 
+router.get('/', (req, res) => {
   Promise.all([versionRequest(forumApiHost), versionRequest(requestApiHost)])
     .then(json =>
       res.json({
