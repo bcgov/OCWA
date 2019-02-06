@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import compact from 'lodash/compact';
 import Modal, { ModalTransition } from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
 import WarningIcon from '@atlaskit/icon/glyph/warning';
@@ -8,7 +9,7 @@ import { uid } from 'react-uid';
 
 import * as styles from './styles.css';
 
-const makeVersionString = (v, hash) => [v, hash].join(' - ');
+const makeVersionString = (...args) => compact(args).join(':');
 
 function About({ data, fetchStatus, open, onToggle }) {
   return (
@@ -32,7 +33,7 @@ function About({ data, fetchStatus, open, onToggle }) {
           {fetchStatus === 'loaded' && (
             <dl className={styles.aboutList}>
               <dt>User Interface Version</dt>
-              <dd>{`${version} - ${commit}`}</dd>
+              <dd>{`${version}:${commit}`}</dd>
               {data.map(d => (
                 <React.Fragment key={uid(d)}>
                   <dt>{d.name}</dt>

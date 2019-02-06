@@ -3,6 +3,7 @@ const config = require('config');
 const cookieParser = require('cookie-parser');
 const express = require('express');
 const isFunction = require('lodash/isFunction');
+const get = require('lodash/get');
 const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
@@ -91,6 +92,7 @@ app.get('*', storeUrl, (req, res) => {
     title: 'OCWA [Development Version]',
     filesApiHost: parseApiHost(filesApiHost),
     socketHost: parseWsHost(forumSocket),
+    commit: get(process, 'env.GITHASH', ''),
   });
 });
 

@@ -35,12 +35,10 @@
 
 .aboutList dt {
   font-weight: 700;
-  float: left;
 }
 
 .aboutList dd {
-  padding-left: 40%;
-  clear: right;
+  margin: 0 0 15px 0;
   font-family: Menlo, monospace;
 }
 

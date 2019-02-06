@@ -9,7 +9,7 @@ import * as styles from './styles.css';
 function AppBar({ children, icon, title }) {
   return (
     <div className={styles.container}>
-      <Tooltip content={`OCWA Version ${version} - ${commit}`}>
+      <Tooltip content={`OCWA Version ${version}:${commit}`}>
         <Link id="app-bar-brand" to="/" className={styles.brand}>
           {icon}
           {title}
