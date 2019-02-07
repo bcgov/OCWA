@@ -48,7 +48,7 @@ class Uploader extends React.Component {
   };
 
   uploadFiles = files => {
-    const { onUpload } = this.props;
+    const { requestId, onUpload } = this.props;
     const payload = [];
 
     for (let i = 0; i < files.length; i += 1) {
@@ -60,7 +60,7 @@ class Uploader extends React.Component {
     }
 
     if (files.length > 0) {
-      onUpload(payload);
+      onUpload(payload, requestId);
     }
   };
 
@@ -132,6 +132,7 @@ Uploader.propTypes = {
   files: PropTypes.arrayOf(PropTypes.string).isRequired,
   isUploading: PropTypes.bool.isRequired,
   onUpload: PropTypes.func.isRequired,
+  requestId: PropTypes.string.isRequired,
   uploadText: PropTypes.string.isRequired,
 };
 

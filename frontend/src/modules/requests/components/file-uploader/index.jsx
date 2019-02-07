@@ -4,6 +4,7 @@ import cx from 'classnames';
 import Tabs from '@atlaskit/tabs';
 
 import FilesUploader from '../../containers/file-uploader';
+import { RequestSchema } from '../../types';
 import SupportingFilesUploader from '../../containers/supporting-files-uploader';
 import * as styles from './styles.css';
 
@@ -51,7 +52,7 @@ class FileUploader extends React.Component {
 }
 
 FileUploader.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: RequestSchema.isRequired,
 };
 
 export default FileUploader;
