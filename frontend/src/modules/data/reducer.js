@@ -162,15 +162,16 @@ const messages = (state = [], action) => {
     has(action, 'payload.result.error') ||
     has(action, 'payload.error');
 
-  if (actionMessages.length > 0) {
-    const newMessages = actionMessages.map(message => ({
-      id: uniqueId('messages'),
-      type: hasErrorMessage ? 'failed' : last(action.type.split('/')),
-      message,
-    }));
+  if (!has(action, 'meta.hideNotification'))
+    if (actionMessages.length > 0) {
+      const newMessages = actionMessages.map(message => ({
+        id: uniqueId('messages'),
+        type: hasErrorMessage ? 'failed' : last(action.type.split('/')),
+        message,
+      }));
 
-    return [...newMessages, ...state];
-  }
+      return [...newMessages, ...state];
+    }
 
   // TODO: probably can shorten this regex
   if (/\w+\/\w+\/reset$/.test(action.type)) {

@@ -115,6 +115,7 @@ function* uploadFileChannel(item, meta) {
         meta: {
           schema: { result: requestSchema },
           id: requestId,
+          hideNotification: true,
           url: `/api/v1/requests/save/${requestId}`,
         },
         payload: {
