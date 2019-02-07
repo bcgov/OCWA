@@ -48,6 +48,7 @@ matrix:
         - wget -q https://dl.bintray.com/jeremy-long/owasp/dependency-check-4.0.2-release.zip
         - unzip dependency-check-4.0.2-release.zip
         - PATH=`pwd`/dependency-check/bin:$PATH
+        - ls -l `pwd`/dependency-check/bin
 
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
