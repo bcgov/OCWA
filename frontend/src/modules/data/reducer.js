@@ -14,9 +14,7 @@ import uniqueId from 'lodash/uniqueId';
 /* eslint-disable consistent-return */
 function mergeStrategy(objValue, srcValue) {
   if (isArray(objValue)) {
-    if (objValue.length > 0 && srcValue.length === 0) {
-      return [];
-    }
+    return srcValue;
   }
 }
 /* eslint-enable consistent-return */

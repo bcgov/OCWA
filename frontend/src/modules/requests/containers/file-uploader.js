@@ -14,6 +14,7 @@ const mapStateToProps = (state, props) => {
 
   return {
     data,
+    requestId: props.data._id,
     files,
     isUploading,
   };
