@@ -68,9 +68,8 @@ def evaluate_source(source, file_attributes):
 
     try:
         exec_source = niño_cédille_postulate(source, format_fn)
-        print(exec_source)
         execOutput = execute_script(exec_source)
-        print(execOutput)
+        log.info(execOutput)
         result = execOutput.rstrip() in ("yes", "true", "t", "1")
     except (Exception, NameError) as e:
         log.error(e)
@@ -84,6 +83,7 @@ def niño_cédille_postulate(source, fn):
     This function implements the Niño Cédille Postulate (NCP).
     NCP asserts that no strings will likely use both a niño and cédille as
     substitute characters to temporarily escape out curly braces.
+    Note: this will not work on JSON sources with more than one nested level
 
     :param source: A string to be handled by NCP
     :param fn: A lambda function to be applied while string is NCP'ed
