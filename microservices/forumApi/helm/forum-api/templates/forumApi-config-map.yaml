@@ -1,0 +1,10 @@
+{{ if .Values.emailTemplateEnabled }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "ocwaForumApi.fullname" . }}-forumApi-configmap
+data:
+  emailTemplate.html: {{ .Values.emailTemplate }}
+
+{{- end}}

@@ -23,6 +23,8 @@ docker run -e CREATE_ROLE="exporter" -e OC_GROUP="oc" -e ALLOW_DENY=true -e EMAI
 
 replacing image id with the image id from docker build and the configuration values as necessary
 
+## Emails
+To change the email template override (either directly or through a docker volume mount) ./notifications/emailTemplate.html
 
 ## Helm
 For both below helm commands make a copy of values.yaml within the helm/request-api directory
