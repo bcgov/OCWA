@@ -55,7 +55,7 @@ matrix:
         - npm install
         - npm audit || true
         - mkdir -p reports
-        - dependency-check.sh -f ALL -l depcheck.log -o reports --project forumApi -s package.json -s package-lock.json
+        - dependency-check.sh -f ALL -l depcheck.log -o reports --project ocwa_forum_api -s package.json -s package-lock.json
 #        - cat depcheck.log | fold -s -w80
         - cat reports/dependency-check-report.csv
 
