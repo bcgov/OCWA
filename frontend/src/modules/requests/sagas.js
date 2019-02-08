@@ -1,6 +1,7 @@
 import { all, call, fork, put, select, take } from 'redux-saga/effects';
 import { channel, delay, eventChannel, END } from 'redux-saga';
 import { getToken } from '@src/services/auth';
+import difference from 'lodash/difference';
 import get from 'lodash/get';
 import head from 'lodash/head';
 import { normalize } from 'normalizr';
@@ -23,6 +24,9 @@ export const sanitizeURL = url => {
 
   return '';
 };
+
+export const syncFilesPayload = (files, filesToDelete) =>
+  difference(files, filesToDelete);
 
 // Channel to handle the file uploads with TUS
 // file: File object
@@ -107,6 +111,9 @@ function* uploadFileChannel(item, meta) {
       });
       // Autosave the request
       const { isSupportingFile, requestId } = meta;
+      const { filesToDelete } = yield select(state =>
+        get(state, 'requests.viewState', [])
+      );
       const request = yield select(state =>
         get(state, `data.entities.requests.${requestId}`)
       );
@@ -120,9 +127,11 @@ function* uploadFileChannel(item, meta) {
         },
         payload: {
           ...request,
-          files: !isSupportingFile ? [...request.files, id] : request.files,
+          files: !isSupportingFile
+            ? syncFilesPayload([...request.files, id], filesToDelete)
+            : request.files,
           supportingFiles: isSupportingFile
-            ? [...request.supportingFiles, id]
+            ? syncFilesPayload([...request.supportingFiles, id], filesToDelete)
             : request.supportingFiles,
         },
       });
