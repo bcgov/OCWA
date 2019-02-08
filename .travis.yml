@@ -53,7 +53,7 @@ matrix:
         - ls -l `pwd`/dependency-check/bin
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm install
-        - dependency-check.sh
+        - dependency-check.sh -f ALL -l -o reports --project forumApi -s package.json
 
       script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
