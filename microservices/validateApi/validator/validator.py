@@ -1,7 +1,7 @@
 # TODO: This library can cause deadlocks because pymongo isn't fork safe. Test EXTENSIVELY!
 import logging
 import sys
-# import re #uncomment if we use the regular expression method
+import re
 from io import StringIO
 from multiprocessing import Process
 
@@ -54,24 +54,54 @@ def read_file_and_evaluate(source, result):
 
 
 def evaluate_source(source, file_attributes):
-    munchified_attributes = munchify(file_attributes)
-
-    source = source.replace("${file.", "{0.")
-
     result = False
     message = ""
 
+    def format_fn(val):
+        """
+        This function munchifies the file attributes and formats string val
+        :param val: A template string
+        :return: An interpolated string
+        """
+        val_temp = val.replace("${file.", "{0.")
+        return val_temp.format(munchify(file_attributes))
+
     try:
-        source = source.format(munchified_attributes)
-        execOutput = execute_script(source)
+        exec_source = niño_cédille_postulate(source, format_fn)
+        print(exec_source)
+        execOutput = execute_script(exec_source)
         print(execOutput)
-        result = execOutput in ("yes", "true", "t", "1",
-                                "yes\n", "true\n", "t\n", "1\n")
+        result = execOutput.rstrip() in ("yes", "true", "t", "1")
     except (Exception, NameError) as e:
         log.error(e)
         message = str(e)
 
     return result, message
+
+
+def niño_cédille_postulate(source, fn):
+    """
+    This function implements the Niño Cédille Postulate (NCP).
+    NCP asserts that no strings will likely use both a niño and cédille as
+    substitute characters to temporarily escape out curly braces.
+
+    :param source: A string to be handled by NCP
+    :param fn: A lambda function to be applied while string is NCP'ed
+    :return: A string with NCP and fn applied if there is no error; else source
+    """
+    ncp_forward = re.compile(r"(?<!\$)(?:{)(.*?)(?:})")
+    ncp_reverse = re.compile(r"(?<!\$)(?:ñ)(.*?)(?:ç)")
+
+    result = ""
+    try:
+        ncp_source = ncp_forward.sub(r"ñ\1ç", source)
+        fn_source = fn(ncp_source)
+        result = ncp_reverse.sub(r"{\1}", fn_source)
+    except (Exception, NameError) as e:
+        log.error(e)
+        result = source
+
+    return result
 
 
 def execute_script(source):
