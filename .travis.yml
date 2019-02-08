@@ -56,6 +56,7 @@ matrix:
         - mkdir -p reports
         - dependency-check.sh -f ALL -l depcheck.log -o reports --project forumApi -s package.json
         - ls -l reports
+        - cat reports/dependency-check-report.xml
 
       script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
