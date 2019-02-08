@@ -7,5 +7,4 @@ metadata:
 data:
   emailTemplate.html: {{ .Values.emailTemplate }}
 
-
 {{- end}}
