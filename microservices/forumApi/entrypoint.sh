@@ -31,7 +31,7 @@ printf "\"secure\": ${EMAIL_SECURE},\n" >> ./config/default.json
 printf "\"port\": \"${EMAIL_PORT}\",\n" >> ./config/default.json
 printf "\"user\": \"${EMAIL_USER}\",\n" >> ./config/default.json
 printf "\"pass\": \"${EMAIL_PASSWORD}\",\n" >> ./config/default.json
-printf "\"from\": \"${EMAIL_FROM},\"\n" >> ./config/default.json
+printf "\"from\": \"${EMAIL_FROM}\",\n" >> ./config/default.json
 printf "\"subject\": \"${EMAIL_SUBJECT}\"\n" >> ./config/default.json
 printf "}\n" >> ./config/default.json
 printf "}" >> ./config/default.json
