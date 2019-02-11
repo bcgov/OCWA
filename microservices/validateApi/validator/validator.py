@@ -1,7 +1,7 @@
 # TODO: This library can cause deadlocks because pymongo isn't fork safe. Test EXTENSIVELY!
 import logging
-import sys
 import re
+import sys
 from io import StringIO
 from multiprocessing import Process
 
@@ -49,28 +49,37 @@ def validate(rule, resultObj):
 
 def read_file_and_evaluate(source, result):
     _, file_attributes = read_file(
-        result['file_id'], not(source.find('${file.content}') == -1))
+        result['file_id'], '${file.content}' in source)
     return evaluate_source(source, file_attributes)
 
 
 def evaluate_source(source, file_attributes):
+    PREFIX = "file."
     result = False
     message = ""
 
-    def format_fn(val):
-        """
-        This function munchifies the file attributes and formats string val
-        :param val: A template string
-        :return: An interpolated string
-        """
-        val_temp = val.replace("${file.", "{0.")
-        return val_temp.format(munchify(file_attributes))
+    # def format_fn(val):
+    #     """
+    #     This function munchifies the file attributes and formats string val
+    #     :param val: A template string
+    #     :return: An interpolated string
+    #     """
+    #     val_temp = val.replace("${file.", "{0.")
+    #     return val_temp.format(munchify(file_attributes))
 
     try:
-        exec_source = niño_cédille_postulate(source, format_fn)
-        execOutput = execute_script(exec_source)
-        log.info(execOutput)
-        result = execOutput.rstrip() in ("yes", "true", "t", "1")
+        munch_attr = munchify(file_attributes)
+
+        src_split = re.split(r"(\${)(file..*?)(})", source)
+        src_parts = [x for x in src_split if x not in ("${", "}")]
+        src_sub = [munch_attr.get(x[len(PREFIX):]) if x.startswith(
+            PREFIX) else x for x in src_parts]
+        exec_src = "".join(map(str, src_sub))
+        # exec_src = niño_cédille_postulate(source, format_fn)
+
+        exec_output = execute_script(exec_src)
+        log.info(exec_output)
+        result = exec_output.rstrip() in ("yes", "true", "t", "1")
     except (Exception, NameError) as e:
         log.error(e)
         message = str(e)
@@ -78,30 +87,30 @@ def evaluate_source(source, file_attributes):
     return result, message
 
 
-def niño_cédille_postulate(source, fn):
-    """
-    This function implements the Niño Cédille Postulate (NCP).
-    NCP asserts that no strings will likely use both a niño and cédille as
-    substitute characters to temporarily escape out curly braces.
-    Note: this will not work on JSON sources with more than one nested level
+# def niño_cédille_postulate(source, fn):
+#     """
+#     This function implements the Niño Cédille Postulate (NCP).
+#     NCP asserts that no strings will likely use both a niño and cédille as
+#     substitute characters to temporarily escape out curly braces.
+#     Note: this will not work on JSON sources with more than one nested level
 
-    :param source: A string to be handled by NCP
-    :param fn: A lambda function to be applied while string is NCP'ed
-    :return: A string with NCP and fn applied if there is no error; else source
-    """
-    ncp_forward = re.compile(r"(?<!\$)(?:{)(.*?)(?:})")
-    ncp_reverse = re.compile(r"(?<!\$)(?:ñ)(.*?)(?:ç)")
+#     :param source: A string to be handled by NCP
+#     :param fn: A lambda function to be applied while string is NCP'ed
+#     :return: A string with NCP and fn applied if there is no error; else source
+#     """
+#     ncp_forward = re.compile(r"(?<!\$)(?:{)(.*?)(?:})")
+#     ncp_reverse = re.compile(r"(?<!\$)(?:ñ)(.*?)(?:ç)")
 
-    result = ""
-    try:
-        ncp_source = ncp_forward.sub(r"ñ\1ç", source)
-        fn_source = fn(ncp_source)
-        result = ncp_reverse.sub(r"{\1}", fn_source)
-    except (Exception, NameError) as e:
-        log.error(e)
-        result = source
+#     result = ""
+#     try:
+#         ncp_source = ncp_forward.sub(r"ñ\1ç", source)
+#         fn_source = fn(ncp_source)
+#         result = ncp_reverse.sub(r"{\1}", fn_source)
+#     except (Exception, NameError) as e:
+#         log.error(e)
+#         result = source
 
-    return result
+#     return result
 
 
 def execute_script(source):
