@@ -61,7 +61,7 @@ Before you submit your Pull Request (PR) consider the following guidelines:
 1. Fork the bcgov/OCWA repo.
 1. Make your changes in a new git branch:
 
-    ```shell
+    ``` sh
     git checkout -b my-fix-branch develop
     ```
 
@@ -70,14 +70,15 @@ Before you submit your Pull Request (PR) consider the following guidelines:
 1. Ensure that all test suites pass.
 1. Commit your changes using a descriptive commit message that succinctly explains what the commit is meant to change.
 
-    ```shell
+    ``` sh
     git commit -a
     ```
-    Note: the optional commit `-a` command line option will automatically "add" and "rm" edited files.
+
+- Note: the optional commit `-a` command line option will automatically "add" and "rm" edited files.
 
 1. Push your branch to GitHub:
 
-    ```shell
+    ``` sh
     git push origin my-fix-branch
     ```
 
@@ -88,7 +89,7 @@ Before you submit your Pull Request (PR) consider the following guidelines:
   - Re-run the OCWA test suites to ensure tests are still passing.
   - Rebase your branch and force push to your own GitHub repository (this will update your Pull Request):
 
-    ```shell
+    ``` sh
     git rebase master -i
     git push -f
     ```
@@ -102,25 +103,25 @@ from the main (upstream) repository:
 
 - Delete the remote branch on GitHub either through the GitHub web UI or your local shell as follows:
 
-    ```shell
+    ``` sh
     git push origin --delete my-fix-branch
     ```
 
 - Check out the develop branch:
 
-    ```shell
+    ``` sh
     git checkout develop -f
     ```
 
 - Delete the local branch:
 
-    ```shell
+    ``` sh
     git branch -D my-fix-branch
     ```
 
 - Update your master with the latest upstream version:
 
-    ```shell
+    ``` sh
     git pull --ff upstream develop
     ```
 
