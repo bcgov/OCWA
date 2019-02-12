@@ -63,6 +63,7 @@ class Requester_step_def_ks {
 	String REQUEST_PURPOSE_TXT_ID = "purpose"
 	String REQUEST_WITHDRAW_BTN_ID = "request-sidebar-withdraw-button"
 	String REQUEST_CANCEL_BTN_ID = "request-sidebar-cancel-button"
+	String REQUEST_SUBMIT_BTN_ID = "request-sidebar-submit-button" //submit button on the request page
 	String LOGOUT_URL = "/auth/logout"
 	//String NEW_REQUEST_DIALOG_HEADER_TEXT = "Initiate a New Request"
 	String NEW_REQUEST_DIALOG_ID = "request-form"
@@ -70,6 +71,8 @@ class Requester_step_def_ks {
 	String VALID_FILE_ICON = "file-table-item-passing-icon"
 	String WARNING_FILE_ICON = "file-table-item-warning-icon"
 	String ERROR_FILE_ICON = "file-table-item-error-icon"
+	String WORK_IN_PROGRESS_STATUS = "Work in Progress"
+	String AWAITING_REVIEW = "Awaiting Review"
 
 	String g_requestName = ""
 
@@ -168,7 +171,7 @@ class Requester_step_def_ks {
 
 	@Given("request violates given warning rule (.+)")
 	def request_violates_warning_rule(String warningRule){
-		requester_starts_new_request()
+		//requester_starts_new_request()
 		switch (warningRule.toLowerCase()) {
 			case "an output file has a warning file extension":
 				requester_uploads_files(GlobalVariable.WarningExtensionFileName)
@@ -178,7 +181,7 @@ class Requester_step_def_ks {
 				break
 			case "the summation of all output file sizes exceeds the request file size warning threshold":
 			//need to add output files that pass the warning limit individually but together surpass the combined size threshold
-				requester_uploads_files(GlobalVariable.ValidFileName, GlobalVariable.ValidFileName2, GlobalVariable.ValidFileName3)
+				requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2, GlobalVariable.ValidFileName3)
 				break
 			default:
 				throw new Exception("warning rule $warningRule not found")
@@ -187,7 +190,7 @@ class Requester_step_def_ks {
 	}
 	@Given("request violates given blocking rule (.+)")
 	def request_violates_blocking_rule(String blockingRule){
-		requester_starts_new_request()
+		//requester_starts_new_request()
 		switch (blockingRule.toLowerCase()) {
 			case "an output file has a blocked file extension":
 				requester_uploads_files(GlobalVariable.BlockedExtensionFileName)
@@ -197,7 +200,7 @@ class Requester_step_def_ks {
 				break
 			case "the summation of all output file sizes exceeds the request file size limit":
 			//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
-				requester_uploads_files(GlobalVariable.ValidFileName, GlobalVariable.ValidFileName2, GlobalVariable.WarningMaxSizeLimitFileName)
+				requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2, GlobalVariable.WarningMaxSizeLimitFileName)
 				break
 			default:
 				throw new Exception("block rule $blockingRule not found")
@@ -479,7 +482,7 @@ class Requester_step_def_ks {
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
-		request_should_be_in_given_status("Awaiting Review")
+		request_should_be_in_given_status(AWAITING_REVIEW)
 		WebUI.closeBrowser()
 	}
 
@@ -504,6 +507,27 @@ class Requester_step_def_ks {
 	def team_members_request_should_not_be_visible(){
 		WebUI.verifyTextNotPresent(g_requestName, false)
 		WebUI.closeBrowser()
+	}
+	@Then("the request cannot be successfully submitted")
+	def request_cannot_be_successfully_submitted(){
+		TestObject submitBtn = get_test_object_by_id(REQUEST_SUBMIT_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", 10)
+		WebUI.waitForElementVisible(submitBtn, 20)
+		WebUI.waitForElementClickable(submitBtn, 30)
+		WebUI.click(submitBtn)
+		WebUI.comment("Clicked the submit link")
+		request_should_be_in_given_status(WORK_IN_PROGRESS_STATUS)
+	}
+	
+	@Then("the request can be successfully submitted")
+	def request_can_be_successfully_submitted(){
+		TestObject submitBtn = get_test_object_by_id(REQUEST_SUBMIT_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", 10)
+		WebUI.waitForElementVisible(submitBtn, 20)
+		WebUI.waitForElementClickable(submitBtn, 30)
+		WebUI.click(submitBtn)
+		WebUI.comment("Clicked the submit link")
+		request_should_be_in_given_status(AWAITING_REVIEW)
 	}
 
 	//Helper function for getting TestObject from the id of an html element
