@@ -5,6 +5,7 @@ import Loadable from 'react-loadable';
 import includes from 'lodash/includes';
 import Messages from '@src/modules/data/containers/messages';
 import some from 'lodash/some';
+import { exporterGroup, ocGroup, exporterMode } from '@src/services/config';
 import '@atlaskit/css-reset';
 
 import About from '../../containers/about';
@@ -20,6 +21,10 @@ const Exporter = Loadable({
 const OutputChecker = Loadable({
   loader: () => import('../../../output-checker/components/app'),
   loading: () => <Loading text="Initializing Output Checker interface" />,
+});
+const Download = Loadable({
+  loader: () => import('../../../download/components/app'),
+  loading: () => <Loading text="Initializing Exporter Download interface" />,
 });
 
 class App extends React.Component {
@@ -39,8 +44,6 @@ class App extends React.Component {
   renderMain = () => {
     const { authFetchStatus, isAuthenticated, user } = this.props;
     // TODO: These values should be in config.json
-    const exporterGroup = '/exporter';
-    const ocGroup = '/oc';
     const validGroups = [exporterGroup, ocGroup];
     let el = null;
 
@@ -59,6 +62,8 @@ class App extends React.Component {
       // Load bundle for output checker if that's the only role, otherwise always send exporter
       if (hasOcRole && !hasExporterRole) {
         el = <OutputChecker user={user} />;
+      } else if (exporterMode === 'download') {
+        el = <Download user={user} />;
       } else {
         el = <Exporter user={user} />;
       }
