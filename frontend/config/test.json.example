@@ -8,6 +8,9 @@
   "forumSocket": "localhost:3001",
   "requestApiHost": "localhost:3002",
   "filesApiHost": "localhost:1080",
+  "exporterGroup": "/exporter",
+  "ocGroup": "/oc",
+  "exporterMode": "export",
   "auth": {
     "authorizationEndpoint": "URL_REQUIRED",
     "callbackURL": "http://localhost:8000/auth",

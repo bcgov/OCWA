@@ -36,6 +36,9 @@ ocwa-frontend:
   forumSocket: "ocwa-forum-api.ocwa:3001"
   requestApiHost: "ocwa-request-api.ocwa"
   filesApiHost: "ocwa-storage-api.ocwa"
+  exporterGroup: "/exporter"
+  ocGroup: "/oc"
+  exporterMode: "export"
   auth:
     authorizationEndpoint: "openid.auth.endpoint"
     callbackURL: "chart-example.local/auth"
@@ -128,7 +131,7 @@ forum-api:
   mongoImage:
     repository: mongo
     tag: 4.1
-    
+
   emailTemplateEnabled: false
   emailTemplate: |-
   emailEnabled: false
@@ -369,7 +372,7 @@ validate-api:
   apiSecret: "ssh this is a secret"
   user:
     idField: Email
-    
+
   alwaysScan: "true"
 
   createDatabase: false
