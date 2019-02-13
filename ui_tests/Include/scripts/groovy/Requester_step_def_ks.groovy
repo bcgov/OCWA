@@ -122,7 +122,7 @@ class Requester_step_def_ks {
 		WebUI.comment("found and clicked the Assign to Me button")
 
 	}
-	
+
 	@When("the output checker marks the request as approved")
 	def checker_marks_request_as_approved() {
 		TestObject approveButtonObject = get_test_object_by_id(APPROVE_REQUEST_BTN_ID)
@@ -132,7 +132,7 @@ class Requester_step_def_ks {
 		WebUI.click(approveButtonObject)
 		WebUI.comment("found and clicked the approve button")
 	}
-	
+
 	@When("the output checker marks the request as needs revisions")
 	def checker_marks_request_as_needs_revisions() {
 		TestObject revisionsButtonObject = get_test_object_by_id(REVISIONS_NEEDED_REQUEST_BTN_ID)
@@ -218,8 +218,8 @@ class Requester_step_def_ks {
 			requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2)
 		}
 		else { //add 1 valid output file
-			//requester_uploads_files(GlobalVariable.ValidFileName, false)
-			requester_uploads_files(GlobalVariable.BlockedStudyIDFileName, false) //temporary stop gap 
+			requester_uploads_files(GlobalVariable.ValidFileName, false)
+			//requester_uploads_files(GlobalVariable.BlockedStudyIDFileName, false) //temporary stop gap
 		}
 	}
 
