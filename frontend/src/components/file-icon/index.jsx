@@ -70,7 +70,11 @@ function FileIcon({ type }) {
 }
 
 FileIcon.propTypes = {
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
+};
+
+FileIcon.defaultProps = {
+  type: null,
 };
 
 export default FileIcon;

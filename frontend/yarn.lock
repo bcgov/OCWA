@@ -1578,6 +1578,15 @@
     tslib "^1.8.0"
     uuid "^3.1.0"
 
+"@atlaskit/textfield@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@atlaskit/textfield/-/textfield-0.1.6.tgz#4d606da205278fa45f75a603ce8da4195acc81b1"
+  integrity sha512-kkLuYJcahTyJXlF5BaUXFeIUV3hLE2kCcpVw2WTE+/q6RI8z1+9gpi0DkzVHx5yrRdt5Wb4OourfUxh9a+hRqA==
+  dependencies:
+    "@atlaskit/analytics-next" "^3.1.2"
+    "@atlaskit/theme" "^7.0.1"
+    "@babel/runtime" "^7.0.0"
+
 "@atlaskit/theme@^6.0.0", "@atlaskit/theme@^6.0.2", "@atlaskit/theme@^6.1.1", "@atlaskit/theme@^6.2.0", "@atlaskit/theme@^6.2.1":
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/@atlaskit/theme/-/theme-6.2.1.tgz#2d84a5b8dbd05c5d94064c0ab29e6f6a2f1ff415"
