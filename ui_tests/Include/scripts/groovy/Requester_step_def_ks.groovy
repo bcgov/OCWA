@@ -72,7 +72,13 @@ class Requester_step_def_ks {
 	String WARNING_FILE_ICON = "file-table-item-warning-icon"
 	String ERROR_FILE_ICON = "file-table-item-error-icon"
 	String WORK_IN_PROGRESS_STATUS = "Work in Progress"
-	String AWAITING_REVIEW = "Awaiting Review"
+	String AWAITING_REVIEW_STATUS = "Awaiting Review"
+	String DRAFT_STATUS = "Draft"
+
+	//Output checker interface
+	String ASSIGN_REQUEST_TO_ME_ID = "request-sidebar-pickup-button"
+	String APPROVE_REQUEST_BTN_ID = "request-sidebar-approve-button"
+	String REVISIONS_NEEDED_REQUEST_BTN_ID = "request-sidebar-request-revisions-button"
 
 	String g_requestName = ""
 
@@ -83,6 +89,64 @@ class Requester_step_def_ks {
 	@Given("requester has logged in")
 	def requester_login() {
 		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
+	}
+
+	@Given("output checker has logged in")
+	def checker_login() {
+		login(GlobalVariable.OCWA_USER_CHECKER1, GlobalVariable.OCWA_USER_CHECKER1_PSWD)
+	}
+	@Given("an unclaimed request exists")
+	def checker_unclaimed_request_exists() {
+		requester_login()
+		requester_has_submitted_a_request()
+	}
+	@When("output checker tries to claim an unclaimed request")
+	def checker_tries_to_claim_unclaimed_request() {
+		WebUI.waitForPageLoad(30)
+		TestObject linkToRequest = get_test_object_by_text(g_requestName)
+		WebUI.waitForElementVisible(linkToRequest, 20)
+		WebUI.waitForElementClickable(linkToRequest, 20)
+
+		WebUI.click(linkToRequest)
+		WebUI.comment("found and clicked the request link")
+		WebUI.waitForPageLoad(20)
+		WebUI.comment("should be on the individual request page.")
+
+		TestObject assignToMeButtonObject = get_test_object_by_id(ASSIGN_REQUEST_TO_ME_ID)
+
+		WebUI.waitForPageLoad(30)
+		WebUI.waitForElementNotHasAttribute(assignToMeButtonObject, "disabled", 10)
+		WebUI.waitForElementVisible(assignToMeButtonObject, 20)
+		WebUI.waitForElementClickable(assignToMeButtonObject, 30)
+		WebUI.click(assignToMeButtonObject)
+		WebUI.comment("found and clicked the Assign to Me button")
+
+	}
+	
+	@When("the output checker marks the request as approved")
+	def checker_marks_request_as_approved() {
+		TestObject approveButtonObject = get_test_object_by_id(APPROVE_REQUEST_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(approveButtonObject, "disabled", 10)
+		WebUI.waitForElementVisible(approveButtonObject, 20)
+		WebUI.waitForElementClickable(approveButtonObject, 30)
+		WebUI.click(approveButtonObject)
+		WebUI.comment("found and clicked the approve button")
+	}
+	
+	@When("the output checker marks the request as needs revisions")
+	def checker_marks_request_as_needs_revisions() {
+		TestObject revisionsButtonObject = get_test_object_by_id(REVISIONS_NEEDED_REQUEST_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(revisionsButtonObject, "disabled", 10)
+		WebUI.waitForElementVisible(revisionsButtonObject, 20)
+		WebUI.waitForElementClickable(revisionsButtonObject, 30)
+		WebUI.click(revisionsButtonObject)
+		WebUI.comment("found and clicked the needs revisions button")
+	}
+
+	@Then("the output checker should be able to see that they're now assigned the request")
+	def checker_should_see_they_are_assigned_to_request(){
+		WebUI.verifyTextPresent(GlobalVariable.OCWA_USER_CHECKER1, false)
+		WebUI.closeBrowser()
 	}
 
 	def login(String username, String password){
@@ -154,7 +218,8 @@ class Requester_step_def_ks {
 			requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2)
 		}
 		else { //add 1 valid output file
-			requester_uploads_files(GlobalVariable.ValidFileName, false)
+			//requester_uploads_files(GlobalVariable.ValidFileName, false)
+			requester_uploads_files(GlobalVariable.BlockedStudyIDFileName, false) //temporary stop gap 
 		}
 	}
 
@@ -268,7 +333,7 @@ class Requester_step_def_ks {
 	@Given("a project team member has created a request")
 	def project_team_member_has_created_request() {
 		login(GlobalVariable.OCWA_USER_TEAM_MEMBER, GlobalVariable.OCWA_USER_TEAM_MEMBER_PSWD)
-		requester_has_a_request_of_status("draft")
+		requester_has_a_request_of_status(DRAFT_STATUS)
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$LOGOUT_URL")
 	}
 
@@ -482,7 +547,7 @@ class Requester_step_def_ks {
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
-		request_should_be_in_given_status(AWAITING_REVIEW)
+		request_should_be_in_given_status(AWAITING_REVIEW_STATUS)
 		WebUI.closeBrowser()
 	}
 
@@ -518,7 +583,7 @@ class Requester_step_def_ks {
 		WebUI.comment("Clicked the submit link")
 		request_should_be_in_given_status(WORK_IN_PROGRESS_STATUS)
 	}
-	
+
 	@Then("the request can be successfully submitted")
 	def request_can_be_successfully_submitted(){
 		TestObject submitBtn = get_test_object_by_id(REQUEST_SUBMIT_BTN_ID)
@@ -527,7 +592,7 @@ class Requester_step_def_ks {
 		WebUI.waitForElementClickable(submitBtn, 30)
 		WebUI.click(submitBtn)
 		WebUI.comment("Clicked the submit link")
-		request_should_be_in_given_status(AWAITING_REVIEW)
+		request_should_be_in_given_status(AWAITING_REVIEW_STATUS)
 	}
 
 	//Helper function for getting TestObject from the id of an html element
