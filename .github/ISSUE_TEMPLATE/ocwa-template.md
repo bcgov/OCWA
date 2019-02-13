@@ -49,12 +49,8 @@ assignees: BrandonSharratt
 
 ### ERROR
 
-<pre><code>
 <!-- If you have an associated exception or error, please post it below -->
-
-</code><pre>
 
 ## Notes
 
 <!-- Do any of these matter: Operating System, Browser? If so, please mention the version and any other relevant details below. -->
-* 
