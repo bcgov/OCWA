@@ -12,7 +12,6 @@ from munch import munchify
 
 log = logging.getLogger(__name__)
 
-
 class Validator:
     rule = ""
     result = None
@@ -70,10 +69,14 @@ def evaluate_source(source, file_attributes):
     try:
         munch_attr = munchify(file_attributes)
 
+        # Tokenize the source to look for any "${", "file.something" and "}"
         src_split = re.split(r"(\${)(file..*?)(})", source)
+        # Drop "${" and "}" from the token list
         src_parts = [x for x in src_split if x not in ("${", "}")]
+        # In-place replace any "file.something" with appropriate attribute
         src_sub = [munch_attr.get(x[len(PREFIX):]) if x.startswith(
             PREFIX) else x for x in src_parts]
+        # Concatenate all tokens back into a single executable string
         exec_src = "".join(map(str, src_sub))
         # exec_src = niño_cédille_postulate(source, format_fn)
 
@@ -114,10 +117,22 @@ def evaluate_source(source, file_attributes):
 
 
 def execute_script(source):
+    """
+    Temporarily intercept stdout and attempt to execute source
+    :param source: Python source code string to execute
+    :returns: Standard output of execution in lowercase
+    :raises: Exception
+    """
     old_stdout = sys.stdout
     redirected_stdout = sys.stdout = StringIO()
-    exec(source)
-    sys.stdout = old_stdout
+
+    try:
+        exec(source)
+    except Exception as e:
+        log.error("Failed to execute source script")
+        raise e
+    finally:
+        sys.stdout = old_stdout
 
     return redirected_stdout.getvalue().lower()
 
