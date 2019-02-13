@@ -29,6 +29,14 @@ resource "docker_container" "ocwa_forum_api" {
       "SURNAME_FIELD=surname",
       "GROUP_FIELD=groups",
       "DEFAULT_ACCESS_IS_GROUP=true",
-      "REQUIRED_CREATE_ROLE=/exporter"
+      "REQUIRED_CREATE_ROLE=/exporter",
+      "EMAIL_SUBJECT=forumApi",
+      "EMAIL_ENABLED=false",
+      "EMAIL_USER=forum@ocwa.com",
+      "EMAIL_PASSWORD=MYPASS",
+      "EMAIL_FROM=forum@ocwa.com",
+      "EMAIL_SERVICE=smtp.gmail.com",
+      "EMAIL_PORT=465",
+      "EMAIL_SECURE=true"
   ]
 }
