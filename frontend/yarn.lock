@@ -5023,9 +5023,9 @@ expect@^23.6.0:
     jest-message-util "^23.4.0"
     jest-regex-util "^23.3.0"
 
-express-manifest-helpers-upgraded@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/express-manifest-helpers-upgraded/-/express-manifest-helpers-upgraded-0.7.0.tgz#07ed247531edd53a36c623780aae4d605126d1de"
+express-manifest-helpers-upgraded@^0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/express-manifest-helpers-upgraded/-/express-manifest-helpers-upgraded-0.7.1.tgz#5dda2be284c9d667264072ce9359c67e6d4181f7"
   dependencies:
     lodash.assign "^4.2.0"
 
