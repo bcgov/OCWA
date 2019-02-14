@@ -267,6 +267,9 @@ class Requester_step_def_ks {
 			//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
 				requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2, GlobalVariable.WarningMaxSizeLimitFileName)
 				break
+			case "a request has a file with a studyid in it":
+				requester_uploads_files(GlobalVariable.BlockedStudyIDFileName)
+				break
 			default:
 				throw new Exception("block rule $blockingRule not found")
 				break
@@ -374,11 +377,13 @@ class Requester_step_def_ks {
 	@When("requester writes and submits a new comment")
 	def requester_creates_a_new_comment(){
 		requester_views_request_they_created()
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_Discussion'))
-		//WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/div_'), TEST_COMMENT)
-		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/div_Normal text_ak-editor-cont'), TEST_COMMENT)
-		//WebUI.setText(get_test_object_by_id("discussion-form"), TEST_COMMENT)
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Save (1)'))
+		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'), 10)
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'))
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/div_discussion_form'))
+		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/p_discussion_form_text'), 10)
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/p_discussion_form_text'))
+		WebUI.sendKeys(null, TEST_COMMENT)
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Save'))
 	}
 
 	@When("the requester views the request")
@@ -495,16 +500,14 @@ class Requester_step_def_ks {
 		WebUI.closeBrowser()
 	}
 
-	@Then("the requester should see the complete record of the request including export files, supporting files/text, discussion, and status changes")
+	@Then("the requester should see the complete record of the request including export files, supporting content, discussion, and status changes")
 	def submitted_request_info_matches_what_was_submitted(){
 		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
 		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		WebUI.verifyTextPresent(g_requestName, false)
 		WebUI.verifyTextPresent(PURPOSE_TEXT, false)
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_Discussion'))
-		//WebUI.delay(2)
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'))
 		requester_should_see_their_new_comment_displayed()
-		//WebUI.delay(5)
 		WebUI.closeBrowser()
 	}
 
@@ -554,12 +557,14 @@ class Requester_step_def_ks {
 	@Then("requester should be informed that given blocking rule (.+) has been violated")
 	def request_should_be_informed_of_blocking_rule_violation(String rule){
 		WebUI.comment("checking that file was successfully blocked")
+		WebUI.waitForElementPresent(get_test_object_by_class(ERROR_FILE_ICON), 10)
 		WebUI.verifyElementPresent(get_test_object_by_class(ERROR_FILE_ICON), 10)
 	}
 
 	@Then("requester should be informed that given warning rule (.+) has been violated")
 	def request_should_be_informed_of_warning_rule_violation(String rule){
 		WebUI.comment("checking that file successfully triggered warning")
+		WebUI.waitForElementPresent(get_test_object_by_class(WARNING_FILE_ICON), 10)
 		WebUI.verifyElementPresent(get_test_object_by_class(WARNING_FILE_ICON), 10)
 	}
 
