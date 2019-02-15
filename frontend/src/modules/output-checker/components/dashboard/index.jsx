@@ -25,6 +25,7 @@ function Dashboard({ filter, onFilterChange, onSearchChange, search }) {
       <div className={styles.toolbar}>
         <div>
           <CreatableSelect
+            id="oc-dashboard-filters-select"
             options={filterOptions}
             placeholder="Filter Requests"
             onChange={({ value }) => onFilterChange(value)}
@@ -35,6 +36,7 @@ function Dashboard({ filter, onFilterChange, onSearchChange, search }) {
           <TextField
             shouldFitContainer
             isLabelHidden
+            id="oc-dashboard-search-input"
             onChange={event => onSearchChange(event.target.value)}
             placeholder="Search export requests..."
             value={search}

@@ -72,6 +72,19 @@ mongoImage:
   repository: mongo
   tag: 4.1
 
+emailTemplateEnabled: false
+emailTemplate: |-
+
+
+emailEnabled: false
+emailService: smtp.gmail.com
+emailSecure: true
+emailPort: 465
+emailUser: me@ocwa.com
+emailPassword: myPass
+emailFrom: donotreply@ocwa.com
+emailSubject: Forum Api
+
 
 
 resources: {}

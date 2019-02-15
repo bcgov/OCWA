@@ -63,6 +63,7 @@ class Requester_step_def_ks {
 	String REQUEST_PURPOSE_TXT_ID = "purpose"
 	String REQUEST_WITHDRAW_BTN_ID = "request-sidebar-withdraw-button"
 	String REQUEST_CANCEL_BTN_ID = "request-sidebar-cancel-button"
+	String REQUEST_SUBMIT_BTN_ID = "request-sidebar-submit-button" //submit button on the request page
 	String LOGOUT_URL = "/auth/logout"
 	//String NEW_REQUEST_DIALOG_HEADER_TEXT = "Initiate a New Request"
 	String NEW_REQUEST_DIALOG_ID = "request-form"
@@ -70,6 +71,14 @@ class Requester_step_def_ks {
 	String VALID_FILE_ICON = "file-table-item-passing-icon"
 	String WARNING_FILE_ICON = "file-table-item-warning-icon"
 	String ERROR_FILE_ICON = "file-table-item-error-icon"
+	String WORK_IN_PROGRESS_STATUS = "Work in Progress"
+	String AWAITING_REVIEW_STATUS = "Awaiting Review"
+	String DRAFT_STATUS = "Draft"
+
+	//Output checker interface
+	String ASSIGN_REQUEST_TO_ME_ID = "request-sidebar-pickup-button"
+	String APPROVE_REQUEST_BTN_ID = "request-sidebar-approve-button"
+	String REVISIONS_NEEDED_REQUEST_BTN_ID = "request-sidebar-request-revisions-button"
 
 	String g_requestName = ""
 
@@ -80,6 +89,64 @@ class Requester_step_def_ks {
 	@Given("requester has logged in")
 	def requester_login() {
 		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
+	}
+
+	@Given("output checker has logged in")
+	def checker_login() {
+		login(GlobalVariable.OCWA_USER_CHECKER1, GlobalVariable.OCWA_USER_CHECKER1_PSWD)
+	}
+	@Given("an unclaimed request exists")
+	def checker_unclaimed_request_exists() {
+		requester_login()
+		requester_has_submitted_a_request()
+	}
+	@When("output checker tries to claim an unclaimed request")
+	def checker_tries_to_claim_unclaimed_request() {
+		WebUI.waitForPageLoad(30)
+		TestObject linkToRequest = get_test_object_by_text(g_requestName)
+		WebUI.waitForElementVisible(linkToRequest, 20)
+		WebUI.waitForElementClickable(linkToRequest, 20)
+
+		WebUI.click(linkToRequest)
+		WebUI.comment("found and clicked the request link")
+		WebUI.waitForPageLoad(20)
+		WebUI.comment("should be on the individual request page.")
+
+		TestObject assignToMeButtonObject = get_test_object_by_id(ASSIGN_REQUEST_TO_ME_ID)
+
+		WebUI.waitForPageLoad(30)
+		WebUI.waitForElementNotHasAttribute(assignToMeButtonObject, "disabled", 10)
+		WebUI.waitForElementVisible(assignToMeButtonObject, 20)
+		WebUI.waitForElementClickable(assignToMeButtonObject, 30)
+		WebUI.click(assignToMeButtonObject)
+		WebUI.comment("found and clicked the Assign to Me button")
+
+	}
+
+	@When("the output checker marks the request as approved")
+	def checker_marks_request_as_approved() {
+		TestObject approveButtonObject = get_test_object_by_id(APPROVE_REQUEST_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(approveButtonObject, "disabled", 10)
+		WebUI.waitForElementVisible(approveButtonObject, 20)
+		WebUI.waitForElementClickable(approveButtonObject, 30)
+		WebUI.click(approveButtonObject)
+		WebUI.comment("found and clicked the approve button")
+	}
+
+	@When("the output checker marks the request as needs revisions")
+	def checker_marks_request_as_needs_revisions() {
+		TestObject revisionsButtonObject = get_test_object_by_id(REVISIONS_NEEDED_REQUEST_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(revisionsButtonObject, "disabled", 10)
+		WebUI.waitForElementVisible(revisionsButtonObject, 20)
+		WebUI.waitForElementClickable(revisionsButtonObject, 30)
+		WebUI.click(revisionsButtonObject)
+		WebUI.comment("found and clicked the needs revisions button")
+	}
+
+	@Then("the output checker should be able to see that they're now assigned the request")
+	def checker_should_see_they_are_assigned_to_request(){
+		WebUI.verifyTextPresent(GlobalVariable.OCWA_USER_CHECKER1, false)
+		WebUI.closeBrowser()
 	}
 
 	def login(String username, String password){
@@ -152,6 +219,7 @@ class Requester_step_def_ks {
 		}
 		else { //add 1 valid output file
 			requester_uploads_files(GlobalVariable.ValidFileName, false)
+			//requester_uploads_files(GlobalVariable.BlockedStudyIDFileName, false) //temporary stop gap
 		}
 	}
 
@@ -168,7 +236,7 @@ class Requester_step_def_ks {
 
 	@Given("request violates given warning rule (.+)")
 	def request_violates_warning_rule(String warningRule){
-		requester_starts_new_request()
+		//requester_starts_new_request()
 		switch (warningRule.toLowerCase()) {
 			case "an output file has a warning file extension":
 				requester_uploads_files(GlobalVariable.WarningExtensionFileName)
@@ -178,7 +246,7 @@ class Requester_step_def_ks {
 				break
 			case "the summation of all output file sizes exceeds the request file size warning threshold":
 			//need to add output files that pass the warning limit individually but together surpass the combined size threshold
-				requester_uploads_files(GlobalVariable.ValidFileName, GlobalVariable.ValidFileName2, GlobalVariable.ValidFileName3)
+				requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2, GlobalVariable.ValidFileName3)
 				break
 			default:
 				throw new Exception("warning rule $warningRule not found")
@@ -187,7 +255,7 @@ class Requester_step_def_ks {
 	}
 	@Given("request violates given blocking rule (.+)")
 	def request_violates_blocking_rule(String blockingRule){
-		requester_starts_new_request()
+		//requester_starts_new_request()
 		switch (blockingRule.toLowerCase()) {
 			case "an output file has a blocked file extension":
 				requester_uploads_files(GlobalVariable.BlockedExtensionFileName)
@@ -197,7 +265,10 @@ class Requester_step_def_ks {
 				break
 			case "the summation of all output file sizes exceeds the request file size limit":
 			//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
-				requester_uploads_files(GlobalVariable.ValidFileName, GlobalVariable.ValidFileName2, GlobalVariable.WarningMaxSizeLimitFileName)
+				requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2, GlobalVariable.WarningMaxSizeLimitFileName)
+				break
+			case "a request has a file with a studyid in it":
+				requester_uploads_files(GlobalVariable.BlockedStudyIDFileName)
 				break
 			default:
 				throw new Exception("block rule $blockingRule not found")
@@ -265,7 +336,7 @@ class Requester_step_def_ks {
 	@Given("a project team member has created a request")
 	def project_team_member_has_created_request() {
 		login(GlobalVariable.OCWA_USER_TEAM_MEMBER, GlobalVariable.OCWA_USER_TEAM_MEMBER_PSWD)
-		requester_has_a_request_of_status("draft")
+		requester_has_a_request_of_status(DRAFT_STATUS)
 		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$LOGOUT_URL")
 	}
 
@@ -306,11 +377,13 @@ class Requester_step_def_ks {
 	@When("requester writes and submits a new comment")
 	def requester_creates_a_new_comment(){
 		requester_views_request_they_created()
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_Discussion'))
-		//WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/div_'), TEST_COMMENT)
-		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/div_Normal text_ak-editor-cont'), TEST_COMMENT)
-		//WebUI.setText(get_test_object_by_id("discussion-form"), TEST_COMMENT)
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Save (1)'))
+		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'), 10)
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'))
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/div_discussion_form'))
+		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/p_discussion_form_text'), 10)
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/p_discussion_form_text'))
+		WebUI.sendKeys(null, TEST_COMMENT)
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Save'))
 	}
 
 	@When("the requester views the request")
@@ -427,16 +500,14 @@ class Requester_step_def_ks {
 		WebUI.closeBrowser()
 	}
 
-	@Then("the requester should see the complete record of the request including export files, supporting files/text, discussion, and status changes")
+	@Then("the requester should see the complete record of the request including export files, supporting content, discussion, and status changes")
 	def submitted_request_info_matches_what_was_submitted(){
 		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
 		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		WebUI.verifyTextPresent(g_requestName, false)
 		WebUI.verifyTextPresent(PURPOSE_TEXT, false)
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_Discussion'))
-		//WebUI.delay(2)
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'))
 		requester_should_see_their_new_comment_displayed()
-		//WebUI.delay(5)
 		WebUI.closeBrowser()
 	}
 
@@ -479,19 +550,23 @@ class Requester_step_def_ks {
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
-		request_should_be_in_given_status("Awaiting Review")
+		request_should_be_in_given_status(AWAITING_REVIEW_STATUS)
 		WebUI.closeBrowser()
 	}
 
 	@Then("requester should be informed that given blocking rule (.+) has been violated")
 	def request_should_be_informed_of_blocking_rule_violation(String rule){
-		WebUI.comment("checking that file was successfully blocked")
-		WebUI.verifyElementPresent(get_test_object_by_class(ERROR_FILE_ICON), 10)
+		if(!rule.equals("The summation of all output file sizes exceeds the request file size limit")) {
+			WebUI.comment("checking that file was successfully blocked")
+			WebUI.waitForElementPresent(get_test_object_by_class(ERROR_FILE_ICON), 10)
+			WebUI.verifyElementPresent(get_test_object_by_class(ERROR_FILE_ICON), 10)
+		}
 	}
 
 	@Then("requester should be informed that given warning rule (.+) has been violated")
 	def request_should_be_informed_of_warning_rule_violation(String rule){
 		WebUI.comment("checking that file successfully triggered warning")
+		WebUI.waitForElementPresent(get_test_object_by_class(WARNING_FILE_ICON), 10)
 		WebUI.verifyElementPresent(get_test_object_by_class(WARNING_FILE_ICON), 10)
 	}
 
@@ -504,6 +579,27 @@ class Requester_step_def_ks {
 	def team_members_request_should_not_be_visible(){
 		WebUI.verifyTextNotPresent(g_requestName, false)
 		WebUI.closeBrowser()
+	}
+	@Then("the request cannot be successfully submitted")
+	def request_cannot_be_successfully_submitted(){
+		TestObject submitBtn = get_test_object_by_id(REQUEST_SUBMIT_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", 10)
+		WebUI.waitForElementVisible(submitBtn, 20)
+		WebUI.waitForElementClickable(submitBtn, 30)
+		WebUI.click(submitBtn)
+		WebUI.comment("Clicked the submit link")
+		request_should_be_in_given_status(WORK_IN_PROGRESS_STATUS)
+	}
+
+	@Then("the request can be successfully submitted")
+	def request_can_be_successfully_submitted(){
+		TestObject submitBtn = get_test_object_by_id(REQUEST_SUBMIT_BTN_ID)
+		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", 10)
+		WebUI.waitForElementVisible(submitBtn, 20)
+		WebUI.waitForElementClickable(submitBtn, 30)
+		WebUI.click(submitBtn)
+		WebUI.comment("Clicked the submit link")
+		request_should_be_in_given_status(AWAITING_REVIEW_STATUS)
 	}
 
 	//Helper function for getting TestObject from the id of an html element

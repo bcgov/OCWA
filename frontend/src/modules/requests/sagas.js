@@ -1,11 +1,13 @@
-import { all, call, fork, put, take } from 'redux-saga/effects';
+import { all, call, fork, put, select, take } from 'redux-saga/effects';
 import { channel, delay, eventChannel, END } from 'redux-saga';
 import { getToken } from '@src/services/auth';
+import difference from 'lodash/difference';
+import get from 'lodash/get';
 import head from 'lodash/head';
 import { normalize } from 'normalizr';
 import tus from 'tus-js-client';
 
-import { fileSchema } from './schemas';
+import { fileSchema, requestSchema } from './schemas';
 import {
   uploadFileFailure,
   uploadFileProgress,
@@ -23,6 +25,9 @@ export const sanitizeURL = url => {
   return '';
 };
 
+export const syncFilesPayload = (files, filesToDelete) =>
+  difference(files, filesToDelete);
+
 // Channel to handle the file uploads with TUS
 // file: File object
 // metadata: composed details, includes filename, filetype, lastModified and jwt
@@ -31,7 +36,7 @@ function uploadChannel(file, metadata) {
     const upload = new tus.Upload(file, {
       endpoint: `${FILES_API_HOST}/files/`,
       retryDelays: [0, 1000, 3000, 5000],
-      chunkSize: 50000,
+      chunkSize: 52000000,
       metadata,
       onError: error =>
         emitter({
@@ -39,14 +44,6 @@ function uploadChannel(file, metadata) {
           file,
           id: sanitizeURL(upload.url),
         }),
-      onChunkComplete: () => {
-        emitter({
-          file,
-          success: true,
-          id: sanitizeURL(upload.url),
-        });
-        emitter(END);
-      },
       onProgress: (bytesUploaded, bytesTotal) =>
         emitter({
           file,
@@ -111,6 +108,32 @@ function* uploadFileChannel(item, meta) {
           dataType: 'files',
         },
         payload: normalize(payload, fileSchema),
+      });
+      // Autosave the request
+      const { isSupportingFile, requestId } = meta;
+      const { filesToDelete } = yield select(state =>
+        get(state, 'requests.viewState', [])
+      );
+      const request = yield select(state =>
+        get(state, `data.entities.requests.${requestId}`)
+      );
+      yield put({
+        type: 'request/put',
+        meta: {
+          schema: { result: requestSchema },
+          id: requestId,
+          hideNotification: true,
+          url: `/api/v1/requests/save/${requestId}`,
+        },
+        payload: {
+          ...request,
+          files: !isSupportingFile
+            ? syncFilesPayload([...request.files, id], filesToDelete)
+            : request.files,
+          supportingFiles: isSupportingFile
+            ? syncFilesPayload([...request.supportingFiles, id], filesToDelete)
+            : request.supportingFiles,
+        },
       });
       yield call(delay, 1500);
       yield put(uploadFileReset(payload.id));

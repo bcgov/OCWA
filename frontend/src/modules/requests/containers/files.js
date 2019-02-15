@@ -8,7 +8,9 @@ import { filesListSchema } from '../schemas';
 
 const mapStateToProps = (state, props) => {
   const fetchStatus = get(state, 'data.fetchStatus.dataTypes.files', 'idle');
-  const data = props.ids.map(id => get(state, `data.entities.files.${id}`, {}));
+  const data = props.ids.map(id =>
+    get(state, `data.entities.files.${id}`, { id })
+  );
 
   return {
     data: fetchStatus === 'loaded' ? data : [],

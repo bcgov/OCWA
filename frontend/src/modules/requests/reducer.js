@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import get from 'lodash/get';
+import has from 'lodash/has';
 import mapKeys from 'lodash/mapKeys';
 import uniqueId from 'lodash/uniqueId';
 import union from 'lodash/union';
@@ -36,12 +37,6 @@ const viewState = (state = initialViewState, action = {}) => {
       return {
         ...state,
         ...action.payload,
-      };
-
-    case 'requests/search':
-      return {
-        ...state,
-        search: action.payload,
       };
 
     case 'requests/view/request':
@@ -98,7 +93,8 @@ const viewState = (state = initialViewState, action = {}) => {
     case 'requests/get':
       return {
         ...state,
-        page: action.payload.page,
+        search: get(action, 'meta.search', ''),
+        page: get(action, 'payload.page', state.page),
       };
 
     // If the result is empty it means there is exactly 100 items in the DB
@@ -106,7 +102,16 @@ const viewState = (state = initialViewState, action = {}) => {
     case 'requests/get/success':
       return {
         ...state,
-        page: action.payload.result.length > 0 ? state.page : state.page - 1,
+        page:
+          action.payload.result.length > 0 || has(action, 'meta.search')
+            ? state.page
+            : Math.max(state.page - 1, 1),
+      };
+
+    case 'requests/search/clear':
+      return {
+        ...state,
+        search: '',
       };
 
     default:

@@ -25,21 +25,24 @@ function Sidebar({
   return (
     <aside className={styles.sidebar}>
       <h6>Exporter</h6>
-      <p>{data.author}</p>
+      <p id="request-author-text">{data.author}</p>
       <h6>Reviewers</h6>
-      {data.reviewers.length === 1 && <p>{assignedUser}</p>}
-      {data.reviewers.length <= 0 && (
-        <Button
-          appearance="link"
-          id="request-sidebar-pickup-button"
-          iconBefore={<AddCircleIcon primaryColor="green" />}
-          isDisabled={isSaving}
-          onClick={() => onPickupRequest(id)}
-        >
-          Assign to Me
-        </Button>
+      {data.reviewers.length === 1 && (
+        <p id="request-assigned-oc">{assignedUser}</p>
       )}
-      {user.email === assignedUser &&
+      {data.reviewers.length <= 0 &&
+        data.state < 3 && (
+          <Button
+            appearance="link"
+            id="request-sidebar-pickup-button"
+            iconBefore={<AddCircleIcon primaryColor="green" />}
+            isDisabled={isSaving}
+            onClick={() => onPickupRequest(id)}
+          >
+            Assign to Me
+          </Button>
+        )}
+      {user.username === assignedUser &&
         data.state < 4 && (
           <React.Fragment>
             <h6>Actions</h6>

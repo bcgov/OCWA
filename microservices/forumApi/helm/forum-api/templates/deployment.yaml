@@ -19,10 +19,23 @@ spec:
         app: {{ template "ocwaForumApi.name" . }}
         release: {{ .Release.Name }}
     spec:
+      {{ if .Values.emailTemplateEnabled }}
+      volumes:
+      - name: emailTemplate
+        configMap:
+          name: {{ template "ocwaForumApi.fullname" . }}-forumApi-configmap
+          defaultMode: 511
+      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ if .Values.emailTemplateEnabled }}
+          volumeMounts:
+          - name: emailTemplate
+            mountPath: ./notifications
+            subPath: "emailTemplate"
+          {{ end }}
           env:
             - name: API_PORT
               value: "{{ .Values.apiPort }}"
@@ -62,6 +75,25 @@ spec:
               value: {{ .Values.user.groupField }}
             - name: IGNORE_GROUPS
               value: {{ .Values.user.ignoreGroups }}
+            - name: EMAIL_ENABLED
+              value: "{{ .Values.emailEnabled }}"
+            - name: EMAIL_SERVICE
+              value: "{{ .Values.emailService }}"
+            - name: EMAIL_SECURE
+              value: "{{ .Values.emailSecure }}"
+            - name: EMAIL_PORT
+              value: "{{ .Values.emailPort }}"
+            - name: EMAIL_USER
+              value: "{{ .Values.emailUser }}"
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
+                  key: emailPassword
+            - name: EMAIL_FROM
+              value: "{{ .Values.emailFrom }}"
+            - name: EMAIL_SUBJECT
+              value: "{{ .Values.emailSubject }}"
 
           ports:
             - name: http

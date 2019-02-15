@@ -3,6 +3,7 @@ const config = require('config');
 const cookieParser = require('cookie-parser');
 const express = require('express');
 const isFunction = require('lodash/isFunction');
+const get = require('lodash/get');
 const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
@@ -26,6 +27,7 @@ const cookieSecret = config.get('cookieSecret');
 const isDevelopment = process.env.NODE_ENV === 'development';
 const filesApiHost = config.get('filesApiHost');
 const forumSocket = config.get('forumSocket');
+const idField = config.get('user.idField');
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
 });
@@ -91,6 +93,8 @@ app.get('*', storeUrl, (req, res) => {
     title: 'OCWA [Development Version]',
     filesApiHost: parseApiHost(filesApiHost),
     socketHost: parseWsHost(forumSocket),
+    commit: get(process, 'env.GITHASH', ''),
+    idField,
   });
 });
 

@@ -63,6 +63,8 @@ validationApi: http://ocwa-validation-api.ocwa
 validationApiSecret: validateApiSecret
 
 ocwaUrl: http://ocwa-ui.ocwa
+emailTemplateEnabled: false
+emailTemplate: |-
 emailEnabled: false
 emailService: smtp.gmail.com
 emailSecure: true

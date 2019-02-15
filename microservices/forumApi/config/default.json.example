@@ -24,6 +24,17 @@
     "givenNameField": "GivenName",
     "surNameField": "Surname",
     "groupField": "Groups"
+  },
+
+  "email":{
+    "enabled": false,
+    "service": "smtp.gmail.com",
+    "secure": true,
+    "port": 465,
+    "user": "forum@gmail.com",
+    "pass": "forumPassword",
+    "from": "forum@donotreply.com",
+    "subject": "Forum Api Topic"
   }
 
 }

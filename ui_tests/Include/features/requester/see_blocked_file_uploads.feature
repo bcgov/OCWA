@@ -6,14 +6,14 @@ Feature: see blocked file uploads
 		And the requester affirms the output is safe for release and protects the confidentiality of data, to the best of their knowledge		
 	Scenario Outline: A request violates blocking rule
 		Given request violates given blocking rule <blocking_rule> 
-		When requester submits their request 
-		Then the requester should not be able to submit the request
-		And requester should be informed that given blocking rule <blocking_rule> has been violated
+		When the requester saves their request
+		And the requester views the request
+		Then requester should be informed that given blocking rule <blocking_rule> has been violated
+		And the request cannot be successfully submitted
 		
 		Examples:
 			| blocking_rule |
-			| A request that has a file that is too big | 
+			| A request that has a file that is too big |
 			| The summation of all output file sizes exceeds the request file size limit |
 			| An output file has a blocked file extension |
 			| A request has a file with a StudyID in it |
-			

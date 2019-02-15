@@ -24,6 +24,7 @@ function RequestCard({ activeId, data, draggable }) {
 
   return (
     <div
+      id={`request-list-card-${data._id}`}
       className={cx(styles.container, {
         [styles.draggable]: draggable,
         [styles.active]: data._id === activeId,
@@ -33,24 +34,28 @@ function RequestCard({ activeId, data, draggable }) {
         <div className={styles.icon}>
           <RequestIcon value={data.state} />
         </div>
-        <Link to={`/requests/${data._id}`}>{data.name}</Link>
+        <Link className="request-list-card-link" to={`/requests/${data._id}`}>
+          {data.name}
+        </Link>
       </div>
       <div className={styles.detailsRow}>
-        <small className={styles.author}>
+        <small className={cx(styles.author, 'request-list-card-exporter-text')}>
           <PersonIcon size="small" />
           {data.author}
         </small>
         <small>
           <EditorFileIcon />
-          {`${data.files.length} ${data.files.length > 1 ? 'Files' : 'File'}`}
+          <span className="request-list-card-files-text">
+            {`${data.files.length} ${data.files.length > 1 ? 'Files' : 'File'}`}
+          </span>
         </small>
       </div>
       <div className={styles.detailsRow}>
-        <small>
+        <small className="request-list-card-assignee-text">
           {totalCheckers > 0 ? <CheckboxIcon /> : <PresenceUnavailableIcon />}
           {totalCheckers > 0 ? 'Assigned' : 'Unclaimed'}
         </small>
-        <small>
+        <small className="request-list-card-date-text">
           <EditorDateIcon />
           {updatedAtString}
         </small>
