@@ -25,9 +25,11 @@ function Sidebar({
   return (
     <aside className={styles.sidebar}>
       <h6>Exporter</h6>
-      <p>{data.author}</p>
+      <p id="request-author-text">{data.author}</p>
       <h6>Reviewers</h6>
-      {data.reviewers.length === 1 && <p>{assignedUser}</p>}
+      {data.reviewers.length === 1 && (
+        <p id="request-assigned-oc">{assignedUser}</p>
+      )}
       {data.reviewers.length <= 0 &&
         data.state < 3 && (
           <Button

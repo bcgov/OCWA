@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { CreatableSelect } from '@atlaskit/select';
 import { Code } from 'react-content-loader';
+import isEmpty from 'lodash/isEmpty';
 import range from 'lodash/range';
 import { RequestSchema } from '@src/modules/requests/types';
 
@@ -38,7 +39,7 @@ function RequestsNav({
       value: 6,
     },
   ];
-  if (isLoading) {
+  if (isLoading && isEmpty(data)) {
     const elements = range(20);
     return (
       <nav
@@ -58,6 +59,7 @@ function RequestsNav({
     <nav className={styles.nav}>
       <div className={styles.navHeader}>
         <CreatableSelect
+          id="request-nav-filter-select"
           options={options}
           placeholder="Filter by State"
           value={options.find(d => d.value === state)}

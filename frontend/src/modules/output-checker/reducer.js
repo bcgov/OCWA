@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import get from 'lodash/get';
+import has from 'lodash/has';
 
 const initialViewState = {
   search: '',
@@ -9,6 +10,14 @@ const initialViewState = {
 
 function viewState(state = initialViewState, action = {}) {
   switch (action.type) {
+    case 'requests/get':
+      return {
+        ...state,
+        state: has(action, 'payload.state')
+          ? action.payload.state
+          : state.state,
+      };
+
     case 'requests/filter/changed':
       return {
         ...state,
