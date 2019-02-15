@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import CommentIcon from '@atlaskit/icon/glyph/comment';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import DocumentsIcon from '@atlaskit/icon/glyph/documents';
@@ -18,7 +19,7 @@ import RequestsNav from '../../containers/requests-nav';
 import Sidebar from '../../containers/sidebar';
 import * as styles from './styles.css';
 
-function Request({ data, isLoaded, isSaving, match }) {
+function Request({ data, isSaving, match }) {
   const { requestId } = match.params;
 
   return (
@@ -26,7 +27,7 @@ function Request({ data, isLoaded, isSaving, match }) {
       <RequestsNav activeId={requestId} />
       <div className={styles.request}>
         <header className={styles.header}>
-          <h2>{data.name || 'Loading...'}</h2>
+          <h2 id="request-name-text">{data.name || 'Loading...'}</h2>
           <Tabs>
             <Tab icon={<InfoIcon />} text="Details" url={match.url} />
             <Tab
@@ -42,7 +43,7 @@ function Request({ data, isLoaded, isSaving, match }) {
           </Tabs>
         </header>
         {isEmpty(data) && (
-          <div style={{ padding: 20 }}>
+          <div id="request-loading" className={styles.empty}>
             <List />
           </div>
         )}
@@ -77,7 +78,6 @@ function Request({ data, isLoaded, isSaving, match }) {
 
 Request.propTypes = {
   data: RequestSchema.isRequired,
-  isLoaded: PropTypes.bool.isRequired,
   isSaving: PropTypes.bool.isRequired,
   match: PropTypes.shape({
     url: PropTypes.string.isRequired,

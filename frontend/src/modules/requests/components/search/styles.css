@@ -1,0 +1,19 @@
+.container {
+  margin-top: 0;
+  position: relative;
+}
+
+.clearButton {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -11px;
+}
+
+.clearButton:hover {
+  background: transparent;
+}
+
+.input {
+  padding-right: 40px;
+}

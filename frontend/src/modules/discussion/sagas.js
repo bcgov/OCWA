@@ -5,6 +5,7 @@ import { camelizeKeys } from 'humps';
 import { getToken } from '@src/services/auth';
 import has from 'lodash/has';
 import get from 'lodash/get';
+import { idField } from '@src/services/config';
 
 import { postSchema } from './schemas';
 
@@ -16,7 +17,7 @@ function createSocket() {
   return socket;
 }
 
-function createSocketChannel(socket, email) {
+function createSocketChannel(socket, username) {
   return eventChannel(emit => {
     socket.onmessage = event => {
       const parsedJson = JSON.parse(event.data);
@@ -29,7 +30,7 @@ function createSocketChannel(socket, email) {
       if (has(json, 'comment')) {
         const { topicId, authorUser } = json.comment;
 
-        if (authorUser !== email) {
+        if (authorUser !== username) {
           const payload = normalize(json.comment, postSchema);
 
           emit({
@@ -52,8 +53,10 @@ function createSocketChannel(socket, email) {
 function* authWatcher() {
   try {
     const socket = yield call(createSocket);
-    const email = yield select(state => get(state, 'app.auth.user.email'));
-    const channel = yield call(createSocketChannel, socket, email);
+    const user = yield select(state => get(state, 'app.auth.user', {}));
+    const email = get(user, 'email', '');
+    const username = get(user, idField, email);
+    const channel = yield call(createSocketChannel, socket, username);
 
     while (true) {
       const { payload, meta } = yield take(channel);

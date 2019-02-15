@@ -9,7 +9,6 @@ import Date from '@src/components/date';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
 import DocumentsIcon from '@atlaskit/icon/glyph/documents';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
-import { FieldTextStateless } from '@atlaskit/field-text';
 import get from 'lodash/get';
 import head from 'lodash/head';
 import last from 'lodash/last';
@@ -18,9 +17,10 @@ import SearchIcon from '@atlaskit/icon/glyph/search';
 import { colors } from '@atlaskit/theme';
 import { limit } from '@src/services/config';
 
+import NewRequest from '../../containers/new-request';
 import RequestIcon from '../request-icon';
 import RequestMenu from '../../containers/request-menu';
-import NewRequest from '../../containers/new-request';
+import Search from '../../containers/search';
 import * as styles from './styles.css';
 
 const header = {
@@ -56,7 +56,6 @@ function RequestsList({
   isLoading,
   isLoaded,
   onChangeFilter,
-  onSearch,
   onSort,
   page,
   search,
@@ -171,14 +170,7 @@ function RequestsList({
                   </Button>
                 ))}
               </ButtonGroup>
-              <FieldTextStateless
-                isLabelHidden
-                shouldFitContainer={false}
-                id="requests-list-search"
-                placeholder="Search Requests"
-                onChange={event => onSearch(event.target.value)}
-                value={search}
-              />
+              <Search />
             </nav>
           </GridColumn>
         </Grid>
@@ -241,8 +233,6 @@ RequestsList.propTypes = {
   isLoaded: PropTypes.bool.isRequired,
   onChangeFilter: PropTypes.func.isRequired,
   onSort: PropTypes.func.isRequired,
-  onSearch: PropTypes.func.isRequired,
-  // onSelect: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
   search: PropTypes.string.isRequired,
   sortKey: PropTypes.string.isRequired,

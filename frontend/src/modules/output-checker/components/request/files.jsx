@@ -6,12 +6,12 @@ import { RequestSchema } from '@src/modules/requests/types';
 function RequestFiles({ data }) {
   return (
     <div>
-      <div>
+      <div id="request-files">
         <h4>Export Files</h4>
         <Files ids={data.files} fileStatus={data.fileStatus} />
       </div>
       {data.supportingFiles.length > 0 && (
-        <div>
+        <div id="request-supporting-files">
           <h4>Supporting Files</h4>
           <Files ids={data.supportingFiles} />
         </div>
