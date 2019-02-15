@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "ocwaRequestApi.fullname" . }}-requestApi-configmap
+  name: {{ template "ocwaRequestApi.fullname" . }}-requestapi-configmap
 data:
   emailTemplate.html: |-
 {{ .Values.emailTemplate | indent 4}}

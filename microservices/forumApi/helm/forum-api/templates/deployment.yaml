@@ -23,7 +23,7 @@ spec:
       volumes:
       - name: emailTemplate
         configMap:
-          name: {{ template "ocwaForumApi.fullname" . }}-forumApi-configmap
+          name: {{ template "ocwaForumApi.fullname" . }}-forumapi-configmap
           defaultMode: 511
       {{ end }}
       containers:
