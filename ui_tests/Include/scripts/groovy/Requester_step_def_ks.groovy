@@ -556,9 +556,11 @@ class Requester_step_def_ks {
 
 	@Then("requester should be informed that given blocking rule (.+) has been violated")
 	def request_should_be_informed_of_blocking_rule_violation(String rule){
-		WebUI.comment("checking that file was successfully blocked")
-		WebUI.waitForElementPresent(get_test_object_by_class(ERROR_FILE_ICON), 10)
-		WebUI.verifyElementPresent(get_test_object_by_class(ERROR_FILE_ICON), 10)
+		if(!rule.equals("The summation of all output file sizes exceeds the request file size limit")) {
+			WebUI.comment("checking that file was successfully blocked")
+			WebUI.waitForElementPresent(get_test_object_by_class(ERROR_FILE_ICON), 10)
+			WebUI.verifyElementPresent(get_test_object_by_class(ERROR_FILE_ICON), 10)
+		}
 	}
 
 	@Then("requester should be informed that given warning rule (.+) has been violated")

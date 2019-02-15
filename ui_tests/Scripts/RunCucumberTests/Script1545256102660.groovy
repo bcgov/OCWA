@@ -23,3 +23,5 @@ CucumberKW.runFeatureFile('Include/features/requester/edit_previously_submitted_
 
 CucumberKW.runFeatureFile('Include/features/requester/see_warning_file_uploads.feature')
 
+CucumberKW.runFeatureFile('Include/features/requester/see_blocked_file_uploads.feature')
+
