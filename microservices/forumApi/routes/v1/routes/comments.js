@@ -88,6 +88,10 @@ router.post("/:topicId", function(req, res, next){
             log.debug("comment saved triggering websocket");
             messages.sendCommentMessage(topicId, result);
 
+            //send email notifications
+            var notifications = require('../notifications/notifications');
+            notifications.notify(topicRes[0], comment, req.user);
+
             res.json({message: "Successfully written", _id: result._id, result: result});
         });
     });
