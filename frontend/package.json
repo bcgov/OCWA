@@ -7,9 +7,7 @@
     "start": "cross-env NODE_ENV=development nodemon server/index.js",
     "start:prod": "cross-env NODE_ENV=production node server/index.js",
     "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
-    "test": "jest --coverage",
-    "snyk-protect": "snyk protect",
-    "prepublish": "yarn run snyk-protect"
+    "test": "jest --coverage"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
