@@ -9,7 +9,7 @@
     "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
     "test": "jest --coverage",
     "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "prepublish": "yarn run snyk-protect"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
