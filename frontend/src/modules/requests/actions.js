@@ -25,6 +25,10 @@ export const searchResults = filter => ({
   payload: filter,
 });
 
+export const clearSearch = () => ({
+  type: 'requests/search/clear',
+});
+
 export const changeStep = step => ({
   type: 'requests/change-step',
   payload: step,
@@ -99,6 +103,7 @@ export const downloadFile = id => ({
 export default {
   createRequest,
   changeStep,
+  clearSearch,
   closeDraftRequest,
   downloadFile,
   fetchRequests,

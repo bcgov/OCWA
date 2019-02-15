@@ -5,7 +5,6 @@ import withRequest from '@src/modules/data/components/data-request';
 import { fetchRequests } from '@src/modules/requests/actions';
 import { requestsListSchema } from '@src/modules/requests/schemas';
 
-import { changeStateFilter } from '../actions';
 import RequestNav from '../components/request/nav';
 
 const mapStateToProps = state => {
@@ -23,12 +22,22 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  onStateFilterChange: changeStateFilter,
   initialRequest: () =>
     fetchRequests(
       { page: 1 },
       {
         url: '/api/v1/requests?page=1&state=3',
+        schema: requestsListSchema,
+      }
+    ),
+  onStateFilterChange: state =>
+    fetchRequests(
+      {
+        page: 1,
+        state,
+      },
+      {
+        url: `/api/v1/requests?page=1&state=${state}`,
         schema: requestsListSchema,
       }
     ),

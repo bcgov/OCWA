@@ -6,6 +6,7 @@ document.getElementById('test').addEventListener("change", function(e) {
     var upload = new tus.Upload(file, {
         endpoint: "http://127.0.0.1:1080/files/",
         retryDelays: [0, 1000, 3000, 5000],
+        chunkSize: 52000000, // 52428800 = 50MB
         metadata: {
             filename: file.name,
             filetype: file.type,

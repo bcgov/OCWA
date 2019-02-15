@@ -7,7 +7,9 @@
     "start": "cross-env NODE_ENV=development nodemon server/index.js",
     "start:prod": "cross-env NODE_ENV=production node server/index.js",
     "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
@@ -79,6 +81,7 @@
     "@atlaskit/smart-card": "8.4.0",
     "@atlaskit/spinner": "^9.0.10",
     "@atlaskit/tabs": "^8.0.9",
+    "@atlaskit/textfield": "^0.1.6",
     "@atlaskit/util-shared-styles": "^3.0.0",
     "@babel/polyfill": "^7.0.0",
     "body-parser": "^1.18.3",
@@ -118,7 +121,8 @@
     "redux-saga": "^0.16.2",
     "request": "^2.88.0",
     "styled-components": "^3.4.6",
-    "tus-js-client": "^1.5.1"
+    "tus-js-client": "^1.5.1",
+    "snyk": "^1.123.0"
   },
   "resolutions": {
     "**/event-stream": "^4.0.1"
@@ -135,5 +139,6 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     }
-  }
+  },
+  "snyk": true
 }
