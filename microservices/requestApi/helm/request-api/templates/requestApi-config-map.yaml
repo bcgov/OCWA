@@ -1,4 +1,4 @@
-{{ if .Values.emailTemplateEnabled }}
+{{ if .Values.emailEnabled }}
 
 apiVersion: v1
 kind: ConfigMap
