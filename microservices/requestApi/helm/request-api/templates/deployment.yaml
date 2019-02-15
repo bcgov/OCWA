@@ -19,7 +19,7 @@ spec:
         app: {{ template "ocwaRequestApi.name" . }}
         release: {{ .Release.Name }}
     spec:
-      {{ if .Values.emailEnabled }}
+      {{ if .Values.emailTemplateEnabled }}
       volumes:
       - name: emailTemplate
         configMap:
@@ -30,7 +30,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{ if .Values.emailEnabled }}
+          {{ if .Values.emailTemplateEnabled }}
           volumeMounts:
           - name: emailTemplate
             mountPath: ./notifications
