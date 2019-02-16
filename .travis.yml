@@ -48,6 +48,7 @@ matrix:
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm install
+        - npm audit
 
       script:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
@@ -103,6 +104,7 @@ matrix:
         - cp config/test.json.example config/test.json
         - cp config/default.json.example config/default.json
         - npm install
+        - npm audit
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
         - npm install
         - cp config/default.json.example config/default.json
@@ -291,6 +293,8 @@ matrix:
       - cd /home/travis/build/bcgov/OCWA/frontend
       - cp config/test.json.example config/test.json
       - yarn
+      - npm i --package-lock-only
+      - npm audit
       - npm test
       - helm lint helm/ocwa-frontend
       - bash docker_quayio_push ocwa_frontend 
@@ -373,7 +377,6 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA
         - helm lint helm/ocwa
 
- 
 env:
   global:
   - HELM_URL=https://storage.googleapis.com/kubernetes-helm

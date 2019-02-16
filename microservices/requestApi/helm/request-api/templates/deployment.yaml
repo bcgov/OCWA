@@ -21,9 +21,9 @@ spec:
     spec:
       {{ if .Values.emailTemplateEnabled }}
       volumes:
-      - name: emailTemplate
+      - name: emailtemplate
         configMap:
-          name: {{ template "ocwaRequestApi.fullname" . }}-forumApi-configmap
+          name: {{ template "ocwaRequestApi.fullname" . }}-requestapi-configmap
           defaultMode: 511
       {{ end }}
       containers:
@@ -32,7 +32,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{ if .Values.emailTemplateEnabled }}
           volumeMounts:
-          - name: emailTemplate
+          - name: emailtemplate
             mountPath: ./notifications
             subPath: "emailTemplate"
           {{ end }}
