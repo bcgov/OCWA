@@ -22,3 +22,11 @@ if [ $TRAVIS_BRANCH == "develop" ]; then
     docker push bcgovimages/ocwa_frontend:edge;
     echo "edge (develop) pushed successfully";
 fi
+
+if [ $TRAVIS_BRANCH == $TRAVIS_TAG ]; then
+    #Tag build
+    docker build -t bcgovimages/ocwa_frontend:$TRAVIS_TAG .;
+    echo "dockerfile built pushing now";
+    docker push bcgovimages/ocwa_frontend:$TRAVIS_TAG;
+    echo "$TRAVIS_TAG pushed successfully";
+fi

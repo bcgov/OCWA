@@ -66,6 +66,7 @@ matrix:
         provider: script
         script: bash docker_push
         on:
+          tags: true
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$
 
@@ -144,6 +145,7 @@ matrix:
         provider: script
         script: bash docker_push
         on:
+          tags: true
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$
 
@@ -198,6 +200,7 @@ matrix:
         provider: script
         script: bash docker_push
         on:
+          tags: true
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$
 
@@ -258,6 +261,7 @@ matrix:
         provider: script
         script: bash docker_push
         on:
+          tags: true
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ 
 
@@ -309,6 +313,7 @@ matrix:
         provider: script
         script: bash docker_push
         on:
+          tags: true
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$
 
