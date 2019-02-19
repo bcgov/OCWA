@@ -67,7 +67,7 @@ matrix:
         script: bash docker_push
         on:
           all_branches: true
-          condition: '[ $TRAVIS_BRANCH =~ ^master|develop$ ] || [ $TRAVIS_TAG != "" ]'
+          condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
 
     - name: "Request Api"
       stage: "APIs"
@@ -145,7 +145,7 @@ matrix:
         script: bash docker_push
         on:
           all_branches: true
-          condition: '[ $TRAVIS_BRANCH =~ ^master|develop$ ] || [ $TRAVIS_TAG != "" ]'
+          condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
 
     - name: "Policy Api"
       stage: "APIs"
@@ -199,7 +199,7 @@ matrix:
         script: bash docker_push
         on:
           all_branches: true
-          condition: '[ $TRAVIS_BRANCH =~ ^master|develop$ ] || [ $TRAVIS_TAG != "" ]'
+          condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
 
     - name: "Validation Api"
       stage: "APIs"
@@ -259,7 +259,7 @@ matrix:
         script: bash docker_push
         on:
           all_branches: true
-          condition: '[ $TRAVIS_BRANCH =~ ^master|develop$ ] || [ $TRAVIS_TAG != "" ]'
+          condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
 
     - name: "Front End"
       stage: "Frontend"
@@ -310,7 +310,7 @@ matrix:
         script: bash docker_push
         on:
           all_branches: true
-          condition: '[ $TRAVIS_BRANCH =~ ^master|develop$ ] || [ $TRAVIS_TAG != "" ]'
+          condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
 
     - name: "Integration Tests"
       stage: "Tests"
