@@ -117,7 +117,7 @@ server {
     proxy_set_header         Upgrade $http_upgrade;
     proxy_set_header         Connection $connection_upgrade;
 
-    set $backend "http://ocwa_frontend_download:8000";
+    set $backend "http://ocwa_frontend_download:8001";
 
     proxy_pass $backend;
   }
