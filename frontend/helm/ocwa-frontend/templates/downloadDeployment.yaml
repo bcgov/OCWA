@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "ocwaFrontend.fullname" . }}
+  name: {{ template "ocwaFrontend.fullname" . }}-download
   labels:
     app: {{ template "ocwaFrontend.name" . }}
     chart: {{ template "ocwaFrontend.chart" . }}
@@ -20,7 +20,7 @@ spec:
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name }}-download
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
@@ -29,9 +29,9 @@ spec:
             - name: HOST
               value: {{ .Values.host }}
             - name: FORUM_API_HOST
-              value: "{{ .Values.forumApiHost }}"
+              value: "none"
             - name: FORUM_SOCKET_HOST
-              value: "{{ .Values.forumSocket }}"
+              value: "none"
             - name: REQUEST_API_HOST
               value: "{{ .Values.requestApiHost }}"
             - name: FILES_API_HOST
@@ -41,7 +41,7 @@ spec:
             - name: OC_GROUP
               value: "{{ .Values.ocGroup }}"
             - name: EXPORTER_MODE
-              value: "export"
+              value: "download"
             - name: COOKIE_SECRET
               valueFrom:
                 secretKeyRef:
