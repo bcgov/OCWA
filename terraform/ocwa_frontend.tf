@@ -52,7 +52,7 @@ resource "docker_container" "ocwa_download_frontend" {
       "NODE_TLS_REJECT_UNAUTHORIZED=0",
       "EXPORTER_GROUP=/exporter",
       "OC_GROUP=/oc",
-      "EXPORTER_MODE=export"
+      "EXPORTER_MODE=download"
   ]
 
 }
