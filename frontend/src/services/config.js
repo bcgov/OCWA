@@ -1,5 +1,6 @@
 export const limit = 100;
 
+export const socketHost = SOCKET_HOST;
 export const version = VERSION;
 export const commit = COMMIT;
 export const idField = ID_FIELD;
@@ -15,4 +16,6 @@ export default {
   exporterGroup,
   ocGroup,
   exporterMode,
+  idField,
+  socketHost,
 };
