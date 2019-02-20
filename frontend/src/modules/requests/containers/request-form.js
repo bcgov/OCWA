@@ -20,6 +20,8 @@ import { requestSchema } from '../schemas';
 
 const mapStateToProps = state => {
   const { currentRequestId, filesToDelete } = state.requests.viewState;
+  const filesForUpload = state.requests.files;
+  const filesUploadState = state.requests.uploads;
   const keyPath = `data.entities.requests.${currentRequestId}`;
   const isNewRequest = !has(state, keyPath);
   const request = get(state, keyPath, {
@@ -30,13 +32,13 @@ const mapStateToProps = state => {
   // Files (saved and current editing session files, uploaded or removed)
   const queuedFiles = [];
   const queuedSupportingFiles = [];
-  forIn(state.requests.files, (value, key) => {
-    if (state.requests.uploads[key] === 'loaded') {
+  forIn(filesForUpload, (value, key) => {
+    if (filesUploadState[key] === 'loaded') {
       queuedFiles.push(key);
     }
   });
   forIn(state.requests.supportingFiles, (value, key) => {
-    if (state.requests.uploads[key] === 'loaded') {
+    if (filesUploadState[key] === 'loaded') {
       queuedSupportingFiles.push(key);
     }
   });
@@ -47,7 +49,12 @@ const mapStateToProps = state => {
     request.supportingFiles,
     queuedSupportingFiles
   ).filter(id => !filesToDelete.includes(id));
-  const isUploading = values(state.requests.uploads).some(isNumber);
+  // Determine uploading state
+  const totalFilesInQueue = values(filesForUpload).length;
+  const uploadStates = values(filesUploadState);
+  const isUploading =
+    uploadStates.length < totalFilesInQueue ||
+    uploadStates.some(d => d !== 'loaded');
   const data = {
     ...request,
     files,
