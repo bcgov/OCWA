@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>p_discussion_form_text</name>
+   <name>div_discussion_form_contenteditable</name>
    <tag></tag>
    <elementGuidId>5ce96867-4870-40a1-8f7d-24083a81d246</elementGuidId>
    <selectorCollection>
@@ -14,7 +14,7 @@
       </entry>
       <entry>
          <key>BASIC</key>
-         <value>id(&quot;discussion-form&quot;)//p[1]</value>
+         <value>id(&quot;discussion-form&quot;)//div[@contenteditable='true']</value>
       </entry>
    </selectorCollection>
    <selectorMethod>BASIC</selectorMethod>
@@ -31,7 +31,7 @@
       <matchCondition>equals</matchCondition>
       <name>xpath</name>
       <type>Main</type>
-      <value>id(&quot;discussion-form&quot;)//p[1]</value>
+      <value>id(&quot;discussion-form&quot;)//div[@contenteditable='true']</value>
    </webElementProperties>
    <webElementXpaths>
       <isSelected>true</isSelected>

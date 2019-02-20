@@ -380,9 +380,10 @@ class Requester_step_def_ks {
 		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'), 10)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'))
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/div_discussion_form'))
-		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/p_discussion_form_text'), 10)
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/p_discussion_form_text'))
-		WebUI.sendKeys(null, TEST_COMMENT)
+
+		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/div_discussion_form_contenteditable'), 10)
+		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/span_Save'), 10)
+		WebUI.sendKeys(findTestObject('Object Repository/Page_OCWA Development Version/div_discussion_form_contenteditable'), TEST_COMMENT)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Save'))
 	}
 
