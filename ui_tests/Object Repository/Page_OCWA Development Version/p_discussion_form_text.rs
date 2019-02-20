@@ -7,11 +7,14 @@
    <selectorCollection>
       <entry>
          <key>CSS</key>
-         <value></value>
       </entry>
       <entry>
          <key>XPATH</key>
          <value>//div[@id='discussion-form']/div/div[2]/div/div[2]/div/div[2]/p</value>
+      </entry>
+      <entry>
+         <key>BASIC</key>
+         <value>id(&quot;discussion-form&quot;)//p[1]</value>
       </entry>
    </selectorCollection>
    <selectorMethod>BASIC</selectorMethod>
@@ -28,7 +31,7 @@
       <matchCondition>equals</matchCondition>
       <name>xpath</name>
       <type>Main</type>
-      <value>id(&quot;discussion-form&quot;)/div[1]/div[@class=&quot;sc-fihHvN iKlTEi&quot;]/div[@class=&quot;akEditor sc-jWojfa kCFsaG&quot;]/div[@class=&quot;sc-bbkauy dLAVYa&quot;]/div[@class=&quot;ak-editor-content-area sc-iBmynh gYBDlU sc-erNlkL bHjARR&quot;]/div[@class=&quot;ProseMirror ProseMirror-focused&quot;]/p[1]</value>
+      <value>id(&quot;discussion-form&quot;)//p[1]</value>
    </webElementProperties>
    <webElementXpaths>
       <isSelected>true</isSelected>

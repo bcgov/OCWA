@@ -9,6 +9,10 @@
          <key>XPATH</key>
          <value>//div[@id='discussion-form']/div/div[2]/div[2]/div/div/button/span/span</value>
       </entry>
+      <entry>
+         <key>BASIC</key>
+         <value>id(&quot;discussion-form&quot;)//button/span[1]/span[1][count(. | //span[(text() = 'Save' or . = 'Save')]) = count(//span[(text() = 'Save' or . = 'Save')])]</value>
+      </entry>
    </selectorCollection>
    <selectorMethod>BASIC</selectorMethod>
    <useRalativeImagePath>false</useRalativeImagePath>
@@ -27,11 +31,11 @@
       <value>Save</value>
    </webElementProperties>
    <webElementProperties>
-      <isSelected>false</isSelected>
+      <isSelected>true</isSelected>
       <matchCondition>equals</matchCondition>
       <name>xpath</name>
       <type>Main</type>
-      <value>id(&quot;discussion-form&quot;)/div[1]/div[@class=&quot;sc-fihHvN iKlTEi&quot;]/div[@class=&quot;sc-fKGOjr iJjZpR&quot;]/div[@class=&quot;ButtonGroup-duns38-0 gMavhk&quot;]/div[@class=&quot;ButtonGroup__GroupItem-duns38-1 iJyhld&quot;]/button[@class=&quot;Button__StyledButton-sc-1o41kgk-0 dRpQjM&quot;]/span[1]/span[1]</value>
+      <value>id(&quot;discussion-form&quot;)//button/span[1]/span[1]</value>
    </webElementProperties>
    <webElementXpaths>
       <isSelected>true</isSelected>
