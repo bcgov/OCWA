@@ -1,0 +1,9 @@
+.header {
+  margin: 20px 0;
+}
+
+.actionsColumn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

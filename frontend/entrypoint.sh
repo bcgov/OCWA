@@ -8,6 +8,9 @@ printf "\"forumApiHost\": \"${FORUM_API_HOST}\",\n" >> ./config/default.json
 printf "\"forumSocket\": \"${FORUM_SOCKET_HOST}\",\n" >> ./config/default.json
 printf "\"requestApiHost\": \"${REQUEST_API_HOST}\",\n" >> ./config/default.json
 printf "\"filesApiHost\": \"${FILES_API_HOST}\",\n" >> ./config/default.json
+printf "\"exporterGroup\": \"${EXPORTER_GROUP}\",\n" >> ./config/default.json
+printf "\"ocGroup\": \"${OC_GROUP}\",\n" >> ./config/default.json
+printf "\"exporterMode\": \"${EXPORTER_MODE}\",\n" >> ./config/default.json
 printf "\"cookieSecret\": \"${COOKIE_SECRET}\",\n" >> ./config/default.json
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 printf "\"auth\": {\n" >> ./config/default.json

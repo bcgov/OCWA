@@ -121,10 +121,11 @@ function FilesTable({
         content: (
           <div className={styles.downloadButton}>
             <Button
+              download
               appearance="subtle"
               spacing="none"
+              href={`/api/v1/files/${file.id}`}
               iconBefore={<DownloadIcon />}
-              onClick={() => onDownload(file.id)}
             />
           </div>
         ),
@@ -186,7 +187,6 @@ FilesTable.propTypes = {
   isFailed: PropTypes.bool.isRequired,
   showDownloadButton: PropTypes.bool,
   showRemoveButton: PropTypes.bool,
-  onDownload: PropTypes.func,
   onRemove: PropTypes.func,
 };
 
@@ -194,7 +194,6 @@ FilesTable.defaultProps = {
   fileStatus: {},
   showDownloadButton: false,
   showRemoveButton: false,
-  onDownload: () => null,
   onRemove: () => null,
 };
 

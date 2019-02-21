@@ -3,15 +3,16 @@ import { eventChannel } from 'redux-saga';
 import { normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
 import { getToken } from '@src/services/auth';
-import has from 'lodash/has';
 import get from 'lodash/get';
-import { idField } from '@src/services/config';
+import has from 'lodash/has';
+import isEmpty from 'lodash/isEmpty';
+import { socketHost, idField } from '@src/services/config';
 
 import { postSchema } from './schemas';
 
 function createSocket() {
   const token = getToken();
-  const socket = new WebSocket(SOCKET_HOST, token);
+  const socket = new WebSocket(socketHost, token);
   socket.onopen = () => console.log('[SOCKET] connected');
   socket.onclose = () => console.log('[SOCKET] closed');
   return socket;
@@ -51,6 +52,8 @@ function createSocketChannel(socket, username) {
 }
 
 function* authWatcher() {
+  if (isEmpty(socketHost.replace(/wss?:\/\//, ''))) return;
+
   try {
     const socket = yield call(createSocket);
     const user = yield select(state => get(state, 'app.auth.user', {}));

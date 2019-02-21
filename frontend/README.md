@@ -25,6 +25,13 @@ Make sure instead of `Roles` you assign `Groups`, e.g.
   ]
 }
 ```
+### Groups and Modes
+There are 2 default groups a user can belong to; Exporter(/exporter by default)
+or Output Checker (/oc by default). In addition the app has 2 modes it can run in,
+export or download. Note that the `export` value works for both the OC or Exporter
+and can be really any value or nil, but if it is set to `download` it'll open an
+exporter-only download interface.
+
 
 ## Installation
 
@@ -45,6 +52,9 @@ Create a `config/default.json` from the `config/default.json.example` file and f
 yarn install
 yarn start
 ```
+$ hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
+$ port=8000
+$ docker run -e TOKEN_ENDPOINT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_SCOPES="openid offline_access" -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e EXPORTER_GROUP="/exporter" -e OC_GROUP="/oc" -e EXPORTER_MODE="export" -e FORUM_SOCKET_HOST=$hostip:3001 -e REQUEST_API_HOST=$hostip:3002 -e FILES_API_HOST=$hostip:1080 -e USER_ID_FIELD=email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
 
 Note that if you want to use a test user, ensure the `default.json` config has the following fields:
 

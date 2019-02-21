@@ -95,17 +95,11 @@ export const reset = () => ({ type: 'request/reset' });
 
 export const removeFile = id => ({ type: 'request/remove-file', payload: id });
 
-export const downloadFile = id => ({
-  type: 'request/download-file',
-  payload: id,
-});
-
 export default {
   createRequest,
   changeStep,
   clearSearch,
   closeDraftRequest,
-  downloadFile,
   fetchRequests,
   removeFile,
   saveRequest,

@@ -28,6 +28,10 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 const filesApiHost = config.get('filesApiHost');
 const forumSocket = config.get('forumSocket');
 const idField = config.get('user.idField');
+const exporterGroup = config.get('exporterGroup');
+const ocGroup = config.get('ocGroup');
+const exporterMode = config.get('exporterMode');
+
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
 });
@@ -95,6 +99,9 @@ app.get('*', storeUrl, (req, res) => {
     socketHost: parseWsHost(forumSocket),
     commit: get(process, 'env.GITHASH', ''),
     idField,
+    exporterGroup,
+    ocGroup,
+    exporterMode,
   });
 });
 
