@@ -30,6 +30,14 @@ class NewRequestDialog extends React.PureComponent {
     this.state = defaultFormValues;
   }
 
+  componentDidUpdate(prevProps) {
+    const { data, isUploading } = this.props;
+
+    if (prevProps.isUploading && !isUploading) {
+      this.save(data);
+    }
+  }
+
   validateForm = () => {
     if (!this.formRef.current) {
       return false;
