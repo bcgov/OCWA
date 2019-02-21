@@ -176,13 +176,13 @@ def read_file(file_id, deep_read=False):
 
         if startingMb != newMime:
             log.debug("Replacing mimetype")
-            response = conn.copy_object(Bucket=bucket,
+            _ = conn.copy_object(Bucket=bucket,
                                         Key=file_id, 
                                         ContentType=newMime, 
                                         MetadataDirective="REPLACE", 
                                         CopySource=bucket+"/"+file_id,
                                         Metadata=fileResp['Metadata'])
-            fileResp[ftIndex] = newMime
+            file[ftIndex] = newMime
             log.debug("Done replacing mimetype")
 
         log.debug(file)
