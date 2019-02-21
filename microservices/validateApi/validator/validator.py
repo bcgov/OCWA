@@ -172,7 +172,7 @@ def read_file(file_id, deep_read=False):
             origMime = file[ftIndex]
 
         startingMb = fileResp['Body'].read(amt=1024)
-        newMime = magic.from_stream(startingMb, mime=True)
+        newMime = magic.from_buffer(startingMb, mime=True)
 
         if startingMb != newMime:
             log.debug("Replacing mimetype")
