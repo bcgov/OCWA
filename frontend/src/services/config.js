@@ -16,6 +16,5 @@ export default {
   exporterGroup,
   ocGroup,
   exporterMode,
-  idField,
   socketHost,
 };
