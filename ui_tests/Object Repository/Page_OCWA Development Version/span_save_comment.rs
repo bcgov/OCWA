@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>span_Save</name>
+   <name>span_save_comment</name>
    <tag></tag>
    <elementGuidId>467131b2-017c-4bea-845e-29b5bf520a80</elementGuidId>
    <selectorCollection>

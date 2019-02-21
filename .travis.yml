@@ -351,10 +351,10 @@ matrix:
 
     - name: "OCWA Master Helm Chart"
       stage: "Tests"
-      language: node_js
-      node_js:
-        - "node"
-      cache: npm
+      language: python
+      python:
+        - "3.6"
+      cache: pip
 
       install:
         - cd /home/travis/build/bcgov/OCWA
