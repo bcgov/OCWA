@@ -174,7 +174,7 @@ def read_file(file_id, deep_read=False):
         startingMb = fileResp['Body'].read(amt=1024)
         newMime = magic.from_buffer(startingMb, mime=True)
 
-        if startingMb != newMime:
+        if origMime != newMime:
             log.debug("Replacing mimetype")
             _ = conn.copy_object(Bucket=bucket,
                                         Key=file_id, 
