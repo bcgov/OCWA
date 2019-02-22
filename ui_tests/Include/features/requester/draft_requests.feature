@@ -18,5 +18,3 @@ As an requester I want to be able to save a draft of my request so that I can do
 		When the requester saves their request
 		Then the requester should see their saved request including 1 output file 1 supporting file 
 		And requester should be able to make changes to the request
-		
-	

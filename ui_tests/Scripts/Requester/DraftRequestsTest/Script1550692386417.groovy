@@ -15,13 +15,3 @@ import internal.GlobalVariable as GlobalVariable
 
 CucumberKW.runFeatureFile('Include/features/requester/draft_requests.feature')
 
-CucumberKW.runFeatureFile('Include/features/requester/create_a_new_request.feature')
-
-CucumberKW.runFeatureFile('Include/features/requester/view_request_details.feature')
-
-CucumberKW.runFeatureFile('Include/features/requester/edit_previously_submitted_request.feature')
-
-CucumberKW.runFeatureFile('Include/features/requester/see_warning_file_uploads.feature')
-
-CucumberKW.runFeatureFile('Include/features/requester/see_blocked_file_uploads.feature')
-

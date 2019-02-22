@@ -26,6 +26,7 @@ import WebUiBuiltInKeywords as WebUI
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.By
+import org.openqa.selenium.Keys as Keys
 
 import com.kms.katalon.core.mobile.keyword.internal.MobileDriverFactory
 import com.kms.katalon.core.webui.driver.DriverFactory
@@ -150,26 +151,26 @@ class Requester_step_def_ks {
 	}
 
 	def login(String username, String password){
-		WebUI.openBrowser('')
+		WebUI.openBrowser(null)
 		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+		WebUI.waitForPageLoad(10)
+
 		TestObject loginButton = get_test_object_by_id(LOGIN_BTN_ID)
-		WebUI.waitForElementClickable(loginButton, 30)
+		WebUI.waitForElementClickable(loginButton, 10)
 		WebUI.click(loginButton)
+		WebUI.waitForPageLoad(10)
 
 		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Username or email_userna'), username)
-
 		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), password)
-
 		WebUI.click(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_login'))
-
+		WebUI.waitForPageLoad(30)
 	}
 
 	@Given("requester has started a request")
 	def requester_starts_new_request() {
-
 		TestObject newRequestButtonObject = get_test_object_by_id(NEW_REQUEST_BTN_ID)
 
-		WebUI.waitForPageLoad(30)
+		WebUI.waitForPageLoad(10)
 		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", 10)
 
 		WebUI.waitForElementVisible(newRequestButtonObject, 20)
@@ -198,17 +199,20 @@ class Requester_step_def_ks {
 		WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
 		WebUI.waitForElementClickable(uploadFileButton, 30)
 		WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$fileToUpload")
-		WebUI.delay(10)
+		WebUI.delay(3)
+
 		if (secondFile != "") {
 			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
 			WebUI.waitForElementClickable(uploadFileButton, 30)
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$secondFile")
+			WebUI.delay(3)
 		}
 
 		if (thirdFile != "") {
 			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
 			WebUI.waitForElementClickable(uploadFileButton, 30)
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$thirdFile")
+			WebUI.delay(3)
 		}
 	}
 
@@ -348,30 +352,30 @@ class Requester_step_def_ks {
 
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
-		TestObject saveCloseBtn = get_test_object_by_id(REQUEST_SAVE_CLOSE_BTN_ID)
+		WebUI.delay(3)
+		TestObject saveCloseBtn = findTestObject('Object Repository/Page_OCWA Development Version/button_save_close_request')
 		WebUI.waitForElementNotHasAttribute(saveCloseBtn, "disabled", 10)
 		WebUI.waitForElementVisible(saveCloseBtn, 10)
-		if (!WebUI.waitForElementClickable(saveCloseBtn, 30)) {
-			WebUI.comment("waiting for Save and Close button to be clickable timed out")
-		}
+		WebUI.waitForElementClickable(saveCloseBtn, 10)
 		WebUI.click(saveCloseBtn)
-		//WebUI.waitForElementNotHasAttribute(saveCloseBtn, "disabled", 10) // may not be necessary
 		WebUI.waitForElementNotPresent(saveCloseBtn, 10) //wait for the modal window to close
 	}
 
 	@When("requester submits their request")
 	def requester_submits_request() {
-		TestObject saveBtn = get_test_object_by_id(REQUEST_SAVE_BTN_ID)
+		WebUI.delay(3)
+		TestObject saveBtn = findTestObject('Object Repository/Page_OCWA Development Version/button_save_request')
 		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
 		WebUI.waitForElementClickable(saveBtn, 30)
 		WebUI.click(saveBtn)
+
+		WebUI.delay(3)
 		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
-
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
 
-		WebUI.waitForElementNotPresent(saveBtn, 10) //wait for the modal window to close
+		WebUI.waitForElementNotPresent(saveBtn, 10, FailureHandling.STOP_ON_FAILURE) //wait for the modal window to close
 	}
 
 	@When("requester writes and submits a new comment")
@@ -380,21 +384,23 @@ class Requester_step_def_ks {
 		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'), 10)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'))
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/div_discussion_form'))
-		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/p_discussion_form_text'), 10)
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/p_discussion_form_text'))
-		WebUI.sendKeys(null, TEST_COMMENT)
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Save'))
+
+		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/div_discussion_form_contenteditable'), 10)
+		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_save_comment'), 10)
+		WebUI.sendKeys(findTestObject('Object Repository/Page_OCWA Development Version/div_discussion_form_contenteditable'), TEST_COMMENT)
+		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_save_comment'))
 	}
 
 	@When("the requester views the request")
 	def requester_views_request_they_created(){
 		if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
 			WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
-
 		}
-		WebUI.waitForPageLoad(20)
+		WebUI.waitForPageLoad(10)
 		TestObject searchBox = get_test_object_by_id(SEARCH_BOX_ID)
+		WebUI.waitForElementClickable(searchBox, 10, FailureHandling.STOP_ON_FAILURE)
 		WebUI.setText(searchBox, g_requestName)
+		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementVisible(linkToRequest, 20)
@@ -403,7 +409,7 @@ class Requester_step_def_ks {
 			WebUI.comment("waiting for request link to be clickable timed out")
 		}
 		WebUI.click(linkToRequest)
-		WebUI.waitForPageLoad(20)
+		WebUI.waitForPageLoad(10)
 	}
 
 	@When("the requester cancels the request")
@@ -415,6 +421,7 @@ class Requester_step_def_ks {
 	@When("the requester withdraws the request")
 	def requester_withdraws_request(){
 		requester_views_request_they_created()
+		WebUI.waitForElementClickable(get_test_object_by_id(REQUEST_WITHDRAW_BTN_ID), 10)
 		WebUI.click(get_test_object_by_id(REQUEST_WITHDRAW_BTN_ID))
 	}
 
@@ -445,12 +452,16 @@ class Requester_step_def_ks {
 	@Then("the requester should see their saved request including (.+) output file (.+) supporting file")
 	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles){
 		//requester_views_request_they_created()
-		WebUI.comment("current page (should be main page):${WebUI.getUrl()}")
+		WebUI.waitForPageLoad(10)
+		WebUI.comment("current page (should be main page): ${WebUI.getUrl()}")
 		TestObject searchBox = get_test_object_by_id(SEARCH_BOX_ID)
+		WebUI.waitForElementClickable(searchBox, 10, FailureHandling.STOP_ON_FAILURE)
 		WebUI.setText(searchBox, g_requestName)
+		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
+		WebUI.waitForElementVisible(get_test_object_by_text(g_requestName), 10)
 		if (!WebUI.verifyTextPresent(g_requestName, false)) {
-			WebUI.comment("unable to find the text:$g_requestName on the page.  This text is used to find the request link")
+			WebUI.comment("unable to find the text:$g_requestName on the page. This text is used to find the request link")
 		}
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
@@ -461,11 +472,11 @@ class Requester_step_def_ks {
 		WebUI.comment("clicked on the request link that contains text: $g_requestName")
 
 		WebUI.waitForPageLoad(20)
-		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
+		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 
 
 		WebUI.verifyTextPresent(g_requestName, false)
-		WebUI.delay(5) // we need to do a hard delay here to give time for the inline ajax to finish
+		WebUI.delay(3) // we need to do a hard delay here to give time for the inline ajax to finish
 
 		if (numOutputFiles == "1") {
 			WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
@@ -502,7 +513,9 @@ class Requester_step_def_ks {
 
 	@Then("the requester should see the complete record of the request including export files, supporting content, discussion, and status changes")
 	def submitted_request_info_matches_what_was_submitted(){
-		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
+		WebUI.delay(3)
+		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
+		WebUI.waitForPageLoad(10)
 		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		WebUI.verifyTextPresent(g_requestName, false)
 		WebUI.verifyTextPresent(PURPOSE_TEXT, false)
@@ -514,7 +527,9 @@ class Requester_step_def_ks {
 	@Then('the request status is changed to "(.+)"')
 	def request_should_be_in_given_status(String statusTxt){
 		requester_views_request_they_created()
-		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
+		WebUI.delay(3)
+		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
+		WebUI.waitForPageLoad(10)
 		WebUI.verifyTextPresent(statusTxt, false)
 		WebUI.closeBrowser()
 	}
@@ -536,7 +551,7 @@ class Requester_step_def_ks {
 	@Then("requester should be able to make changes to the request")
 	def requester_should_be_able_to_make_changes_to_the_request(){
 		//requester_views_request_they_created()
-		WebUI.comment("current page (should be request page):${WebUI.getUrl()}")
+		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.click(get_test_object_by_id(REQUEST_EDIT_BTN_ID))
 		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), EDITED_PURPOSE_TEXT)
 
@@ -584,8 +599,7 @@ class Requester_step_def_ks {
 	def request_cannot_be_successfully_submitted(){
 		TestObject submitBtn = get_test_object_by_id(REQUEST_SUBMIT_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", 10)
-		WebUI.waitForElementVisible(submitBtn, 20)
-		WebUI.waitForElementClickable(submitBtn, 30)
+//		WebUI.waitForElementClickable(submitBtn, 10)
 		WebUI.click(submitBtn)
 		WebUI.comment("Clicked the submit link")
 		request_should_be_in_given_status(WORK_IN_PROGRESS_STATUS)
