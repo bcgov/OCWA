@@ -58,6 +58,9 @@ ocwa-frontend:
     scope: "openid offline_access"
     tokenEndpoint: "openid.auth.tokenEndpoint"
     userInfoURL: "openid.userinfo.url"
+
+  downloadCallbackUrl: "chart-example-download.local/auth"
+
   storage:
     endPoint: "ocwa-storage-api.ocwa"
     port: 9000

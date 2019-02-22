@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ template "ocwaFrontend.fullname" . }}-download
   labels:
-    app: {{ template "ocwaFrontend.name" . }}
+    app: {{ template "ocwaFrontend.name" . }}-download
     chart: {{ template "ocwaFrontend.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -11,12 +11,12 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "ocwaFrontend.name" . }}
+      app: {{ template "ocwaFrontend.name" . }}-download
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "ocwaFrontend.name" . }}
+        app: {{ template "ocwaFrontend.name" . }}-download
         release: {{ .Release.Name }}
     spec:
       containers:
@@ -50,7 +50,7 @@ spec:
             - name: AUTH_ENDPOINT
               value: "{{ .Values.auth.authorizationEndpoint }}"
             - name: AUTH_CALLBACK_URL
-              value: "{{ .Values.auth.callbackURL }}"
+              value: "{{ .Values.downloadCallbackUrl }}"
             - name: AUTH_CLIENT
               value: "{{ .Values.auth.clientID }}"
             - name: CLIENT_SECRET

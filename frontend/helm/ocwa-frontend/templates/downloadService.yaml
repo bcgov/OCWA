@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ template "ocwaFrontend.fullname" . }}-download
   labels:
-    app: {{ template "ocwaFrontend.name" . }}
+    app: {{ template "ocwaFrontend.name" . }}-download
     chart: {{ template "ocwaFrontend.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -15,5 +15,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "ocwaFrontend.name" . }}
+    app: {{ template "ocwaFrontend.name" . }}-download
     release: {{ .Release.Name }}
