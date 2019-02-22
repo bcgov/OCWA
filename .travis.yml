@@ -64,7 +64,7 @@ matrix:
 
       deploy:
         provider: script
-        script: bash docker_push
+        script: bash docker_push || travis_terminate 1
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
@@ -142,7 +142,7 @@ matrix:
 
       deploy:
         provider: script
-        script: bash docker_push
+        script: bash docker_push || travis_terminate 1
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
@@ -196,7 +196,7 @@ matrix:
 
       deploy:
         provider: script
-        script: bash docker_push
+        script: bash docker_push || travis_terminate 1
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
@@ -256,7 +256,7 @@ matrix:
 
       deploy:
         provider: script
-        script: bash docker_push
+        script: bash docker_push || travis_terminate 1
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
@@ -307,7 +307,7 @@ matrix:
 
       deploy:
         provider: script
-        script: bash docker_push
+        script: bash docker_push || travis_terminate 1
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
