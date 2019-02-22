@@ -171,17 +171,19 @@ def read_file(file_id, deep_read=False):
         if ftIndex in file:
             origMime = file[ftIndex]
 
-        startingMb = fileResp['Body'].read(amt=1024)
-        newMime = magic.from_buffer(startingMb, mime=True)
+        # Note: Boto3 is unable to properly read a chunk and repeat in certain cases
+        # The connection hangs and times out when read multiple times
+        contentBody = fileResp['Body'].read()
+        newMime = magic.from_buffer(contentBody, mime=True)
 
         if origMime != newMime:
             log.debug("Replacing mimetype")
             _ = conn.copy_object(Bucket=bucket,
-                                        Key=file_id, 
-                                        ContentType=newMime, 
-                                        MetadataDirective="REPLACE", 
-                                        CopySource=bucket+"/"+file_id,
-                                        Metadata=fileResp['Metadata'])
+                                 Key=file_id,
+                                 ContentType=newMime,
+                                 MetadataDirective="REPLACE",
+                                 CopySource=bucket+"/"+file_id,
+                                 Metadata=fileResp['Metadata'])
             file[ftIndex] = newMime
             log.debug("Done replacing mimetype")
 
@@ -193,7 +195,7 @@ def read_file(file_id, deep_read=False):
 
         file['content'] = ""
         if deep_read:
-            file['content'] = startingMb + fileResp['Body'].read()
+            file['content'] = contentBody
 
     except (Exception) as e:
         log.debug("Failed to get file")
