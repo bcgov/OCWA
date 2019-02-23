@@ -97,7 +97,7 @@ function FilesTable({
         },
         {
           key: file.fileType,
-          content: file.fileType,
+          content: file.fileType || file.contentType || 'unknown',
         },
         {
           key: file.size,
