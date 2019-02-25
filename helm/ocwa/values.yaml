@@ -26,6 +26,17 @@ ocwa-frontend:
         port: 80
     tls: []
 
+  downloadIngress:
+    enabled: false
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    path: /
+    hosts:
+      - name: chart-example-download.local
+        service: ocwa-ocwa-frontend-download
+        port: 80
+    tls: []
+
   port: 8000
   logLevel: error
 
@@ -36,6 +47,8 @@ ocwa-frontend:
   forumSocket: "ocwa-forum-api.ocwa:3001"
   requestApiHost: "ocwa-request-api.ocwa"
   filesApiHost: "ocwa-storage-api.ocwa"
+  exporterGroup: "/exporter"
+  ocGroup: "/oc"
   auth:
     authorizationEndpoint: "openid.auth.endpoint"
     callbackURL: "chart-example.local/auth"
@@ -45,6 +58,9 @@ ocwa-frontend:
     scope: "openid offline_access"
     tokenEndpoint: "openid.auth.tokenEndpoint"
     userInfoURL: "openid.userinfo.url"
+
+  downloadCallbackUrl: "chart-example-download.local/auth"
+
   storage:
     endPoint: "ocwa-storage-api.ocwa"
     port: 9000
@@ -128,7 +144,7 @@ forum-api:
   mongoImage:
     repository: mongo
     tag: 4.1
-    
+
   emailTemplateEnabled: false
   emailTemplate: |-
   emailEnabled: false
@@ -369,7 +385,7 @@ validate-api:
   apiSecret: "ssh this is a secret"
   user:
     idField: Email
-    
+
   alwaysScan: "true"
 
   createDatabase: false

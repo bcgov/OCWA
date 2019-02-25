@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "ocwaFrontend.fullname" . }}-download
+  labels:
+    app: {{ template "ocwaFrontend.name" . }}-download
+    chart: {{ template "ocwaFrontend.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ocwaFrontend.name" . }}-download
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ocwaFrontend.name" . }}-download
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-download
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PORT
+              value: "{{ .Values.port }}"
+            - name: HOST
+              value: {{ .Values.host }}
+            - name: FORUM_API_HOST
+              value: "none"
+            - name: FORUM_SOCKET_HOST
+              value: "none"
+            - name: REQUEST_API_HOST
+              value: "{{ .Values.requestApiHost }}"
+            - name: FILES_API_HOST
+              value: "{{ .Values.filesApiHost }}"
+            - name: EXPORTER_GROUP
+              value: "{{ .Values.exporterGroup }}"
+            - name: OC_GROUP
+              value: "{{ .Values.ocGroup }}"
+            - name: EXPORTER_MODE
+              value: "download"
+            - name: COOKIE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaFrontend.fullname" . }}-secrets
+                  key: cookieSecret
+            - name: AUTH_ENDPOINT
+              value: "{{ .Values.auth.authorizationEndpoint }}"
+            - name: AUTH_CALLBACK_URL
+              value: "{{ .Values.downloadCallbackUrl }}"
+            - name: AUTH_CLIENT
+              value: "{{ .Values.auth.clientID }}"
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaFrontend.fullname" . }}-secrets
+                  key: clientSecret
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaFrontend.fullname" . }}-secrets
+                  key: jwtSecret
+            - name: AUTH_ISSUER
+              value: {{ .Values.auth.issuer }}
+            - name: AUTH_SCOPES
+              value: {{ .Values.auth.scope }}
+            - name: TOKEN_ENDPOINT
+              value: {{ .Values.auth.tokenEndpoint }}
+            - name: STORAGE_ENDPOINT
+              value: {{ .Values.storage.endPoint }}
+            - name: STORAGE_PORT
+              value: "{{ .Values.storage.port }}"
+            - name: STORAGE_SSL
+              value: "{{ .Values.storage.useSSL }}"
+            - name: STORAGE_BUCKET
+              value: {{ .Values.storage.bucket }}
+            - name: STORAGE_ACCESS_KEY
+              value: {{ .Values.storage.accessKey }}
+            - name: STORAGE_SECRET_KEY
+              value: {{ .Values.storage.secretKey }}
+            - name: USER_INFO_ENDPOINT
+              value: {{ .Values.auth.userInfoURL }}
+            - name: USER_ID_FIELD
+              value: {{ .Values.user.idField }}
+
+          ports:
+            - name: http
+              containerPort: {{ .Values.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 60
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

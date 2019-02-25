@@ -9,6 +9,7 @@ import boto3
 from config import Config
 from db.db import Db
 from munch import munchify
+import magic
 
 log = logging.getLogger(__name__)
 
@@ -166,6 +167,26 @@ def read_file(file_id, deep_read=False):
         if 'Filetype' in file:
             ftIndex = 'Filetype'
 
+        origMime = ""
+        if ftIndex in file:
+            origMime = file[ftIndex]
+
+        # Note: Boto3 is unable to properly read a chunk and repeat in certain cases
+        # The connection hangs and times out when read multiple times
+        contentBody = fileResp['Body'].read()
+        newMime = magic.from_buffer(contentBody, mime=True)
+
+        if origMime != newMime:
+            log.debug("Replacing mimetype")
+            _ = conn.copy_object(Bucket=bucket,
+                                 Key=file_id,
+                                 ContentType=newMime,
+                                 MetadataDirective="REPLACE",
+                                 CopySource=bucket+"/"+file_id,
+                                 Metadata=fileResp['Metadata'])
+            file[ftIndex] = newMime
+            log.debug("Done replacing mimetype")
+
         log.debug(file)
 
         index = file[ftIndex].find('/')
@@ -174,7 +195,7 @@ def read_file(file_id, deep_read=False):
 
         file['content'] = ""
         if deep_read:
-            file['content'] = fileResp['Body'].read()
+            file['content'] = contentBody
 
     except (Exception) as e:
         log.debug("Failed to get file")

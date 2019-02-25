@@ -36,6 +36,12 @@ spec:
               value: "{{ .Values.requestApiHost }}"
             - name: FILES_API_HOST
               value: "{{ .Values.filesApiHost }}"
+            - name: EXPORTER_GROUP
+              value: "{{ .Values.exporterGroup }}"
+            - name: OC_GROUP
+              value: "{{ .Values.ocGroup }}"
+            - name: EXPORTER_MODE
+              value: "export"
             - name: COOKIE_SECRET
               valueFrom:
                 secretKeyRef:

@@ -10,7 +10,10 @@
     "FILES_API_HOST": true,
     "SOCKET_HOST": true,
     "VERSION": true,
-    "COMMIT": true
+    "COMMIT": true,
+    "EXPORTER_GROUP": true,
+    "OC_GROUP": true,
+    "EXPORTER_MODE": true
   },
   "parser": "babel-eslint",
   "rules": {

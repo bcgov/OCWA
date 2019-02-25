@@ -40,4 +40,24 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.get('/:fileId', async (req, res) => {
+  const { fileId } = req.params;
+  const { metaData } = await minioClient.statObject(bucket, fileId);
+  const stream = await minioClient.getObject(bucket, fileId);
+  const data = [];
+
+  stream.on('data', chunk => data.push(chunk));
+  stream.on('end', () => {
+    const fileData = Buffer.concat(data);
+
+    res.writeHead(200, {
+      'Content-Type': metaData.filetype,
+      'Content-Disposition': `attachment; filename=${metaData.filename}`,
+      'Content-Length': fileData.length,
+    });
+
+    res.end(fileData);
+  });
+});
+
 module.exports = router;
