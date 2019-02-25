@@ -26,7 +26,11 @@ function RequestDetails({ data }) {
         <div className={styles.sectionHeader}>Output Files</div>
         <div className={styles.sectionContent}>
           {files.length > 0 && (
-            <Files ids={files} fileStatus={data.fileStatus} />
+            <Files
+              showDownloadButton
+              ids={files}
+              fileStatus={data.fileStatus}
+            />
           )}
           {!files.length && (
             <div className={styles.empty}>No files have been added</div>
@@ -36,7 +40,9 @@ function RequestDetails({ data }) {
       <div id="request-support-files" className={styles.section}>
         <div className={styles.sectionHeader}>Support Files</div>
         <div className={styles.sectionContent}>
-          {supportingFiles.length > 0 && <Files ids={supportingFiles} />}
+          {supportingFiles.length > 0 && (
+            <Files showDownloadButton ids={supportingFiles} />
+          )}
           {!supportingFiles.length && (
             <div className={styles.empty}>No files have been added</div>
           )}
