@@ -14,3 +14,7 @@ Given a claimed request exists
 When output checker tries to assign an unclaimed request to another output checker 
 Then the output checker should be able to see that the request has been assigned to the output checker they specified
  
+Scenario: Claim a request already claimed by another output checker
+Given a different output checker is assigned to a request
+When output checker tries to claim the already assigned request 
+Then the output checker should be able to see that they're now assigned the request

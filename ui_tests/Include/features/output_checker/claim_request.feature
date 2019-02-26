@@ -6,10 +6,3 @@ Given an unclaimed request exists
 And output checker has logged in 
 When output checker tries to claim an unclaimed request 
 Then the output checker should be able to see that they're now assigned the request
-
-Scenario: Claim a request already claimed by another output checker
-Given output checker has logged in
-And at least on other output checker exists
-And the other output checker is assigned to a request
-When output checker tries to claim the already assigned request 
-Then the output checker should be able to see that they're now assigned the request

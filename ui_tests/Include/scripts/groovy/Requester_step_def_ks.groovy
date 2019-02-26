@@ -146,6 +146,7 @@ class Requester_step_def_ks {
 
 	@Then("the output checker should be able to see that they're now assigned the request")
 	def checker_should_see_they_are_assigned_to_request(){
+		WebUI.delay(3)
 		WebUI.verifyTextPresent(GlobalVariable.OCWA_USER_CHECKER1, false)
 		WebUI.closeBrowser()
 	}
@@ -289,6 +290,7 @@ class Requester_step_def_ks {
 	def requester_has_submitted_a_request(){
 		requester_starts_new_request()
 		requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
+		WebUI.delay(5)
 		requester_submits_request()
 	}
 
@@ -363,11 +365,11 @@ class Requester_step_def_ks {
 
 	@When("requester submits their request")
 	def requester_submits_request() {
-		WebUI.delay(3)
+//		WebUI.delay(3)
 		TestObject saveBtn = findTestObject('Object Repository/Page_OCWA Development Version/button_save_request')
-		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
-		WebUI.waitForElementClickable(saveBtn, 30)
-		WebUI.click(saveBtn)
+//		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
+//		WebUI.waitForElementClickable(saveBtn, 30)
+//		WebUI.click(saveBtn)
 
 		WebUI.delay(3)
 		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
