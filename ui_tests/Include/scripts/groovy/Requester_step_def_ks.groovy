@@ -117,6 +117,7 @@ class Requester_step_def_ks {
 		TestObject assignToMeButtonObject = get_test_object_by_id(ASSIGN_REQUEST_TO_ME_ID)
 
 		WebUI.waitForPageLoad(30)
+		WebUI.waitForElementPresent(assignToMeButtonObject, 10)
 		WebUI.waitForElementNotHasAttribute(assignToMeButtonObject, "disabled", 10)
 		WebUI.waitForElementVisible(assignToMeButtonObject, 20)
 		WebUI.waitForElementClickable(assignToMeButtonObject, 30)
