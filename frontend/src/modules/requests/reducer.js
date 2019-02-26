@@ -18,6 +18,7 @@ const initialViewState = {
   currentNewRequestStep: 0,
   filter: null,
   filesToDelete: [],
+  showMyRequestsOnly: false,
   sortKey: 'state',
   sortOrder: 'DESC',
   search: '',
@@ -37,6 +38,12 @@ const viewState = (state = initialViewState, action = {}) => {
       return {
         ...state,
         ...action.payload,
+      };
+
+    case 'requests/toggle-my-requests':
+      return {
+        ...state,
+        showMyRequestsOnly: !state.showMyRequestsOnly,
       };
 
     case 'requests/view/request':
