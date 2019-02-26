@@ -80,6 +80,7 @@ class Requester_step_def_ks {
 	String ASSIGN_REQUEST_TO_ME_ID = "request-sidebar-pickup-button"
 	String APPROVE_REQUEST_BTN_ID = "request-sidebar-approve-button"
 	String REVISIONS_NEEDED_REQUEST_BTN_ID = "request-sidebar-request-revisions-button"
+	String REQUEST_ASSIGNED_TO_ID = "request-assigned-oc"
 
 	String g_requestName = ""
 
@@ -146,9 +147,15 @@ class Requester_step_def_ks {
 
 	@Then("the output checker should be able to see that they're now assigned the request")
 	def checker_should_see_they_are_assigned_to_request(){
-		WebUI.delay(3)
+		TestObject assigneeTextObject = get_test_object_by_id(REQUEST_ASSIGNED_TO_ID)
+		WebUI.waitForElementPresent(assigneeTextObject, 10)
 		WebUI.verifyTextPresent(GlobalVariable.OCWA_USER_CHECKER1, false)
 		WebUI.closeBrowser()
+	}
+	
+	@Then("the output checker should see the status of the request updated to '(.+)'")
+	def checker_should_see_request_is_in_given_status(String status){
+		//placeholder until status is displayed on individual requests in the oc interface
 	}
 
 	def login(String username, String password){
@@ -290,7 +297,7 @@ class Requester_step_def_ks {
 	def requester_has_submitted_a_request(){
 		requester_starts_new_request()
 		requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
-		WebUI.delay(5)
+		WebUI.delay(10)
 		requester_submits_request()
 	}
 
