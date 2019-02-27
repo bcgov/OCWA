@@ -3,7 +3,6 @@ import forIn from 'lodash/forIn';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
-import isNumber from 'lodash/isNumber';
 import union from 'lodash/union';
 import values from 'lodash/values';
 import withRequest from '@src/modules/data/components/data-request';
@@ -24,10 +23,16 @@ const mapStateToProps = state => {
   const filesUploadState = state.requests.uploads;
   const keyPath = `data.entities.requests.${currentRequestId}`;
   const isNewRequest = !has(state, keyPath);
-  const request = get(state, keyPath, {
+  const defaultRequestValues = {
     files: [],
     supportingFiles: [],
-  });
+  };
+  const request = get(state, keyPath, defaultRequestValues);
+  const duplicateRequest = get(
+    state,
+    'requests.viewState.duplicateRequest',
+    defaultRequestValues
+  );
 
   // Files (saved and current editing session files, uploaded or removed)
   const queuedFiles = [];
@@ -42,11 +47,14 @@ const mapStateToProps = state => {
       queuedSupportingFiles.push(key);
     }
   });
-  const files = union(request.files, queuedFiles).filter(
-    id => !filesToDelete.includes(id)
-  );
+  const files = union(
+    request.files,
+    duplicateRequest.files,
+    queuedFiles
+  ).filter(id => !filesToDelete.includes(id));
   const supportingFiles = union(
     request.supportingFiles,
+    duplicateRequest.supportingFiles,
     queuedSupportingFiles
   ).filter(id => !filesToDelete.includes(id));
   // Determine uploading state
@@ -56,6 +64,7 @@ const mapStateToProps = state => {
     uploadStates.length < totalFilesInQueue ||
     uploadStates.some(d => d !== 'loaded');
   const data = {
+    ...duplicateRequest,
     ...request,
     files,
     supportingFiles,

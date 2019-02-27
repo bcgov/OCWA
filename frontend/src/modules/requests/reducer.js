@@ -2,9 +2,29 @@ import { combineReducers } from 'redux';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import mapKeys from 'lodash/mapKeys';
+import mapValues from 'lodash/mapValues';
+import pick from 'lodash/pick';
 import uniqueId from 'lodash/uniqueId';
 import union from 'lodash/union';
 
+const duplicateKeys = [
+  'name',
+  'supportingFiles',
+  'files',
+  'purpose',
+  'variableDescriptions',
+  'selectionCriteria',
+  'steps',
+  'freq',
+  'confidentiality',
+];
+const duplicateValueMapper = (value, key) => {
+  if (key === 'name') {
+    return `${value} Duplicate`;
+  }
+
+  return value;
+};
 const uploadIdMapper = (action, value, key) => {
   if (action.meta.file.fileName === value.fileName) {
     return action.meta.file.id;
@@ -16,6 +36,7 @@ const uploadIdMapper = (action, value, key) => {
 const initialViewState = {
   currentRequestId: null,
   currentNewRequestStep: 0,
+  duplicateRequest: undefined,
   filter: null,
   filesToDelete: [],
   showMyRequestsOnly: false,
@@ -46,6 +67,16 @@ const viewState = (state = initialViewState, action = {}) => {
         showMyRequestsOnly: !state.showMyRequestsOnly,
       };
 
+    case 'requests/duplicate':
+      return {
+        ...state,
+        currentRequestId: uniqueId('request'),
+        duplicateRequest: mapValues(
+          pick(action.payload, duplicateKeys),
+          duplicateValueMapper
+        ),
+      };
+
     case 'requests/view/request':
     case 'requests/view/draft':
       return {
@@ -60,6 +91,7 @@ const viewState = (state = initialViewState, action = {}) => {
         filesToDelete: [],
         currentRequestId: null,
         currentNewRequestStep: 0,
+        duplicateRequest: undefined,
       };
 
     case 'requests/change-step':
