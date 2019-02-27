@@ -178,4 +178,59 @@ router.delete('/:topicId', function(req, res){
 
     });
 });
+
+
+router.put('/:topicId/subscribe', function(req, res){
+    var db = require('../db/db');
+    var mongoose = require('mongoose');
+    var collaborators = require('../collaborators/collaborators');
+    var topicId = mongoose.Types.ObjectId(req.params.topicId);
+
+    var userId = req.body.user_id;
+
+    db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(topicErr, topicRes) {
+        if (topicErr || !topicRes || topicRes.length <= 0){
+            res.status(500);
+            res.json({error: topicErr.message});
+            return;
+        }
+
+        collaborators.subscribe(topicId, topicRes[0], userId, (err) => {
+            if (err) {
+                res.status(500);
+                res.json({error: err.message});
+                return;
+            }
+            res.json({message: "Topic subscriptions ok"});
+        });
+    });
+});
+
+router.put('/:topicId/unsubscribe', function(req, res){
+    var db = require('../db/db');
+    var mongoose = require('mongoose');
+    var collaborators = require('../collaborators/collaborators');
+    var topicId = mongoose.Types.ObjectId(req.params.topicId);
+
+    var userId = req.body.user_id;
+
+    db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(topicErr, topicRes) {
+        if (topicErr || !topicRes || topicRes.length <= 0){
+            res.status(500);
+            res.json({error: topicErr.message});
+            return;
+        }
+
+        collaborators.unsubscribe(topicId, topicRes[0], userId, (err) => {
+            if (err) {
+                res.status(500);
+                res.json({error: err.message});
+                return;
+            }
+            res.json({message: "Topic subscriptions ok"});
+        });
+    });
+});
+
+
 module.exports = router;

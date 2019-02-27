@@ -57,6 +57,7 @@ router.get('/:topicId', function(req, res, next) {
 //create a new comment in the topic
 router.post("/:topicId", function(req, res, next){
     var db = require('../db/db');
+    var collaborators = require('../collaborators/collaborators');
 
     var comment = new db.Comment;
     var topicId = req.params.topicId;
@@ -78,21 +79,29 @@ router.post("/:topicId", function(req, res, next){
             return;
         }
 
-        comment.save(function(saveErr, result){
-            if (saveErr || !result) {
+        collaborators.subscribe(topic._id, topic, req.user.id, (err) => {
+            if (err) {
                 res.status(500);
-                res.json({error: saveErr});
+                res.json({error: err.message});
                 return;
             }
-            var messages = require('../messages/messages');
-            log.debug("comment saved triggering websocket");
-            messages.sendCommentMessage(topicId, result);
 
-            //send email notifications
-            var notifications = require('../notifications/notifications');
-            notifications.notify(topicRes[0], comment, req.user);
+            comment.save(function(saveErr, result){
+                if (saveErr || !result) {
+                    res.status(500);
+                    res.json({error: saveErr});
+                    return;
+                }
+                var messages = require('../messages/messages');
+                log.debug("comment saved triggering websocket");
+                messages.sendCommentMessage(topicId, result);
 
-            res.json({message: "Successfully written", _id: result._id, result: result});
+                //send email notifications
+                var notifications = require('../notifications/notifications');
+                notifications.notify(topicRes[0], comment, req.user);
+
+                res.json({message: "Successfully written", _id: result._id, result: result});
+            });
         });
     });
 
