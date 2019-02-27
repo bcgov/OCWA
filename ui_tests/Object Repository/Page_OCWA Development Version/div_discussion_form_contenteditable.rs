@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>span_Save</name>
+   <name>div_discussion_form_contenteditable</name>
    <tag></tag>
-   <elementGuidId>467131b2-017c-4bea-845e-29b5bf520a80</elementGuidId>
+   <elementGuidId>5ce96867-4870-40a1-8f7d-24083a81d246</elementGuidId>
    <selectorCollection>
       <entry>
+         <key>CSS</key>
+      </entry>
+      <entry>
          <key>XPATH</key>
-         <value>//div[@id='discussion-form']/div/div[2]/div[2]/div/div/button/span/span</value>
+         <value>//div[@id='discussion-form']/div/div[2]/div/div[2]/div/div[2]/p</value>
+      </entry>
+      <entry>
+         <key>BASIC</key>
+         <value>id(&quot;discussion-form&quot;)//div[@contenteditable='true']</value>
       </entry>
    </selectorCollection>
    <selectorMethod>BASIC</selectorMethod>
@@ -17,56 +24,49 @@
       <matchCondition>equals</matchCondition>
       <name>tag</name>
       <type>Main</type>
-      <value>span</value>
+      <value>p</value>
    </webElementProperties>
    <webElementProperties>
       <isSelected>true</isSelected>
       <matchCondition>equals</matchCondition>
-      <name>text</name>
-      <type>Main</type>
-      <value>Save</value>
-   </webElementProperties>
-   <webElementProperties>
-      <isSelected>false</isSelected>
-      <matchCondition>equals</matchCondition>
       <name>xpath</name>
       <type>Main</type>
-      <value>id(&quot;discussion-form&quot;)/div[1]/div[@class=&quot;sc-fihHvN iKlTEi&quot;]/div[@class=&quot;sc-fKGOjr iJjZpR&quot;]/div[@class=&quot;ButtonGroup-duns38-0 gMavhk&quot;]/div[@class=&quot;ButtonGroup__GroupItem-duns38-1 iJyhld&quot;]/button[@class=&quot;Button__StyledButton-sc-1o41kgk-0 dRpQjM&quot;]/span[1]/span[1]</value>
+      <value>id(&quot;discussion-form&quot;)//div[@contenteditable='true']</value>
    </webElementProperties>
    <webElementXpaths>
       <isSelected>true</isSelected>
       <matchCondition>equals</matchCondition>
       <name>xpath:idRelative</name>
-      <value>//div[@id='discussion-form']/div/div[2]/div[2]/div/div/button/span/span</value>
+      <value>//div[@id='discussion-form']/div/div[2]/div/div[2]/div/div[2]/p</value>
    </webElementXpaths>
    <webElementXpaths>
       <isSelected>false</isSelected>
       <matchCondition>equals</matchCondition>
       <name>xpath:neighbor</name>
-      <value>(.//*[normalize-space(text()) and normalize-space(.)='Normal text'])[1]/following::span[31]</value>
+      <value>(.//*[normalize-space(text()) and normalize-space(.)='No posts yet'])[1]/following::p[2]</value>
    </webElementXpaths>
    <webElementXpaths>
       <isSelected>false</isSelected>
       <matchCondition>equals</matchCondition>
       <name>xpath:neighbor</name>
-      <value>(.//*[normalize-space(text()) and normalize-space(.)='No posts yet'])[1]/following::span[36]</value>
+      <value>(.//*[normalize-space(text()) and normalize-space(.)='Discussion'])[1]/following::p[2]</value>
    </webElementXpaths>
    <webElementXpaths>
       <isSelected>false</isSelected>
       <matchCondition>equals</matchCondition>
       <name>xpath:neighbor</name>
-      <value>(.//*[normalize-space(text()) and normalize-space(.)='Cancel'])[1]/preceding::span[1]</value>
+      <value>(.//*[normalize-space(text()) and normalize-space(.)='Save'])[1]/preceding::p[1]</value>
    </webElementXpaths>
    <webElementXpaths>
       <isSelected>false</isSelected>
       <matchCondition>equals</matchCondition>
       <name>xpath:neighbor</name>
-      <value>(.//*[normalize-space(text()) and normalize-space(.)='Exporter'])[1]/preceding::span[4]</value>
+      <value>(.//*[normalize-space(text()) and normalize-space(.)='Cancel'])[1]/preceding::p[1]</value>
    </webElementXpaths>
    <webElementXpaths>
       <isSelected>false</isSelected>
       <matchCondition>equals</matchCondition>
       <name>xpath:position</name>
-      <value>//div[2]/div/div/button/span/span</value>
+      <value>//div[2]/p</value>
    </webElementXpaths>
 </WebElementEntity>

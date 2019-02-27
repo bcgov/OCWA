@@ -1,0 +1,35 @@
+.files  {
+  border-top: 2px solid #dfe1e6;
+  border-bottom: 2px solid #dfe1e6;
+}
+
+.file {
+  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #dfe1e6;
+}
+
+.files > .file:first-child {
+  border-top: none;
+}
+
+.files > .file:last-child {
+  border-bottom: none;
+}
+
+.file > div {
+  display: flex;
+  align-items: center;
+}
+
+.fileName > span:first-child {
+  margin-right: 15px;
+}
+
+.loading {
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

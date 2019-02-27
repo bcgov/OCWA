@@ -29,8 +29,11 @@ assignees: BrandonSharratt
 
 ### ENV
 
-<!-- Choose at least one of the following environments -->
-`DEV`, `TEST`, `PROD`
+<!-- Put at least one `x` below. Select all the environments which apply. -->
+
+- [ ] `DEV`
+- [ ] `TEST`
+- [ ] `PROD`
 
 ### TESTCASE
 
