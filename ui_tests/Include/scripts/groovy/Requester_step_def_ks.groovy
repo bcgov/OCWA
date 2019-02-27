@@ -153,7 +153,7 @@ class Requester_step_def_ks {
 		WebUI.verifyTextPresent(GlobalVariable.OCWA_USER_CHECKER1, false)
 		WebUI.closeBrowser()
 	}
-	
+
 	@Then("the output checker should see the status of the request updated to '(.+)'")
 	def checker_should_see_request_is_in_given_status(String status){
 		//placeholder until status is displayed on individual requests in the oc interface
@@ -405,12 +405,11 @@ class Requester_step_def_ks {
 		WebUI.setText(searchBox, g_requestName)
 		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
+		WebUI.delay(3) // TODO: Resolve searching delay with proper element check
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
-		WebUI.waitForElementVisible(linkToRequest, 20)
+		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
+		WebUI.waitForElementClickable(linkToRequest, 10)
 
-		if (!WebUI.waitForElementClickable(linkToRequest, 20)) {
-			WebUI.comment("waiting for request link to be clickable timed out")
-		}
 		WebUI.click(linkToRequest)
 		WebUI.waitForPageLoad(10)
 	}
@@ -466,11 +465,12 @@ class Requester_step_def_ks {
 		if (!WebUI.verifyTextPresent(g_requestName, false)) {
 			WebUI.comment("unable to find the text:$g_requestName on the page. This text is used to find the request link")
 		}
+
+		WebUI.delay(3) // TODO: Resolve searching delay with proper element check
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
-		if (!WebUI.waitForElementClickable(linkToRequest, 20)) {
-			WebUI.comment("waiting for the link to the request to be clickable on the main page timed out")
-		}
+		WebUI.waitForElementClickable(linkToRequest, 10)
+
 		WebUI.click(linkToRequest)
 		WebUI.comment("clicked on the request link that contains text: $g_requestName")
 
@@ -602,7 +602,7 @@ class Requester_step_def_ks {
 	def request_cannot_be_successfully_submitted(){
 		TestObject submitBtn = get_test_object_by_id(REQUEST_SUBMIT_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", 10)
-//		WebUI.waitForElementClickable(submitBtn, 10)
+		WebUI.waitForElementClickable(submitBtn, 10)
 		WebUI.click(submitBtn)
 		WebUI.comment("Clicked the submit link")
 		request_should_be_in_given_status(WORK_IN_PROGRESS_STATUS)
