@@ -81,6 +81,7 @@ class Requester_step_def_ks {
 	String APPROVE_REQUEST_BTN_ID = "request-sidebar-approve-button"
 	String REVISIONS_NEEDED_REQUEST_BTN_ID = "request-sidebar-request-revisions-button"
 	String REQUEST_ASSIGNED_TO_ID = "request-assigned-oc"
+	
 
 	String g_requestName = ""
 
@@ -90,12 +91,12 @@ class Requester_step_def_ks {
 
 	@Given("requester has logged in")
 	def requester_login() {
-		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
+		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD, GlobalVariable.OCWA_URL)
 	}
 
 	@Given("output checker has logged in")
 	def checker_login() {
-		login(GlobalVariable.OCWA_USER_CHECKER1, GlobalVariable.OCWA_USER_CHECKER1_PSWD)
+		login(GlobalVariable.OCWA_USER_CHECKER1, GlobalVariable.OCWA_USER_CHECKER1_PSWD, GlobalVariable.OCWA_URL)
 	}
 	@Given("an unclaimed request exists")
 	def checker_unclaimed_request_exists() {
@@ -158,10 +159,17 @@ class Requester_step_def_ks {
 	def checker_should_see_request_is_in_given_status(String status){
 		//placeholder until status is displayed on individual requests in the oc interface
 	}
+	@Then("the approved files are available for download outside of the secure environment")
+	def requester_should_see_files_available_for_download() {
+		download_interface_login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
+		WebUI.waitForPageLoad(10)
+		WebUI.delay(3)
+		WebUI.verifyTextPresent(g_requestName, false)
+	}
 
-	def login(String username, String password){
+	def login(String username, String password, String url){
 		WebUI.openBrowser(null)
-		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+		WebUI.navigateToUrl(url)
 		WebUI.waitForPageLoad(10)
 
 		TestObject loginButton = get_test_object_by_id(LOGIN_BTN_ID)
@@ -173,6 +181,10 @@ class Requester_step_def_ks {
 		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), password)
 		WebUI.click(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_login'))
 		WebUI.waitForPageLoad(30)
+	}
+	
+	def download_interface_login(String username, String password){
+		login(username, password, GlobalVariable.OCWA_DL_URL)
 	}
 
 	@Given("requester has started a request")
