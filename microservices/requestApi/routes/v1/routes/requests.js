@@ -46,7 +46,7 @@ router.get('/', function(req, res, next) {
 
     if (typeof(req.query.name) !== "undefined"){
         q['name'] = req.query.name;
-        if (req.query.name.substring(req.query.substring.length-1) === "*"){
+        if (req.query.name.substring(req.query.name.length-1) === "*"){
             q['name'] = {"$regex": req.query.name, "$options": "i"}
         }
     }
