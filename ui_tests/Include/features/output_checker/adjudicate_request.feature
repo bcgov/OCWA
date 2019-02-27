@@ -7,11 +7,11 @@ As an output checker I need the ability to change the status of a request to "Ap
 	And output checker has logged in 
 	When output checker tries to claim an unclaimed request
 	And the output checker marks the request as approved
-	Then the output checker should see the status of the request updated to "Approved"
+	Then the output checker should see the status of the request updated to 'Approved'
 	
 	Scenario: Request is needs revisions
 	Given an unclaimed request exists
 	And output checker has logged in 
 	When output checker tries to claim an unclaimed request
 	And the output checker marks the request as needs revisions
-	Then the output checker should see the status of the request updated to "Work in progress"
+	Then the output checker should see the status of the request updated to 'Work in progress'

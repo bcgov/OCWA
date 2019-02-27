@@ -80,6 +80,7 @@ class Requester_step_def_ks {
 	String ASSIGN_REQUEST_TO_ME_ID = "request-sidebar-pickup-button"
 	String APPROVE_REQUEST_BTN_ID = "request-sidebar-approve-button"
 	String REVISIONS_NEEDED_REQUEST_BTN_ID = "request-sidebar-request-revisions-button"
+	String REQUEST_ASSIGNED_TO_ID = "request-assigned-oc"
 
 	String g_requestName = ""
 
@@ -116,6 +117,7 @@ class Requester_step_def_ks {
 		TestObject assignToMeButtonObject = get_test_object_by_id(ASSIGN_REQUEST_TO_ME_ID)
 
 		WebUI.waitForPageLoad(30)
+		WebUI.waitForElementPresent(assignToMeButtonObject, 10)
 		WebUI.waitForElementNotHasAttribute(assignToMeButtonObject, "disabled", 10)
 		WebUI.waitForElementVisible(assignToMeButtonObject, 20)
 		WebUI.waitForElementClickable(assignToMeButtonObject, 30)
@@ -146,8 +148,15 @@ class Requester_step_def_ks {
 
 	@Then("the output checker should be able to see that they're now assigned the request")
 	def checker_should_see_they_are_assigned_to_request(){
+		TestObject assigneeTextObject = get_test_object_by_id(REQUEST_ASSIGNED_TO_ID)
+		WebUI.waitForElementPresent(assigneeTextObject, 10)
 		WebUI.verifyTextPresent(GlobalVariable.OCWA_USER_CHECKER1, false)
 		WebUI.closeBrowser()
+	}
+	
+	@Then("the output checker should see the status of the request updated to '(.+)'")
+	def checker_should_see_request_is_in_given_status(String status){
+		//placeholder until status is displayed on individual requests in the oc interface
 	}
 
 	def login(String username, String password){
@@ -363,19 +372,13 @@ class Requester_step_def_ks {
 
 	@When("requester submits their request")
 	def requester_submits_request() {
-		WebUI.delay(3)
-		TestObject saveBtn = findTestObject('Object Repository/Page_OCWA Development Version/button_save_request')
-		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
-		WebUI.waitForElementClickable(saveBtn, 30)
-		WebUI.click(saveBtn)
-
-		WebUI.delay(3)
-		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
+		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), "disabled", 10)
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
-		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
+		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 10)
+		WebUI.delay(3)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
 
-		WebUI.waitForElementNotPresent(saveBtn, 10, FailureHandling.STOP_ON_FAILURE) //wait for the modal window to close
+		WebUI.waitForElementNotPresent(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), 10) //wait for the modal window to close
 	}
 
 	@When("requester writes and submits a new comment")
