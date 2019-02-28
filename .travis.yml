@@ -312,42 +312,42 @@ matrix:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
 
-    # - name: "Integration Tests"
-    #   stage: "Tests"
-    #   language: java
-    #   addons:
-    #     chrome: stable
-    #     hosts:
-    #       - auth.example.demo
-    #       - ocwa.example.demo
-    #   jdk: openjdk8
+    - name: "Integration Tests"
+      stage: "Tests"
+      language: java
+      addons:
+        chrome: stable
+        hosts:
+          - auth.example.demo
+          - ocwa.example.demo
+      jdk: openjdk8
 
-    #   before_install:
-    #     - cd /usr/local/bin
-    #     - sudo curl -L -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-    #     - sudo unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-    #     - sudo rm -rf terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-    #     - sudo chmod +x terraform 
+      before_install:
+        - cd /usr/local/bin
+        - sudo curl -L -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+        - sudo unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+        - sudo rm -rf terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+        - sudo chmod +x terraform 
 
-    #   install:
-    #     - cd /home/travis/build/bcgov/OCWA/terraform
-    #     - mkdir _tmp
-    #     - cp terraform.tfvars.example terraform.tfvars
-    #     - terraform init
-    #     - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
+      install:
+        - cd /home/travis/build/bcgov/OCWA/terraform
+        - mkdir _tmp
+        - cp terraform.tfvars.example terraform.tfvars
+        - terraform init
+        - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
 
-    #   before_script:
-    #     - cd /usr/local/bin
-    #     - sudo wget -q https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
-    #     - sudo tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
-    #     - sudo chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
-    #     - sudo chmod -R 777 Katalon_Studio_Linux_64-${KATALON_VERSION}
-    #     # Check that the install lifecycle worked
-    #     - docker ps
+      before_script:
+        - cd /usr/local/bin
+        - sudo wget -q https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
+        - sudo tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
+        - sudo chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
+        - sudo chmod -R 777 Katalon_Studio_Linux_64-${KATALON_VERSION}
+        # Check that the install lifecycle worked
+        - docker ps
          
-    #   script:
-    #     - cd /usr/local/bin/Katalon_Studio_Linux_64-${KATALON_VERSION}
-    #     - xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+      script:
+        - cd /usr/local/bin/Katalon_Studio_Linux_64-${KATALON_VERSION}
+        - xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
 
     - name: "OCWA Master Helm Chart"
       stage: "Tests"
