@@ -57,6 +57,12 @@ export const createDataAction = type => (...args) => {
   return omitBy(action, isEmpty);
 };
 
+export const dismissMessages = id => ({
+  type: 'messages/dismiss',
+  payload: id,
+});
+
 export default {
   createDataAction,
+  dismissMessages,
 };

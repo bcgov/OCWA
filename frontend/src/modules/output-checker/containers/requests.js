@@ -1,6 +1,8 @@
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import head from 'lodash/head';
+import last from 'lodash/last';
+import sortBy from 'lodash/sortBy';
 import values from 'lodash/values';
 import withRequest from '@src/modules/data/components/data-request';
 import { fetchRequests } from '@src/modules/requests/actions';
@@ -28,7 +30,7 @@ const mapStateToProps = (state, { params }) => {
     .filter(d => (search ? d.name.search(search) >= 0 : true));
 
   return {
-    data,
+    data: sortBy(data, d => last(d.chronology).timestamp).reverse(),
     fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests'),
   };
 };
