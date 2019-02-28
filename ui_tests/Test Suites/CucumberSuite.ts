@@ -11,18 +11,6 @@
    <rerunFailedTestCasesOnly>false</rerunFailedTestCasesOnly>
    <testSuiteGuid>4efd54cc-68dc-4a64-a8f1-7ae0c49473f5</testSuiteGuid>
    <testCaseLink>
-      <guid>847ca9f7-a2a8-4b94-a086-8b957e1bffae</guid>
-      <isReuseDriver>false</isReuseDriver>
-      <isRun>true</isRun>
-      <testCaseId>Test Cases/Checker/AdjudicateRequestTest</testCaseId>
-   </testCaseLink>
-   <testCaseLink>
-      <guid>a78af739-b12c-412b-8d28-402ba035ca05</guid>
-      <isReuseDriver>false</isReuseDriver>
-      <isRun>true</isRun>
-      <testCaseId>Test Cases/Checker/ClaimRequestTest</testCaseId>
-   </testCaseLink>
-   <testCaseLink>
       <guid>cd13c019-4e79-4480-9def-0abdfe5a964d</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
@@ -57,5 +45,17 @@
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
       <testCaseId>Test Cases/Requester/ViewRequestDetailsTest</testCaseId>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>847ca9f7-a2a8-4b94-a086-8b957e1bffae</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>false</isRun>
+      <testCaseId>Test Cases/Checker/AdjudicateRequestTest</testCaseId>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>a78af739-b12c-412b-8d28-402ba035ca05</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>false</isRun>
+      <testCaseId>Test Cases/Checker/ClaimRequestTest</testCaseId>
    </testCaseLink>
 </TestSuiteEntity>

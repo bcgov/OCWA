@@ -43,6 +43,6 @@ kcadm.sh set-password -r ocwa --username researcher_1 --new-password researcher_
 OCUID=$(kcadm.sh create users -r ocwa -s username=ocuser_1 -s enabled=true -s email=ocuser@nowhere.com -s firstName=OutCheckF -s lastName=OutCheckL -i)
 echo "User = $OCUID"
 
+kcadm.sh update users/$OCUID/groups/$GID2 -r ocwa -s realm=ocwa -s userId=$OCUID -s groupId=$GID2 -n
 kcadm.sh update users/$OCUID/groups/$GID3 -r ocwa -s realm=ocwa -s userId=$OCUID -s groupId=$GID3 -n
 kcadm.sh set-password -r ocwa --username ocuser_1 --new-password ocuser_1_password
-

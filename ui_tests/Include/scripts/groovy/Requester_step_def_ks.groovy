@@ -196,7 +196,6 @@ class Requester_step_def_ks {
 
 	// parameterized function for uploading 1 to 3 output or supporting files
 	def requester_uploads_files(String fileToUpload, boolean isUploadScreenAlreadyOpen = false, String secondFile="", String thirdFile="") {
-
 		if (!isUploadScreenAlreadyOpen) {
 			TestObject requestFormSaveFilesButton = get_test_object_by_id(REQUEST_SAVE_FILES_BTN_ID)
 			WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
@@ -375,9 +374,8 @@ class Requester_step_def_ks {
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), "disabled", 10)
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 10)
-		WebUI.delay(3)
+		WebUI.delay(3) // Stopgap related to https://github.com/bcgov/OCWA/issues/89
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
-
 		WebUI.waitForElementNotPresent(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), 10) //wait for the modal window to close
 	}
 
