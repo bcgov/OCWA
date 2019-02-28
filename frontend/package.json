@@ -22,6 +22,7 @@
     "babel-jest": "^24.1.0",
     "babel-loader": "^8.0.2",
     "babel-minify-webpack-plugin": "^0.3.1",
+    "braces": "^2.3.2",
     "clean-webpack-plugin": "^0.1.19",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
@@ -140,8 +141,11 @@
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     },
-    "setupFilesAfterEnv": [ "<rootDir>/tests/setup.js", "./node_modules/jest-enzyme/lib/index.js"],
-        "setupFiles": [
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js",
+      "./node_modules/jest-enzyme/lib/index.js"
+    ],
+    "setupFiles": [
       "<rootDir>/tests/globals.js"
     ]
   },
