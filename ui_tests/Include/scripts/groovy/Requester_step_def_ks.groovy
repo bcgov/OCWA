@@ -405,7 +405,6 @@ class Requester_step_def_ks {
 		WebUI.setText(searchBox, g_requestName)
 		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
-		WebUI.delay(3) // TODO: Resolve searching delay with proper element check
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
 		WebUI.waitForElementClickable(linkToRequest, 10)
@@ -466,7 +465,6 @@ class Requester_step_def_ks {
 			WebUI.comment("unable to find the text:$g_requestName on the page. This text is used to find the request link")
 		}
 
-		WebUI.delay(3) // TODO: Resolve searching delay with proper element check
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
 		WebUI.waitForElementClickable(linkToRequest, 10)
@@ -628,6 +626,7 @@ class Requester_step_def_ks {
 	//Helper function for getting TestObject from the text of an html element
 	def get_test_object_by_text(String t) {
 		TestObject tObject = new TestObject(t)
+		tObject.addProperty("tag", ConditionType.EQUALS, "a", true)
 		tObject.addProperty("text", ConditionType.EQUALS, t, true)
 		return tObject
 	}
