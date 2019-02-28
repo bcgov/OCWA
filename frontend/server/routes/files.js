@@ -51,7 +51,7 @@ router.get('/:fileId', async (req, res) => {
     const fileData = Buffer.concat(data);
 
     res.writeHead(200, {
-      'Content-Type': metaData.filetype,
+      'Content-Type': metaData.filetype || metaData['content-type'],
       'Content-Disposition': `attachment; filename=${metaData.filename}`,
       'Content-Length': fileData.length,
     });
