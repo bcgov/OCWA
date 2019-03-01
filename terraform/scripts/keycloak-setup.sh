@@ -15,9 +15,11 @@ kcadm.sh get clients/$CID -r ocwa
 
 GID1=$(kcadm.sh create groups -r ocwa -s name=exporter -i)
 GID2=$(kcadm.sh create groups -r ocwa -s name=project_1 -i)
+GID3=$(kcadm.sh create groups -r ocwa -s name=oc -i)
 
 echo "Group = $GID1"
 echo "Group = $GID2"
+echo "Group = $GID3"
 
 TUID=$(kcadm.sh create users -r ocwa -s username=testuser -s enabled=true -s email=testuser@nowhere.com -s firstName=TestF -s lastName=TestL -i)
 
@@ -36,3 +38,11 @@ TUID=$(kcadm.sh create users -r ocwa -s username=researcher_1 -s enabled=true -s
 kcadm.sh update users/$TUID/groups/$GID1 -r ocwa -s realm=ocwa -s userId=$TUID -s groupId=$GID1 -n
 kcadm.sh update users/$TUID/groups/$GID2 -r ocwa -s realm=ocwa -s userId=$TUID -s groupId=$GID2 -n
 kcadm.sh set-password -r ocwa --username researcher_1 --new-password researcher_1_password
+
+
+OCUID=$(kcadm.sh create users -r ocwa -s username=ocuser_1 -s enabled=true -s email=ocuser@nowhere.com -s firstName=OutCheckF -s lastName=OutCheckL -i)
+echo "User = $OCUID"
+
+kcadm.sh update users/$OCUID/groups/$GID2 -r ocwa -s realm=ocwa -s userId=$OCUID -s groupId=$GID2 -n
+kcadm.sh update users/$OCUID/groups/$GID3 -r ocwa -s realm=ocwa -s userId=$OCUID -s groupId=$GID3 -n
+kcadm.sh set-password -r ocwa --username ocuser_1 --new-password ocuser_1_password

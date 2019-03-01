@@ -29,7 +29,7 @@ class NewRequestForm extends React.Component {
     return (
       <div id="request-form">
         <Form ref={this.formRef}>
-          <Field isRequired label="Request Name" id="name">
+          <Field isRequired label="Request Title" id="name">
             <FieldText
               shouldFitContainer
               name="name"

@@ -80,6 +80,7 @@ class Requester_step_def_ks {
 	String ASSIGN_REQUEST_TO_ME_ID = "request-sidebar-pickup-button"
 	String APPROVE_REQUEST_BTN_ID = "request-sidebar-approve-button"
 	String REVISIONS_NEEDED_REQUEST_BTN_ID = "request-sidebar-request-revisions-button"
+	String REQUEST_ASSIGNED_TO_ID = "request-assigned-oc"
 
 	String g_requestName = ""
 
@@ -116,6 +117,7 @@ class Requester_step_def_ks {
 		TestObject assignToMeButtonObject = get_test_object_by_id(ASSIGN_REQUEST_TO_ME_ID)
 
 		WebUI.waitForPageLoad(30)
+		WebUI.waitForElementPresent(assignToMeButtonObject, 10)
 		WebUI.waitForElementNotHasAttribute(assignToMeButtonObject, "disabled", 10)
 		WebUI.waitForElementVisible(assignToMeButtonObject, 20)
 		WebUI.waitForElementClickable(assignToMeButtonObject, 30)
@@ -146,8 +148,15 @@ class Requester_step_def_ks {
 
 	@Then("the output checker should be able to see that they're now assigned the request")
 	def checker_should_see_they_are_assigned_to_request(){
+		TestObject assigneeTextObject = get_test_object_by_id(REQUEST_ASSIGNED_TO_ID)
+		WebUI.waitForElementPresent(assigneeTextObject, 10)
 		WebUI.verifyTextPresent(GlobalVariable.OCWA_USER_CHECKER1, false)
 		WebUI.closeBrowser()
+	}
+
+	@Then("the output checker should see the status of the request updated to '(.+)'")
+	def checker_should_see_request_is_in_given_status(String status){
+		//placeholder until status is displayed on individual requests in the oc interface
 	}
 
 	def login(String username, String password){
@@ -187,7 +196,6 @@ class Requester_step_def_ks {
 
 	// parameterized function for uploading 1 to 3 output or supporting files
 	def requester_uploads_files(String fileToUpload, boolean isUploadScreenAlreadyOpen = false, String secondFile="", String thirdFile="") {
-
 		if (!isUploadScreenAlreadyOpen) {
 			TestObject requestFormSaveFilesButton = get_test_object_by_id(REQUEST_SAVE_FILES_BTN_ID)
 			WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
@@ -363,19 +371,12 @@ class Requester_step_def_ks {
 
 	@When("requester submits their request")
 	def requester_submits_request() {
-		WebUI.delay(3)
-		TestObject saveBtn = findTestObject('Object Repository/Page_OCWA Development Version/button_save_request')
-		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
-		WebUI.waitForElementClickable(saveBtn, 30)
-		WebUI.click(saveBtn)
-
-		WebUI.delay(3)
-		WebUI.waitForElementNotHasAttribute(saveBtn, "disabled", 10)
+		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), "disabled", 10)
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
-		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
+		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 10)
+		WebUI.delay(3) // Stopgap related to https://github.com/bcgov/OCWA/issues/89
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
-
-		WebUI.waitForElementNotPresent(saveBtn, 10, FailureHandling.STOP_ON_FAILURE) //wait for the modal window to close
+		WebUI.waitForElementNotPresent(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), 10) //wait for the modal window to close
 	}
 
 	@When("requester writes and submits a new comment")
@@ -403,11 +404,9 @@ class Requester_step_def_ks {
 		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
-		WebUI.waitForElementVisible(linkToRequest, 20)
+		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
+		WebUI.waitForElementClickable(linkToRequest, 10)
 
-		if (!WebUI.waitForElementClickable(linkToRequest, 20)) {
-			WebUI.comment("waiting for request link to be clickable timed out")
-		}
 		WebUI.click(linkToRequest)
 		WebUI.waitForPageLoad(10)
 	}
@@ -463,11 +462,11 @@ class Requester_step_def_ks {
 		if (!WebUI.verifyTextPresent(g_requestName, false)) {
 			WebUI.comment("unable to find the text:$g_requestName on the page. This text is used to find the request link")
 		}
+
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
-		if (!WebUI.waitForElementClickable(linkToRequest, 20)) {
-			WebUI.comment("waiting for the link to the request to be clickable on the main page timed out")
-		}
+		WebUI.waitForElementClickable(linkToRequest, 10)
+
 		WebUI.click(linkToRequest)
 		WebUI.comment("clicked on the request link that contains text: $g_requestName")
 
@@ -599,7 +598,7 @@ class Requester_step_def_ks {
 	def request_cannot_be_successfully_submitted(){
 		TestObject submitBtn = get_test_object_by_id(REQUEST_SUBMIT_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", 10)
-//		WebUI.waitForElementClickable(submitBtn, 10)
+		WebUI.waitForElementClickable(submitBtn, 10)
 		WebUI.click(submitBtn)
 		WebUI.comment("Clicked the submit link")
 		request_should_be_in_given_status(WORK_IN_PROGRESS_STATUS)
@@ -625,6 +624,7 @@ class Requester_step_def_ks {
 	//Helper function for getting TestObject from the text of an html element
 	def get_test_object_by_text(String t) {
 		TestObject tObject = new TestObject(t)
+		tObject.addProperty("tag", ConditionType.EQUALS, "a", true)
 		tObject.addProperty("text", ConditionType.EQUALS, t, true)
 		return tObject
 	}

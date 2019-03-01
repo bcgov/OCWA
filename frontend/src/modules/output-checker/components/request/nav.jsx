@@ -6,6 +6,7 @@ import { Code } from 'react-content-loader';
 import isEmpty from 'lodash/isEmpty';
 import range from 'lodash/range';
 import { RequestSchema } from '@src/modules/requests/types';
+import Search from '../search';
 
 import RequestCard from '../request-card';
 import * as styles from './styles.css';
@@ -14,70 +15,60 @@ function RequestsNav({
   activeId,
   data,
   isLoading,
+  onSearch,
   onStateFilterChange,
   state,
 }) {
   const options = [
     {
-      label: 'Submitted',
+      label: 'Available',
       value: 2,
     },
     {
       label: 'In Review',
       value: 3,
     },
-    {
-      label: 'Approved',
-      value: 4,
-    },
-    {
-      label: 'Denied',
-      value: 5,
-    },
-    {
-      label: 'Cancelled',
-      value: 6,
-    },
   ];
-  if (isLoading && isEmpty(data)) {
-    const elements = range(20);
-    return (
-      <nav
-        className={cx(styles.nav, styles.navLoading)}
-        style={{ overflowY: 'hidden' }}
-      >
-        {elements.map(n => (
+  const elements = range(20);
+  const isLoadingVisible = isLoading && isEmpty(data);
+
+  return (
+    <nav
+      className={cx(styles.nav, { [styles.navLoading]: isLoadingVisible })}
+      style={{ overflowY: isLoadingVisible ? 'hidden' : null }}
+    >
+      <div className={styles.navHeader}>
+        <div className={styles.navHeaderSearch}>
+          <Search placeholder="Filter by Name" onChange={onSearch} />
+        </div>
+        <CreatableSelect
+          id="request-nav-filter-select"
+          options={options}
+          placeholder="Filter"
+          value={options.find(d => d.value === state) || options[0]}
+          onChange={({ value }) => onStateFilterChange(value)}
+        />
+      </div>
+      {isLoadingVisible &&
+        elements.map(n => (
           <div key={n} className={styles.loadingListItem}>
             <Code height={60} width={350} />
           </div>
         ))}
-      </nav>
-    );
-  }
-
-  return (
-    <nav className={styles.nav}>
-      <div className={styles.navHeader}>
-        <CreatableSelect
-          id="request-nav-filter-select"
-          options={options}
-          placeholder="Filter by State"
-          value={options.find(d => d.value === state)}
-          onChange={({ value }) => onStateFilterChange(value)}
-        />
-      </div>
-      <div className={styles.navScroll}>
-        <div>
-          {data.map(d => (
-            <RequestCard
-              key={d._id}
-              activeId={activeId}
-              data={d}
-              draggable={false}
-            />
-          ))}
+      {!isLoadingVisible && (
+        <div className={styles.navScroll}>
+          <div>
+            {data.map(d => (
+              <RequestCard
+                key={d._id}
+                activeId={activeId}
+                data={d}
+                draggable={false}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 }
@@ -87,6 +78,7 @@ RequestsNav.propTypes = {
   data: PropTypes.arrayOf(RequestSchema).isRequired,
   isLoading: PropTypes.bool.isRequired,
   state: PropTypes.number.isRequired,
+  onSearch: PropTypes.func.isRequired,
   onStateFilterChange: PropTypes.func.isRequired,
 };
 

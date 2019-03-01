@@ -46,12 +46,15 @@ router.get('/', function(req, res, next) {
 
     if (typeof(req.query.name) !== "undefined"){
         q['name'] = req.query.name;
+        if (req.query.name.substring(req.query.name.length-1) === "*"){
+            req.query.name = req.query.name.substring(0, req.query.name.length-1);
+            q['name'] = {"$regex": req.query.name, "$options": "i"};
+        }
     }
 
     if (typeof(req.query.topic_id) !== "undefined"){
         q['topic'] = req.query.topic_id;
     }
-
 
     db.Request.getAll(q, limit, page, req.user, function(err, requestRes){
         if (err || !requestRes){
@@ -362,7 +365,7 @@ router.put('/submit/:requestId', function(req, res, next){
                 if ( (maxSize > 0) && (bundleSize >= maxSize)){
                     logger.error("Bundle exceeds max size");
                     res.status(403);
-                    res.json({error: "Request submission failed, bundle exceeds max size failed", info: maxSize});
+                    res.json({error: "Request submission failed, total request filesize exceeds maximum", info: maxSize});
                     return;
                 }
 
@@ -405,7 +408,7 @@ router.put('/submit/:requestId', function(req, res, next){
                         return;
                     }
                     res.status(403);
-                    res.json({error: "Request submission failed, validation failed", fileStatus: status});
+                    res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
                     return;
                 });
             });
@@ -447,7 +450,7 @@ router.put('/submit/:requestId', function(req, res, next){
                     return;
                 }
                 res.status(403);
-                res.json({error: "Request submission failed, validation failed", fileStatus: status});
+                res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
                 return;
             });
         }

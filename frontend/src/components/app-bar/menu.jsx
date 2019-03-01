@@ -15,7 +15,7 @@ function AppBarMenu({ children, user }) {
       position="bottom right"
       trigger={<Avatar borderColor="#0052CC" name={user.displayName} />}
     >
-      <DropdownItem>{`Howdy, ${user.displayName}`}</DropdownItem>
+      <DropdownItem>{`Signed in as ${user.displayName}`}</DropdownItem>
       {children}
       <AboutButton />
       <DropdownItem href="/auth/logout">Logout</DropdownItem>
