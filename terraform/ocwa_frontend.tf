@@ -42,7 +42,7 @@ resource "docker_container" "ocwa_download_frontend" {
       "FORUM_SOCKET_HOST=none",
       "HOST=0.0.0.0",
       "PORT=8000",
-      "USER_ID_FIELD=username",
+      "USER_ID_FIELD=preferred_username",
       "STORAGE_ENDPOINT=ocwaminio",
       "STORAGE_PORT=9000",
       "STORAGE_SSL=false",

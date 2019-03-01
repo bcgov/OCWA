@@ -101,7 +101,7 @@
    </GlobalVariableEntity>
    <GlobalVariableEntity>
       <description></description>
-      <initValue>'http://localhost:8000/download'</initValue>
+      <initValue>'http://localhost:8001'</initValue>
       <name>OCWA_DL_URL</name>
    </GlobalVariableEntity>
 </GlobalVariableEntities>

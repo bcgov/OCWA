@@ -16,7 +16,7 @@
    </GlobalVariableEntity>
    <GlobalVariableEntity>
       <description></description>
-      <initValue>'https://ocwa.example.demo/download'</initValue>
+      <initValue>'https://ocwadl.example.demo'</initValue>
       <name>OCWA_DL_URL</name>
    </GlobalVariableEntity>
 </GlobalVariableEntities>

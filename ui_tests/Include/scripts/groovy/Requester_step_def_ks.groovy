@@ -112,7 +112,8 @@ class Requester_step_def_ks {
 		String desiredString = "Show All Requests"
 		TestObject desiredOption = new TestObject(desiredString)
 		desiredOption.addProperty("text", ConditionType.EQUALS, desiredString, true)
-		WebUI.waitForElementVisible(desiredOption, 10)
+		WebUI.waitForElementPresent(desiredOption, 10)
+		WebUI.scrollToElement(desiredOption, 10)
 		WebUI.click(desiredOption)
 
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
@@ -172,7 +173,6 @@ class Requester_step_def_ks {
 	def requester_should_see_files_available_for_download() {
 		download_interface_login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
 		WebUI.waitForPageLoad(10)
-		WebUI.delay(3)
 		WebUI.verifyTextPresent(g_requestName, false)
 	}
 
@@ -397,7 +397,9 @@ class Requester_step_def_ks {
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 10)
 		WebUI.delay(3) // Stopgap related to https://github.com/bcgov/OCWA/issues/89
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
-		WebUI.waitForElementNotPresent(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), 10) //wait for the modal window to close
+		if(!WebUI.waitForElementNotPresent(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), 10)) {
+			throw new com.kms.katalon.core.exception.StepFailedException("Submission failed - modal window still present")
+		}
 	}
 
 	@When("requester writes and submits a new comment")
@@ -480,21 +482,20 @@ class Requester_step_def_ks {
 		WebUI.setText(searchBox, g_requestName)
 		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
-		WebUI.waitForElementVisible(get_test_object_by_text(g_requestName), 10)
+		TestObject linkToRequest = get_test_object_by_text(g_requestName)
+		WebUI.waitForElementPresent(linkToRequest, 10)
 		if (!WebUI.verifyTextPresent(g_requestName, false)) {
 			WebUI.comment("unable to find the text:$g_requestName on the page. This text is used to find the request link")
 		}
 
-		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
+		WebUI.waitForElementVisible(linkToRequest, 10)
 		WebUI.waitForElementClickable(linkToRequest, 10)
-
 		WebUI.click(linkToRequest)
 		WebUI.comment("clicked on the request link that contains text: $g_requestName")
 
 		WebUI.waitForPageLoad(20)
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
-
 
 		WebUI.verifyTextPresent(g_requestName, false)
 		WebUI.delay(3) // we need to do a hard delay here to give time for the inline ajax to finish
