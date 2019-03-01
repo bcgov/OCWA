@@ -1,6 +1,7 @@
 
 
 var chai = require('chai');
+var { expect } = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../../app');
 var should = chai.should();
@@ -146,5 +147,152 @@ describe("Topics", function() {
                 });
         });
 
+        
     });
+
+    describe('/PUT v1/:topic/subscribe', function () {
+
+        it('it should successfully add the user to contributors', function (done) {
+            chai.request(server)
+            .post('/v1/')
+            .set("Authorization", "Bearer "+jwt)
+            .send({
+                'name': "Test Subscriber Topic 1a"
+            })
+            .end(function (err, res) {
+                res.should.have.status(200);
+
+                chai.request(server)
+                .put('/v1/' + res.body._id + "/subscribe")
+                .set("Authorization", "Bearer "+jwt)
+                .send({
+                    'user_id': "testuser"
+                })
+                .end(function (err, ures) {
+                    ures.should.have.status(200);
+                    ures.body.should.be.a('object');
+                    ures.body.should.have.property('message').eql('Topic subscriptions ok');
+                    done();
+                });
+            });
+        });
+
+        it('it should successfully respond despite user already subscribed', function (done) {
+            chai.request(server)
+                .post('/v1/')
+                .set("Authorization", "Bearer "+jwt)
+                .send({
+                    'name': "Test Subscriber Topic 1b"
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+
+                    chai.request(server)
+                    .put('/v1/' + res.body._id + "/subscribe")
+                    .set("Authorization", "Bearer "+jwt)
+                    .send({
+                        'user_id': "jrocket@example.com"
+                    })
+                    .end(function (err, ures) {
+                        ures.should.have.status(200);
+                        ures.body.should.be.a('object');
+                        ures.body.should.have.property('message').eql('Topic subscriptions ok');
+                        done();
+                    });
+                });
+        });
+
+        it('it should successfully fail due to invalid topic', function (done) {
+            chai.request(server)
+            .put('/v1/' + "_bad_topic_id_" + "/subscribe")
+            .set("Authorization", "Bearer "+jwt)
+            .send({
+                'user_id': "jrocket@example.com"
+            })
+            .end(function (err, ures) {
+                ures.should.have.status(500);
+                expect(ures.body).to.be.an('object').that.is.empty;
+                done();
+            });
+        });
+
+    });
+
+    describe('/PUT v1/:topic/unsubscribe', function () {
+
+        it('it should successfully remove the user from contributors', function (done) {
+            chai.request(server)
+                .post('/v1/')
+                .set("Authorization", "Bearer "+jwt)
+                .send({
+                    'name': "Test Subscriber Topic 2"
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+
+                    chai.request(server)
+                    .put('/v1/' + res.body._id + "/subscribe")
+                    .set("Authorization", "Bearer "+jwt)
+                    .send({
+                        'user_id': "testuser"
+                    })
+                    .end(function (err, _ignore) {
+
+                        chai.request(server)
+                        .put('/v1/' + res.body._id + "/unsubscribe")
+                        .set("Authorization", "Bearer "+jwt)
+                        .send({
+                            'user_id': "testuser"
+                        })
+                        .end(function (err, ures) {
+                            ures.should.have.status(200);
+                            ures.body.should.be.a('object');
+                            ures.body.should.have.property('message').eql('Topic subscriptions ok');
+                            done();
+                        });
+                    })
+                });
+        });
+
+        it('it should successfully respond despite not having the user', function (done) {
+            chai.request(server)
+                .post('/v1/')
+                .set("Authorization", "Bearer "+jwt)
+                .send({
+                    'name': "Test Subscriber Topic 3"
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+
+                    chai.request(server)
+                    .put('/v1/' + res.body._id + "/unsubscribe")
+                    .set("Authorization", "Bearer "+jwt)
+                    .send({
+                        'user_id': "some_user_that_does_not_exist"
+                    })
+                    .end(function (err, ures) {
+                        ures.should.have.status(200);
+                        ures.body.should.be.a('object');
+                        ures.body.should.have.property('message').eql('Topic subscriptions ok');
+                        done();
+                    });
+                });
+        });
+
+        it('it should successfully fail due to invalid topic', function (done) {
+            chai.request(server)
+            .put('/v1/' + "_bad_topic_id_" + "/unsubscribe")
+            .set("Authorization", "Bearer "+jwt)
+            .send({
+                'user_id': "jrocket@example.com"
+            })
+            .end(function (err, ures) {
+                ures.should.have.status(500);
+                expect(ures.body).to.be.an('object').that.is.empty;
+                done();
+            });
+        });
+
+    });
+
 });
