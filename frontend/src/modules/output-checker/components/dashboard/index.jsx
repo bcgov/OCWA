@@ -8,12 +8,12 @@ import * as styles from './styles.css';
 
 function Dashboard({ filter, onFilterChange, onSearchChange, search }) {
   const filterOptions = [
-    { label: 'Show All Requests', value: 'all' },
     { label: 'Show My Requests', value: 'mine' },
+    { label: 'Show All Requests', value: 'all' },
     { label: 'Show Unassigned', value: 'unassigned' },
   ];
   const columns = [
-    { state: 2, title: 'Submitted' },
+    { state: 2, title: 'Available For Review' },
     { state: 3, title: 'In Review' },
     { state: 4, title: 'Approved' },
     { state: 5, title: 'Denied' },

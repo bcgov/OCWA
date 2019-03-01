@@ -7,6 +7,7 @@ import FlagFilledIcon from '@atlaskit/icon/glyph/flag-filled';
 import get from 'lodash/get';
 import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
 import { RequestSchema } from '@src/modules/requests/types';
+import { idField } from '@src/services/config';
 
 import * as styles from './styles.css';
 
@@ -27,7 +28,7 @@ function Sidebar({
       <h6>Exporter</h6>
       <p id="request-author-text">{data.author}</p>
       <h6>Reviewers</h6>
-      {data.reviewers.length === 1 && (
+      {data.reviewers.length > 0 && (
         <p id="request-assigned-oc">{assignedUser}</p>
       )}
       {data.reviewers.length <= 0 &&
@@ -42,8 +43,8 @@ function Sidebar({
             Assign to Me
           </Button>
         )}
-      {user.username === assignedUser &&
-        data.state < 4 && (
+      {data.reviewers.includes(get(user, idField)) &&
+        data.state === 3 && (
           <React.Fragment>
             <h6>Actions</h6>
             <Button

@@ -21,8 +21,20 @@
 }
 
 .navHeader {
+  width: 100%;
+  display: flex;
   padding: 10px;
+  box-sizing: border-box;
   border-bottom: 1px solid #dee2e6;
+}
+
+.navHeaderSearch {
+  width: 60%;
+  margin-right: 15px;
+}
+
+.navHeader > div:last-child {
+  flex: 1;
 }
 
 .navScroll {
@@ -54,6 +66,16 @@
   border-bottom: 1px solid #dee2e6;
 }
 
+.header h2 {
+  margin: 0;
+}
+
+.hgroup {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .main {
   position: relative;
   flex: 1;
@@ -75,7 +97,7 @@
   width: 300px;
   padding: 20px;
   position: fixed;
-  top: 178px;
+  top: 198px;
   right: 0;
   box-sizing: border-box;
 }

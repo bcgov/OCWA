@@ -12,19 +12,17 @@ const dictionary = {
   success: 'success',
 };
 const icons = {
-  failed: <ErrorIcon label="Error" secondaryColor={colors.R400} />,
-  success: <Tick label="Success" secondaryColor={colors.G400} />,
+  failed: <ErrorIcon label="Error" primaryColor={colors.R400} />,
+  success: <Tick label="Success" primaryColor={colors.G400} />,
 };
-const getAppearance = type => get(dictionary, type, 'normal');
 
-function Messages({ data }) {
+function Messages({ data, onDismiss }) {
   return (
-    <FlagGroup>
+    <FlagGroup onDismissed={onDismiss}>
       {data.map(d => (
         <Flag
           id={d.id}
           key={d.id}
-          appearance={getAppearance(d.type)}
           icon={icons[d.type]}
           description={d.message}
           title={startCase(get(dictionary, d.type))}
@@ -42,6 +40,7 @@ Messages.propTypes = {
       message: PropTypes.string.isRequired,
     })
   ).isRequired,
+  onDismiss: PropTypes.func.isRequired,
 };
 
 export default Messages;
