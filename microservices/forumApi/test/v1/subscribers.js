@@ -41,7 +41,7 @@ describe("Subscribers", function() {
         var topicId = mongoose.Types.ObjectId();
 
         it('it should fail with error when subscribing to invalid topic', function (done) {
-            subscribers.subscribe(topicId, "_user_", (err) => {
+            subscribers.subscribe(topicId, "_user_", true, (err) => {
                 expect(err).to.be.an('object').that.is.not.empty;
                 assert.propertyVal(err, 'error', 'topic not found');
                 done();
@@ -55,5 +55,47 @@ describe("Subscribers", function() {
                 done();
             });
         });
+    });
+
+    describe('Scenarios contributing subscribers', function () {
+
+        it('it should succeed with subscriber being a contributor as well', function (done) {
+            chai.request(server)
+            .post('/v1/')
+            .set("Authorization", "Bearer "+jwt)
+            .send({
+                'name': "Test Subscriber_1 Topic"
+            })
+            .end(function (err, res) {
+                res.should.have.status(200);
+
+                const topicId = res.body._id;
+
+                subscribers.subscribe(topicId, "_user_", true, (err) => {
+                    expect(err).to.be.null;
+                    done();
+                });
+            });
+        });
+
+        it('it should succeed with subscriber not being a contributor', function (done) {
+            chai.request(server)
+            .post('/v1/')
+            .set("Authorization", "Bearer "+jwt)
+            .send({
+                'name': "Test Subscriber_2 Topic"
+            })
+            .end(function (err, res) {
+                res.should.have.status(200);
+
+                const topicId = res.body._id;
+
+                subscribers.subscribe(topicId, "_user_", false, (err) => {
+                    expect(err).to.be.null;
+                    done();
+                });
+            });
+        });
+
     });
 });

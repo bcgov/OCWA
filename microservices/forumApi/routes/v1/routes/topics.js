@@ -197,7 +197,7 @@ router.put('/:topicId/subscribe', function(req, res){
             return;
         }
 
-        subscribers.subscribe(topicId, userId, (err) => {
+        subscribers.subscribe(topicId, userId, false, (err) => {
             if (err) {
                 res.status(500);
                 res.json({error: err.message});
