@@ -1,6 +1,7 @@
 
 
 var chai = require('chai');
+var { expect } = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../../app');
 var should = chai.should();
@@ -201,6 +202,20 @@ describe("Topics", function() {
                 });
         });
 
+        it('it should successfully fail due to invalid topic', function (done) {
+            chai.request(server)
+            .put('/v1/' + "_bad_topic_id_" + "/subscribe")
+            .set("Authorization", "Bearer "+jwt)
+            .send({
+                'user_id': "jrocket@example.com"
+            })
+            .end(function (err, ures) {
+                ures.should.have.status(500);
+                expect(ures.body).to.be.an('object').that.is.empty;
+                done();
+            });
+        });
+
     });
 
     describe('/PUT v1/:topic/unsubscribe', function () {
@@ -262,6 +277,20 @@ describe("Topics", function() {
                         done();
                     });
                 });
+        });
+
+        it('it should successfully fail due to invalid topic', function (done) {
+            chai.request(server)
+            .put('/v1/' + "_bad_topic_id_" + "/unsubscribe")
+            .set("Authorization", "Bearer "+jwt)
+            .send({
+                'user_id': "jrocket@example.com"
+            })
+            .end(function (err, ures) {
+                ures.should.have.status(500);
+                expect(ures.body).to.be.an('object').that.is.empty;
+                done();
+            });
         });
 
     });
