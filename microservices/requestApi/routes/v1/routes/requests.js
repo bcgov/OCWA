@@ -365,7 +365,7 @@ router.put('/submit/:requestId', function(req, res, next){
                 if ( (maxSize > 0) && (bundleSize >= maxSize)){
                     logger.error("Bundle exceeds max size");
                     res.status(403);
-                    res.json({error: "Request submission failed, bundle exceeds max size failed", info: maxSize});
+                    res.json({error: "Request submission failed, total request filesize exceeds maximum", info: maxSize});
                     return;
                 }
 
@@ -408,7 +408,7 @@ router.put('/submit/:requestId', function(req, res, next){
                         return;
                     }
                     res.status(403);
-                    res.json({error: "Request submission failed, validation failed", fileStatus: status});
+                    res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
                     return;
                 });
             });
@@ -450,7 +450,7 @@ router.put('/submit/:requestId', function(req, res, next){
                     return;
                 }
                 res.status(403);
-                res.json({error: "Request submission failed, validation failed", fileStatus: status});
+                res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
                 return;
             });
         }
