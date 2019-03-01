@@ -342,7 +342,7 @@ matrix:
         - |-
           if [ ! -f "/tmp/traviscache/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" ]; then
             cd /tmp/traviscache
-            sudo wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+            sudo wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
           fi
           cd /usr/local/bin
           sudo unzip -o /tmp/traviscache/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
@@ -365,18 +365,20 @@ matrix:
         - |-
           if [ ! -f "/tmp/traviscache/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz" ]; then
             cd /tmp/traviscache
-            sudo wget https://download.katalon.com/${KATALON_VERSION}/Katalon_Studio_Linux_64.tar.gz -O Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
+            sudo wget -q https://download.katalon.com/${KATALON_VERSION}/Katalon_Studio_Linux_64.tar.gz -O Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
           fi
+        - |-
           cd /usr/local/bin
-          sudo tar -xf /tmp/traviscache/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
-          sudo chmod +x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
-          sudo chmod -R 777 Katalon_Studio_Linux_64-${KATALON_VERSION}
+          sudo mkdir -p Katalon_Studio
+          sudo tar -xf /tmp/traviscache/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz -C Katalon_Studio
+          sudo chmod +x Katalon_Studio/katalon
+          sudo chmod -R 777 Katalon_Studio
         # Check that the install lifecycle worked
         - docker ps
          
       script:
         - |-
-          cd /usr/local/bin/Katalon_Studio_Linux_64-${KATALON_VERSION}
+          cd /usr/local/bin/Katalon_Studio
           xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
 
     - name: "OCWA Master Helm Chart"
