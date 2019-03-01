@@ -79,7 +79,7 @@ router.post("/:topicId", function(req, res, next){
             return;
         }
 
-        collaborators.subscribe(topic._id, topic, req.user.id, (err) => {
+        collaborators.subscribe(topic._id, req.user.id, (err) => {
             if (err) {
                 res.status(500);
                 res.json({error: err.message});

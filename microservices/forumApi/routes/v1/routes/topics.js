@@ -188,6 +188,7 @@ router.put('/:topicId/subscribe', function(req, res){
 
     var userId = req.body.user_id;
 
+    // .getAll() filters using permissions
     db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(topicErr, topicRes) {
         if (topicErr || !topicRes || topicRes.length <= 0){
             res.status(500);
@@ -195,7 +196,7 @@ router.put('/:topicId/subscribe', function(req, res){
             return;
         }
 
-        collaborators.subscribe(topicId, topicRes[0], userId, (err) => {
+        collaborators.subscribe(topicId, userId, (err) => {
             if (err) {
                 res.status(500);
                 res.json({error: err.message});
@@ -214,6 +215,7 @@ router.put('/:topicId/unsubscribe', function(req, res){
 
     var userId = req.body.user_id;
 
+    // .getAll() filters using permissions
     db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(topicErr, topicRes) {
         if (topicErr || !topicRes || topicRes.length <= 0){
             res.status(500);
@@ -221,7 +223,7 @@ router.put('/:topicId/unsubscribe', function(req, res){
             return;
         }
 
-        collaborators.unsubscribe(topicId, topicRes[0], userId, (err) => {
+        collaborators.unsubscribe(topicId, userId, (err) => {
             if (err) {
                 res.status(500);
                 res.json({error: err.message});
