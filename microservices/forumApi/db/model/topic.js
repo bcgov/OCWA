@@ -5,6 +5,7 @@ const topicSchema = new Schema({
     name: {type: Schema.Types.String, required: true, index: true},
     parent_id: {type: Schema.Types.ObjectId, ref: 'topic', default: null, index: true},
     contributors: {type: [Schema.Types.String], required: true},
+    subscribers: {type: [Schema.Types.String], required: true},
     author_groups: {type: [Schema.Types.String], required: true}
 });
 

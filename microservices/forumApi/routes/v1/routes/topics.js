@@ -60,6 +60,7 @@ router.post("/", function(req, res, next){
 
     topic.name = req.body.name;
     topic.contributors.push(req.user.id);
+    topic.subscribers.push(req.user.id);
 
     var groups = req.user.groups.slice();
 
@@ -183,7 +184,7 @@ router.delete('/:topicId', function(req, res){
 router.put('/:topicId/subscribe', function(req, res){
     var db = require('../db/db');
     var mongoose = require('mongoose');
-    var collaborators = require('../collaborators/collaborators');
+    var subscribers = require('../subscribers/subscribers');
     var topicId = mongoose.Types.ObjectId(req.params.topicId);
 
     var userId = req.body.user_id;
@@ -196,7 +197,7 @@ router.put('/:topicId/subscribe', function(req, res){
             return;
         }
 
-        collaborators.subscribe(topicId, userId, (err) => {
+        subscribers.subscribe(topicId, userId, (err) => {
             if (err) {
                 res.status(500);
                 res.json({error: err.message});
@@ -210,7 +211,7 @@ router.put('/:topicId/subscribe', function(req, res){
 router.put('/:topicId/unsubscribe', function(req, res){
     var db = require('../db/db');
     var mongoose = require('mongoose');
-    var collaborators = require('../collaborators/collaborators');
+    var subscribers = require('../subscribers/subscribers');
     var topicId = mongoose.Types.ObjectId(req.params.topicId);
 
     var userId = req.body.user_id;
@@ -223,7 +224,7 @@ router.put('/:topicId/unsubscribe', function(req, res){
             return;
         }
 
-        collaborators.unsubscribe(topicId, userId, (err) => {
+        subscribers.unsubscribe(topicId, userId, (err) => {
             if (err) {
                 res.status(500);
                 res.json({error: err.message});

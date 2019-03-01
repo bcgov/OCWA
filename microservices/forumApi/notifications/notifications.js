@@ -39,7 +39,7 @@ notifications.notify = function(topic, comment, user){
     var nodemailer = require("nodemailer");
     var db = require('../db/db');
 
-    var notifyWho = topic.contributors;
+    var notifyWho = topic.subscribers == null ? []:topic.subscribers;
 
     logger.verbose("Notification triggered", user);
 

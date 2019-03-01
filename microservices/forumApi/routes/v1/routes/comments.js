@@ -57,7 +57,7 @@ router.get('/:topicId', function(req, res, next) {
 //create a new comment in the topic
 router.post("/:topicId", function(req, res, next){
     var db = require('../db/db');
-    var collaborators = require('../collaborators/collaborators');
+    var subscribers = require('../subscribers/subscribers');
 
     var comment = new db.Comment;
     var topicId = req.params.topicId;
@@ -79,7 +79,7 @@ router.post("/:topicId", function(req, res, next){
             return;
         }
 
-        collaborators.subscribe(topic._id, req.user.id, (err) => {
+        subscribers.subscribe(topic._id, req.user.id, (err) => {
             if (err) {
                 res.status(500);
                 res.json({error: err.message});
