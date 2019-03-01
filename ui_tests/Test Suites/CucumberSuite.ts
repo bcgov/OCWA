@@ -49,13 +49,13 @@
    <testCaseLink>
       <guid>847ca9f7-a2a8-4b94-a086-8b957e1bffae</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Checker/AdjudicateRequestTest</testCaseId>
    </testCaseLink>
    <testCaseLink>
       <guid>a78af739-b12c-412b-8d28-402ba035ca05</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Checker/ClaimRequestTest</testCaseId>
    </testCaseLink>
 </TestSuiteEntity>

@@ -10,7 +10,7 @@ Feature: Adjudicate request
   Scenario: Request is worthy of approval
     And the output checker marks the request as approved
     Then the output checker should see the status of the request updated to 'Approved'
-    And the approved files are available for download outside of the secure environment
+    #And the approved files are available for download outside of the secure environment
 
   Scenario: Request is needs revisions
     And the output checker marks the request as needs revisions

@@ -106,6 +106,15 @@ class Requester_step_def_ks {
 	@When("output checker tries to claim an unclaimed request")
 	def checker_tries_to_claim_unclaimed_request() {
 		WebUI.waitForPageLoad(30)
+		// TODO: Un-hard code this string mess
+		WebUI.click(get_test_object_by_id("oc-dashboard-filters-select"))
+
+		String desiredString = "Show All Requests"
+		TestObject desiredOption = new TestObject(desiredString)
+		desiredOption.addProperty("text", ConditionType.EQUALS, desiredString, true)
+		WebUI.waitForElementVisible(desiredOption, 10)
+		WebUI.click(desiredOption)
+
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementVisible(linkToRequest, 20)
 		WebUI.waitForElementClickable(linkToRequest, 20)
@@ -263,18 +272,18 @@ class Requester_step_def_ks {
 		//requester_starts_new_request()
 		switch (warningRule.toLowerCase()) {
 			case "an output file has a warning file extension":
-			requester_uploads_files(GlobalVariable.WarningExtensionFileName)
-			break
+				requester_uploads_files(GlobalVariable.WarningExtensionFileName)
+				break
 			case "a request that has a file that exceeds the file size warning threshold":
-			requester_uploads_files(GlobalVariable.WarningMaxSizeLimitFileName)
-			break
+				requester_uploads_files(GlobalVariable.WarningMaxSizeLimitFileName)
+				break
 			case "the summation of all output file sizes exceeds the request file size warning threshold":
 			//need to add output files that pass the warning limit individually but together surpass the combined size threshold
-			requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2, GlobalVariable.ValidFileName3)
-			break
+				requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2, GlobalVariable.ValidFileName3)
+				break
 			default:
-			throw new Exception("warning rule $warningRule not found")
-			break
+				throw new Exception("warning rule $warningRule not found")
+				break
 		}
 	}
 	@Given("request violates given blocking rule (.+)")
@@ -282,21 +291,21 @@ class Requester_step_def_ks {
 		//requester_starts_new_request()
 		switch (blockingRule.toLowerCase()) {
 			case "an output file has a blocked file extension":
-			requester_uploads_files(GlobalVariable.BlockedExtensionFileName)
-			break
+				requester_uploads_files(GlobalVariable.BlockedExtensionFileName)
+				break
 			case "a request that has a file that is too big":
-			requester_uploads_files(GlobalVariable.BlockedMaxSizeLimitFileName)
-			break
+				requester_uploads_files(GlobalVariable.BlockedMaxSizeLimitFileName)
+				break
 			case "the summation of all output file sizes exceeds the request file size limit":
 			//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
-			requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2, GlobalVariable.WarningMaxSizeLimitFileName)
-			break
+				requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2, GlobalVariable.WarningMaxSizeLimitFileName)
+				break
 			case "a request has a file with a studyid in it":
-			requester_uploads_files(GlobalVariable.BlockedStudyIDFileName)
-			break
+				requester_uploads_files(GlobalVariable.BlockedStudyIDFileName)
+				break
 			default:
-			throw new Exception("block rule $blockingRule not found")
-			break
+				throw new Exception("block rule $blockingRule not found")
+				break
 		}
 	}
 
@@ -327,33 +336,33 @@ class Requester_step_def_ks {
 	def requester_has_a_request_of_status(String status) {
 		switch (status.toLowerCase()) {
 			case "draft":
-			requester_starts_new_request()
-			requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
-			requester_saves_new_request()
-			break
+				requester_starts_new_request()
+				requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
+				requester_saves_new_request()
+				break
 			case "awaiting review":
-			requester_has_submitted_a_request()
-			break
+				requester_has_submitted_a_request()
+				break
 			case "review in progress":
-			requester_has_submitted_a_request()
+				requester_has_submitted_a_request()
 			//output checker needs to claim
-			break
+				break
 			case "work in progress":
-			requester_has_submitted_a_request()
-			requester_withdraws_request()
-			break
+				requester_has_submitted_a_request()
+				requester_withdraws_request()
+				break
 			case "cancelled":
-			requester_has_submitted_a_request()
-			requester_cancels_request()
-			break
+				requester_has_submitted_a_request()
+				requester_cancels_request()
+				break
 			case "approved":
-			requester_has_submitted_a_request()
+				requester_has_submitted_a_request()
 			//output checker needs to claim
 			//output checker needs to approve
-			break
+				break
 			default:
-			throw new Exception("status $status not found")
-			break
+				throw new Exception("status $status not found")
+				break
 		}
 	}
 
@@ -442,22 +451,22 @@ class Requester_step_def_ks {
 		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 		switch (status.toLowerCase()) {
 			case "draft":
-			WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Draft'))
-			break
+				WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Draft'))
+				break
 			case "submitted":
-			WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_QueuedIn Review'))
-			break
+				WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_QueuedIn Review'))
+				break
 			case "approved":
 			//stub for when a filter for approved requests is added to UI
-			break
+				break
 			case "cancelled":
-			WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Cancelled'))
-			break
+				WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Cancelled'))
+				break
 			case "their": //essentially viewing all their requests
-			break
+				break
 			default:
-			throw new Exception("status $status not found")
-			break
+				throw new Exception("status $status not found")
+				break
 		}
 	}
 
