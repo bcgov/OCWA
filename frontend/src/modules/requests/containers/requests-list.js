@@ -4,7 +4,7 @@ import keys from 'lodash/keys';
 import isArray from 'lodash/isArray';
 import isNull from 'lodash/isNull';
 import withRequest from '@src/modules/data/components/data-request';
-import { idField, limit } from '@src/services/config';
+import { limit } from '@src/services/config';
 
 import {
   changeFilter,
@@ -26,7 +26,7 @@ const mapStateToProps = state => {
     sortKey,
     sortOrder,
   } = state.requests.viewState;
-  const userId = get(state, `app.auth.user.${idField}`);
+  const userId = get(state, 'app.auth.user.id');
   const entities = get(state, 'data.entities.requests', {});
   const ids = keys(entities);
   const regex = new RegExp(search, 'i');

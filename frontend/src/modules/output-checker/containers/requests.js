@@ -7,13 +7,12 @@ import values from 'lodash/values';
 import withRequest from '@src/modules/data/components/data-request';
 import { fetchRequests } from '@src/modules/requests/actions';
 import { requestsListSchema } from '@src/modules/requests/schemas';
-import { idField } from '@src/services/config';
 
 import RequestsList from '../components/requests-list';
 
 const mapStateToProps = (state, { params }) => {
   const { filter, search } = state.outputChecker.viewState;
-  const username = get(state, ['app', 'auth', 'user', idField]);
+  const username = get(state, 'app.auth.user.id');
   const requests = values(state.data.entities.requests);
   const data = requests
     .filter(d => d.state === params.state)

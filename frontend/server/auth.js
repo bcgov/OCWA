@@ -1,7 +1,9 @@
 const config = require('config');
+const get = require('lodash/get');
 const passport = require('passport');
 const OpenIDConnectStrategy = require('passport-openidconnect');
 
+const idField = config.get('user.idField');
 const strategy = new OpenIDConnectStrategy(
   {
     issuer: config.get('auth.issuer'),
@@ -26,7 +28,7 @@ const strategy = new OpenIDConnectStrategy(
     verified
   ) => {
     const user = {
-      id: profile.id,
+      id: get(jwtClaims, idField),
       displayName: profile.displayName,
       username: jwtClaims.preferred_username,
       email: jwtClaims.email,
