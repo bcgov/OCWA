@@ -123,6 +123,39 @@ server {
   }
 }
 
+
+
+server {
+  listen                    443 ssl;
+  server_name               ${ocwaDLHostname};
+
+  ssl_certificate           ${sslCertificate};
+  ssl_certificate_key       ${sslCertificateKey};
+
+  location / {
+    resolver 127.0.0.11 valid=30s;
+
+    set $backend "http://ocwa_frontend_download:8000";
+    proxy_pass $backend;
+
+    # Disable request and response buffering
+    proxy_request_buffering  off;
+    proxy_buffering          off;
+    proxy_http_version       1.1;
+
+    # Add X-Forwarded-* headers
+    proxy_set_header X-Forwarded-Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    proxy_set_header        Host            $host;
+    proxy_set_header        X-Real-IP       $remote_addr;
+
+    proxy_set_header         Upgrade $http_upgrade;
+    proxy_set_header         Connection $connection_upgrade;
+    client_max_body_size     0;
+  }
+}
+
 server {
   listen                    443 ssl default;
 
