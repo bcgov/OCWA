@@ -7,7 +7,6 @@ import FlagFilledIcon from '@atlaskit/icon/glyph/flag-filled';
 import get from 'lodash/get';
 import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
 import { RequestSchema } from '@src/modules/requests/types';
-import { idField } from '@src/services/config';
 
 import * as styles from './styles.css';
 
@@ -43,7 +42,7 @@ function Sidebar({
             Assign to Me
           </Button>
         )}
-      {data.reviewers.includes(get(user, idField)) &&
+      {data.reviewers.includes(user.id) &&
         data.state === 3 && (
           <React.Fragment>
             <h6>Actions</h6>

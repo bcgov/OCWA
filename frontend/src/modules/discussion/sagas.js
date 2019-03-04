@@ -6,7 +6,7 @@ import { getToken } from '@src/services/auth';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
-import { socketHost, idField } from '@src/services/config';
+import { socketHost } from '@src/services/config';
 
 import { postSchema } from './schemas';
 
@@ -58,7 +58,7 @@ function* authWatcher() {
     const socket = yield call(createSocket);
     const user = yield select(state => get(state, 'app.auth.user', {}));
     const email = get(user, 'email', '');
-    const username = get(user, idField, email);
+    const username = get(user, 'id', email);
     const channel = yield call(createSocketChannel, socket, username);
 
     while (true) {
