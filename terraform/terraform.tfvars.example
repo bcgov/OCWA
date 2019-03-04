@@ -14,6 +14,7 @@ keycloak = {
 ocwaHostname = "ocwa.example.demo"
 ocwaHost = "https://ocwa.example.demo"
 
+ocwaDLHost = "https://ocwadl.example.demo"
 ocwaDLHostname = "ocwadl.example.demo"
 
 ocwaWebSocketHost = "wss://ocwa.example.demo/socket"

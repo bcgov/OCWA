@@ -106,21 +106,6 @@ server {
     proxy_pass $backend;
   }
 
-  location /download {
-    resolver 127.0.0.11 valid=30s;
-
-    proxy_set_header        Host            $host;
-    proxy_set_header        X-Real-IP       $remote_addr;
-    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header        X-Forwarded-Proto $scheme;
-    proxy_http_version      1.1;
-    proxy_set_header         Upgrade $http_upgrade;
-    proxy_set_header         Connection $connection_upgrade;
-
-    set $backend "http://ocwa_frontend_download:8000";
-
-    proxy_pass $backend;
-  }
 }
 
 
@@ -135,7 +120,7 @@ server {
   location / {
     resolver 127.0.0.11 valid=30s;
 
-    set $backend "http://ocwa_frontend_download:8000";
+    set $backend "http://ocwa_download_frontend:8000";
     proxy_pass $backend;
 
     # Disable request and response buffering
