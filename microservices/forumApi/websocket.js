@@ -2,13 +2,13 @@ var websocket = {};
 var config = require('config');
 var auth = require('./auth/auth');
 var jwt = require('jsonwebtoken');
+const WebSocket = require('ws');
 
 websocket.connections = {};
 websocket.server = null;
 
 websocket.init = function(){
     var self = this;
-    const WebSocket = require('ws');
 
     this.server = new WebSocket.Server({
         port: config.get("wsPort"),
@@ -72,5 +72,9 @@ websocket.getConnections = function(){
 websocket.updateClient = function(message, id){
     this.connections[id].send(message);
 };
+
+websocket.isOpen = function (client) {
+    return (client.readyState === WebSocket.OPEN);
+}
 
 module.exports = websocket;
