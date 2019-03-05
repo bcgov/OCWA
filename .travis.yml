@@ -47,7 +47,7 @@ matrix:
 
       before_install:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - npm install
+        - npm ci
         - npm audit
 
       script:
@@ -87,7 +87,7 @@ matrix:
         - tar xzfv ${HELM_TGZ}
         - PATH=`pwd`/linux-amd64/:$PATH
         - helm init --client-only
-        # Installig pip deps
+        # Installing pip deps
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
         - cd /home/travis/build/bcgov/OCWA
         - wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
@@ -103,10 +103,10 @@ matrix:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
         - cp config/test.json.example config/test.json
         - cp config/default.json.example config/default.json
-        - npm install
+        - npm ci
         - npm audit
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - npm install
+        - npm ci
         - cp config/default.json.example config/default.json
         - cp config/test.json.example config/test.json
         - NODE_ENV=test npm start &
@@ -278,9 +278,6 @@ matrix:
           packages:
             - g++-4.8
 
-      before_install:
-        - npm install -g yarn --cache-min 999999999
-
       install:
         - |-
           cd /home/travis/build/bcgov/OCWA/frontend
@@ -302,14 +299,14 @@ matrix:
         - |-
           cd /home/travis/build/bcgov/OCWA/frontend
           cp config/test.json.example config/test.json
-        - yarn
-        - npm install --package-lock-only
+        - npm ci
         - npm audit
         - npm test
         - helm lint helm/ocwa-frontend
         - bash docker_quayio_push ocwa_frontend 
-        - cd /home/travis/build/bcgov/OCWA
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_frontend -Dsonar.projectName="OCWA Frontend" -Dsonar.modules=frontend
+        - |-
+          cd /home/travis/build/bcgov/OCWA
+          sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_frontend -Dsonar.projectName="OCWA Frontend" -Dsonar.modules=frontend
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/frontend

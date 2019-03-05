@@ -5,16 +5,15 @@ WORKDIR /usr/src/app
 
 COPY ./config/config.docker /usr/src/app/config/default.json
 
-COPY package.json /usr/src/app
-COPY yarn.lock /usr/src/app
+COPY package*.json /usr/src/app
 
-RUN yarn install
+RUN npm ci
 COPY . /usr/src/app
 RUN echo "{}" > /usr/src/app/config/production.json
 RUN chmod +x entrypoint.sh
 
 ENV NODE_ENV production
-RUN yarn build
+RUN npm run build
 
 EXPOSE 8000
 ENTRYPOINT ["./entrypoint.sh"]

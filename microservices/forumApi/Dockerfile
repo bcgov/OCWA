@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 
 ##copy package and package-lock and install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 RUN apk update && \
     apk add nginx && \
