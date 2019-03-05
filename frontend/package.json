@@ -25,6 +25,8 @@
     "clean-webpack-plugin": "^0.1.19",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.10.0",
     "eslint": "^5.6.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^3.1.0",
@@ -118,9 +120,9 @@
     "redux": "^4.0.0",
     "redux-saga": "^0.16.2",
     "request": "^2.88.0",
+    "snyk": "^1.123.0",
     "styled-components": "^3.4.6",
-    "tus-js-client": "^1.5.1",
-    "snyk": "^1.123.0"
+    "tus-js-client": "^1.5.1"
   },
   "resolutions": {
     "**/event-stream": "^4.0.1"
@@ -136,7 +138,13 @@
     },
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
-    }
+    },
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ],
+    "setupFiles": [
+      "<rootDir>/tests/globals.js"
+    ]
   },
   "snyk": true
 }

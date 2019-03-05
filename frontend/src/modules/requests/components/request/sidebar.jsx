@@ -1,13 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Avatar from '@atlaskit/avatar';
 import Button from '@atlaskit/button';
 import { withRouter } from 'react-router-dom';
+import { uid } from 'react-uid';
 // Icons
-import CheckIcon from '@atlaskit/icon/glyph/check';
+import CopyIcon from '@atlaskit/icon/glyph/copy';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled';
-import FlagFilledIcon from '@atlaskit/icon/glyph/flag-filled';
 import SignInIcon from '@atlaskit/icon/glyph/sign-in';
 import SignOutIcon from '@atlaskit/icon/glyph/sign-out';
 import TrashIcon from '@atlaskit/icon/glyph/trash';
@@ -16,21 +15,33 @@ import { RequestSchema } from '../../types';
 
 function RequestSidebar({
   data,
-  isOutputChecker,
   isSaving,
   history,
   onCancel,
   onDelete,
+  onDuplicate,
   onEdit,
   onSubmit,
   onWithdraw,
 }) {
+  const withdrawHandler = () => {
+    const c = confirm(
+      'Editing a submitted request automatically withdraws it. Do you still wish to proceed?'
+    );
+
+    if (c) {
+      onWithdraw(data._id);
+    }
+  };
+
   return (
     <aside id="request-sidebar">
       <h6>Requester</h6>
-      <div id="request-reviewers">{data.author}</div>
+      <div id="request-author">{data.author}</div>
       <h6>Output Checker</h6>
-      <div id="request-reviewers">{data.reviewers.map(d => <p>{d}</p>)}</div>
+      <div id="request-reviewers">
+        {data.reviewers.map(d => <p key={uid(d)}>{d}</p>)}
+      </div>
       {data.reviewers.length <= 0 && (
         <p id="request-reviewers-empty">No reviewer has been assigned</p>
       )}
@@ -38,38 +49,15 @@ function RequestSidebar({
       {data.state >= 2 &&
         data.state < 4 && (
           <React.Fragment>
-            {isOutputChecker &&
-              false && (
-                <React.Fragment>
-                  <div>
-                    <Button
-                      appearance="link"
-                      id="request-sidebar-approve-button"
-                      iconBefore={<CheckIcon primaryColor="green" />}
-                    >
-                      Approve Request
-                    </Button>
-                  </div>
-                  <div>
-                    <Button
-                      appearance="link"
-                      id="request-sidebar-reject-button"
-                      iconBefore={<FlagFilledIcon primaryColor="red" />}
-                    >
-                      Request Revisions
-                    </Button>
-                  </div>
-                </React.Fragment>
-              )}
             <div>
               <Button
                 appearance="link"
                 id="request-sidebar-withdraw-button"
                 isDisabled={isSaving}
                 iconBefore={<SignOutIcon />}
-                onClick={() => onWithdraw(data._id)}
+                onClick={withdrawHandler}
               >
-                Withdraw Request
+                Edit Request
               </Button>
             </div>
             <div>
@@ -114,6 +102,7 @@ function RequestSidebar({
               appearance="link"
               id="request-sidebar-delete-button"
               iconBefore={<TrashIcon />}
+              isDisabled={isSaving}
               onClick={() => {
                 history.push('/');
                 onDelete(data._id);
@@ -124,6 +113,17 @@ function RequestSidebar({
           </div>
         </React.Fragment>
       )}
+      {data.state >= 4 && (
+        <Button
+          appearance="link"
+          id="request-sidebar-duplicate-button"
+          iconBefore={<CopyIcon />}
+          isDisabled={isSaving}
+          onClick={() => onDuplicate(data)}
+        >
+          Duplicate Request
+        </Button>
+      )}
     </aside>
   );
 }
@@ -133,10 +133,10 @@ RequestSidebar.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
-  isOutputChecker: PropTypes.bool.isRequired,
   isSaving: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onDuplicate: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onWithdraw: PropTypes.func.isRequired,
