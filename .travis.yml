@@ -329,6 +329,7 @@ matrix:
         hosts:
           - auth.example.demo
           - ocwa.example.demo
+          - ocwadl.example.demo
       jdk: openjdk8
       cache:
         directories:
