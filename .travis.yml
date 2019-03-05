@@ -25,39 +25,47 @@ matrix:
            - ubuntu-toolchain-r-test
          packages:
            - g++-4.8
-      before_script:
-        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - cp config/test.json.example config/test.json
-        - cp config/default.json.example config/default.json
-        - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
-        - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
-        - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
-        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
-        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
-        - wget -q ${HELM_URL}/${HELM_TGZ}
-        - tar xzfv ${HELM_TGZ}
-        - PATH=`pwd`/linux-amd64/:$PATH
-        - helm init --client-only
-        # Installig pip deps
-        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
-        - cd /home/travis/build/bcgov/OCWA
-        - wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
-        - unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
-        - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
 
       before_install:
-        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - npm ci
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+          npm ci
         - npm audit
 
+      before_script:
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+          cp config/test.json.example config/test.json
+          cp config/default.json.example config/default.json
+        - |-
+          wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+          tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+          mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
+        - |-
+          wget -q ${HELM_URL}/${HELM_TGZ}
+          tar xzfv ${HELM_TGZ}
+          PATH=`pwd`/linux-amd64/:$PATH
+          helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+        - |-
+          cd /home/travis/build/bcgov/OCWA
+          wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
+          unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
+          PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+
       script:
-        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - npm test
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+          npm test
         - helm lint helm/forum-api
         - bash docker_quayio_push
-        - cd /home/travis/build/bcgov/OCWA
-        - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_forum_api -Dsonar.projectName="OCWA Forum API" -Dsonar.modules=forumApi
+        - |-
+          cd /home/travis/build/bcgov/OCWA
+          PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+          sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_forum_api -Dsonar.projectName="OCWA Forum API" -Dsonar.modules=forumApi
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
@@ -82,60 +90,70 @@ matrix:
           packages:
             - g++-4.8
             - python3-pip
+
       before_script:
-        - wget -q ${HELM_URL}/${HELM_TGZ}
-        - tar xzfv ${HELM_TGZ}
-        - PATH=`pwd`/linux-amd64/:$PATH
-        - helm init --client-only
+        - |-
+          wget -q ${HELM_URL}/${HELM_TGZ}
+          tar xzfv ${HELM_TGZ}
+          PATH=`pwd`/linux-amd64/:$PATH
+          helm init --client-only
         # Installing pip deps
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
         - cd /home/travis/build/bcgov/OCWA
-        - wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
-        - unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
-        - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+        - |-
+          wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
+          unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
+          PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+        - |-
+          wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+          tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+          mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
 
       script:
-        - wget http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
-        - tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
-        - mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
-        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
-        - ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
-        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-        - cp config/test.json.example config/test.json
-        - cp config/default.json.example config/default.json
-        - npm ci
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+          cp config/test.json.example config/test.json
+          cp config/default.json.example config/default.json
+          npm ci
         - npm audit
-        - cd /home/travis/build/bcgov/OCWA/microservices/forumApi
-        - npm ci
-        - cp config/default.json.example config/default.json
-        - cp config/test.json.example config/test.json
-        - NODE_ENV=test npm start &
-        - wget https://dl.minio.io/server/minio/release/linux-amd64/minio
-        - chmod +x minio
-        - export MINIO_ACCESS_KEY="myKey"
-        - export MINIO_SECRET_KEY="mySecret"
-        - ./minio server /tmp &
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - sudo pip3 install -U setuptools
-        - sudo pip3 install -r requirements.txt
-        - cp config/default.json.template config/default.json
-        - sudo pip3 install -e .
-        - python3 wsgi.py &
-        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - sudo pip3 install -U setuptools
-        - sudo pip3 install -r requirements.txt
-        - cp config/default.json.template config/default.json
-        - sudo pip3 install -e .
-        - python3 wsgi.py &
-        - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-        - sleep 15
-        - npm test
-        - bash docker_quayio_push
-        - cd /home/travis/build/bcgov/OCWA
-        - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_request_api -Dsonar.projectName="OCWA Request API" -Dsonar.modules=requestApi
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+          npm ci
+          cp config/default.json.example config/default.json
+          cp config/test.json.example config/test.json
+          NODE_ENV=test npm start &
+        - |-
+          wget https://dl.minio.io/server/minio/release/linux-amd64/minio
+          chmod +x minio
+          export MINIO_ACCESS_KEY="myKey"
+          export MINIO_SECRET_KEY="mySecret"
+          ./minio server /tmp &
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+          sudo pip3 install -U setuptools
+          sudo pip3 install -r requirements.txt
+          cp config/default.json.template config/default.json
+          sudo pip3 install -e .
+          python3 wsgi.py &
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+          sudo pip3 install -U setuptools
+          sudo pip3 install -r requirements.txt
+          cp config/default.json.template config/default.json
+          sudo pip3 install -e .
+          python3 wsgi.py &
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+          sleep 15
+          npm test
         - helm lint helm/request-api
-        
+        - bash docker_quayio_push
+        - |-
+          cd /home/travis/build/bcgov/OCWA
+          PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+          sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_request_api -Dsonar.projectName="OCWA Request API" -Dsonar.modules=requestApi
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/requestApi
@@ -159,37 +177,40 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - python3-pip
-       
-      before_script:
-       - cd /home/travis/build/bcgov/OCWA
-       - wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
-       - unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
-       - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-       - sudo pip install yamllint=="${YAMLLINT_VERSION}" 
 
       install:
-        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - sudo pip3 install -U setuptools
-        - sudo pip3 install -r requirements.txt
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+          sudo pip3 install -U setuptools
+          sudo pip3 install -r requirements.txt
+        - |-
+          wget -q ${HELM_URL}/${HELM_TGZ}
+          tar xzfv ${HELM_TGZ}
+          PATH=`pwd`/linux-amd64/:$PATH
+          helm init --client-only
+
+      before_script:
+        - |-
+          cd /home/travis/build/bcgov/OCWA
+          wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
+          unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
+          PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+          sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
       script:
-        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - cp config/default.json.template config/default.json
-        - sudo pip3 install -e .
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+          cp config/default.json.template config/default.json
+          sudo pip3 install -e .
         - sudo pytest
         - sudo coverage run --branch --source=db,v1 -m pytest
         - sudo coverage xml
-        - wget -q ${HELM_URL}/${HELM_TGZ}
-        - tar xzfv ${HELM_TGZ}
-        - PATH=`pwd`/linux-amd64/:$PATH
-        - helm init --client-only
-        # Installig pip deps
-       
         - helm lint helm/policy-api
         - bash docker_quayio_push 
-        - cd /home/travis/build/bcgov/OCWA
-        - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_policy_api -Dsonar.projectName="OCWA Policy API" -Dsonar.modules=policyApi
+        - |-
+          cd /home/travis/build/bcgov/OCWA
+          PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+          sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_policy_api -Dsonar.projectName="OCWA Policy API" -Dsonar.modules=policyApi
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/policyApi 
@@ -213,44 +234,48 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - python3-pip
+
+      install:
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+          sudo pip3 install -U setuptools
+          sudo pip3 install -r requirements.txt
+
       before_script:
-        - wget -q ${HELM_URL}/${HELM_TGZ}
-        - tar xzfv ${HELM_TGZ}
-        - PATH=`pwd`/linux-amd64/:$PATH
-        - helm init --client-only
-        - cd /home/travis/build/bcgov/OCWA
-        - wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
-        - unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
-        - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        # Installig pip deps
+        - |-
+          wget -q ${HELM_URL}/${HELM_TGZ}
+          tar xzfv ${HELM_TGZ}
+          PATH=`pwd`/linux-amd64/:$PATH
+          helm init --client-only
+        - |-
+          cd /home/travis/build/bcgov/OCWA
+          wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
+          unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
+          PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+        # Installing pip deps
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
-      before_install:
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-      install:
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - sudo pip3 install -U setuptools
-        - sudo pip3 install -r requirements.txt
-
       script:
-        - cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-        - sudo pip3 install -U setuptools
-        - sudo pip3 install -r requirements.txt
-        - cp config/default.json.template config/default.json
-        - sudo pip3 install -e .
-        - python3 wsgi.py &
-        - cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-        - cp config/default.json.template config/default.json
-        - sudo pip3 install -e .
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+          sudo pip3 install -U setuptools
+          sudo pip3 install -r requirements.txt
+          cp config/default.json.template config/default.json
+          sudo pip3 install -e .
+          python3 wsgi.py &
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+          cp config/default.json.template config/default.json
+          sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - sudo coverage xml
         - helm lint helm/validate-api
         - bash docker_quayio_push
-        - cd /home/travis/build/bcgov/OCWA
-        - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_validate_api -Dsonar.projectName="OCWA Validate API" -Dsonar.modules=validateApi
+        - |-
+          cd /home/travis/build/bcgov/OCWA
+          PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+          sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_validate_api -Dsonar.projectName="OCWA Validate API" -Dsonar.modules=validateApi
         
-
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/microservices/validateApi 
 
@@ -285,7 +310,7 @@ matrix:
           tar xzfv ${HELM_TGZ}
           PATH=`pwd`/linux-amd64/:$PATH
           helm init --client-only
-        # Installig pip deps
+        # Installing pip deps
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
       before_script:
@@ -338,13 +363,12 @@ matrix:
             mkdir -p /tmp/traviscache
           fi
         - |-
-          if [ ! -f "/tmp/traviscache/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" ]; then
-            cd /tmp/traviscache
-            sudo wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-          fi
+          cd /tmp
+          sudo wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+        - |-
           cd /usr/local/bin
-          sudo unzip -o /tmp/traviscache/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-          sudo rm -rf /tmp/traviscache/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+          sudo unzip -o /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+          sudo rm -rf /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
           sudo chmod +x terraform
 
       install:
@@ -387,11 +411,12 @@ matrix:
       cache: pip
 
       install:
-        - cd /home/travis/build/bcgov/OCWA
-        - wget -q ${HELM_URL}/${HELM_TGZ}
-        - tar xzfv ${HELM_TGZ}
-        - PATH=`pwd`/linux-amd64/:$PATH
-        - helm init --client-only
+        - |-
+          cd /home/travis/build/bcgov/OCWA
+          wget -q ${HELM_URL}/${HELM_TGZ}
+          tar xzfv ${HELM_TGZ}
+          PATH=`pwd`/linux-amd64/:$PATH
+          helm init --client-only
         # Installing pip deps
         - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
