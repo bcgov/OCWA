@@ -125,7 +125,7 @@ matrix:
           cp config/test.json.example config/test.json
           NODE_ENV=test npm start &
         - |-
-          wget https://dl.minio.io/server/minio/release/linux-amd64/minio
+          wget -q https://dl.minio.io/server/minio/release/linux-amd64/minio
           chmod +x minio
           export MINIO_ACCESS_KEY="myKey"
           export MINIO_SECRET_KEY="mySecret"
@@ -291,11 +291,7 @@ matrix:
       language: node_js
       node_js:
         - "node"
-      cache:
-        npm: true
-        yarn: true
-        directories:
-          - /home/travis/build/bcgov/OCWA/frontend/node_modules
+      cache: npm
       addons:
         apt:
           sources:

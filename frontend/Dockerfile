@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 
 COPY ./config/config.docker /usr/src/app/config/default.json
 
-COPY package*.json /usr/src/app
+COPY package*.json /usr/src/app/
 
 RUN npm ci
 COPY . /usr/src/app
