@@ -265,42 +265,51 @@ matrix:
       stage: "Frontend"
       language: node_js
       node_js:
-      - "node"
-      cache: npm
+        - "node"
+      cache:
+        npm: true
+        yarn: true
+        directories:
+          - /home/travis/build/bcgov/OCWA/frontend/node_modules
       addons:
         apt:
           sources:
-          - ubuntu-toolchain-r-test
+            - ubuntu-toolchain-r-test
           packages:
-          - g++-4.8  
+            - g++-4.8
+
+      before_install:
+        - npm install -g yarn --cache-min 999999999
+
+      install:
+        - |-
+          cd /home/travis/build/bcgov/OCWA/frontend
+          wget ${HELM_URL}/${HELM_TGZ}
+          tar xzfv ${HELM_TGZ}
+          PATH=`pwd`/linux-amd64/:$PATH
+          helm init --client-only
+        # Installig pip deps
+        - sudo pip install yamllint=="${YAMLLINT_VERSION}"
 
       before_script:
-      - cd /home/travis/build/bcgov/OCWA/frontend
-      - wget -q ${HELM_URL}/${HELM_TGZ}
-      - tar xzfv ${HELM_TGZ}
-      - PATH=`pwd`/linux-amd64/:$PATH
-      - helm init --client-only
-      # Installig pip deps
-      - sudo pip install yamllint=="${YAMLLINT_VERSION}"
-      - cd /home/travis/build/bcgov/OCWA
-      - wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
-      - unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
-      - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-      before_install:
-      - npm install -g yarn --cache-min 999999999
+        - |-
+          cd /home/travis/build/bcgov/OCWA
+          wget ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
+          unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
+          PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
 
       script:
-      - cd /home/travis/build/bcgov/OCWA/frontend
-      - cp config/test.json.example config/test.json
-      - yarn
-      - npm i --package-lock-only
-      - npm audit
-      - npm test
-      - helm lint helm/ocwa-frontend
-      - bash docker_quayio_push ocwa_frontend 
-      - cd /home/travis/build/bcgov/OCWA
-      - PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-      - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_frontend -Dsonar.projectName="OCWA Frontend" -Dsonar.modules=frontend
+        - |-
+          cd /home/travis/build/bcgov/OCWA/frontend
+          cp config/test.json.example config/test.json
+        - yarn
+        - npm install --package-lock-only
+        - npm audit
+        - npm test
+        - helm lint helm/ocwa-frontend
+        - bash docker_quayio_push ocwa_frontend 
+        - cd /home/travis/build/bcgov/OCWA
+        - sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_frontend -Dsonar.projectName="OCWA Frontend" -Dsonar.modules=frontend
 
       before_deploy:
         - cd /home/travis/build/bcgov/OCWA/frontend
@@ -320,34 +329,58 @@ matrix:
         hosts:
           - auth.example.demo
           - ocwa.example.demo
+          - ocwadl.example.demo
       jdk: openjdk8
+      cache:
+        directories:
+          - /tmp/traviscache
 
       before_install:
-        - cd /usr/local/bin
-        - sudo curl -L -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-        - sudo unzip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-        - sudo rm -rf terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-        - sudo chmod +x terraform 
+        - |-
+          if [ ! -d "/tmp/traviscache" ]; then
+            mkdir -p /tmp/traviscache
+          fi
+        - |-
+          if [ ! -f "/tmp/traviscache/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" ]; then
+            cd /tmp/traviscache
+            sudo wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+          fi
+          cd /usr/local/bin
+          sudo unzip -o /tmp/traviscache/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+          sudo rm -rf /tmp/traviscache/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+          sudo chmod +x terraform
 
       install:
-        - cd /home/travis/build/bcgov/OCWA/terraform
-        - mkdir _tmp
-        - cp terraform.tfvars.example terraform.tfvars
+        - |-
+          cd /home/travis/build/bcgov/OCWA/terraform
+          mkdir _tmp
+          cp terraform.tfvars.example terraform.tfvars
         - terraform init
         - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
 
       before_script:
-        - cd /usr/local/bin
-        - sudo wget -q https://github.com/katalon-studio/katalon-studio/releases/download/v${KATALON_VERSION}/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
-        - sudo tar -xf Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
-        - sudo chmod ugo+x Katalon_Studio_Linux_64-${KATALON_VERSION}/katalon
-        - sudo chmod -R 777 Katalon_Studio_Linux_64-${KATALON_VERSION}
+        - |-
+          if [ ! -d "/tmp/traviscache" ]; then
+            mkdir -p /tmp/traviscache
+          fi
+        - |-
+          if [ ! -f "/tmp/traviscache/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz" ]; then
+            cd /tmp/traviscache
+            sudo wget -q https://download.katalon.com/${KATALON_VERSION}/Katalon_Studio_Linux_64.tar.gz -O Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
+          fi
+        - |-
+          cd /usr/local/bin
+          sudo mkdir -p Katalon_Studio
+          sudo tar -xf /tmp/traviscache/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz -C Katalon_Studio
+          sudo chmod +x Katalon_Studio/katalon
+          sudo chmod -R 777 Katalon_Studio
         # Check that the install lifecycle worked
         - docker ps
          
       script:
-        - cd /usr/local/bin/Katalon_Studio_Linux_64-${KATALON_VERSION}
-        - xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+        - |-
+          cd /usr/local/bin/Katalon_Studio
+          xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
 
     - name: "OCWA Master Helm Chart"
       stage: "Tests"
@@ -375,7 +408,7 @@ env:
   - HELM_TGZ=helm-v2.4.1-linux-amd64.tar.gz
   - HELM_URL=https://storage.googleapis.com/kubernetes-helm
   - GH_URL=https://kubenow.github.io/helm-charts
-  - KATALON_VERSION=5.10.1
+  - KATALON_VERSION=6.0.5
   - MONGODB=4.1.1
   - REPO_DIR=/home/travis/build/kubenow/helm-charts
   - SONAR_APP=sonar-scanner

@@ -60,6 +60,7 @@ router.post("/", function(req, res, next){
 
     topic.name = req.body.name;
     topic.contributors.push(req.user.id);
+    topic.subscribers.push(req.user.id);
 
     var groups = req.user.groups.slice();
 
@@ -178,4 +179,61 @@ router.delete('/:topicId', function(req, res){
 
     });
 });
+
+
+router.put('/:topicId/subscribe', function(req, res){
+    var db = require('../db/db');
+    var mongoose = require('mongoose');
+    var subscribers = require('../subscribers/subscribers');
+    var topicId = mongoose.Types.ObjectId(req.params.topicId);
+
+    var userId = req.body.user_id;
+
+    // .getAll() filters using permissions
+    db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(topicErr, topicRes) {
+        if (topicErr || !topicRes || topicRes.length <= 0){
+            res.status(500);
+            res.json({error: topicErr.message});
+            return;
+        }
+
+        subscribers.subscribe(topicId, userId, false, (err) => {
+            if (err) {
+                res.status(500);
+                res.json({error: err.message});
+                return;
+            }
+            res.json({message: "Topic subscriptions ok"});
+        });
+    });
+});
+
+router.put('/:topicId/unsubscribe', function(req, res){
+    var db = require('../db/db');
+    var mongoose = require('mongoose');
+    var subscribers = require('../subscribers/subscribers');
+    var topicId = mongoose.Types.ObjectId(req.params.topicId);
+
+    var userId = req.body.user_id;
+
+    // .getAll() filters using permissions
+    db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(topicErr, topicRes) {
+        if (topicErr || !topicRes || topicRes.length <= 0){
+            res.status(500);
+            res.json({error: topicErr.message});
+            return;
+        }
+
+        subscribers.unsubscribe(topicId, userId, (err) => {
+            if (err) {
+                res.status(500);
+                res.json({error: err.message});
+                return;
+            }
+            res.json({message: "Topic subscriptions ok"});
+        });
+    });
+});
+
+
 module.exports = router;

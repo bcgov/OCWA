@@ -162,6 +162,10 @@ const messages = (state = [], action) => {
     has(action, 'payload.result.error') ||
     has(action, 'payload.error');
 
+  if (action.type === 'messages/dismiss') {
+    return state.filter(d => d.id !== action.payload);
+  }
+
   if (!has(action, 'meta.hideNotification'))
     if (actionMessages.length > 0) {
       const newMessages = actionMessages.map(message => ({

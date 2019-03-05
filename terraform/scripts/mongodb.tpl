@@ -15,4 +15,4 @@ db.rules.insert({name:"restricted_file_types", source:"print('$${file.Filename}'
 db.rules.insert({name:"file_size_under_3.5mb", source:"print($${file.size}<3670016)",mandatory:false });
 db.rules.insert({name:"file_size_under_5mb", source:"print($${file.size}<5242880)",mandatory:true });
 /* Checks file content for anything matching exactly 1 alphanumeric followed by 9 digits */
-db.rules.insert({name:"studyid_in_content", source:"print(not bool(re.search(r'[\\w]{1}[\\d]{9}', $${file.content}.decode('utf-8'))))", mandatory: true});
+db.rules.insert({name:"studyid_not_in_content", source:"print(not bool(re.search(r'[\\w]{1}[\\d]{9}', $${file.content}.decode('utf-8'))))", mandatory: true});

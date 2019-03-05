@@ -18,6 +18,14 @@ variable "ocwaHostname" {
   type = "string"
 }
 
+variable "ocwaDLHost" {
+  type = "string"
+}
+
+variable "ocwaDLHostname" {
+  type = "string"
+}
+
 variable "ocwaWebSocketHost" {
   type = "string"
 }

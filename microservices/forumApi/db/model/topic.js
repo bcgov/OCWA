@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const topicSchema = new Schema({
-    name: {type: Schema.Types.String, required: true, unique: true, index: true},
+    name: {type: Schema.Types.String, required: true, index: true},
     parent_id: {type: Schema.Types.ObjectId, ref: 'topic', default: null, index: true},
     contributors: {type: [Schema.Types.String], required: true},
+    subscribers: {type: [Schema.Types.String], required: true},
     author_groups: {type: [Schema.Types.String], required: true}
 });
 

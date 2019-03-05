@@ -20,6 +20,11 @@ export const search = value => ({
   payload: value,
 });
 
+export const navSearch = value => ({
+  type: 'request/nav/search',
+  payload: value,
+});
+
 export default {
   changeFilter,
   changeStateFilter,

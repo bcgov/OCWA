@@ -11,13 +11,22 @@ import {
   fetchRequests,
   searchResults,
   sortRequests,
+  toggleMyRequests,
   viewDraftRequest,
 } from '../actions';
 import RequestsList from '../components/requests-list';
 import { requestsListSchema } from '../schemas';
 
 const mapStateToProps = state => {
-  const { filter, page, search, sortKey, sortOrder } = state.requests.viewState;
+  const {
+    filter,
+    page,
+    search,
+    showMyRequestsOnly,
+    sortKey,
+    sortOrder,
+  } = state.requests.viewState;
+  const userId = get(state, 'app.auth.user.id');
   const entities = get(state, 'data.entities.requests', {});
   const ids = keys(entities);
   const regex = new RegExp(search, 'i');
@@ -28,10 +37,17 @@ const mapStateToProps = state => {
     return d.state === filter;
   });
 
-  const data = dataEntities.filter(d => {
-    if (!search) return true;
-    return regex.test(d.name);
-  });
+  const data = dataEntities
+    .filter(d => {
+      if (showMyRequestsOnly) {
+        return d.author === userId;
+      }
+      return true;
+    })
+    .filter(d => {
+      if (!search) return true;
+      return regex.test(d.name);
+    });
 
   return {
     data: search ? data : data.slice(sliceStartIndex, sliceStartIndex + limit),
@@ -39,6 +55,7 @@ const mapStateToProps = state => {
     filter,
     page,
     search,
+    showMyRequestsOnly,
     sortKey,
     sortOrder,
   };
@@ -48,6 +65,7 @@ export default connect(mapStateToProps, {
   onChangeFilter: changeFilter,
   onSearch: searchResults,
   onSelect: viewDraftRequest,
+  onShowMyRequests: toggleMyRequests,
   onSort: sortRequests,
   initialRequest: () =>
     fetchRequests(

@@ -27,7 +27,7 @@ function Sidebar({
       <h6>Exporter</h6>
       <p id="request-author-text">{data.author}</p>
       <h6>Reviewers</h6>
-      {data.reviewers.length === 1 && (
+      {data.reviewers.length > 0 && (
         <p id="request-assigned-oc">{assignedUser}</p>
       )}
       {data.reviewers.length <= 0 &&
@@ -42,8 +42,8 @@ function Sidebar({
             Assign to Me
           </Button>
         )}
-      {user.username === assignedUser &&
-        data.state < 4 && (
+      {data.reviewers.includes(user.id) &&
+        data.state === 3 && (
           <React.Fragment>
             <h6>Actions</h6>
             <Button

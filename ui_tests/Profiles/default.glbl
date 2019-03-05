@@ -89,4 +89,19 @@
       <initValue>'test_valid_file_upload3.txt'</initValue>
       <name>ValidFileName3</name>
    </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'ocuser_1'</initValue>
+      <name>OCWA_USER_CHECKER1</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'ocuser_1_password'</initValue>
+      <name>OCWA_USER_CHECKER1_PSWD</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'http://localhost:8001'</initValue>
+      <name>OCWA_DL_URL</name>
+   </GlobalVariableEntity>
 </GlobalVariableEntities>

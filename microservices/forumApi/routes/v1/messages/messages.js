@@ -36,7 +36,9 @@ function sendTopicMessage(topic){
     for (var i=0; i<keys.length; i++){
         checkTopicPermissions(conns[keys[i]].user, topic._id, conns[keys[i]], function(send, sock) {
             if (send) {
-                sock.send(JSON.stringify({topic: topic}));
+                if (websockets.isOpen(sock)) {
+                    sock.send(JSON.stringify({topic: topic}));
+                }
             }
         });
     }
@@ -54,7 +56,9 @@ function sendCommentMessage(topicId, comment){
     for (var i=0; i<keys.length; i++){
         checkCommentPermissions(conns[keys[i]].user, topicId, comment._id, conns[keys[i]], function(send, sock) {
             if (send) {
-                sock.send(JSON.stringify({comment: comment}));
+                if (websockets.isOpen(sock)) {
+                    sock.send(JSON.stringify({comment: comment}));
+                }
             }
         });
     }

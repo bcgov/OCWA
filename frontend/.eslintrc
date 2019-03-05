@@ -11,6 +11,7 @@
     "SOCKET_HOST": true,
     "VERSION": true,
     "COMMIT": true,
+    "ID_FIELD": true,
     "EXPORTER_GROUP": true,
     "OC_GROUP": true,
     "EXPORTER_MODE": true

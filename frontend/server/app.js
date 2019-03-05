@@ -94,7 +94,7 @@ app.get('/hello', (req, res) => {
 app.get('*', storeUrl, (req, res) => {
   res.render('index', {
     isDevelopment,
-    title: 'OCWA [Development Version]',
+    title: 'OCWA | Output Checker Workflow App',
     filesApiHost: parseApiHost(filesApiHost),
     socketHost: parseWsHost(forumSocket),
     commit: get(process, 'env.GITHASH', ''),

@@ -51,7 +51,7 @@ function* handleDataRequest(method, action) {
     });
   }
 
-  yield call(delay, 3000);
+  yield call(delay, 7000);
   yield put({
     type: `${action.type}/reset`,
     meta,

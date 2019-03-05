@@ -4,8 +4,9 @@ import has from 'lodash/has';
 
 const initialViewState = {
   search: '',
+  navSearch: '',
   state: 2, // Between 2 - 6
-  filter: 'all', // Enum: 'all', 'mine', 'unassigned'
+  filter: 'mine', // Enum: 'all', 'mine', 'unassigned'
 };
 
 function viewState(state = initialViewState, action = {}) {
@@ -44,6 +45,12 @@ function viewState(state = initialViewState, action = {}) {
           ['payload', 'entities', 'requests', action.payload.result, 'state'],
           2
         ),
+      };
+
+    case 'request/nav/search':
+      return {
+        ...state,
+        navSearch: action.payload,
       };
 
     default:

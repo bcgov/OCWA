@@ -95,6 +95,8 @@ export const reset = () => ({ type: 'request/reset' });
 
 export const removeFile = id => ({ type: 'request/remove-file', payload: id });
 
+export const toggleMyRequests = () => ({ type: 'requests/toggle-my-requests' });
+
 export default {
   createRequest,
   changeStep,
@@ -102,11 +104,12 @@ export default {
   closeDraftRequest,
   fetchRequests,
   removeFile,
+  reset,
   saveRequest,
   sortRequests,
-  viewDraftRequest,
+  toggleMyRequests,
   uploadSupportingFile,
   uploadFile,
   uploadFileReset,
-  reset,
+  viewDraftRequest,
 };

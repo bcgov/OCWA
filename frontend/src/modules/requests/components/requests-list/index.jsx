@@ -13,6 +13,8 @@ import get from 'lodash/get';
 import head from 'lodash/head';
 import last from 'lodash/last';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
+import PersonIcon from '@atlaskit/icon/glyph/person';
+import PeopleGroupIcon from '@atlaskit/icon/glyph/people-group';
 import SearchIcon from '@atlaskit/icon/glyph/search';
 import { colors } from '@atlaskit/theme';
 import { limit } from '@src/services/config';
@@ -34,6 +36,7 @@ const header = {
     },
     { key: 'submittedOn', content: 'Submitted On', isSortable: true },
     { key: 'updatedOn', content: 'Updated On', isSortable: true },
+    { key: 'author', content: 'Requester', isSortable: true },
     { key: 'outputChecker', content: 'Output Checker', isSortable: true },
     { key: 'more', shouldTruncate: true, width: 18 },
   ],
@@ -56,16 +59,27 @@ function RequestsList({
   isLoading,
   isLoaded,
   onChangeFilter,
+  onShowMyRequests,
   onSort,
   page,
   search,
+  showMyRequestsOnly,
   sortKey,
   sortOrder,
 }) {
+  const requestsButtonIcon = showMyRequestsOnly ? (
+    <PeopleGroupIcon />
+  ) : (
+    <PersonIcon />
+  );
+  const requestsButtonString = showMyRequestsOnly
+    ? 'Show Team Requests'
+    : 'Show My Requests';
   const rows = data.map(d => {
     const format = 'MMM Do, YYYY';
     const submittedOn = head(d.chronology).timestamp;
     const updatedOn = last(d.chronology).timestamp;
+    const outputChecker = head(d.reviewers);
 
     return {
       key: `row-${d._id}`,
@@ -91,8 +105,12 @@ function RequestsList({
           content: <Date value={updatedOn} format={format} />,
         },
         {
-          key: 0,
-          content: '-',
+          key: d.author,
+          content: d.author,
+        },
+        {
+          key: outputChecker,
+          content: outputChecker || <em>Unassigned</em>,
         },
         {
           content: (
@@ -170,6 +188,15 @@ function RequestsList({
                   </Button>
                 ))}
               </ButtonGroup>
+              <ButtonGroup>
+                <Button
+                  appearance={showMyRequestsOnly ? 'primary' : null}
+                  iconBefore={requestsButtonIcon}
+                  onClick={onShowMyRequests}
+                >
+                  {requestsButtonString}
+                </Button>
+              </ButtonGroup>
               <Search />
             </nav>
           </GridColumn>
@@ -232,9 +259,11 @@ RequestsList.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   onChangeFilter: PropTypes.func.isRequired,
+  onShowMyRequests: PropTypes.func.isRequired,
   onSort: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
   search: PropTypes.string.isRequired,
+  showMyRequestsOnly: PropTypes.bool.isRequired,
   sortKey: PropTypes.string.isRequired,
   sortOrder: PropTypes.oneOf(['DESC', 'ASC']).isRequired,
 };

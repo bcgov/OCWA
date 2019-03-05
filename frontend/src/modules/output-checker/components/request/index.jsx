@@ -6,12 +6,13 @@ import Discussion from '@src/modules/discussion/containers/discussion';
 import DocumentsIcon from '@atlaskit/icon/glyph/documents';
 import InfoIcon from '@atlaskit/icon/glyph/info';
 import isEmpty from 'lodash/isEmpty';
+import { Link, Route, Switch } from 'react-router-dom';
 import { List } from 'react-content-loader';
 import Tab from '@src/components/tabs/tab';
 import Tabs from '@src/components/tabs';
-import { Route, Switch } from 'react-router-dom';
 import { RequestSchema } from '@src/modules/requests/types';
 import Spinner from '@atlaskit/spinner';
+import StateLabel from '@src/modules/requests/components/state-label';
 
 import Details from './details';
 import Files from './files';
@@ -27,7 +28,13 @@ function Request({ data, isSaving, match }) {
       <RequestsNav activeId={requestId} />
       <div className={styles.request}>
         <header className={styles.header}>
-          <h2 id="request-name-text">{data.name || 'Loading...'}</h2>
+          <hgroup className={styles.hgroup}>
+            <div>
+              <Link to="/">&laquo; Back to Dashboard</Link>
+              <h2 id="request-name-text">{data.name || 'Loading...'}</h2>
+            </div>
+            <StateLabel value={data.state} />
+          </hgroup>
           <Tabs>
             <Tab icon={<InfoIcon />} text="Details" url={match.url} />
             <Tab
