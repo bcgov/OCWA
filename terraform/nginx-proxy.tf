@@ -51,6 +51,7 @@ data "template_file" "proxy_config" {
       authHost = "${var.authHost}"
       authHostname = "${var.authHostname}"
       ocwaHost = "${var.ocwaHost}"
+      ocwaDLHostname = "${var.ocwaDLHostname}"
       ocwaHostname = "${var.ocwaHostname}"
       sslCertificate = "${var.sslCertificate}"
       sslCertificateKey = "${var.sslCertificateKey}"

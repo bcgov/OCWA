@@ -82,6 +82,7 @@ class Requester_step_def_ks {
 	String REVISIONS_NEEDED_REQUEST_BTN_ID = "request-sidebar-request-revisions-button"
 	String REQUEST_ASSIGNED_TO_ID = "request-assigned-oc"
 
+
 	String g_requestName = ""
 
 	/**
@@ -90,12 +91,12 @@ class Requester_step_def_ks {
 
 	@Given("requester has logged in")
 	def requester_login() {
-		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
+		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD, GlobalVariable.OCWA_URL)
 	}
 
 	@Given("output checker has logged in")
 	def checker_login() {
-		login(GlobalVariable.OCWA_USER_CHECKER1, GlobalVariable.OCWA_USER_CHECKER1_PSWD)
+		login(GlobalVariable.OCWA_USER_CHECKER1, GlobalVariable.OCWA_USER_CHECKER1_PSWD, GlobalVariable.OCWA_URL)
 	}
 	@Given("an unclaimed request exists")
 	def checker_unclaimed_request_exists() {
@@ -105,6 +106,16 @@ class Requester_step_def_ks {
 	@When("output checker tries to claim an unclaimed request")
 	def checker_tries_to_claim_unclaimed_request() {
 		WebUI.waitForPageLoad(30)
+		// TODO: Un-hard code this string mess
+		WebUI.click(get_test_object_by_id("oc-dashboard-filters-select"))
+
+		String desiredString = "Show All Requests"
+		TestObject desiredOption = new TestObject(desiredString)
+		desiredOption.addProperty("text", ConditionType.EQUALS, desiredString, true)
+		WebUI.waitForElementPresent(desiredOption, 10)
+		WebUI.scrollToElement(desiredOption, 10)
+		WebUI.click(desiredOption)
+
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementVisible(linkToRequest, 20)
 		WebUI.waitForElementClickable(linkToRequest, 20)
@@ -158,10 +169,16 @@ class Requester_step_def_ks {
 	def checker_should_see_request_is_in_given_status(String status){
 		//placeholder until status is displayed on individual requests in the oc interface
 	}
+	@Then("the approved files are available for download outside of the secure environment")
+	def requester_should_see_files_available_for_download() {
+		download_interface_login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
+		WebUI.waitForPageLoad(10)
+		WebUI.verifyTextPresent(g_requestName, false)
+	}
 
-	def login(String username, String password){
+	def login(String username, String password, String url){
 		WebUI.openBrowser(null)
-		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+		WebUI.navigateToUrl(url)
 		WebUI.waitForPageLoad(10)
 
 		TestObject loginButton = get_test_object_by_id(LOGIN_BTN_ID)
@@ -173,6 +190,10 @@ class Requester_step_def_ks {
 		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), password)
 		WebUI.click(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_login'))
 		WebUI.waitForPageLoad(30)
+	}
+
+	def download_interface_login(String username, String password){
+		login(username, password, GlobalVariable.OCWA_DL_URL)
 	}
 
 	@Given("requester has started a request")
@@ -376,7 +397,9 @@ class Requester_step_def_ks {
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 10)
 		WebUI.delay(3) // Stopgap related to https://github.com/bcgov/OCWA/issues/89
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
-		WebUI.waitForElementNotPresent(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), 10) //wait for the modal window to close
+		if(!WebUI.waitForElementNotPresent(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), 10)) {
+			throw new com.kms.katalon.core.exception.StepFailedException("Submission failed - modal window still present")
+		}
 	}
 
 	@When("requester writes and submits a new comment")
@@ -403,6 +426,7 @@ class Requester_step_def_ks {
 		WebUI.setText(searchBox, g_requestName)
 		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
+		WebUI.delay(3) // TODO: Resolve searching delay with proper element check
 		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
 		WebUI.waitForElementClickable(linkToRequest, 10)
@@ -458,21 +482,20 @@ class Requester_step_def_ks {
 		WebUI.setText(searchBox, g_requestName)
 		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
-		WebUI.waitForElementVisible(get_test_object_by_text(g_requestName), 10)
+		TestObject linkToRequest = get_test_object_by_text(g_requestName)
+		WebUI.waitForElementPresent(linkToRequest, 10)
 		if (!WebUI.verifyTextPresent(g_requestName, false)) {
 			WebUI.comment("unable to find the text:$g_requestName on the page. This text is used to find the request link")
 		}
 
-		TestObject linkToRequest = get_test_object_by_text(g_requestName)
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
+		WebUI.waitForElementVisible(linkToRequest, 10)
 		WebUI.waitForElementClickable(linkToRequest, 10)
-
 		WebUI.click(linkToRequest)
 		WebUI.comment("clicked on the request link that contains text: $g_requestName")
 
 		WebUI.waitForPageLoad(20)
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
-
 
 		WebUI.verifyTextPresent(g_requestName, false)
 		WebUI.delay(3) // we need to do a hard delay here to give time for the inline ajax to finish

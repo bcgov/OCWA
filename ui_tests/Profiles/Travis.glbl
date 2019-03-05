@@ -14,4 +14,9 @@
       <initValue>'/home/travis/build/bcgov/OCWA/ui_tests/test_files/'</initValue>
       <name>TestFilePath</name>
    </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'https://ocwadl.example.demo'</initValue>
+      <name>OCWA_DL_URL</name>
+   </GlobalVariableEntity>
 </GlobalVariableEntities>
