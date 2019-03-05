@@ -22,7 +22,6 @@
     "babel-jest": "^24.1.0",
     "babel-loader": "^8.0.2",
     "babel-minify-webpack-plugin": "^0.3.1",
-    "braces": "^2.3.2",
     "clean-webpack-plugin": "^0.1.19",
     "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
@@ -37,7 +36,6 @@
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
     "jest": "^24.1.0",
-    "jest-enzyme": "^7.0.1",
     "mini-css-extract-plugin": "^0.4.4",
     "nodemon": "^1.18.4",
     "redux-logger": "^3.0.6",
@@ -142,8 +140,7 @@
       "^.+\\.jsx?$": "babel-jest"
     },
     "setupFilesAfterEnv": [
-      "<rootDir>/tests/setup.js",
-      "./node_modules/jest-enzyme/lib/index.js"
+      "<rootDir>/tests/setup.js"
     ],
     "setupFiles": [
       "<rootDir>/tests/globals.js"
