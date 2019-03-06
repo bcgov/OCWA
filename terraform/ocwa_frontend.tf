@@ -1,6 +1,6 @@
 
 data "docker_registry_image" "ocwa_frontend" {
-  name = "bcgovimages/ocwa_frontend${var.images["frontend"]}"
+  name = "${var.images["owner"]}/ocwa_frontend${var.images["frontend"]}"
 }
 
 resource "docker_image" "ocwa_frontend" {
