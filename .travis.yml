@@ -402,6 +402,7 @@ matrix:
           sudo chmod +x Katalon_Studio/katalon
           sudo chmod -R 777 Katalon_Studio
         # Check that the install lifecycle worked
+        - docker images
         - docker ps
          
       script:
