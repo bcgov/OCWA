@@ -61,7 +61,9 @@ matrix:
           cd /home/travis/build/bcgov/OCWA/microservices/forumApi
           npm test
         - helm lint helm/forum-api
-        - bash docker_quayio_push
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+          bash docker_quayio_push ocwa_forum_api
         - |-
           cd /home/travis/build/bcgov/OCWA
           PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
@@ -149,7 +151,9 @@ matrix:
           sleep 15
           npm test
         - helm lint helm/request-api
-        - bash docker_quayio_push
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+          bash docker_quayio_push ocwa_request_api
         - |-
           cd /home/travis/build/bcgov/OCWA
           PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
@@ -202,11 +206,12 @@ matrix:
           cd /home/travis/build/bcgov/OCWA/microservices/policyApi
           cp config/default.json.template config/default.json
           sudo pip3 install -e .
-        - sudo pytest
         - sudo coverage run --branch --source=db,v1 -m pytest
         - sudo coverage xml
-        - helm lint helm/policy-api
-        - bash docker_quayio_push 
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+          helm lint helm/policy-api
+          bash docker_quayio_push ocwa_policy_api
         - |-
           cd /home/travis/build/bcgov/OCWA
           PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
@@ -269,8 +274,10 @@ matrix:
           sudo pip3 install -e .
         - sudo coverage run --branch --source=db,v1,validator -m pytest
         - sudo coverage xml
-        - helm lint helm/validate-api
-        - bash docker_quayio_push
+        - |-
+          cd /home/travis/build/bcgov/OCWA/microservices/validateApi
+          helm lint helm/validate-api
+          bash docker_quayio_push ocwa_validate_api
         - |-
           cd /home/travis/build/bcgov/OCWA
           PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
@@ -323,8 +330,10 @@ matrix:
         - npm ci
         - npm audit
         - npm test
-        - helm lint helm/ocwa-frontend
-        - bash docker_quayio_push ocwa_frontend 
+        - |-
+          cd /home/travis/build/bcgov/OCWA/frontend
+          helm lint helm/ocwa-frontend
+          bash docker_quayio_push ocwa_frontend
         - |-
           cd /home/travis/build/bcgov/OCWA
           sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_frontend -Dsonar.projectName="OCWA Frontend" -Dsonar.modules=frontend
