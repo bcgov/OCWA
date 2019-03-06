@@ -10,8 +10,8 @@ docker build -t quay.io/ikethecoder/$QUAYIO_REPO .
 echo "Pushing image $QUAYIO_REPO to Quay..."
 docker push quay.io/ikethecoder/$QUAYIO_REPO
 if [ ! -z "$TRAVIS_BRANCH" ]; then
-    echo "Tagging image $QUAYIO_REPO with $TRAVIS_BRANCH on Quay..."
-    docker push quay.io/ikethecoder/$QUAYIO_REPO:$TRAVIS_BRANCH
+    echo "Tagging image $QUAYIO_REPO with ${TRAVIS_BRANCH/\//-} on Quay..."
+    docker push quay.io/ikethecoder/$QUAYIO_REPO:${TRAVIS_BRANCH/\//-}
 fi
 
 echo "Docker image push completed"

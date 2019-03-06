@@ -18,4 +18,4 @@ images = {
 s = Template(template)
 
 with open('terraform.auto.tfvars', 'w') as the_file:
-    the_file.write(s.substitute(TAG=os.environ['TRAVIS_BRANCH']))
+    the_file.write(s.substitute(TAG=os.environ['TRAVIS_BRANCH'].replace('/', '-')))
