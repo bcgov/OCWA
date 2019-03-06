@@ -372,6 +372,7 @@ matrix:
           cd /home/travis/build/bcgov/OCWA/terraform
           mkdir _tmp
           cp terraform.tfvars.example terraform.tfvars
+          python2 scripts/prepare_images_variable.py
         - terraform init
         - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
 
