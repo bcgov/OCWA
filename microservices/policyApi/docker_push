@@ -3,30 +3,33 @@
 #make sure in the right directory
 cd /home/travis/build/bcgov/OCWA/microservices/policyApi
 
+BCGOV_BASE="bcgovimages"
+REPO=$1
+QUAYIO_BASE="quay.io/ikethecoder"
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
 printf "\nENV GITHASH $TRAVIS_COMMIT\n" >> Dockerfile
 
 if [ $TRAVIS_BRANCH == "master" ]; then
-    docker build -t bcgovimages/ocwa_policy_api:latest -t bcgovimages/ocwa_policy_api:$TRAVIS_COMMIT .;
-    echo "dockerfile built pushing now";
-    docker push bcgovimages/ocwa_policy_api:latest;
-    docker push bcgovimages/ocwa_policy_api:$TRAVIS_COMMIT;
-    echo "latest and $TRAVIS_COMMIT pushed successfully";
+    docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:latest
+    docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:$TRAVIS_COMMIT
+    echo "dockerfile tagged pushing now"
+    docker push $BCGOV_BASE/$REPO:latest
+    docker push $BCGOV_BASE/$REPO:$TRAVIS_COMMIT
+    echo "latest and $TRAVIS_COMMIT pushed successfully"
 fi
 
 if [ $TRAVIS_BRANCH == "develop" ]; then
-    docker build -t bcgovimages/ocwa_policy_api:edge .;
-    echo "dockerfile built pushing now";
-    docker push bcgovimages/ocwa_policy_api:edge;
-    echo "edge (develop) pushed successfully";
+    docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:edge
+    echo "dockerfile tagged pushing now"
+    docker push $BCGOV_BASE/$REPO:edge
+    echo "edge (develop) pushed successfully"
 fi
 
 if [ "$TRAVIS_BRANCH" == "$TRAVIS_TAG" ]; then
-    #Tag build
-    docker build -t bcgovimages/ocwa_policy_api:$TRAVIS_TAG .;
-    echo "dockerfile built pushing now";
-    docker push bcgovimages/ocwa_policy_api:$TRAVIS_TAG;
-    echo "$TRAVIS_TAG pushed successfully";
+    docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:$TRAVIS_TAG
+    echo "dockerfile tagged pushing now"
+    docker push $BCGOV_BASE/$REPO:$TRAVIS_TAG
+    echo "$TRAVIS_TAG pushed successfully"
 fi

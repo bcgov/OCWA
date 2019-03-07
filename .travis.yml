@@ -74,7 +74,7 @@ matrix:
 
       deploy:
         provider: script
-        script: bash docker_push || travis_terminate 1
+        script: bash docker_push ocwa_forum_api || travis_terminate 1
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
@@ -164,7 +164,7 @@ matrix:
 
       deploy:
         provider: script
-        script: bash docker_push || travis_terminate 1
+        script: bash docker_push ocwa_request_api || travis_terminate 1
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
@@ -222,7 +222,7 @@ matrix:
 
       deploy:
         provider: script
-        script: bash docker_push || travis_terminate 1
+        script: bash docker_push ocwa_policy_api || travis_terminate 1
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
@@ -288,7 +288,7 @@ matrix:
 
       deploy:
         provider: script
-        script: bash docker_push || travis_terminate 1
+        script: bash docker_push ocwa_validate_api || travis_terminate 1
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
@@ -343,7 +343,7 @@ matrix:
 
       deploy:
         provider: script
-        script: bash docker_push || travis_terminate 1
+        script: bash docker_push ocwa_frontend || travis_terminate 1
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG
