@@ -10,6 +10,7 @@ from config import Config
 from db.db import Db
 from munch import munchify
 import magic
+import ValidationQueue.ValidationQueue
 
 log = logging.getLogger(__name__)
 
@@ -23,7 +24,9 @@ class Validator:
         self.result = result
 
     def start_validate(self):
-        log.debug("Starting validation process")
+        log.debug("Adding to queue")
+        ValidationQueue.ValidationQueue.getQueue().put(self.result)
+        
         self.proc = Process(target=validate, args=(self.rule, self.result))
         self.proc.start()
 
