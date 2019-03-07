@@ -7,7 +7,7 @@ All installs require an instance of mongodb available.
 ### Prerequisites
 
 - Python 3.6 or newer
-- MongoDB 3.6 or newer
+- MongoDB 4.0 or newer
 - Docker 18.09.1 or newer
 
 ### Bare Metal Install
