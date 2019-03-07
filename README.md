@@ -11,9 +11,9 @@ OCWA is written in both node.js and Python 3. Docker is also strongly recommende
 - Python 3.6 or newer
 - npm 6.4.1 or newer
 - node 10.15.1 LTS or newer
-- MongoDB 3.6 or newer
+- MongoDB 4.0 or newer
 - Docker 18.09.1 or newer
-- Katalon Studio 5.9 or newer
+- Katalon Studio 5.10 or newer
 
 ## Components
 
