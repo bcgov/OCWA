@@ -35,13 +35,19 @@ function StateLabel({ value }) {
       name = 'No state';
       break;
   }
+  const color = getRequestStateColor(value);
 
   return (
     <div
       className={cx('request-state-label', styles.container)}
-      style={{ backgroundColor: getRequestStateColor(value) }}
+      style={{ backgroundColor: color }}
     >
-      <RequestIcon color="white" size="medium" value={value} />
+      <RequestIcon
+        color="white"
+        secondaryColor={value >= 3 ? getRequestStateColor(value) : null}
+        size="medium"
+        value={value}
+      />
       {name}
     </div>
   );

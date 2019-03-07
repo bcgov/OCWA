@@ -5,6 +5,7 @@ import isArray from 'lodash/isArray';
 import isNull from 'lodash/isNull';
 import withRequest from '@src/modules/data/components/data-request';
 import { limit } from '@src/services/config';
+import { escapeRegExp } from '@src/utils';
 
 import {
   changeFilter,
@@ -29,7 +30,7 @@ const mapStateToProps = state => {
   const userId = get(state, 'app.auth.user.id');
   const entities = get(state, 'data.entities.requests', {});
   const ids = keys(entities);
-  const regex = new RegExp(search, 'i');
+  const regex = new RegExp(escapeRegExp(search), 'i');
   const sliceStartIndex = Math.max((page - 1) * limit, 0);
   const dataEntities = ids.map(id => get(entities, id, {})).filter(d => {
     if (isNull(filter)) return true;

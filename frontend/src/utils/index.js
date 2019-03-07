@@ -1,3 +1,6 @@
-export default function() {
-  console.log('arssss');
-}
+export const escapeRegExp = string =>
+  string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+export default {
+  escapeRegExp,
+};
