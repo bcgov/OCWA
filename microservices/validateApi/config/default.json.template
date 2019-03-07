@@ -26,5 +26,8 @@
     "idField": "Email"
   },
 
-  "alwaysScanFiles": false
+  "alwaysScanFiles": false,
+
+  "workingLimit": 1024,
+  "failOverWorkingLimit": true
 }
