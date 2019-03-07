@@ -1,6 +1,6 @@
 
 data "docker_registry_image" "ocwa_validate_api" {
-  name = "bcgovimages/ocwa_validate_api${var.images["validate_api"]}"
+  name = "${var.images["owner"]}/ocwa_validate_api${var.images["validate_api"]}"
 }
 
 resource "docker_image" "ocwa_validate_api" {
