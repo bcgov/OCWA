@@ -1,13 +1,19 @@
 #!/bin/bash
-
-#make sure in the right directory
-cd /home/travis/build/bcgov/OCWA/frontend
-
 QUAYIO_REPO=$1
+QUAYIO_BASE="quay.io/ikethecoder"
 
+echo "Logging into Quay..."
 echo "$QUAYIO_PASSWORD" | docker login -u "$QUAYIO_USERNAME" --password-stdin quay.io
-echo "logged in to quay, building now";
-docker build -t quay.io/ikethecoder/$QUAYIO_REPO .
-echo "dockerfile built pushing now";
-docker push quay.io/ikethecoder/$QUAYIO_REPO
-echo "push to quay done successfully";
+
+echo "Building Docker image..."
+docker build -t $QUAYIO_BASE/$QUAYIO_REPO .
+
+echo "Pushing image $QUAYIO_REPO to Quay..."
+docker push $QUAYIO_BASE/$QUAYIO_REPO
+if [ ! -z "$TRAVIS_BRANCH" ]; then
+    echo "Tagging image $QUAYIO_REPO with ${TRAVIS_BRANCH/\//-} on Quay..."
+    docker tag $QUAYIO_BASE/$QUAYIO_REPO $QUAYIO_BASE/$QUAYIO_REPO:${TRAVIS_BRANCH/\//-}
+    docker push $QUAYIO_BASE/$QUAYIO_REPO:${TRAVIS_BRANCH/\//-}
+fi
+
+echo "Docker image push completed"

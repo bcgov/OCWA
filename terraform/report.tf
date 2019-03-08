@@ -18,11 +18,12 @@ resource "local_file" "report_script" {
 data "template_file" "terraform_lock" {
   template = "${file("${path.module}/scripts/terraform.lock.tpl")}"
   vars = {
-    requestApiDigest = "${data.docker_registry_image.ocwa_request_api.sha256_digest}"      
-    policyApiDigest = "${data.docker_registry_image.ocwa_policy_api.sha256_digest}"      
-    validateApiDigest = "${data.docker_registry_image.ocwa_validate_api.sha256_digest}"      
-    forumApiDigest = "${data.docker_registry_image.ocwa_forum_api.sha256_digest}"      
-    frontendDigest = "${data.docker_registry_image.ocwa_frontend.sha256_digest}"      
+    owner = "${var.images["owner"]}"      
+    requestApiDigest = "@${data.docker_registry_image.ocwa_request_api.sha256_digest}"      
+    policyApiDigest = "@${data.docker_registry_image.ocwa_policy_api.sha256_digest}"      
+    validateApiDigest = "@${data.docker_registry_image.ocwa_validate_api.sha256_digest}"      
+    forumApiDigest = "@${data.docker_registry_image.ocwa_forum_api.sha256_digest}"      
+    frontendDigest = "@${data.docker_registry_image.ocwa_frontend.sha256_digest}"      
   }
 }
 

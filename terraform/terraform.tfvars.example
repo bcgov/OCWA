@@ -26,6 +26,7 @@ sslCertificate = "/ssl/example.crt"
 sslCertificateKey = "/ssl/example.key"
 
 images = {
+    owner = "bcgovimages"
     request_api = ":edge"
     validate_api = ":edge"
     forum_api = ":edge"

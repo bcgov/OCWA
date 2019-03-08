@@ -36,5 +36,4 @@ printf "\"idField\": \"${USER_ID_FIELD}\"\n" >> ./config/default.json
 printf "}\n" >> ./config/default.json
 printf "}" >> ./config/default.json
 
-
-yarn start:prod
+npm run start:prod

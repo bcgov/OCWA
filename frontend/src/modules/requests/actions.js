@@ -39,6 +39,11 @@ export const viewDraftRequest = id => ({
   payload: id,
 });
 
+export const duplicateRequest = request => ({
+  type: 'requests/duplicate',
+  payload: request,
+});
+
 export const editRequest = request => ({
   type: 'requests/view/request',
   payload: request,
@@ -102,6 +107,7 @@ export default {
   changeStep,
   clearSearch,
   closeDraftRequest,
+  duplicateRequest,
   fetchRequests,
   removeFile,
   reset,

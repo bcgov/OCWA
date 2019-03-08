@@ -345,7 +345,7 @@ class Requester_step_def_ks {
 				break
 			case "review in progress":
 				requester_has_submitted_a_request()
-			//output checker needs to claim
+				//output checker needs to claim
 				break
 			case "work in progress":
 				requester_has_submitted_a_request()
@@ -357,8 +357,8 @@ class Requester_step_def_ks {
 				break
 			case "approved":
 				requester_has_submitted_a_request()
-			//output checker needs to claim
-			//output checker needs to approve
+				//output checker needs to claim
+				//output checker needs to approve
 				break
 			default:
 				throw new Exception("status $status not found")
@@ -443,9 +443,15 @@ class Requester_step_def_ks {
 
 	@When("the requester withdraws the request")
 	def requester_withdraws_request(){
-		requester_views_request_they_created()
+		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForElementClickable(get_test_object_by_id(REQUEST_WITHDRAW_BTN_ID), 10)
 		WebUI.click(get_test_object_by_id(REQUEST_WITHDRAW_BTN_ID))
+		WebUI.acceptAlert()
+
+		// Click Add Files button
+		TestObject requestFormSaveFilesButton = get_test_object_by_id(REQUEST_SAVE_FILES_BTN_ID)
+		WebUI.waitForElementClickable(requestFormSaveFilesButton, 10)
+		WebUI.click(requestFormSaveFilesButton)
 	}
 
 	@When("requester views (.+) requests")
@@ -474,7 +480,6 @@ class Requester_step_def_ks {
 
 	@Then("the requester should see their saved request including (.+) output file (.+) supporting file")
 	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles){
-		//requester_views_request_they_created()
 		WebUI.waitForPageLoad(10)
 		WebUI.comment("current page (should be main page): ${WebUI.getUrl()}")
 		TestObject searchBox = get_test_object_by_id(SEARCH_BOX_ID)
@@ -491,6 +496,7 @@ class Requester_step_def_ks {
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
 		WebUI.waitForElementVisible(linkToRequest, 10)
 		WebUI.waitForElementClickable(linkToRequest, 10)
+		WebUI.delay(1) // Need to wait for the loading wheel to disappear
 		WebUI.click(linkToRequest)
 		WebUI.comment("clicked on the request link that contains text: $g_requestName")
 
@@ -572,16 +578,16 @@ class Requester_step_def_ks {
 
 	@Then("requester should be able to make changes to the request")
 	def requester_should_be_able_to_make_changes_to_the_request(){
-		//requester_views_request_they_created()
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.click(get_test_object_by_id(REQUEST_EDIT_BTN_ID))
 		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), EDITED_PURPOSE_TEXT)
 
-		// click Add Files button
+		// Click Add Files button
 		TestObject requestFormSaveFilesButton = get_test_object_by_id(REQUEST_SAVE_FILES_BTN_ID)
-		WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
+		WebUI.waitForElementClickable(requestFormSaveFilesButton, 10)
 		WebUI.click(requestFormSaveFilesButton)
 	}
+
 	@Then("requester should be able to re-submit the request")
 	def requester_should_be_able_to_resubmit_request(){
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)

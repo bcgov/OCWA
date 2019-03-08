@@ -1,6 +1,6 @@
 
 data "docker_registry_image" "ocwa_policy_api" {
-  name = "bcgovimages/ocwa_policy_api${var.images["policy_api"]}"
+  name = "${var.images["owner"]}/ocwa_policy_api${var.images["policy_api"]}"
 }
 
 resource "docker_image" "ocwa_policy_api" {

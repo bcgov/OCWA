@@ -1,5 +1,14 @@
-import { all, call, fork, put, take } from 'redux-saga/effects';
+import {
+  all,
+  call,
+  fork,
+  put,
+  select,
+  take,
+  takeLatest,
+} from 'redux-saga/effects';
 import { channel, delay, eventChannel, END } from 'redux-saga';
+import get from 'lodash/get';
 import { getToken } from '@src/services/auth';
 import difference from 'lodash/difference';
 import head from 'lodash/head';
@@ -142,6 +151,18 @@ function* uploadFileWatcher() {
   }
 }
 
+function* onSaveRequest(action) {
+  const { id, isWithdrawing } = action.meta;
+
+  if (isWithdrawing) {
+    yield put({
+      type: 'requests/view/request',
+      payload: id,
+    });
+  }
+}
+
 export default function* root() {
+  yield takeLatest('request/put/success', onSaveRequest);
   yield call(uploadFileWatcher);
 }
