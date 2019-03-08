@@ -12,7 +12,7 @@ import ErrorIcon from '@atlaskit/icon/glyph/error';
 import get from 'lodash/get';
 import head from 'lodash/head';
 import last from 'lodash/last';
-import Loading from '@src/components/Loading';
+import Loading from '@src/components/loading';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import PersonIcon from '@atlaskit/icon/glyph/person';
 import PeopleGroupIcon from '@atlaskit/icon/glyph/people-group';
