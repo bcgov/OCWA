@@ -97,10 +97,8 @@ class NewRequestDialog extends React.PureComponent {
     const { data, isFilesValid, sendAction } = this.props;
 
     if (isFilesValid) {
-      console.log('IS VALID!');
-      // sendAction('onSubmit', data, { quitEditing: true });
+      sendAction('onSubmit', data, { quitEditing: true });
     } else {
-      console.log('REFRESH!');
       sendAction('onFetch', data._id);
     }
   };
