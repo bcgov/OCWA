@@ -94,8 +94,15 @@ class NewRequestDialog extends React.PureComponent {
   };
 
   onSubmit = () => {
-    const { data, sendAction } = this.props;
-    sendAction('onSubmit', data, { quitEditing: true });
+    const { data, isFilesValid, sendAction } = this.props;
+
+    if (isFilesValid) {
+      console.log('IS VALID!');
+      // sendAction('onSubmit', data, { quitEditing: true });
+    } else {
+      console.log('REFRESH!');
+      sendAction('onFetch', data._id);
+    }
   };
 
   save = (payload, quitEditing = false, nextStep = false) => {
@@ -119,12 +126,15 @@ class NewRequestDialog extends React.PureComponent {
       currentStep,
       data,
       isCreating,
+      isFilesValid,
+      isLoading,
       isSaving,
       isUploading,
       onCancel,
       open,
     } = this.props;
-    const isDisabled = isCreating || isUploading || isSaving || !open;
+    const isDisabled =
+      isCreating || isLoading || isUploading || isSaving || !open;
     const isDraft = data.state === 0;
 
     return (
@@ -171,14 +181,14 @@ class NewRequestDialog extends React.PureComponent {
           )}
           {currentStep === 1 && (
             <Button
-              appearance="primary"
+              appearance={isFilesValid ? 'primary' : 'warning'}
               id="request-form-submit-button"
               isDisabled={
                 isDisabled || isDraft || get(data, 'files.length', 0) <= 0
               }
               onClick={this.onSubmit}
             >
-              Submit for Review
+              {isFilesValid ? 'Submit for Review' : 'Processing: Check Status'}
             </Button>
           )}
         </ButtonGroup>
@@ -224,6 +234,8 @@ NewRequestDialog.propTypes = {
     name: PropTypes.string,
     files: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  isFilesValid: PropTypes.bool.isRequired,
   isNewRequest: PropTypes.bool.isRequired,
   isUploading: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
