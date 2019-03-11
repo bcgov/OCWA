@@ -30,7 +30,9 @@ Run `docker build . -t ocwa_validate_api` to build the docker container and the 
 
 ``` sh
 hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
-docker run -e POLICY_URL=PolicyApiUrl -e STORAGE_HOST=MyS3StyleHost -e STORAGE_BUCKET=MyS3StyleBucket -e STORAGE_ACCESS_KEY=MyS3AccessKey -e STORAGE_ACCESS_SECRET=MyS3AccessSecret -e API_SECRET=MySecret -e LOG_LEVEL=info -e DB_USERNAME=mongoUser -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e DB_PORT=27017 -e USER_ID_FIELD=Email  -e DB_HOST=docker -e ALWAYS_SCAN_FILES=true --add-host=docker:$hostip -p LOCALPORT:3003 ocwa_validate_api
+docker run -e POLICY_URL=PolicyApiUrl -e STORAGE_HOST=MyS3StyleHost -e STORAGE_BUCKET=MyS3StyleBucket -e STORAGE_ACCESS_KEY=MyS3AccessKey -e STORAGE_ACCESS_SECRET=MyS3AccessSecret -e API_SECRET=MySecret -e LOG_LEVEL=info -e DB_USERNAME=mongoUser -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e DB_PORT=27017 -e USER_ID_FIELD=Email  -e DB_HOST=docker \
+-e ALWAYS_SCAN_FILES=true -e WORKING_LIMIT=5242880 -e FAIL_OVER_WORKING_LIMIT=true \
+--add-host=docker:$hostip -p LOCALPORT:3003 ocwa_validate_api
 ```
 
 - *Windows Note: the `--add-host=docker:$hostip` parameter and hostip line are not necessary.*
