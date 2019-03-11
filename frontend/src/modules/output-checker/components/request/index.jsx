@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import cx from 'classnames';
 import CommentIcon from '@atlaskit/icon/glyph/comment';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import DocumentsIcon from '@atlaskit/icon/glyph/documents';
@@ -13,6 +12,7 @@ import Tabs from '@src/components/tabs';
 import { RequestSchema } from '@src/modules/requests/types';
 import Spinner from '@atlaskit/spinner';
 import StateLabel from '@src/modules/requests/components/state-label';
+import Title from '@src/components/title';
 
 import Details from './details';
 import Files from './files';
@@ -25,6 +25,7 @@ function Request({ data, isSaving, match }) {
 
   return (
     <div className={styles.container}>
+      <Title>{data.name || 'Loading...'}</Title>
       <RequestsNav activeId={requestId} />
       <div className={styles.request}>
         <header className={styles.header}>

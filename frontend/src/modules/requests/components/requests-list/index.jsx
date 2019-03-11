@@ -17,6 +17,7 @@ import Page, { Grid, GridColumn } from '@atlaskit/page';
 import PersonIcon from '@atlaskit/icon/glyph/person';
 import PeopleGroupIcon from '@atlaskit/icon/glyph/people-group';
 import SearchIcon from '@atlaskit/icon/glyph/search';
+import Title from '@src/components/title';
 import { colors } from '@atlaskit/theme';
 import { limit } from '@src/services/config';
 
@@ -174,6 +175,7 @@ function RequestsList({
   return (
     <Page>
       <Loading loading={isLoading} />
+      <Title>My Requests</Title>
       <header id="requests-list-header" className={styles.header}>
         <Grid>
           <GridColumn medium={12}>
