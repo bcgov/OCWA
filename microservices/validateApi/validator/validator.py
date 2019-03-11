@@ -100,7 +100,7 @@ def validateProcess():
             if not(processes[index]['proc'].is_alive()):
                 #process is done
                 workingSize -= processes[index]['size']
-                del processes[i]
+                del processes[index]
                 index = index - 1
 
             index = index + 1
