@@ -29,6 +29,8 @@ resource "docker_container" "ocwa_validate_api" {
       "STORAGE_ACCESS_KEY=${random_id.accessKey.hex}",
       "STORAGE_ACCESS_SECRET=${random_string.secretKey.result}",
       "POLICY_URL=http://ocwa_policy_api:3004",
-      "ALWAYS_SCAN_FILES=false"
+      "ALWAYS_SCAN_FILES=false",
+      "WORKING_LIMIT=5242880",
+      "FAIL_OVER_WORKING_LIMIT=true"
   ]
 }
