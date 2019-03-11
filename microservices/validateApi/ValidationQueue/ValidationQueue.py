@@ -1,4 +1,4 @@
-import queue
+from multiprocessing import Queue
 from config import Config
 import db
 import ut
@@ -8,12 +8,12 @@ class QueueObject(object):
     self.result = None
     self.size = -1
 
-    __init__(rule, result):
+    def __init__(rule, result):
         self.rule = rule
         self.result = result
 
 class ValidationQueue(object):
-    q = queue.Queue()
+    q = Queue()
 
     @classmethod
     def getQueue(cls):
@@ -26,7 +26,7 @@ class ValidationQueue(object):
         for i in range(len(results)):
             policy = get_policy(results[i].policy_id)
             queueItem = new QueueObject(policy, results[i])
-            cls.q.put(results[i])
+            cls.q.put(queueItem)
 
 def get_policy(policy_id):
     conf = Config().data

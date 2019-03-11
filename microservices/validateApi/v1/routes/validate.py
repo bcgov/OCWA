@@ -76,9 +76,8 @@ def validate_policy(fileId: str) -> object:
             log.debug("pre save")
             result.save()
             log.debug("creating validator")
-            v = Validator(policy[i], result)
             log.debug("calling start validate")
-            v.start_validate()
+            v.start_validate(policy[i], result)
             
 
     return jsonify({"message": "Successful"}), HTTPStatus.CREATED
@@ -123,8 +122,8 @@ def validate_rule(fileId: str, ruleId: str) -> object:
         policy = get_policy(None)
 
         if result.rule_id in policy.keys():
-            v = Validator(policy[result.rule_id], result)
-            v.start_validate()
+            v = Validator()
+            v.start_validate(policy[result.rule_id], result)
 
             return jsonify({"message": "Successful"}), HTTPStatus.OK
         else:

@@ -2,6 +2,7 @@
 import logging
 import re
 import sys
+import time
 from io import StringIO
 from multiprocessing import Process
 
@@ -14,21 +15,96 @@ import ValidationQueue.ValidationQueue
 
 log = logging.getLogger(__name__)
 
+# sleep time in seconds
+SLEEP_TIME = 10
+
+# aborting?
+ABORTING = False
+
 class Validator:
-    rule = ""
-    result = None
-    proc = None
+    self.proc = None
 
-    def __init__(self, rule, result):
-        self.rule = rule
-        self.result = result
+    def abort():
+        ABORTING = True
+        self.proc.join()
 
-    def start_validate(self):
-        log.debug("Adding to queue")
-        ValidationQueue.ValidationQueue.getQueue().put(self.result)
+    def start_validate_process(self):
+        log.debug("Starting validation header process")
         
-        self.proc = Process(target=validate, args=(self.rule, self.result))
+        self.proc = Process(target=validateProcess)
         self.proc.start()
+
+    def start_validate(self, rule, result):
+        log.debug("Adding to queue")
+        item = ValidationQueue.QueueObject(rule, result)
+        ValidationQueue.ValidationQueue.getQueue().put(item)
+
+
+def validateProcess():
+    conf = Config().data
+    processes = []
+    workingSize = 0
+    workingLimit = conf['workingLimit']
+    config = Config().conf.data
+    endpoint = config['storage']['endpoint']
+    bucket = config['storage']['bucket']
+    access_key_id = config['storage']['access_key']
+    access_secret_id = config['storage']['secret_key']
+
+    conn = boto3.client(service_name='s3',
+                        aws_access_key_id=access_key_id,
+                        aws_secret_access_key=access_secret_id,
+                        endpoint_url=endpoint)
+
+    bucketObj = conn.get_bucket(bucket)
+    
+    while not(ABORTING):
+        #queue work
+        if ValidationQueue.ValidationQueue.getQueue().empty():
+            time.sleep(SLEEP_TIME)
+        else:
+            item = ValidationQueue.ValidationQueue.getQueue().get(False)
+            if item.size == -1:
+                item.size = bucketObj.lookup('file_name').size
+
+            if item.size > workingLimit:
+                # Can't ever scan this it's too big
+                item.result.message = "File is too large to be validated"
+                item.result.state = 0 # pass
+                if ('failOverWorkingLimit' in config['failOverWorkingLimit']) and (config['failOverWorkingLimit']):
+                    item.result.state = 1 # fail
+
+                item.result.save()
+
+            elif (workingSize+item.size) > workingLimit:
+                # can't work on yet, too big
+                onlyOneItem = ValidationQueue.ValidationQueue.getQueue().empty()
+                ValidationQueue.ValidationQueue.getQueue().put(item)
+                if onlyOneItem:
+                    time.sleep(SLEEP_TIME)
+            else:
+                # can start work on now
+                workingSize += item.size
+                self.proc = Process(target=validate, args=(item.rule, item.result))
+                self.proc.start()
+                processes.append({'size': item.size, 'proc': self.proc})
+        
+        #process trimming
+        index = 0
+        for i in range(len(processes)):
+            if !processes[i]['proc'].is_alive():
+                #process is done
+                workingSize -= processes[index]['size']
+                index = index - 1
+
+            index = index + 1
+
+    # aborting, wait till all the processes exit
+    for i in range(len(processes)):
+        if processes[i]['proc'].is_alive():
+            processes[i]['proc'].join()
+
+
 
 
 def validate(rule, resultObj):
