@@ -16,19 +16,17 @@ app = create_app()
 
 log = logging.getLogger(__name__)
 
-#no zombies
+#no zombie
 import signal
 validationHeaderProcess = None
 def sigInt_handler(sig, frame):
-    log.info('Server aborting, from ctrl+c server...')
-    log.info('Please wait to avoid having zombie processes')
-    if not(validationHeaderProcess is None):
-        v.abort()
-    log.info('processes exited')
+    #print (validationHeaderProcess)
+    #log.info('Server stopping ctrl+c received...', frame.f_globals)
+    #log.info('Please wait to avoid having zombie processes')
+    #if not(validationHeaderProcess is None):
+    #    validationHeaderProcess.abort()
     log.info('Server terminated!')
     sys.exit(0)
-
-
 
 import config
 from v1.validator.validator import Validator
@@ -41,6 +39,8 @@ def main(port: int = conf.data['apiPort']) -> object:
     :param port: Port number
     :return:
     """
+
+
     config = conf.conf.data
     logLevel = config['logLevel'].upper()
 
@@ -65,6 +65,8 @@ def main(port: int = conf.data['apiPort']) -> object:
     log.info("initializing validation process...")
     validationHeaderProcess = Validator()
     validationHeaderProcess.start_validate_process()
+
+    print (validationHeaderProcess)
 
     
 
