@@ -16,7 +16,7 @@ from ValidationQueue.ValidationQueue import ValidationQueue, QueueObject
 log = logging.getLogger(__name__)
 
 # sleep time in seconds
-SLEEP_TIME = 10
+SLEEP_TIME = 1
 
 # aborting?
 ABORTING = False
@@ -86,7 +86,7 @@ def validateProcess():
                 ValidationQueue.getQueue().put(item)
                 if onlyOneItem:
                     time.sleep(SLEEP_TIME)
-                    
+
             else:
                 # can start work on now
                 workingSize += item.size
