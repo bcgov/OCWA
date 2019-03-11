@@ -11,7 +11,7 @@ from config import Config
 from db.db import Db
 from munch import munchify
 import magic
-import ValidationQueue.ValidationQueue
+from ValidationQueue.ValidationQueue import ValidationQueue, QueueObject
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ SLEEP_TIME = 10
 ABORTING = False
 
 class Validator:
-    self.proc = None
+    proc = None
 
     def abort():
         ABORTING = True
@@ -31,13 +31,15 @@ class Validator:
     def start_validate_process(self):
         log.debug("Starting validation header process")
         
+        ValidationQueue.initQueue()
+
         self.proc = Process(target=validateProcess)
         self.proc.start()
 
     def start_validate(self, rule, result):
         log.debug("Adding to queue")
-        item = ValidationQueue.QueueObject(rule, result)
-        ValidationQueue.ValidationQueue.getQueue().put(item)
+        item = QueueObject(rule, result)
+        ValidationQueue.getQueue().put(item)
 
 
 def validateProcess():
@@ -55,44 +57,47 @@ def validateProcess():
                         aws_access_key_id=access_key_id,
                         aws_secret_access_key=access_secret_id,
                         endpoint_url=endpoint)
-
-    bucketObj = conn.get_bucket(bucket)
     
     while not(ABORTING):
         #queue work
-        if ValidationQueue.ValidationQueue.getQueue().empty():
+        if ValidationQueue.getQueue().empty():
             time.sleep(SLEEP_TIME)
         else:
-            item = ValidationQueue.ValidationQueue.getQueue().get(False)
+            item = ValidationQueue.getQueue().get(False)
             if item.size == -1:
-                item.size = bucketObj.lookup('file_name').size
+                try:
+                    headObj = conn.head_object(Bucket=bucket, Key=item.result.file_id)
+                    item.size = headObj['ContentLength']
+                except:
+                    log.error("error getting object from s3")
+                
 
             if item.size > workingLimit:
                 # Can't ever scan this it's too big
                 item.result.message = "File is too large to be validated"
                 item.result.state = 0 # pass
-                if ('failOverWorkingLimit' in config['failOverWorkingLimit']) and (config['failOverWorkingLimit']):
+                if ('failOverWorkingLimit' in config) and (config['failOverWorkingLimit']):
                     item.result.state = 1 # fail
 
                 item.result.save()
 
             elif (workingSize+item.size) > workingLimit:
                 # can't work on yet, too big
-                onlyOneItem = ValidationQueue.ValidationQueue.getQueue().empty()
-                ValidationQueue.ValidationQueue.getQueue().put(item)
+                onlyOneItem = ValidationQueue.getQueue().empty()
+                ValidationQueue.getQueue().put(item)
                 if onlyOneItem:
                     time.sleep(SLEEP_TIME)
             else:
                 # can start work on now
                 workingSize += item.size
-                self.proc = Process(target=validate, args=(item.rule, item.result))
-                self.proc.start()
-                processes.append({'size': item.size, 'proc': self.proc})
+                proc = Process(target=validate, args=(item.rule, item.result))
+                proc.start()
+                processes.append({'size': item.size, 'proc': proc})
         
         #process trimming
         index = 0
         for i in range(len(processes)):
-            if !processes[i]['proc'].is_alive():
+            if not(processes[i]['proc'].is_alive()):
                 #process is done
                 workingSize -= processes[index]['size']
                 index = index - 1

@@ -66,6 +66,11 @@ spec:
               value: {{ .Values.user.idField }}
             - name: ALWAYS_SCAN_FILES
               value: "{{ .Values.alwaysScan }}"
+            - name: WORKING_LIMIT
+              value: {{ .Values.workingLimit }}
+            - name: FAIL_OVER_WORKING_LIMIT
+              value: "{{ .Values.failOverWorkingLimit }}"
+              
           ports:
             - name: http
               containerPort: {{ .Values.apiPort }}

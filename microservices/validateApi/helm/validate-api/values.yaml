@@ -46,6 +46,8 @@ user:
   idField: Email
 
 alwaysScan: "true"
+workingLimit: 5242880,
+failOverWorkingLimit: "true"
 
 
 resources: {}

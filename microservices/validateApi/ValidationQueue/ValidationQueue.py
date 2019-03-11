@@ -1,16 +1,17 @@
 from multiprocessing import Queue
 from config import Config
-import db
-import ut
+from db.db import Db
+import requests
 
-class QueueObject(object):
-    self.rule = None
-    self.result = None
-    self.size = -1
+class QueueObject:
+    rule = None
+    result = None
+    size = -1
 
-    def __init__(rule, result):
+    def __init__(self, rule, result):
         self.rule = rule
         self.result = result
+        self.size = -1
 
 class ValidationQueue(object):
     q = Queue()
@@ -21,17 +22,22 @@ class ValidationQueue(object):
 
     @classmethod
     def initQueue(cls):
+        db = Db()
         results = db.Results.objects(state=2)
 
-        for i in range(len(results)):
-            policy = get_policy(results[i].policy_id)
-            queueItem = new QueueObject(policy, results[i])
-            cls.q.put(queueItem)
+        for result in results:
+            try:
+                policy = get_policy(result.rule_id)[0]
+                queueItem = QueueObject(policy, result)
+                cls.q.put(queueItem)
+            except:
+                pass
 
 def get_policy(policy_id):
     conf = Config().data
     policy_api_url = conf['policyApi']
+    headers = {'X-API-KEY': conf['apiSecret']}
 
-    response = requests.get(policy_api_url + "/" + policy_id)
+    response = requests.get(policy_api_url + "v1/" + policy_id, headers=headers)
 
     return response.json()
