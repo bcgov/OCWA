@@ -66,10 +66,6 @@ def main(port: int = conf.data['apiPort']) -> object:
     validationHeaderProcess = Validator()
     validationHeaderProcess.start_validate_process()
 
-    print (validationHeaderProcess)
-
-    
-
     log.info('Serving on port %s', str(port))
     http.serve_forever()
     log.info('Server terminated!')
