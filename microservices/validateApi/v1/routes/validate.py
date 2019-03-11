@@ -77,6 +77,7 @@ def validate_policy(fileId: str) -> object:
             result.save()
             log.debug("creating validator")
             log.debug("calling start validate")
+            v = Validator()
             v.start_validate(policy[i], result)
             
 
@@ -146,6 +147,6 @@ def get_policy(policy_id):
     conf = Config().data
     policy_api_url = conf['policyApi']
 
-    response = requests.get(policy_api_url + "/" + policy_id)
+    response = requests.get(policy_api_url + "v1/" + policy_id)
 
     return response.json()
