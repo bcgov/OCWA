@@ -94,11 +94,11 @@ def validateProcess():
                 proc.start()
                 processes.append({'size': item.size, 'proc': proc})
         
-        #process trimming
+        # process trimming
         index = 0
         for i in range(len(processes)):
             if not(processes[index]['proc'].is_alive()):
-                #process is done
+                # process is done
                 workingSize -= processes[index]['size']
                 del processes[index]
                 index = index - 1
