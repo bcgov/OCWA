@@ -79,6 +79,7 @@ def validateProcess():
                     item.result.state = 1 # fail
 
                 item.result.save()
+                log.info("File "+item.result.file_id+"being aborted, too large to be validated")
 
             elif (workingSize+item.size) > workingLimit:
                 # can't work on yet, too big
