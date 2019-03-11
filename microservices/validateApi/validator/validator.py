@@ -24,7 +24,8 @@ ABORTING = False
 class Validator:
     proc = None
 
-    def abort():
+    def abort(self):
+        log.debug("Validator abort called")
         ABORTING = True
         self.proc.join()
 
@@ -106,10 +107,14 @@ def validateProcess():
 
             index = index + 1
 
+    log.debug("Validation header process exiting")
     # aborting, wait till all the processes exit
     for i in range(len(processes)):
         if processes[i]['proc'].is_alive():
             processes[i]['proc'].join()
+            log.debug("a proccess exited")
+
+    log.debug("Validation header exited")
 
 
 
