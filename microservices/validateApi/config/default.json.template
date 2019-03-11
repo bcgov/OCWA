@@ -28,6 +28,6 @@
 
   "alwaysScanFiles": false,
 
-  "workingLimit": 1024,
+  "workingLimit": 5242880,
   "failOverWorkingLimit": true
 }

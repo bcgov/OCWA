@@ -25,7 +25,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: API_PORT
-              value: "{{ .Values.apiPort }}"
+              value: {{ .Values.apiPort | quote }}
             - name: LOG_LEVEL
               value: {{ .Values.logLevel }}
             - name: DB_HOST
@@ -38,7 +38,7 @@ spec:
                   name: {{ template "ocwaValidateApi.fullname" . }}-secrets
                   key: dbPassword
             - name: DB_PORT
-              value: "{{ .Values.database.port }}"
+              value: {{ .Values.database.port | quote }}
             - name: DB_NAME
               value: {{ .Values.database.dbName }}
             - name: STORAGE_HOST
@@ -65,11 +65,11 @@ spec:
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
             - name: ALWAYS_SCAN_FILES
-              value: "{{ .Values.alwaysScan }}"
+              value: {{ .Values.alwaysScan | quote }}
             - name: WORKING_LIMIT
               value: {{ .Values.workingLimit }}
             - name: FAIL_OVER_WORKING_LIMIT
-              value: "{{ .Values.failOverWorkingLimit }}"
+              value: {{ .Values.failOverWorkingLimit | quote }}
               
           ports:
             - name: http

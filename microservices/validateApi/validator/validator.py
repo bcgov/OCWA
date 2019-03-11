@@ -71,7 +71,6 @@ def validateProcess():
                 except:
                     log.error("error getting object from s3")
                 
-
             if item.size > workingLimit:
                 # Can't ever scan this it's too big
                 item.result.message = "File is too large to be validated"
@@ -87,6 +86,7 @@ def validateProcess():
                 ValidationQueue.getQueue().put(item)
                 if onlyOneItem:
                     time.sleep(SLEEP_TIME)
+                    
             else:
                 # can start work on now
                 workingSize += item.size
