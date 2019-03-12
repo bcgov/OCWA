@@ -86,6 +86,7 @@ const mapStateToProps = state => {
     })
     .every(d => d === true);
 
+  console.log(isFilesValid, statuses);
   return {
     currentStep: state.requests.viewState.currentNewRequestStep,
     isNewRequest,
@@ -108,7 +109,7 @@ export default connect(mapStateToProps, {
   onFetch: id =>
     fetchRequest({
       url: `/api/v1/requests/${id}`,
-      schema: { result: requestSchema },
+      schema: requestSchema,
       id,
     }),
   onCreate: (payload, meta) =>

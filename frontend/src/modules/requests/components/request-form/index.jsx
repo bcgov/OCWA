@@ -94,13 +94,8 @@ class NewRequestDialog extends React.PureComponent {
   };
 
   onSubmit = () => {
-    const { data, isFilesValid, sendAction } = this.props;
-
-    if (isFilesValid) {
-      sendAction('onSubmit', data, { quitEditing: true });
-    } else {
-      sendAction('onFetch', data._id);
-    }
+    const { data, sendAction } = this.props;
+    sendAction('onSubmit', data, { quitEditing: true });
   };
 
   save = (payload, quitEditing = false, nextStep = false) => {
@@ -179,14 +174,14 @@ class NewRequestDialog extends React.PureComponent {
           )}
           {currentStep === 1 && (
             <Button
-              appearance={isFilesValid ? 'primary' : 'warning'}
+              appearance="primary"
               id="request-form-submit-button"
               isDisabled={
                 isDisabled || isDraft || get(data, 'files.length', 0) <= 0
               }
               onClick={this.onSubmit}
             >
-              {isFilesValid ? 'Submit for Review' : 'Processing: Check Status'}
+              Submit for Review
             </Button>
           )}
         </ButtonGroup>
