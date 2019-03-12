@@ -18,13 +18,14 @@ import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
 function Request({ data, isLoaded, isOutputChecker, updatedAt, match }) {
+  const title = data.name || 'Loading...';
   if (!isLoaded && isEmpty(data)) {
     return null;
   }
 
   return (
     <div id="requests-page">
-      <Title>{data.name || 'Loading...'}</Title>
+      <Title>{title}</Title>
       <Page>
         <header className={styles.header}>
           <Grid>
@@ -81,7 +82,11 @@ function Request({ data, isLoaded, isOutputChecker, updatedAt, match }) {
                   exact
                   path={`${match.url}/discussion`}
                   render={() =>
-                    data.topic ? <Discussion id={data.topic} /> : <Spinner />
+                    data.topic ? (
+                      <Discussion id={data.topic} title={title} />
+                    ) : (
+                      <Spinner />
+                    )
                   }
                 />
               </Switch>

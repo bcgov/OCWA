@@ -22,10 +22,11 @@ import * as styles from './styles.css';
 
 function Request({ data, isSaving, match }) {
   const { requestId } = match.params;
+  const title = data.name || 'Loading...';
 
   return (
     <div className={styles.container}>
-      <Title>{data.name || 'Loading...'}</Title>
+      <Title>{title}</Title>
       <RequestsNav activeId={requestId} />
       <div className={styles.request}>
         <header className={styles.header}>
@@ -66,13 +67,17 @@ function Request({ data, isSaving, match }) {
               <Route
                 exact
                 path={`${match.url}/files`}
-                render={() => <Files data={data} />}
+                render={() => <Files data={data} title={title} />}
               />
               <Route
                 exact
                 path={`${match.url}/discussion`}
                 render={() =>
-                  data.topic ? <Discussion id={data.topic} /> : <Spinner />
+                  data.topic ? (
+                    <Discussion id={data.topic} title={title} />
+                  ) : (
+                    <Spinner />
+                  )
                 }
               />
             </Switch>

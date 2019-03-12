@@ -1,11 +1,14 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Files from '@src/modules/requests/containers/files';
+import Title from '@src/components/title';
 
 import { RequestSchema } from '@src/modules/requests/types';
 
-function RequestFiles({ data }) {
+function RequestFiles({ data, title }) {
   return (
     <div>
+      <Title>{`${title} | Files (${data.files.length})`}</Title>
       <div id="request-files">
         <h4>Export Files</h4>
         <Files
@@ -26,6 +29,7 @@ function RequestFiles({ data }) {
 
 RequestFiles.propTypes = {
   data: RequestSchema.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 export default RequestFiles;
