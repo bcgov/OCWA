@@ -14,7 +14,7 @@ export default connect(mapStateToProps, {
     fetchRequests(
       { name },
       {
-        url: `/api/v1/requests?name=${name}`,
+        url: `/api/v1/requests?name=${name}*`,
         schema: requestsListSchema,
         search: name,
       }

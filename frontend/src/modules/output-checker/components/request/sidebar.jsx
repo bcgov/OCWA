@@ -24,7 +24,7 @@ function Sidebar({
 
   return (
     <aside className={styles.sidebar}>
-      <h6>Exporter</h6>
+      <h6>Requester</h6>
       <p id="request-author-text">{data.author}</p>
       <h6>Reviewers</h6>
       {data.reviewers.length > 0 && (

@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import escapeRegExp from 'lodash/escapeRegExp';
 import get from 'lodash/get';
 import head from 'lodash/head';
 import last from 'lodash/last';
@@ -26,7 +27,7 @@ const mapStateToProps = (state, { params }) => {
           return true;
       }
     })
-    .filter(d => (search ? d.name.search(search) >= 0 : true));
+    .filter(d => (search ? d.name.search(escapeRegExp(search)) >= 0 : true));
 
   return {
     data: sortBy(data, d => last(d.chronology).timestamp).reverse(),
