@@ -67,7 +67,7 @@ spec:
             - name: ALWAYS_SCAN_FILES
               value: {{ .Values.alwaysScan | quote }}
             - name: WORKING_LIMIT
-              value: {{ .Values.workingLimit }}
+              value: {{ .Values.workingLimit | quote }}
             - name: FAIL_OVER_WORKING_LIMIT
               value: {{ .Values.failOverWorkingLimit | quote }}
               
