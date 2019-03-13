@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
+import escapeRegExp from 'lodash/escapeRegExp';
 import get from 'lodash/get';
 import keys from 'lodash/keys';
 import isArray from 'lodash/isArray';
 import isNull from 'lodash/isNull';
 import withRequest from '@src/modules/data/components/data-request';
 import { limit } from '@src/services/config';
-import { escapeRegExp } from '@src/utils';
 
 import {
   changeFilter,

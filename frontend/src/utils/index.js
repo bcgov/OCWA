@@ -1,6 +1,2 @@
-export const escapeRegExp = string =>
-  string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-export default {
-  escapeRegExp,
-};
+// Add any global utils here
+export default {};
