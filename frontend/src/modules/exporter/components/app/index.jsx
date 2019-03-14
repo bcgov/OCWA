@@ -8,12 +8,14 @@ import Requests from '@src/modules/requests/containers/requests-list';
 import Request from '@src/modules/requests/containers/request';
 import RequestForm from '@src/modules/requests/containers/request-form';
 import { Switch, Route } from 'react-router-dom';
+import Title from '@src/components/title';
 
 import * as styles from './styles.css';
 
 function App({ user }) {
   return (
     <React.Fragment>
+      <Title>Exporter</Title>
       <RequestForm />
       <AppBar icon={<Changes24Icon />} title="OCWA Exporter Tool">
         <NewRequest />

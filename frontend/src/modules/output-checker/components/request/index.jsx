@@ -1,6 +1,5 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import cx from 'classnames';
 import CommentIcon from '@atlaskit/icon/glyph/comment';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import DocumentsIcon from '@atlaskit/icon/glyph/documents';
@@ -13,6 +12,7 @@ import Tabs from '@src/components/tabs';
 import { RequestSchema } from '@src/modules/requests/types';
 import Spinner from '@atlaskit/spinner';
 import StateLabel from '@src/modules/requests/components/state-label';
+import Title from '@src/components/title';
 
 import Details from './details';
 import Files from './files';
@@ -22,9 +22,11 @@ import * as styles from './styles.css';
 
 function Request({ data, isSaving, match }) {
   const { requestId } = match.params;
+  const title = data.name || 'Loading...';
 
   return (
     <div className={styles.container}>
+      <Title>{title}</Title>
       <RequestsNav activeId={requestId} />
       <div className={styles.request}>
         <header className={styles.header}>
@@ -65,13 +67,17 @@ function Request({ data, isSaving, match }) {
               <Route
                 exact
                 path={`${match.url}/files`}
-                render={() => <Files data={data} />}
+                render={() => <Files data={data} title={title} />}
               />
               <Route
                 exact
                 path={`${match.url}/discussion`}
                 render={() =>
-                  data.topic ? <Discussion id={data.topic} /> : <Spinner />
+                  data.topic ? (
+                    <Discussion id={data.topic} title={title} />
+                  ) : (
+                    <Spinner />
+                  )
                 }
               />
             </Switch>
