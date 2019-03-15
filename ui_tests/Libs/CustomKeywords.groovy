@@ -4,6 +4,6 @@
  */
 
 
-def static "test_OCWA_keywords.random_test_request_name.gen_random_test_request_name"() {
-    (new test_OCWA_keywords.random_test_request_name()).gen_random_test_request_name()
+def static "test.ocwa.common.Utils.gen_random_test_request_name"() {
+    (new test.ocwa.common.Utils()).gen_random_test_request_name()
 }

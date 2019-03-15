@@ -14,6 +14,9 @@ import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import internal.GlobalVariable
 
+import test.ocwa.common.Constant
+import test.ocwa.common.Utils
+
 
 class RequesterStep {
 	String TEST_COMMENT = "test"
@@ -44,11 +47,6 @@ class RequesterStep {
 	String AWAITING_REVIEW_STATUS = "Awaiting Review"
 	String DRAFT_STATUS = "Draft"
 
-	//Output checker interface
-	String ASSIGN_REQUEST_TO_ME_ID = "request-sidebar-pickup-button"
-	String APPROVE_REQUEST_BTN_ID = "request-sidebar-approve-button"
-	String REVISIONS_NEEDED_REQUEST_BTN_ID = "request-sidebar-request-revisions-button"
-	String REQUEST_ASSIGNED_TO_ID = "request-assigned-oc"
 
 
 	String g_requestName = ""
@@ -93,7 +91,7 @@ class RequesterStep {
 		WebUI.waitForPageLoad(20)
 		WebUI.comment("should be on the individual request page.")
 
-		TestObject assignToMeButtonObject = get_test_object_by_id(ASSIGN_REQUEST_TO_ME_ID)
+		TestObject assignToMeButtonObject = get_test_object_by_id(Constant.Checker.ASSIGN_REQUEST_TO_ME_ID)
 
 		WebUI.waitForPageLoad(30)
 		WebUI.waitForElementPresent(assignToMeButtonObject, 10)
@@ -107,7 +105,7 @@ class RequesterStep {
 
 	@When("the output checker marks the request as approved")
 	def checker_marks_request_as_approved() {
-		TestObject approveButtonObject = get_test_object_by_id(APPROVE_REQUEST_BTN_ID)
+		TestObject approveButtonObject = get_test_object_by_id(Constant.Checker.APPROVE_REQUEST_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(approveButtonObject, "disabled", 10)
 		WebUI.waitForElementVisible(approveButtonObject, 20)
 		WebUI.waitForElementClickable(approveButtonObject, 30)
@@ -117,7 +115,7 @@ class RequesterStep {
 
 	@When("the output checker marks the request as needs revisions")
 	def checker_marks_request_as_needs_revisions() {
-		TestObject revisionsButtonObject = get_test_object_by_id(REVISIONS_NEEDED_REQUEST_BTN_ID)
+		TestObject revisionsButtonObject = get_test_object_by_id(Constant.Checker.REVISIONS_NEEDED_REQUEST_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(revisionsButtonObject, "disabled", 10)
 		WebUI.waitForElementVisible(revisionsButtonObject, 20)
 		WebUI.waitForElementClickable(revisionsButtonObject, 30)
@@ -127,7 +125,7 @@ class RequesterStep {
 
 	@Then("the output checker should be able to see that they're now assigned the request")
 	def checker_should_see_they_are_assigned_to_request(){
-		TestObject assigneeTextObject = get_test_object_by_id(REQUEST_ASSIGNED_TO_ID)
+		TestObject assigneeTextObject = get_test_object_by_id(Constant.Checker.REQUEST_ASSIGNED_TO_ID)
 		WebUI.waitForElementPresent(assigneeTextObject, 10)
 		WebUI.verifyTextPresent(GlobalVariable.OCWA_USER_CHECKER1, false)
 		WebUI.closeBrowser()
@@ -175,7 +173,7 @@ class RequesterStep {
 		WebUI.waitForElementClickable(newRequestButtonObject, 30)
 		WebUI.click(newRequestButtonObject)
 		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), PURPOSE_TEXT)
-		g_requestName = CustomKeywords.'test_OCWA_keywords.random_test_request_name.gen_random_test_request_name'()
+		g_requestName = new Utils().gen_random_test_request_name()
 		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/input_Request Name_name'), g_requestName)
 	}
 
