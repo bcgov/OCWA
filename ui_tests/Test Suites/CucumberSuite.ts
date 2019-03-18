@@ -29,6 +29,12 @@
       <testCaseId>Test Cases/Requester/EditPreviouslySubmittedRequestTest</testCaseId>
    </testCaseLink>
    <testCaseLink>
+      <guid>841ced82-ee05-45c8-83a9-9ea6510de3df</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/Requester/ExternallyAccessApprovedFilesTest</testCaseId>
+   </testCaseLink>
+   <testCaseLink>
       <guid>1665fdaa-855a-44a6-89a6-80cd823bda46</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>

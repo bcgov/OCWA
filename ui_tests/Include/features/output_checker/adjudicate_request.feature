@@ -5,15 +5,13 @@ Feature: Adjudicate request
 	Background:
 	  Given requester has logged in
     And requester has submitted a request
-    And output checker has logged in
-    When output checker tries to claim an unclaimed request
+    Given output checker has logged in
+    And output checker tries to claim an unclaimed request
 
   Scenario: Request is needs revisions
-    And the output checker marks the request as needs revisions
+    When the output checker marks the request as needs revisions
     Then the output checker should see the status of the request updated to 'Work in progress'
 
   Scenario: Request is worthy of approval
-    And the output checker marks the request as approved
+    When the output checker marks the request as approved
     Then the output checker should see the status of the request updated to 'Approved'
-    And requester has logged into download interface
-    And the approved files are available for download outside of the secure environment

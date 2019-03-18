@@ -7,7 +7,7 @@ import com.kms.katalon.core.testobject.TestObject
  * OCWA Helper and Utility functions for Katalon
  * @author Jeremy Ho
  */
-class Utils {
+public class Utils {
 	/**
 	 * Returns a pseudo-random string for request names
 	 * @return A string in the format "auto_gen_<current date-time>"

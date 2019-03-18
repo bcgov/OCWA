@@ -30,11 +30,11 @@ class LoginStep extends Step {
 		login(GlobalVariable.OCWA_USER_CHECKER1, GlobalVariable.OCWA_USER_CHECKER1_PSWD, GlobalVariable.OCWA_URL)
 	}
 
-	@Then("requester has logged into download interface")
+	@Given("requester has logged into download interface")
 	def download_interface_login(){
 		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD, GlobalVariable.OCWA_DL_URL)
 	}
-	
+
 	def login(String username, String password, String url) {
 		WebUI.openBrowser(null)
 		WebUI.navigateToUrl(url)
