@@ -5,6 +5,8 @@ package test.ocwa.common
  * @author Jeremy Ho
  */
 public class Step {
-	// Edit these variables only when necessary in children classes
+	/**
+	 * Session Request Name - edit this variable ONLY when creating a new request
+	 */
 	protected static def G_REQUESTNAME = ''
 }

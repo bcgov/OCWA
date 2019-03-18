@@ -16,25 +16,40 @@ public class Utils {
 		return 'auto_gen_'.concat(new Date().format('MMddyy-hhmmss'))
 	}
 
-	//Helper function for getting TestObject from the id of an html element
-	static def get_test_object_by_id(String id) {
+	/**
+	 * Returns the TestObject correlating to the id
+	 * @param id The id of the element to filter on
+	 * @return TestObject
+	 */
+	static def getTestObjectById(String id) {
 		TestObject tObject = new TestObject(id)
-		tObject.addProperty("id", ConditionType.EQUALS, id, true)
+		tObject.addProperty('id', ConditionType.EQUALS, id, true)
 		return tObject
 	}
 
-	//Helper function for getting TestObject from the text of an html element
-	static def get_test_object_by_text(String t) {
-		TestObject tObject = new TestObject(t)
-		tObject.addProperty("tag", ConditionType.EQUALS, "a", true)
-		tObject.addProperty("text", ConditionType.EQUALS, t, true)
+	/**
+	 * Returns the TestObject correlating to the text
+	 * @param text The text string to filter on
+	 * @param tag The optional html tag element to filter on.
+	 * Defaults to the 'a' tag. Set as null to make a more generic search
+	 * @return TestObject
+	 */
+	// TODO: Consider inverting tag default to null instead of a
+	static def getTestObjectByText(String text, String tag = 'a') {
+		TestObject tObject = new TestObject(text)
+		tObject.addProperty('text', ConditionType.EQUALS, text, true)
+		if(tag) tObject.addProperty('tag', ConditionType.EQUALS, tag, true)
 		return tObject
 	}
 
-	//Helper function for getting TestObject from the class of an html element
-	static def get_test_object_by_class(String t) {
-		TestObject tObject = new TestObject(t)
-		tObject.addProperty("class", ConditionType.EQUALS, t, true)
+	/**
+	 * Returns the TestObject correlating to the class
+	 * @param cls The class attribute to filter on
+	 * @return TestObject
+	 */
+	static def getTestObjectByClass(String cls) {
+		TestObject tObject = new TestObject(cls)
+		tObject.addProperty('class', ConditionType.EQUALS, cls, true)
 		return tObject
 	}
 }

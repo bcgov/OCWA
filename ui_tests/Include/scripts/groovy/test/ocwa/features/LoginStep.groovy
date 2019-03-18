@@ -19,6 +19,10 @@ import test.ocwa.common.Constant
 import test.ocwa.common.Step
 import test.ocwa.common.Utils
 
+/**
+ * OCWA Login steps for Katalon
+ * @author Jeremy Ho, Paul Ripley
+ */
 class LoginStep extends Step {
 	@Given("requester has logged in")
 	def requester_login() {
@@ -40,14 +44,16 @@ class LoginStep extends Step {
 		WebUI.navigateToUrl(url)
 		WebUI.waitForPageLoad(10)
 
-		TestObject loginButton = Utils.get_test_object_by_id(Constant.Login.LOGIN_BTN_ID)
+		TestObject loginButton = Utils.getTestObjectById(Constant.Login.LOGIN_BTN_ID)
 		WebUI.waitForElementClickable(loginButton, 10)
 		WebUI.click(loginButton)
 		WebUI.waitForPageLoad(10)
 
-		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Username or email_userna'), username)
-		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), password)
-		WebUI.click(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_login'))
+		TestObject kcLoginButton = Utils.getTestObjectById('kc-login')
+		WebUI.setText(Utils.getTestObjectById('username'), username)
+		WebUI.setText(Utils.getTestObjectById('password'), password)
+		WebUI.waitForElementClickable(kcLoginButton, 10)
+		WebUI.click(kcLoginButton)
 		WebUI.waitForPageLoad(10)
 	}
 }

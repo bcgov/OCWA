@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>span_QueuedIn Review</name>
+   <name>span_Queued_in_review</name>
    <tag></tag>
    <elementGuidId>0336bccd-6598-481e-a5b0-f01eae35c4da</elementGuidId>
    <selectorCollection>
