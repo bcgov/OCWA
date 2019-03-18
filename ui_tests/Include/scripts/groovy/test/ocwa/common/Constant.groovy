@@ -1,6 +1,6 @@
 package test.ocwa.common
 
-class Constant {
+public class Constant {
 	Constant() {
 		throw new UnsupportedOperationException();
 	}
@@ -10,5 +10,9 @@ class Constant {
 		static final def APPROVE_REQUEST_BTN_ID = "request-sidebar-approve-button"
 		static final def REQUEST_ASSIGNED_TO_ID = "request-assigned-oc"
 		static final def REVISIONS_NEEDED_REQUEST_BTN_ID = "request-sidebar-request-revisions-button"
+	}
+
+	final class Login {
+		static final def LOGIN_BTN_ID = "app-auth-login-button"
 	}
 }

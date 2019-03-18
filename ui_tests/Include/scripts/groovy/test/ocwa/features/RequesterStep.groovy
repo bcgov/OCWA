@@ -13,19 +13,15 @@ import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 import internal.GlobalVariable
-
-import test.ocwa.common.Constant
+import test.ocwa.common.Step
 import test.ocwa.common.Utils
 
-
-class RequesterStep {
+public class RequesterStep extends Step {
 	String TEST_COMMENT = "test"
 	String PURPOSE_TEXT = "The purpose of my project is X"
 	String EDITED_PURPOSE_TEXT = "Edited the purpose to be Y"
 	String REQUEST_PATH = "/requests/"
-	String LOGIN_BTN_ID = "app-auth-login-button"
-	String LOGIN_USERNAME = "pripley"
-	String LOGIN_PWD = "EUKVYWz2orI="
+
 	String NEW_REQUEST_BTN_ID = "new-request-button"
 	String REQUEST_SAVE_FILES_BTN_ID = "request-form-save-files-button"
 	String REQUEST_FILES_UPLOAD_BTN_ID = "file-uploader-input"
@@ -47,134 +43,24 @@ class RequesterStep {
 	String AWAITING_REVIEW_STATUS = "Awaiting Review"
 	String DRAFT_STATUS = "Draft"
 
-
-
-	String g_requestName = ""
-
-	/**
-	 * The step definitions below match with Katalon sample Gherkin steps
-	 */
-
-	@Given("requester has logged in")
-	def requester_login() {
-		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD, GlobalVariable.OCWA_URL)
-	}
-
-	@Given("output checker has logged in")
-	def checker_login() {
-		login(GlobalVariable.OCWA_USER_CHECKER1, GlobalVariable.OCWA_USER_CHECKER1_PSWD, GlobalVariable.OCWA_URL)
-	}
-	@Given("an unclaimed request exists")
-	def checker_unclaimed_request_exists() {
-		requester_login()
-		requester_has_submitted_a_request()
-	}
-	@When("output checker tries to claim an unclaimed request")
-	def checker_tries_to_claim_unclaimed_request() {
-		WebUI.waitForPageLoad(30)
-		// TODO: Un-hard code this string mess
-		WebUI.click(get_test_object_by_id("oc-dashboard-filters-select"))
-
-		String desiredString = "Show All Requests"
-		TestObject desiredOption = new TestObject(desiredString)
-		desiredOption.addProperty("text", ConditionType.EQUALS, desiredString, true)
-		WebUI.waitForElementPresent(desiredOption, 10)
-		WebUI.scrollToElement(desiredOption, 10)
-		WebUI.click(desiredOption)
-
-		TestObject linkToRequest = get_test_object_by_text(g_requestName)
-		WebUI.waitForElementVisible(linkToRequest, 20)
-		WebUI.waitForElementClickable(linkToRequest, 20)
-
-		WebUI.click(linkToRequest)
-		WebUI.comment("found and clicked the request link")
-		WebUI.waitForPageLoad(20)
-		WebUI.comment("should be on the individual request page.")
-
-		TestObject assignToMeButtonObject = get_test_object_by_id(Constant.Checker.ASSIGN_REQUEST_TO_ME_ID)
-
-		WebUI.waitForPageLoad(30)
-		WebUI.waitForElementPresent(assignToMeButtonObject, 10)
-		WebUI.waitForElementNotHasAttribute(assignToMeButtonObject, "disabled", 10)
-		WebUI.waitForElementVisible(assignToMeButtonObject, 20)
-		WebUI.waitForElementClickable(assignToMeButtonObject, 30)
-		WebUI.click(assignToMeButtonObject)
-		WebUI.comment("found and clicked the Assign to Me button")
-
-	}
-
-	@When("the output checker marks the request as approved")
-	def checker_marks_request_as_approved() {
-		TestObject approveButtonObject = get_test_object_by_id(Constant.Checker.APPROVE_REQUEST_BTN_ID)
-		WebUI.waitForElementNotHasAttribute(approveButtonObject, "disabled", 10)
-		WebUI.waitForElementVisible(approveButtonObject, 20)
-		WebUI.waitForElementClickable(approveButtonObject, 30)
-		WebUI.click(approveButtonObject)
-		WebUI.comment("found and clicked the approve button")
-	}
-
-	@When("the output checker marks the request as needs revisions")
-	def checker_marks_request_as_needs_revisions() {
-		TestObject revisionsButtonObject = get_test_object_by_id(Constant.Checker.REVISIONS_NEEDED_REQUEST_BTN_ID)
-		WebUI.waitForElementNotHasAttribute(revisionsButtonObject, "disabled", 10)
-		WebUI.waitForElementVisible(revisionsButtonObject, 20)
-		WebUI.waitForElementClickable(revisionsButtonObject, 30)
-		WebUI.click(revisionsButtonObject)
-		WebUI.comment("found and clicked the needs revisions button")
-	}
-
-	@Then("the output checker should be able to see that they're now assigned the request")
-	def checker_should_see_they_are_assigned_to_request(){
-		TestObject assigneeTextObject = get_test_object_by_id(Constant.Checker.REQUEST_ASSIGNED_TO_ID)
-		WebUI.waitForElementPresent(assigneeTextObject, 10)
-		WebUI.verifyTextPresent(GlobalVariable.OCWA_USER_CHECKER1, false)
-		WebUI.closeBrowser()
-	}
-
 	@Then("the output checker should see the status of the request updated to '(.+)'")
 	def checker_should_see_request_is_in_given_status(String status){
 		//placeholder until status is displayed on individual requests in the oc interface
 	}
-	@Then("the approved files are available for download outside of the secure environment")
-	def requester_should_see_files_available_for_download() {
-		download_interface_login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
-		WebUI.waitForPageLoad(10)
-		WebUI.verifyTextPresent(g_requestName, false)
-	}
-
-	def login(String username, String password, String url){
-		WebUI.openBrowser(null)
-		WebUI.navigateToUrl(url)
-		WebUI.waitForPageLoad(10)
-
-		TestObject loginButton = get_test_object_by_id(LOGIN_BTN_ID)
-		WebUI.waitForElementClickable(loginButton, 10)
-		WebUI.click(loginButton)
-		WebUI.waitForPageLoad(10)
-
-		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Username or email_userna'), username)
-		WebUI.setText(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_password'), password)
-		WebUI.click(findTestObject('Object Repository/Page_Log in to ocwa/input_Password_login'))
-		WebUI.waitForPageLoad(30)
-	}
-
-	def download_interface_login(String username, String password){
-		login(username, password, GlobalVariable.OCWA_DL_URL)
-	}
 
 	@Given("requester has started a request")
 	def requester_starts_new_request() {
-		TestObject newRequestButtonObject = get_test_object_by_id(NEW_REQUEST_BTN_ID)
+		G_REQUESTNAME = Utils.generateRequestNameDate()
 
+		TestObject newRequestButtonObject = get_test_object_by_id(NEW_REQUEST_BTN_ID)
 		WebUI.waitForPageLoad(10)
 		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", 10)
-
-		WebUI.waitForElementVisible(newRequestButtonObject, 20)
-		WebUI.waitForElementClickable(newRequestButtonObject, 30)
+		WebUI.waitForElementVisible(newRequestButtonObject, 10)
+		WebUI.waitForElementClickable(newRequestButtonObject, 10)
 		WebUI.click(newRequestButtonObject)
+
 		WebUI.setText(get_test_object_by_id(REQUEST_PURPOSE_TXT_ID), PURPOSE_TEXT)
-		g_requestName = new Utils().gen_random_test_request_name()
-		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/input_Request Name_name'), g_requestName)
+		WebUI.setText(findTestObject('Object Repository/Page_OCWA Development Version/input_Request Name_name'), G_REQUESTNAME)
 	}
 
 	@Given("has not submitted the request")
@@ -389,11 +275,11 @@ class RequesterStep {
 		WebUI.waitForPageLoad(10)
 		TestObject searchBox = get_test_object_by_id(SEARCH_BOX_ID)
 		WebUI.waitForElementClickable(searchBox, 10, FailureHandling.STOP_ON_FAILURE)
-		WebUI.setText(searchBox, g_requestName)
+		WebUI.setText(searchBox, G_REQUESTNAME)
 		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
 		WebUI.delay(3) // TODO: Resolve searching delay with proper element check
-		TestObject linkToRequest = get_test_object_by_text(g_requestName)
+		TestObject linkToRequest = get_test_object_by_text(G_REQUESTNAME)
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
 		WebUI.waitForElementClickable(linkToRequest, 10)
 
@@ -450,13 +336,13 @@ class RequesterStep {
 		WebUI.comment("current page (should be main page): ${WebUI.getUrl()}")
 		TestObject searchBox = get_test_object_by_id(SEARCH_BOX_ID)
 		WebUI.waitForElementClickable(searchBox, 10, FailureHandling.STOP_ON_FAILURE)
-		WebUI.setText(searchBox, g_requestName)
+		WebUI.setText(searchBox, G_REQUESTNAME)
 		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
-		TestObject linkToRequest = get_test_object_by_text(g_requestName)
+		TestObject linkToRequest = get_test_object_by_text(G_REQUESTNAME)
 		WebUI.waitForElementPresent(linkToRequest, 10)
-		if (!WebUI.verifyTextPresent(g_requestName, false)) {
-			WebUI.comment("unable to find the text:$g_requestName on the page. This text is used to find the request link")
+		if (!WebUI.verifyTextPresent(G_REQUESTNAME, false)) {
+			WebUI.comment("unable to find the text:$G_REQUESTNAME on the page. This text is used to find the request link")
 		}
 
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
@@ -464,12 +350,12 @@ class RequesterStep {
 		WebUI.waitForElementClickable(linkToRequest, 10)
 		WebUI.delay(1) // Need to wait for the loading wheel to disappear
 		WebUI.click(linkToRequest)
-		WebUI.comment("clicked on the request link that contains text: $g_requestName")
+		WebUI.comment("clicked on the request link that contains text: $G_REQUESTNAME")
 
 		WebUI.waitForPageLoad(20)
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 
-		WebUI.verifyTextPresent(g_requestName, false)
+		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.delay(3) // we need to do a hard delay here to give time for the inline ajax to finish
 
 		if (numOutputFiles == "1") {
@@ -511,7 +397,7 @@ class RequesterStep {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForPageLoad(10)
 		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
-		WebUI.verifyTextPresent(g_requestName, false)
+		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.verifyTextPresent(PURPOSE_TEXT, false)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'))
 		requester_should_see_their_new_comment_displayed()
@@ -530,7 +416,7 @@ class RequesterStep {
 
 	@Then('requests of status "(.+)" should be displayed')
 	def requests_of_given_status_should_be_displayed(String status){
-		WebUI.verifyTextPresent(g_requestName, false)
+		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.closeBrowser()
 	}
 
@@ -586,7 +472,7 @@ class RequesterStep {
 
 	@Then("the team member's request should not be visible")
 	def team_members_request_should_not_be_visible(){
-		WebUI.verifyTextNotPresent(g_requestName, false)
+		WebUI.verifyTextNotPresent(G_REQUESTNAME, false)
 		WebUI.closeBrowser()
 	}
 	@Then("the request cannot be successfully submitted")
