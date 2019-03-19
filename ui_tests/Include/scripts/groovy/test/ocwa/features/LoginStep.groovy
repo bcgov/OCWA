@@ -64,19 +64,19 @@ public class LoginStep extends Step {
 	def login(String username, String password, String url = GlobalVariable.OCWA_URL) {
 		WebUI.openBrowser(null)
 		WebUI.navigateToUrl(url)
-		WebUI.waitForPageLoad(10)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 
 		TestObject loginButton = Utils.getTestObjectById(Constant.Login.LOGIN_BTN_ID)
-		WebUI.waitForElementClickable(loginButton, 10)
+		WebUI.waitForElementClickable(loginButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(loginButton)
-		WebUI.waitForPageLoad(10)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 
 		TestObject kcLoginButton = Utils.getTestObjectById('kc-login')
 		WebUI.setText(Utils.getTestObjectById('username'), username)
 		WebUI.setText(Utils.getTestObjectById('password'), password)
-		WebUI.waitForElementClickable(kcLoginButton, 10)
+		WebUI.waitForElementClickable(kcLoginButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(kcLoginButton)
-		WebUI.waitForPageLoad(10)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 	}
 	
 	/**
@@ -85,6 +85,6 @@ public class LoginStep extends Step {
 	 */
 	def logout(String url = GlobalVariable.OCWA_URL) {
 		WebUI.navigateToUrl("$url$Constant.Login.LOGOUT_URL")
-		WebUI.waitForPageLoad(10)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 	}
 }

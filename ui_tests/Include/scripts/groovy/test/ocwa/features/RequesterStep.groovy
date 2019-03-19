@@ -33,10 +33,10 @@ public class RequesterStep extends Step {
 		G_REQUESTNAME = Utils.generateRequestNameDate()
 
 		TestObject newRequestButtonObject = Utils.getTestObjectById(Constant.Requester.NEW_REQUEST_BTN_ID)
-		WebUI.waitForPageLoad(10)
-		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", 10)
-		WebUI.waitForElementVisible(newRequestButtonObject, 10)
-		WebUI.waitForElementClickable(newRequestButtonObject, 10)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementVisible(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(newRequestButtonObject)
 
 		WebUI.setText(Utils.getTestObjectById(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
@@ -55,20 +55,20 @@ public class RequesterStep extends Step {
 	def requester_uploads_files(String[] files, boolean isUploadScreenAlreadyOpen = false) {
 		if (!isUploadScreenAlreadyOpen) {
 			TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
-			WebUI.waitForElementClickable(requestFormSaveFilesButton, 10)
+			WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 			WebUI.click(requestFormSaveFilesButton)
 		}
 
 		// Upload files
 		TestObject uploadFileButton = Utils.getTestObjectById(Constant.Requester.REQUEST_FILES_UPLOAD_BTN_ID)
 		files.each { file ->
-			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
-			WebUI.waitForElementClickable(uploadFileButton, 10)
+			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", Constant.DEFAULT_TIMEOUT)
+			WebUI.waitForElementClickable(uploadFileButton, Constant.DEFAULT_TIMEOUT)
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$file")
 
 			TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
-			WebUI.waitForElementPresent(successAlert, 10)
-			WebUI.waitForElementNotPresent(successAlert, 10)
+			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
 		}
 	}
 
@@ -208,26 +208,26 @@ public class RequesterStep extends Step {
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
 		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
-		WebUI.waitForElementPresent(successAlert, 10)
-		WebUI.waitForElementNotPresent(successAlert, 10)
+		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
 
 		TestObject saveCloseBtn = findTestObject('Object Repository/OCWA/button_save_close_request')
-		WebUI.waitForElementNotHasAttribute(saveCloseBtn, "disabled", 10)
-		WebUI.waitForElementVisible(saveCloseBtn, 10)
-		WebUI.waitForElementClickable(saveCloseBtn, 10)
+		WebUI.waitForElementNotHasAttribute(saveCloseBtn, "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementVisible(saveCloseBtn, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(saveCloseBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(saveCloseBtn)
-		WebUI.waitForElementNotPresent(saveCloseBtn, 10) //wait for the modal window to close
+		WebUI.waitForElementNotPresent(saveCloseBtn, Constant.DEFAULT_TIMEOUT) //wait for the modal window to close
 	}
 
 	@When("requester submits their request")
 	def requester_submits_request() {
-		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/button_save_request'), "disabled", 10)
-		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", 10)
-		WebUI.waitForElementClickable(findTestObject('Object Repository/OCWA/span_Submit for Review'), 10)
+		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/button_save_request'), "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(findTestObject('Object Repository/OCWA/span_Submit for Review'), Constant.DEFAULT_TIMEOUT)
 
 		WebUI.delay(3) // Stopgap related to https://github.com/bcgov/OCWA/issues/89
 		WebUI.click(findTestObject('Object Repository/OCWA/span_Submit for Review'))
-		if(!WebUI.waitForElementNotPresent(findTestObject('Object Repository/OCWA/button_save_request'), 10)) {
+		if(!WebUI.waitForElementNotPresent(findTestObject('Object Repository/OCWA/button_save_request'), Constant.DEFAULT_TIMEOUT)) {
 			throw new com.kms.katalon.core.exception.StepFailedException("Submission failed - modal window still present")
 		}
 	}
@@ -237,19 +237,19 @@ public class RequesterStep extends Step {
 		requester_views_request_they_created()
 
 		TestObject discussionTab = Utils.getTestObjectById(Constant.Requester.REQUEST_DISCUSSION_TAB_ID)
-		WebUI.waitForElementPresent(discussionTab, 10)
+		WebUI.waitForElementPresent(discussionTab, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(discussionTab)
 
 		TestObject discussionForm = Utils.getTestObjectById(Constant.Requester.REQUEST_DISCUSSION_FORM_ID)
-		WebUI.waitForElementPresent(discussionForm, 10)
+		WebUI.waitForElementPresent(discussionForm, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(discussionForm)
 
 		TestObject contentEditable = findTestObject('Object Repository/OCWA/div_discussion_form_contenteditable')
-		WebUI.waitForElementPresent(contentEditable, 10)
+		WebUI.waitForElementPresent(contentEditable, Constant.DEFAULT_TIMEOUT)
 		WebUI.sendKeys(contentEditable, Constant.Requester.TEST_COMMENT)
 
 		TestObject saveCommentButton = findTestObject('Object Repository/OCWA/span_save_comment')
-		WebUI.waitForElementClickable(saveCommentButton, 10)
+		WebUI.waitForElementClickable(saveCommentButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(saveCommentButton)
 	}
 
@@ -258,19 +258,19 @@ public class RequesterStep extends Step {
 		if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
 			WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 		}
-		WebUI.waitForPageLoad(10)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		TestObject searchBox = Utils.getTestObjectById(Constant.Requester.SEARCH_BOX_ID)
-		WebUI.waitForElementClickable(searchBox, 10)
+		WebUI.waitForElementClickable(searchBox, Constant.DEFAULT_TIMEOUT)
 		WebUI.setText(searchBox, G_REQUESTNAME)
 		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
-		WebUI.waitForElementNotPresent(Utils.getTestObjectByText(Constant.Alerts.LOADING_TEXT, 'span'), 10)
+		WebUI.waitForElementNotPresent(Utils.getTestObjectByText(Constant.Alerts.LOADING_TEXT, 'span'), Constant.DEFAULT_TIMEOUT)
 		TestObject linkToRequest = Utils.getTestObjectByText(G_REQUESTNAME)
-		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
-		WebUI.waitForElementClickable(linkToRequest, 10)
+		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(linkToRequest, Constant.DEFAULT_TIMEOUT)
 
 		WebUI.click(linkToRequest)
-		WebUI.waitForPageLoad(10)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 	}
 
 	@When("the requester cancels the request")
@@ -282,13 +282,13 @@ public class RequesterStep extends Step {
 	@When("the requester withdraws the request")
 	def requester_withdraws_request() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
-		WebUI.waitForElementClickable(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID), 10)
+		WebUI.waitForElementClickable(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID), Constant.DEFAULT_TIMEOUT)
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID))
 		WebUI.acceptAlert()
 
 		// Click Add Files button
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
-		WebUI.waitForElementClickable(requestFormSaveFilesButton, 10)
+		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
 	}
 
@@ -321,7 +321,7 @@ public class RequesterStep extends Step {
 		requester_views_request_they_created()
 
 		// We need to stall here to give time for the inline ajax to finish
-		WebUI.waitForElementNotPresent(Utils.getTestObjectByText('', 'circle'), 10)
+		WebUI.waitForElementNotPresent(Utils.getTestObjectByText('', 'circle'), Constant.DEFAULT_TIMEOUT)
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 
 		if ((numOutputFiles as Integer) > 0) WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
@@ -334,23 +334,23 @@ public class RequesterStep extends Step {
 	@Then("the requester should not be able to submit the request")
 	def requester_is_not_able_to_submit_request() {
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
-		WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
+		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
 
-		WebUI.verifyElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", 10)
+		WebUI.verifyElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.closeBrowser()
 	}
 
 	@Then("the requester should be able to submit the request")
 	def requester_is_able_to_submit_request() {
-		WebUI.verifyElementHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'),"disabled", 10)
+		WebUI.verifyElementHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'),"disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.closeBrowser()
 	}
 
 	@Then("the requester should see the complete record of the request including export files, supporting content, discussion, and status changes")
 	def submitted_request_info_matches_what_was_submitted() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
-		WebUI.waitForPageLoad(10)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.verifyTextPresent(Constant.Requester.PURPOSE_TEXT, false)
@@ -363,7 +363,7 @@ public class RequesterStep extends Step {
 	def request_should_be_in_given_status(String statusTxt) {
 		requester_views_request_they_created()
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
-		WebUI.waitForPageLoad(10)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.verifyTextPresent(statusTxt, false)
 		WebUI.closeBrowser()
 	}
@@ -392,15 +392,15 @@ public class RequesterStep extends Step {
 
 		// Click Add Files button
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
-		WebUI.waitForElementClickable(requestFormSaveFilesButton, 10)
+		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
 		WebUI.closeBrowser()
 	}
 
 	@Then("requester should be able to re-submit the request")
 	def requester_should_be_able_to_resubmit_request() {
-		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", 10)
-		WebUI.waitForElementClickable(findTestObject('Object Repository/OCWA/span_Submit for Review'), 30)
+		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(findTestObject('Object Repository/OCWA/span_Submit for Review'), Constant.DEFAULT_TIMEOUT)
 		WebUI.click(findTestObject('Object Repository/OCWA/span_Submit for Review'))
 		request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
 		WebUI.closeBrowser()
@@ -410,16 +410,16 @@ public class RequesterStep extends Step {
 	def request_should_be_informed_of_blocking_rule_violation(String rule) {
 		if(!rule.equals("The summation of all output file sizes exceeds the request file size limit")) {
 			WebUI.comment("checking that file was successfully blocked")
-			WebUI.waitForElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.ERROR), 10)
-			WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.ERROR), 10)
+			WebUI.waitForElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.ERROR), Constant.DEFAULT_TIMEOUT)
+			WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.ERROR), Constant.DEFAULT_TIMEOUT)
 		}
 	}
 
 	@Then("requester should be informed that given warning rule (.+) has been violated")
 	def request_should_be_informed_of_warning_rule_violation(String rule) {
 		WebUI.comment("checking that file successfully triggered warning")
-		WebUI.waitForElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.WARNING), 10)
-		WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.WARNING), 10)
+		WebUI.waitForElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.WARNING), Constant.DEFAULT_TIMEOUT)
+		WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.WARNING), Constant.DEFAULT_TIMEOUT)
 	}
 
 	@Then("the team member's request should be visible and editable")
@@ -435,8 +435,8 @@ public class RequesterStep extends Step {
 	@Then("the request cannot be successfully submitted")
 	def request_cannot_be_successfully_submitted() {
 		TestObject submitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
-		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", 10)
-		WebUI.waitForElementClickable(submitBtn, 10)
+		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(submitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(submitBtn)
 		WebUI.comment("Clicked the submit link")
 		request_should_be_in_given_status(Constant.Status.WORK_IN_PROGRESS)
@@ -445,9 +445,9 @@ public class RequesterStep extends Step {
 	@Then("the request can be successfully submitted")
 	def request_can_be_successfully_submitted() {
 		TestObject submitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
-		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", 10)
-		WebUI.waitForElementVisible(submitBtn, 20)
-		WebUI.waitForElementClickable(submitBtn, 30)
+		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementVisible(submitBtn, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(submitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(submitBtn)
 		WebUI.comment("Clicked the submit link")
 		request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
