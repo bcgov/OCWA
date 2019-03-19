@@ -47,71 +47,61 @@ public class RequesterStep extends Step {
 	def requester_has_not_submitted_new_request() {
 	}
 
-	// parameterized function for uploading 1 to 3 output or supporting files
-	def requester_uploads_files(String fileToUpload, boolean isUploadScreenAlreadyOpen = false, String secondFile="", String thirdFile="") {
+	/**
+	 * Uploads each file specified in the files array
+	 * @param files String array of filenames to be used for uploading
+	 * @param isUploadScreenAlreadyOpen Optional Boolean regarding the state of upload screen. Defaults to false if not specified.
+	 */
+	def requester_uploads_files(String[] files, boolean isUploadScreenAlreadyOpen = false) {
 		if (!isUploadScreenAlreadyOpen) {
 			TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
-			WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
+			WebUI.waitForElementClickable(requestFormSaveFilesButton, 10)
 			WebUI.click(requestFormSaveFilesButton)
 		}
 
-		//Upload files
+		// Upload files
 		TestObject uploadFileButton = Utils.getTestObjectById(Constant.Requester.REQUEST_FILES_UPLOAD_BTN_ID)
-		WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
-		WebUI.waitForElementClickable(uploadFileButton, 30)
-		WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$fileToUpload")
-		WebUI.delay(3)
-
-		if (secondFile != "") {
+		files.each { file ->
 			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
-			WebUI.waitForElementClickable(uploadFileButton, 30)
-			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$secondFile")
-			WebUI.delay(3)
-		}
-
-		if (thirdFile != "") {
-			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
-			WebUI.waitForElementClickable(uploadFileButton, 30)
-			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$thirdFile")
+			WebUI.waitForElementClickable(uploadFileButton, 10)
+			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$file")
 			WebUI.delay(3)
 		}
 	}
 
 	@Given("requester adds (.+) output file that does not violate any blocking or warning rules")
-	def requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules(String numOutputFilesToUpload){
-		if (numOutputFilesToUpload == "2") { //add 2 valid output files
-			requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2)
-		}
-		else { //add 1 valid output file
-			requester_uploads_files(GlobalVariable.ValidFileName, false)
-			//requester_uploads_files(GlobalVariable.BlockedStudyIDFileName, false) //temporary stop gap
-		}
+	def requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules(String numOutputFilesToUpload) {
+		String[] files = [GlobalVariable.ValidFileName]
+		if(numOutputFilesToUpload == "2") files << GlobalVariable.ValidFileName2
+
+		requester_uploads_files(files)
 	}
 
 	@Given("requester adds (.+) supporting files")
-	def requester_adds_supporting_files(String numSupportingFilesToUpload){
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/div_Supporting Files'))
-		if (numSupportingFilesToUpload == "1") {
-			requester_uploads_files(GlobalVariable.SupportingFileName, true)
-		}
-		else { //add 2 supporting files
-			requester_uploads_files(GlobalVariable.SupportingFileName, true, GlobalVariable.SupportingFileName2)
-		}
+	def requester_adds_supporting_files(String numSupportingFilesToUpload) {
+		String[] files = [GlobalVariable.SupportingFileName]
+		if (numSupportingFilesToUpload == "2") files << GlobalVariable.SupportingFileName2
+
+		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_UPLOAD_TAB_SUPPORT_ID))
+		requester_uploads_files(files, true)
 	}
 
 	@Given("request violates given warning rule (.+)")
-	def request_violates_warning_rule(String warningRule){
-		//requester_starts_new_request()
+	def request_violates_warning_rule(String warningRule) {
 		switch (warningRule.toLowerCase()) {
 			case "an output file has a warning file extension":
-				requester_uploads_files(GlobalVariable.WarningExtensionFileName)
+				requester_uploads_files([GlobalVariable.WarningExtensionFileName] as String[])
 				break
 			case "a request that has a file that exceeds the file size warning threshold":
-				requester_uploads_files(GlobalVariable.WarningMaxSizeLimitFileName)
+				requester_uploads_files([GlobalVariable.WarningMaxSizeLimitFileName] as String[])
 				break
 			case "the summation of all output file sizes exceeds the request file size warning threshold":
-			//need to add output files that pass the warning limit individually but together surpass the combined size threshold
-				requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2, GlobalVariable.ValidFileName3)
+			// need to add output files that pass the warning limit individually but together surpass the combined size threshold
+				requester_uploads_files([
+					GlobalVariable.ValidFileName,
+					GlobalVariable.ValidFileName2,
+					GlobalVariable.ValidFileName3
+				] as String[])
 				break
 			default:
 				throw new Exception("warning rule $warningRule not found")
@@ -119,21 +109,24 @@ public class RequesterStep extends Step {
 		}
 	}
 	@Given("request violates given blocking rule (.+)")
-	def request_violates_blocking_rule(String blockingRule){
-		//requester_starts_new_request()
+	def request_violates_blocking_rule(String blockingRule) {
 		switch (blockingRule.toLowerCase()) {
 			case "an output file has a blocked file extension":
-				requester_uploads_files(GlobalVariable.BlockedExtensionFileName)
+				requester_uploads_files([GlobalVariable.BlockedExtensionFileName] as String[])
 				break
 			case "a request that has a file that is too big":
-				requester_uploads_files(GlobalVariable.BlockedMaxSizeLimitFileName)
+				requester_uploads_files([GlobalVariable.BlockedMaxSizeLimitFileName] as String[])
 				break
 			case "the summation of all output file sizes exceeds the request file size limit":
 			//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
-				requester_uploads_files(GlobalVariable.ValidFileName, false, GlobalVariable.ValidFileName2, GlobalVariable.WarningMaxSizeLimitFileName)
+				requester_uploads_files([
+					GlobalVariable.ValidFileName,
+					GlobalVariable.ValidFileName2,
+					GlobalVariable.WarningMaxSizeLimitFileName
+				] as String[])
 				break
 			case "a request has a file with a studyid in it":
-				requester_uploads_files(GlobalVariable.BlockedStudyIDFileName)
+				requester_uploads_files([GlobalVariable.BlockedStudyIDFileName] as String[])
 				break
 			default:
 				throw new Exception("block rule $blockingRule not found")
@@ -147,7 +140,7 @@ public class RequesterStep extends Step {
 	}
 
 	@Given("requester has submitted a request")
-	def requester_has_submitted_a_request(){
+	def requester_has_submitted_a_request() {
 		requester_starts_new_request()
 		requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
 		requester_submits_request()
@@ -159,7 +152,7 @@ public class RequesterStep extends Step {
 	}
 
 	@Given("the request has been claimed by an output checker")
-	def request_has_been_claimed_by_a_oc(){
+	def request_has_been_claimed_by_a_oc() {
 		//request_is_review_in_progress()
 		requester_has_a_request_of_status("Review in progress")
 	}
@@ -206,10 +199,14 @@ public class RequesterStep extends Step {
 	}
 
 	@Given("requester's project allows for editing of team member's requests")
-	def project_allows_for_team_sharing() {}
+	def project_allows_for_team_sharing() {
+
+	}
 
 	@Given("requester's project does not allow for editing of team member's requests")
-	def project_does_not_allow_for_team_sharing() {}
+	def project_does_not_allow_for_team_sharing() {
+
+	}
 
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
@@ -235,7 +232,7 @@ public class RequesterStep extends Step {
 	}
 
 	@When("requester writes and submits a new comment")
-	def requester_creates_a_new_comment(){
+	def requester_creates_a_new_comment() {
 		requester_views_request_they_created()
 		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'), 10)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'))
@@ -248,7 +245,7 @@ public class RequesterStep extends Step {
 	}
 
 	@When("the requester views the request")
-	def requester_views_request_they_created(){
+	def requester_views_request_they_created() {
 		if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
 			WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 		}
@@ -268,13 +265,13 @@ public class RequesterStep extends Step {
 	}
 
 	@When("the requester cancels the request")
-	def requester_cancels_request(){
+	def requester_cancels_request() {
 		requester_views_request_they_created()
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_CANCEL_BTN_ID))
 	}
 
 	@When("the requester withdraws the request")
-	def requester_withdraws_request(){
+	def requester_withdraws_request() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForElementClickable(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID), 10)
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID))
@@ -401,7 +398,9 @@ public class RequesterStep extends Step {
 	}
 
 	@Then("requests with updates older than a month should not be displayed")
-	def no_old_requests_should_be_displayed(){}
+	def no_old_requests_should_be_displayed() {
+
+	}
 
 	@Then("requester should see their new comment displayed")
 	def requester_should_see_their_new_comment_displayed() {
@@ -409,7 +408,7 @@ public class RequesterStep extends Step {
 	}
 
 	@Then("requester should be able to make changes to the request")
-	def requester_should_be_able_to_make_changes_to_the_request(){
+	def requester_should_be_able_to_make_changes_to_the_request() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 		WebUI.setText(Utils.getTestObjectById(Constant.Requester.REQUEST_PURPOSE_TXT_ID), Constant.Requester.EDITED_PURPOSE_TEXT)
@@ -421,7 +420,7 @@ public class RequesterStep extends Step {
 	}
 
 	@Then("requester should be able to re-submit the request")
-	def requester_should_be_able_to_resubmit_request(){
+	def requester_should_be_able_to_resubmit_request() {
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
 		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
@@ -430,7 +429,7 @@ public class RequesterStep extends Step {
 	}
 
 	@Then("requester should be informed that given blocking rule (.+) has been violated")
-	def request_should_be_informed_of_blocking_rule_violation(String rule){
+	def request_should_be_informed_of_blocking_rule_violation(String rule) {
 		if(!rule.equals("The summation of all output file sizes exceeds the request file size limit")) {
 			WebUI.comment("checking that file was successfully blocked")
 			WebUI.waitForElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.ERROR), 10)
@@ -439,7 +438,7 @@ public class RequesterStep extends Step {
 	}
 
 	@Then("requester should be informed that given warning rule (.+) has been violated")
-	def request_should_be_informed_of_warning_rule_violation(String rule){
+	def request_should_be_informed_of_warning_rule_violation(String rule) {
 		WebUI.comment("checking that file successfully triggered warning")
 		WebUI.waitForElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.WARNING), 10)
 		WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.WARNING), 10)
@@ -451,12 +450,12 @@ public class RequesterStep extends Step {
 	}
 
 	@Then("the team member's request should not be visible")
-	def team_members_request_should_not_be_visible(){
+	def team_members_request_should_not_be_visible() {
 		WebUI.verifyTextNotPresent(G_REQUESTNAME, false)
 		WebUI.closeBrowser()
 	}
 	@Then("the request cannot be successfully submitted")
-	def request_cannot_be_successfully_submitted(){
+	def request_cannot_be_successfully_submitted() {
 		TestObject submitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", 10)
 		WebUI.waitForElementClickable(submitBtn, 10)
@@ -466,7 +465,7 @@ public class RequesterStep extends Step {
 	}
 
 	@Then("the request can be successfully submitted")
-	def request_can_be_successfully_submitted(){
+	def request_can_be_successfully_submitted() {
 		TestObject submitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(submitBtn, "disabled", 10)
 		WebUI.waitForElementVisible(submitBtn, 20)

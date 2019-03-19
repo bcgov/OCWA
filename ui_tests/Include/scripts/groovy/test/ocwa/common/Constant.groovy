@@ -48,7 +48,9 @@ public class Constant {
 		static final def REQUEST_SAVE_CLOSE_BTN_ID = 'request-form-save-close-button'
 		static final def REQUEST_SAVE_FILES_BTN_ID = 'request-form-save-files-button'
 		// Submit button on the request page
-		static final def REQUEST_SUBMIT_BTN_ID = 'request-sidebar-submit-button' 
+		static final def REQUEST_SUBMIT_BTN_ID = 'request-sidebar-submit-button'
+		static final def REQUEST_UPLOAD_TAB_OUTPUT_ID = 'file-upload-tab-output'
+		static final def REQUEST_UPLOAD_TAB_SUPPORT_ID = 'file-upload-tab-support'
 		static final def REQUEST_WITHDRAW_BTN_ID = 'request-sidebar-withdraw-button'
 	}
 
