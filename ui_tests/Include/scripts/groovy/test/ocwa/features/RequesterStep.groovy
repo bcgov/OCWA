@@ -193,25 +193,22 @@ public class RequesterStep extends Step {
 
 	@Given("a project team member has created a request")
 	def project_team_member_has_created_request() {
-		login(GlobalVariable.OCWA_USER_TEAM_MEMBER, GlobalVariable.OCWA_USER_TEAM_MEMBER_PSWD)
 		requester_has_a_request_of_status(Constant.Status.DRAFT)
-		WebUI.navigateToUrl("$GlobalVariable.OCWA_URL$Constant.Login.LOGOUT_URL")
+		new LoginStep().logout()
 	}
 
 	@Given("requester's project allows for editing of team member's requests")
 	def project_allows_for_team_sharing() {
-
 	}
 
 	@Given("requester's project does not allow for editing of team member's requests")
 	def project_does_not_allow_for_team_sharing() {
-
 	}
 
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
 		WebUI.delay(3)
-		TestObject saveCloseBtn = findTestObject('Object Repository/Page_OCWA Development Version/button_save_close_request')
+		TestObject saveCloseBtn = findTestObject('Object Repository/OCWA/button_save_close_request')
 		WebUI.waitForElementNotHasAttribute(saveCloseBtn, "disabled", 10)
 		WebUI.waitForElementVisible(saveCloseBtn, 10)
 		WebUI.waitForElementClickable(saveCloseBtn, 10)
@@ -221,12 +218,12 @@ public class RequesterStep extends Step {
 
 	@When("requester submits their request")
 	def requester_submits_request() {
-		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), "disabled", 10)
-		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
-		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 10)
+		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/button_save_request'), "disabled", 10)
+		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", 10)
+		WebUI.waitForElementClickable(findTestObject('Object Repository/OCWA/span_Submit for Review'), 10)
 		WebUI.delay(3) // Stopgap related to https://github.com/bcgov/OCWA/issues/89
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
-		if(!WebUI.waitForElementNotPresent(findTestObject('Object Repository/Page_OCWA Development Version/button_save_request'), 10)) {
+		WebUI.click(findTestObject('Object Repository/OCWA/span_Submit for Review'))
+		if(!WebUI.waitForElementNotPresent(findTestObject('Object Repository/OCWA/button_save_request'), 10)) {
 			throw new com.kms.katalon.core.exception.StepFailedException("Submission failed - modal window still present")
 		}
 	}
@@ -234,14 +231,22 @@ public class RequesterStep extends Step {
 	@When("requester writes and submits a new comment")
 	def requester_creates_a_new_comment() {
 		requester_views_request_they_created()
-		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'), 10)
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'))
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/div_discussion_form'))
 
-		WebUI.waitForElementPresent(findTestObject('Object Repository/Page_OCWA Development Version/div_discussion_form_contenteditable'), 10)
-		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_save_comment'), 10)
-		WebUI.sendKeys(findTestObject('Object Repository/Page_OCWA Development Version/div_discussion_form_contenteditable'), Constant.Requester.TEST_COMMENT)
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_save_comment'))
+		TestObject discussionTab = Utils.getTestObjectById(Constant.Requester.REQUEST_DISCUSSION_TAB_ID)
+		WebUI.waitForElementPresent(discussionTab, 10)
+		WebUI.click(discussionTab)
+
+		TestObject discussionForm = Utils.getTestObjectById(Constant.Requester.REQUEST_DISCUSSION_FORM_ID)
+		WebUI.waitForElementPresent(discussionForm, 10)
+		WebUI.click(discussionForm)
+
+		TestObject contentEditable = findTestObject('Object Repository/OCWA/div_discussion_form_contenteditable')
+		WebUI.waitForElementPresent(contentEditable, 10)
+		WebUI.sendKeys(contentEditable, Constant.Requester.TEST_COMMENT)
+
+		TestObject saveCommentButton = findTestObject('Object Repository/OCWA/span_save_comment')
+		WebUI.waitForElementClickable(saveCommentButton, 10)
+		WebUI.click(saveCommentButton)
 	}
 
 	@When("the requester views the request")
@@ -288,16 +293,16 @@ public class RequesterStep extends Step {
 		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 		switch (status.toLowerCase()) {
 			case "draft":
-				WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Draft'))
+				WebUI.click(Utils.getTestObjectByText('Draft', 'span'))
 				break
 			case "submitted":
-				WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Queued_in_review'))
+				WebUI.click(Utils.getTestObjectByText('Queued/In Review', 'span'))
 				break
 			case "approved":
 			//stub for when a filter for approved requests is added to UI
 				break
 			case "cancelled":
-				WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Cancelled'))
+				WebUI.click(Utils.getTestObjectByText('Cancelled', 'span'))
 				break
 			case "their": //essentially viewing all their requests
 				break
@@ -335,19 +340,14 @@ public class RequesterStep extends Step {
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.delay(3) // we need to do a hard delay here to give time for the inline ajax to finish
 
-		if (numOutputFiles == "1") {
-			WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
-		}
+		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		if (numOutputFiles == "2") {
 			WebUI.verifyTextPresent(GlobalVariable.ValidFileName2, false)
-			WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		}
-		if (numSupportingFiles == "1") {
-			WebUI.verifyTextPresent(GlobalVariable.SupportingFileName, false)
-		}
+
+		WebUI.verifyTextPresent(GlobalVariable.SupportingFileName, false)
 		if (numSupportingFiles == "2") {
 			WebUI.verifyTextPresent(GlobalVariable.SupportingFileName2, false)
-			WebUI.verifyTextPresent(GlobalVariable.SupportingFileName, false)
 		}
 	}
 
@@ -357,14 +357,14 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, 30)
 		WebUI.click(requestFormSaveFilesButton)
 
-		WebUI.verifyElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
+		WebUI.verifyElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", 10)
 
 		WebUI.closeBrowser()
 	}
 
 	@Then("the requester should be able to submit the request")
 	def requester_is_able_to_submit_request() {
-		WebUI.verifyElementHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'),"disabled", 10)
+		WebUI.verifyElementHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'),"disabled", 10)
 		WebUI.closeBrowser()
 	}
 
@@ -376,7 +376,7 @@ public class RequesterStep extends Step {
 		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.verifyTextPresent(Constant.Requester.PURPOSE_TEXT, false)
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/a_request_discussion_tab'))
+		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_DISCUSSION_TAB_ID))
 		requester_should_see_their_new_comment_displayed()
 		WebUI.closeBrowser()
 	}
@@ -421,9 +421,9 @@ public class RequesterStep extends Step {
 
 	@Then("requester should be able to re-submit the request")
 	def requester_should_be_able_to_resubmit_request() {
-		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), "disabled", 10)
-		WebUI.waitForElementClickable(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'), 30)
-		WebUI.click(findTestObject('Object Repository/Page_OCWA Development Version/span_Submit for Review'))
+		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", 10)
+		WebUI.waitForElementClickable(findTestObject('Object Repository/OCWA/span_Submit for Review'), 30)
+		WebUI.click(findTestObject('Object Repository/OCWA/span_Submit for Review'))
 		request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
 		WebUI.closeBrowser()
 	}

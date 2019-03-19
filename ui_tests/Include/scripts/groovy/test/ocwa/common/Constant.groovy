@@ -39,6 +39,8 @@ public class Constant {
 		static final def SEARCH_BOX_ID = 'requests-list-search'
 
 		static final def REQUEST_CANCEL_BTN_ID = 'request-sidebar-cancel-button'
+		static final def REQUEST_DISCUSSION_FORM_ID = 'discussion-form'
+		static final def REQUEST_DISCUSSION_TAB_ID = 'request-discussion-tab'
 		static final def REQUEST_EDIT_BTN_ID = 'request-sidebar-edit-button'
 		static final def REQUEST_FILES_UPLOAD_BTN_ID = 'file-uploader-input'
 		static final def REQUEST_NAME_TXT_ID = 'name'

@@ -23,23 +23,34 @@ import test.ocwa.common.Utils
  * OCWA Login steps for Katalon
  * @author Jeremy Ho, Paul Ripley
  */
-class LoginStep extends Step {
+public class LoginStep extends Step {
 	@Given("requester has logged in")
 	def requester_login() {
-		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD, GlobalVariable.OCWA_URL)
+		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
+	}
+	
+	@Given("team member has logged in")
+	def team_member_login() {
+		login(GlobalVariable.OCWA_USER_TEAM_MEMBER, GlobalVariable.OCWA_USER_TEAM_MEMBER_PSWD)
 	}
 
 	@Given("output checker has logged in")
 	def checker_login() {
-		login(GlobalVariable.OCWA_USER_CHECKER1, GlobalVariable.OCWA_USER_CHECKER1_PSWD, GlobalVariable.OCWA_URL)
+		login(GlobalVariable.OCWA_USER_CHECKER1, GlobalVariable.OCWA_USER_CHECKER1_PSWD)
 	}
 
 	@Given("requester has logged into download interface")
-	def download_interface_login(){
+	def download_interface_login() {
 		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD, GlobalVariable.OCWA_DL_URL)
 	}
 
-	def login(String username, String password, String url) {
+	/**
+	 * Logs a user into the system with the specified parameters
+	 * @param username String 
+	 * @param password String (unencoded)
+	 * @param url String of login page endpoint. Defaults to OCWA_URL global variable.
+	 */
+	def login(String username, String password, String url = GlobalVariable.OCWA_URL) {
 		WebUI.openBrowser(null)
 		WebUI.navigateToUrl(url)
 		WebUI.waitForPageLoad(10)
@@ -54,6 +65,15 @@ class LoginStep extends Step {
 		WebUI.setText(Utils.getTestObjectById('password'), password)
 		WebUI.waitForElementClickable(kcLoginButton, 10)
 		WebUI.click(kcLoginButton)
+		WebUI.waitForPageLoad(10)
+	}
+	
+	/**
+	 * Logs a user out of the system with the specified parameters
+	 * @param url String of login page endpoint. Defaults to OCWA_URL global variable.
+	 */
+	def logout(String url = GlobalVariable.OCWA_URL) {
+		WebUI.navigateToUrl("$url$Constant.Login.LOGOUT_URL")
 		WebUI.waitForPageLoad(10)
 	}
 }
