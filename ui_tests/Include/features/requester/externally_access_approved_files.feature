@@ -3,7 +3,7 @@ Feature: Access approved output files outside of the secure environment
 
   Background: 
     Given requester has logged in
-    And requester has submitted a request
+    And requester has a request of status "awaiting review"
     Given output checker has logged in
     And output checker tries to claim an unclaimed request
     And the output checker marks the request as approved

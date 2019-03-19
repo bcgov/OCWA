@@ -24,19 +24,30 @@ import test.ocwa.common.Utils
  * @author Jeremy Ho, Paul Ripley
  */
 public class LoginStep extends Step {
-	@Given("requester has logged in")
-	def requester_login() {
-		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD)
-	}
-	
-	@Given("team member has logged in")
-	def team_member_login() {
-		login(GlobalVariable.OCWA_USER_TEAM_MEMBER, GlobalVariable.OCWA_USER_TEAM_MEMBER_PSWD)
-	}
+	@Given("(.+) has logged in")
+	def user_login(String user) {
+		def username = ''
+		def password = ''
 
-	@Given("output checker has logged in")
-	def checker_login() {
-		login(GlobalVariable.OCWA_USER_CHECKER1, GlobalVariable.OCWA_USER_CHECKER1_PSWD)
+		switch (user.toLowerCase()) {
+			case 'requester':
+				username = GlobalVariable.OCWA_USER_RESEARCHER
+				password = GlobalVariable.OCWA_USER_RESEARCHER_PSWD
+				break
+			case 'team member':
+				username = GlobalVariable.OCWA_USER_TEAM_MEMBER
+				password = GlobalVariable.OCWA_USER_TEAM_MEMBER_PSWD
+				break
+			case 'output checker':
+				username = GlobalVariable.OCWA_USER_CHECKER1
+				password = GlobalVariable.OCWA_USER_CHECKER1_PSWD
+				break
+			default:
+				throw new Exception("User ${user} is not defined")
+				break
+		}
+
+		login(username, password)
 	}
 
 	@Given("requester has logged into download interface")

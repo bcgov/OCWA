@@ -9,6 +9,13 @@ public class Constant {
 		throw new UnsupportedOperationException();
 	}
 
+	static final def DEFAULT_TIMEOUT = 10
+
+	final class Alerts {
+		static final def SUCCESS_UPDATED_TEXT = 'Successfully updated'
+		static final def LOADING_TEXT = 'Loading...'
+	}
+
 	final class Checker {
 		static final def ASSIGN_REQUEST_TO_ME_ID = 'request-sidebar-pickup-button'
 		static final def APPROVE_REQUEST_BTN_ID = 'request-sidebar-approve-button'
@@ -57,8 +64,11 @@ public class Constant {
 	}
 
 	final class Status {
+		static final def APPROVED = 'Approved'
 		static final def AWAITING_REVIEW = 'Awaiting Review'
+		static final def CANCELLED = 'Cancelled'
 		static final def DRAFT = 'Draft'
+		static final def SUBMITTED = 'Queued/In Review'
 		static final def WORK_IN_PROGRESS = 'Work in Progress'
 	}
 }

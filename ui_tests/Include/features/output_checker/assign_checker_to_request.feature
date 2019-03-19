@@ -6,7 +6,7 @@ Feature: Assign output checker to a request
 
   Scenario: Assign an unclaimed request
     Given requester has logged in
-    And requester has submitted a request
+    And requester has a request of status "awaiting review"
     When output checker tries to assign an unclaimed request to another output checker
     Then the output checker should be able to see that the request has been assigned to the output checker they specified
 

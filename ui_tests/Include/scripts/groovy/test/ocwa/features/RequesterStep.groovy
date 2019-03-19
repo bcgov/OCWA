@@ -65,7 +65,10 @@ public class RequesterStep extends Step {
 			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", 10)
 			WebUI.waitForElementClickable(uploadFileButton, 10)
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$file")
-			WebUI.delay(3)
+
+			TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
+			WebUI.waitForElementPresent(successAlert, 10)
+			WebUI.waitForElementNotPresent(successAlert, 10)
 		}
 	}
 
@@ -139,13 +142,6 @@ public class RequesterStep extends Step {
 		//stubbed in case we need to check a box in the UI to support this
 	}
 
-	@Given("requester has submitted a request")
-	def requester_has_submitted_a_request() {
-		requester_starts_new_request()
-		requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
-		requester_submits_request()
-	}
-
 	@Given("request was last updated within the last month")
 	def request_updated_within_last_month() {
 		//stubbed because newly created requests will always have an update date within the last month
@@ -157,33 +153,37 @@ public class RequesterStep extends Step {
 		requester_has_a_request_of_status("Review in progress")
 	}
 
+	// TODO: Refactor this into a new "StateStep" class or similar
+	// This new class would extend Step and instantiate CheckerStep and RequesterStep on constructor
 	@Given('requester has a request of status "(.+)"')
 	def requester_has_a_request_of_status(String status) {
+		requester_starts_new_request()
+		requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
+
 		switch (status.toLowerCase()) {
 			case "draft":
-				requester_starts_new_request()
-				requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
 				requester_saves_new_request()
 				break
 			case "awaiting review":
-				requester_has_submitted_a_request()
+				requester_submits_request()
 				break
 			case "review in progress":
-				requester_has_submitted_a_request()
-			//output checker needs to claim
+				requester_submits_request()
+				//output checker needs to claim
 				break
 			case "work in progress":
-				requester_has_submitted_a_request()
-				requester_withdraws_request()
+				requester_submits_request()
+				//output checker needs to claim
+				//output checker needs to request revisions OR requester has submitted and withdrawn
 				break
 			case "cancelled":
-				requester_has_submitted_a_request()
+				requester_submits_request()
 				requester_cancels_request()
 				break
 			case "approved":
-				requester_has_submitted_a_request()
-			//output checker needs to claim
-			//output checker needs to approve
+				requester_submits_request()
+				//output checker needs to claim
+				//output checker needs to approve
 				break
 			default:
 				throw new Exception("status $status not found")
@@ -194,7 +194,7 @@ public class RequesterStep extends Step {
 	@Given("a project team member has created a request")
 	def project_team_member_has_created_request() {
 		requester_has_a_request_of_status(Constant.Status.DRAFT)
-		new LoginStep().logout()
+		WebUI.closeBrowser()
 	}
 
 	@Given("requester's project allows for editing of team member's requests")
@@ -207,7 +207,10 @@ public class RequesterStep extends Step {
 
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
-		WebUI.delay(3)
+		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
+		WebUI.waitForElementPresent(successAlert, 10)
+		WebUI.waitForElementNotPresent(successAlert, 10)
+
 		TestObject saveCloseBtn = findTestObject('Object Repository/OCWA/button_save_close_request')
 		WebUI.waitForElementNotHasAttribute(saveCloseBtn, "disabled", 10)
 		WebUI.waitForElementVisible(saveCloseBtn, 10)
@@ -221,6 +224,7 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/button_save_request'), "disabled", 10)
 		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", 10)
 		WebUI.waitForElementClickable(findTestObject('Object Repository/OCWA/span_Submit for Review'), 10)
+
 		WebUI.delay(3) // Stopgap related to https://github.com/bcgov/OCWA/issues/89
 		WebUI.click(findTestObject('Object Repository/OCWA/span_Submit for Review'))
 		if(!WebUI.waitForElementNotPresent(findTestObject('Object Repository/OCWA/button_save_request'), 10)) {
@@ -256,11 +260,11 @@ public class RequesterStep extends Step {
 		}
 		WebUI.waitForPageLoad(10)
 		TestObject searchBox = Utils.getTestObjectById(Constant.Requester.SEARCH_BOX_ID)
-		WebUI.waitForElementClickable(searchBox, 10, FailureHandling.STOP_ON_FAILURE)
+		WebUI.waitForElementClickable(searchBox, 10)
 		WebUI.setText(searchBox, G_REQUESTNAME)
 		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
 
-		WebUI.delay(3) // TODO: Resolve searching delay with proper element check
+		WebUI.waitForElementNotPresent(Utils.getTestObjectByText(Constant.Alerts.LOADING_TEXT, 'span'), 10)
 		TestObject linkToRequest = Utils.getTestObjectByText(G_REQUESTNAME)
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
 		WebUI.waitForElementClickable(linkToRequest, 10)
@@ -293,16 +297,16 @@ public class RequesterStep extends Step {
 		WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 		switch (status.toLowerCase()) {
 			case "draft":
-				WebUI.click(Utils.getTestObjectByText('Draft', 'span'))
+				WebUI.click(Utils.getTestObjectByText(Constant.Status.DRAFT, 'span'))
 				break
 			case "submitted":
-				WebUI.click(Utils.getTestObjectByText('Queued/In Review', 'span'))
+				WebUI.click(Utils.getTestObjectByText(Constant.Status.SUBMITTED, 'span'))
 				break
 			case "approved":
-			//stub for when a filter for approved requests is added to UI
+				WebUI.click(Utils.getTestObjectByText(Constant.Status.APPROVED, 'span'))
 				break
 			case "cancelled":
-				WebUI.click(Utils.getTestObjectByText('Cancelled', 'span'))
+				WebUI.click(Utils.getTestObjectByText(Constant.Status.CANCELLED, 'span'))
 				break
 			case "their": //essentially viewing all their requests
 				break
@@ -314,41 +318,17 @@ public class RequesterStep extends Step {
 
 	@Then("the requester should see their saved request including (.+) output file (.+) supporting file")
 	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles) {
-		WebUI.waitForPageLoad(10)
-		WebUI.comment("current page (should be main page): ${WebUI.getUrl()}")
-		TestObject searchBox = Utils.getTestObjectById(Constant.Requester.SEARCH_BOX_ID)
-		WebUI.waitForElementClickable(searchBox, 10, FailureHandling.STOP_ON_FAILURE)
-		WebUI.setText(searchBox, G_REQUESTNAME)
-		WebUI.sendKeys(searchBox, Keys.chord(Keys.ENTER))
+		requester_views_request_they_created()
 
-		TestObject linkToRequest = Utils.getTestObjectByText(G_REQUESTNAME)
-		WebUI.waitForElementPresent(linkToRequest, 10)
-		if (!WebUI.verifyTextPresent(G_REQUESTNAME, false)) {
-			WebUI.comment("unable to find the text:$G_REQUESTNAME on the page. This text is used to find the request link")
-		}
-
-		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", 10)
-		WebUI.waitForElementVisible(linkToRequest, 10)
-		WebUI.waitForElementClickable(linkToRequest, 10)
-		WebUI.delay(1) // Need to wait for the loading wheel to disappear
-		WebUI.click(linkToRequest)
-		WebUI.comment("clicked on the request link that contains text: $G_REQUESTNAME")
-
-		WebUI.waitForPageLoad(20)
-		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
-
+		// We need to stall here to give time for the inline ajax to finish
+		WebUI.waitForElementNotPresent(Utils.getTestObjectByText('', 'circle'), 10)
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
-		WebUI.delay(3) // we need to do a hard delay here to give time for the inline ajax to finish
 
-		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
-		if (numOutputFiles == "2") {
-			WebUI.verifyTextPresent(GlobalVariable.ValidFileName2, false)
-		}
+		if ((numOutputFiles as Integer) > 0) WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
+		if ((numOutputFiles as Integer) > 1) WebUI.verifyTextPresent(GlobalVariable.ValidFileName2, false)
 
-		WebUI.verifyTextPresent(GlobalVariable.SupportingFileName, false)
-		if (numSupportingFiles == "2") {
-			WebUI.verifyTextPresent(GlobalVariable.SupportingFileName2, false)
-		}
+		if ((numSupportingFiles as Integer) > 0) WebUI.verifyTextPresent(GlobalVariable.SupportingFileName, false)
+		if ((numSupportingFiles as Integer) > 1) WebUI.verifyTextPresent(GlobalVariable.SupportingFileName2, false)
 	}
 
 	@Then("the requester should not be able to submit the request")
@@ -358,7 +338,6 @@ public class RequesterStep extends Step {
 		WebUI.click(requestFormSaveFilesButton)
 
 		WebUI.verifyElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", 10)
-
 		WebUI.closeBrowser()
 	}
 
@@ -370,7 +349,6 @@ public class RequesterStep extends Step {
 
 	@Then("the requester should see the complete record of the request including export files, supporting content, discussion, and status changes")
 	def submitted_request_info_matches_what_was_submitted() {
-		WebUI.delay(3)
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForPageLoad(10)
 		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
@@ -384,7 +362,6 @@ public class RequesterStep extends Step {
 	@Then('the request status is changed to "(.+)"')
 	def request_should_be_in_given_status(String statusTxt) {
 		requester_views_request_they_created()
-		WebUI.delay(3)
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForPageLoad(10)
 		WebUI.verifyTextPresent(statusTxt, false)
@@ -417,6 +394,7 @@ public class RequesterStep extends Step {
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, 10)
 		WebUI.click(requestFormSaveFilesButton)
+		WebUI.closeBrowser()
 	}
 
 	@Then("requester should be able to re-submit the request")
