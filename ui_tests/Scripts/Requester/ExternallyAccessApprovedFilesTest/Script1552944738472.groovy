@@ -13,5 +13,5 @@ import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import internal.GlobalVariable as GlobalVariable
 
-CucumberKW.runFeatureFile('Include/features/requester/edit_previously_submitted_request.feature')
+CucumberKW.runFeatureFile('Include/features/requester/externally_access_approved_files.feature')
 
