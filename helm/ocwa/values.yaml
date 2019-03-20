@@ -381,6 +381,9 @@ validate-api:
 
   policyApi: ocwa-policy-api.ocwa
 
+  workingLimit: 5242880,
+  failOverWorkingLimit: "true"
+
 
   apiSecret: "ssh this is a secret"
   user:

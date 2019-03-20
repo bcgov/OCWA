@@ -13,7 +13,7 @@ import MoreIcon from '@atlaskit/icon/glyph/more';
 
 import { getRequestStateColor } from '../../utils';
 
-function RequestIcon({ color, size, value }) {
+function RequestIcon({ color, secondaryColor, size, value }) {
   let Icon = null;
   let name = null;
 
@@ -57,6 +57,7 @@ function RequestIcon({ color, size, value }) {
       <Icon
         label={name}
         primaryColor={color || getRequestStateColor(value)}
+        secondaryColor={secondaryColor}
         size={size}
       />
     </Tooltip>
@@ -65,14 +66,16 @@ function RequestIcon({ color, size, value }) {
 
 RequestIcon.propTypes = {
   color: PropTypes.string,
+  secondaryColor: PropTypes.string,
   size: PropTypes.oneOf(['small', 'medium', 'large', 'xlarge']),
   value: PropTypes.number,
 };
 
 RequestIcon.defaultProps = {
   color: null,
-  value: 0,
+  secondaryColor: null,
   size: 'small',
+  value: 0,
 };
 
 export default RequestIcon;

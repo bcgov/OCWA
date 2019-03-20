@@ -119,12 +119,15 @@ class NewRequestDialog extends React.PureComponent {
       currentStep,
       data,
       isCreating,
+      isFilesValid,
+      isLoading,
       isSaving,
       isUploading,
       onCancel,
       open,
     } = this.props;
-    const isDisabled = isCreating || isUploading || isSaving || !open;
+    const isDisabled =
+      isCreating || isLoading || isUploading || isSaving || !open;
     const isDraft = data.state === 0;
 
     return (
@@ -224,6 +227,8 @@ NewRequestDialog.propTypes = {
     name: PropTypes.string,
     files: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  isFilesValid: PropTypes.bool.isRequired,
   isNewRequest: PropTypes.bool.isRequired,
   isUploading: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,

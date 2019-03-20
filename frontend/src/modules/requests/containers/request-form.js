@@ -12,6 +12,7 @@ import {
   createRequest,
   changeStep,
   closeDraftRequest,
+  fetchRequest,
   reset,
   saveRequest,
 } from '../actions';
@@ -69,7 +70,23 @@ const mapStateToProps = state => {
     files,
     supportingFiles,
   };
+  const statuses = values(data.fileStatus);
+  const isFilesValid = statuses
+    .map(value => {
+      if (isEmpty(value)) {
+        return false;
+      }
 
+      return value.every(d => {
+        if (d.mandatory) {
+          return d.pass;
+        }
+        return d.state < 2;
+      });
+    })
+    .every(d => d === true);
+
+  console.log(isFilesValid, statuses);
   return {
     currentStep: state.requests.viewState.currentNewRequestStep,
     isNewRequest,
@@ -77,6 +94,7 @@ const mapStateToProps = state => {
     queuedFiles,
     queuedSupportingFiles,
     id: currentRequestId,
+    isFilesValid: isFilesValid && statuses.length > 0,
     isUploading,
     open: !isEmpty(currentRequestId),
     fetchStatus: isNewRequest
@@ -88,6 +106,12 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
   onChangeStep: changeStep,
   onCancel: closeDraftRequest,
+  onFetch: id =>
+    fetchRequest({
+      url: `/api/v1/requests/${id}`,
+      schema: requestSchema,
+      id,
+    }),
   onCreate: (payload, meta) =>
     createRequest(payload, meta, {
       url: '/api/v1/requests',

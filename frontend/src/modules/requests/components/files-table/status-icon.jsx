@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
+import compact from 'lodash/compact';
 import EditorWarningIcon from '@atlaskit/icon/glyph/editor/warning';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import EmojiFrequentIcon from '@atlaskit/icon/glyph/emoji/frequent';
@@ -36,7 +37,8 @@ class StatusIcon extends React.Component {
 
       return (
         <div key={uid(d)} className={styles.statusRow}>
-          {element} {d.name || d.error}
+          {element}
+          {compact([d.message, d.name, d.error]).join(' - ')}
         </div>
       );
     });

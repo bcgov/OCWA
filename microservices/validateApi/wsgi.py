@@ -16,8 +16,20 @@ app = create_app()
 
 log = logging.getLogger(__name__)
 
+#no zombie
+import signal
+validationHeaderProcess = None
+def sigInt_handler(sig, frame):
+    #print (validationHeaderProcess)
+    #log.info('Server stopping ctrl+c received...', frame.f_globals)
+    #log.info('Please wait to avoid having zombie processes')
+    #if not(validationHeaderProcess is None):
+    #    validationHeaderProcess.abort()
+    log.info('Server terminated!')
+    sys.exit(0)
 
 import config
+from v1.validator.validator import Validator
 
 conf = config.Config()
 
@@ -27,6 +39,8 @@ def main(port: int = conf.data['apiPort']) -> object:
     :param port: Port number
     :return:
     """
+
+
     config = conf.conf.data
     logLevel = config['logLevel'].upper()
 
@@ -44,6 +58,13 @@ def main(port: int = conf.data['apiPort']) -> object:
     http = WSGIServer(('', port), app.wsgi_app)
     load_end = timer()
     log.info('Load time: %s', str(load_end - load_start))
+
+    log.info("adding signal catcher")
+    signal.signal(signal.SIGINT, sigInt_handler)
+
+    log.info("initializing validation process...")
+    validationHeaderProcess = Validator()
+    validationHeaderProcess.start_validate_process()
 
     log.info('Serving on port %s', str(port))
     http.serve_forever()

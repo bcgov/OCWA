@@ -377,11 +377,21 @@ router.put('/submit/:requestId', function(req, res, next){
                     }
 
                     var pass = true;
+                    var blocked = false;
+                    var pending = false;
                     for (var i=0; i < reqRes.files.length; i++) {
                         for (var j=0; j < status[reqRes.files[i]].length; j++) {
+
+                            if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
+                                blocked = true;
+                            }
+
+                            if (status[reqRes.files[i]][j].state === 2){
+                                pending = true;
+                            }
+
                             if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
                                 pass = false;
-                                break;
                             }
                         }
                     }
@@ -408,7 +418,11 @@ router.put('/submit/:requestId', function(req, res, next){
                         return;
                     }
                     res.status(403);
-                    res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
+                    if (blocked){
+                        res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
+                        return;
+                    }
+                    res.json({error: "Request submission failed, validation pending, please wait", fileStatus: status});
                     return;
                 });
             });
@@ -422,9 +436,16 @@ router.put('/submit/:requestId', function(req, res, next){
                 var pass = true;
                 for (var i=0; i < reqRes.files.length; i++){
                     for (var j=0; j < status[reqRes.files[i]].length; j++) {
+                        if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
+                            blocked = true;
+                        }
+
+                        if (status[reqRes.files[i]][j].state === 2){
+                            pending = true;
+                        }
+
                         if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
                             pass = false;
-                            break;
                         }
                     }
                 }
@@ -450,7 +471,11 @@ router.put('/submit/:requestId', function(req, res, next){
                     return;
                 }
                 res.status(403);
-                res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
+                if (blocked){
+                    res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
+                    return;
+                }
+                res.json({error: "Request submission failed, validation pending, please wait", fileStatus: status});
                 return;
             });
         }

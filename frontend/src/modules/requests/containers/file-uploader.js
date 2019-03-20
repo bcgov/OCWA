@@ -9,11 +9,13 @@ import { uploadFile } from '../actions';
 const mapStateToProps = (state, props) => {
   const ids = keys(state.requests.files);
   const files = get(props, 'data.files', []);
+  const fileStatus = get(props, 'data.fileStatus', {});
   const data = difference(ids, files);
   const isUploading = data.length > 0;
 
   return {
     data,
+    fileStatus,
     requestId: props.data._id,
     files,
     isUploading,

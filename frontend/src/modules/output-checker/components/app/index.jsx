@@ -4,6 +4,7 @@ import AppBar from '@src/components/app-bar';
 import AppBarMenu from '@src/components/app-bar/menu';
 import Issue24Icon from '@atlaskit/icon-object/glyph/issue/24';
 import { Switch, Route } from 'react-router-dom';
+import Title from '@src/components/title';
 
 import Dashboard from '../../containers/dashboard';
 import Request from '../../containers/request';

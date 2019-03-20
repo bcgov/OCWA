@@ -1,5 +1,10 @@
 from mongoengine import *
 
+"""
+    State = 0: "Pass",
+    State = 1: "Fail",
+    State = 2: "Pending"
+"""
 
 class Results(Document):
     file_id=StringField(required=True)

@@ -2,6 +2,7 @@
 import logging
 import re
 import sys
+import time
 from io import StringIO
 from multiprocessing import Process
 
@@ -10,22 +11,112 @@ from config import Config
 from db.db import Db
 from munch import munchify
 import magic
+from ValidationQueue.ValidationQueue import ValidationQueue, QueueObject
 
 log = logging.getLogger(__name__)
 
+# sleep time in seconds
+SLEEP_TIME = 1
+
+# aborting?
+ABORTING = False
+
 class Validator:
-    rule = ""
-    result = None
     proc = None
 
-    def __init__(self, rule, result):
-        self.rule = rule
-        self.result = result
+    def abort(self):
+        log.debug("Validator abort called")
+        ABORTING = True
+        self.proc.join()
 
-    def start_validate(self):
-        log.debug("Starting validation process")
-        self.proc = Process(target=validate, args=(self.rule, self.result))
+    def start_validate_process(self):
+        log.debug("Starting validation header process")
+        
+        ValidationQueue.initQueue()
+
+        self.proc = Process(target=validateProcess)
         self.proc.start()
+
+    def start_validate(self, rule, result):
+        log.debug("Adding to queue")
+        item = QueueObject(rule, result)
+        ValidationQueue.getQueue().put(item)
+
+
+def validateProcess():
+    conf = Config().data
+    processes = []
+    workingSize = 0
+    workingLimit = conf['workingLimit']
+    config = Config().conf.data
+    endpoint = config['storage']['endpoint']
+    bucket = config['storage']['bucket']
+    access_key_id = config['storage']['access_key']
+    access_secret_id = config['storage']['secret_key']
+
+    conn = boto3.client(service_name='s3',
+                        aws_access_key_id=access_key_id,
+                        aws_secret_access_key=access_secret_id,
+                        endpoint_url=endpoint)
+    
+    while not(ABORTING):
+        #queue work
+        if ValidationQueue.getQueue().empty():
+            time.sleep(SLEEP_TIME)
+        else:
+            item = ValidationQueue.getQueue().get(False)
+            if item.size == -1:
+                try:
+                    headObj = conn.head_object(Bucket=bucket, Key=item.result.file_id)
+                    item.size = headObj['ContentLength']
+                except:
+                    log.error("error getting object from s3")
+                
+            if item.size > workingLimit:
+                # Can't ever scan this it's too big
+                item.result.message = "File is too large to be validated"
+                item.result.state = 0 # pass
+                if ('failOverWorkingLimit' in config) and (config['failOverWorkingLimit']):
+                    item.result.state = 1 # fail
+
+                item.result.save()
+                log.info("File "+item.result.file_id+"being aborted, too large to be validated")
+
+            elif (workingSize+item.size) > workingLimit:
+                # can't work on yet, too big
+                onlyOneItem = ValidationQueue.getQueue().empty()
+                ValidationQueue.getQueue().put(item)
+                if onlyOneItem:
+                    time.sleep(SLEEP_TIME)
+
+            else:
+                # can start work on now
+                workingSize += item.size
+                proc = Process(target=validate, args=(item.rule, item.result))
+                proc.start()
+                processes.append({'size': item.size, 'proc': proc})
+        
+        # process trimming
+        index = 0
+        for i in range(len(processes)):
+            if not(processes[index]['proc'].is_alive()):
+                # process is done
+                workingSize -= processes[index]['size']
+                del processes[index]
+                index = index - 1
+
+            index = index + 1
+
+    log.debug("Validation header process exiting")
+    # aborting, wait till all the processes exit
+    for i in range(len(processes)):
+        if processes[i]['proc'].is_alive():
+            processes[i]['proc'].join()
+            log.debug("a proccess exited")
+
+    log.debug("Validation header exited")
+
+
 
 
 def validate(rule, resultObj):

@@ -66,7 +66,7 @@ class Uploader extends React.Component {
 
   render() {
     const { isDragging } = this.state;
-    const { data, files, uploadText } = this.props;
+    const { data, files, fileStatus, uploadText } = this.props;
 
     return (
       <div className={styles.uploadContainer}>
@@ -118,7 +118,7 @@ class Uploader extends React.Component {
           {files.length > 0 && (
             <div className={styles.loadedFiles}>
               <h5>Uploaded Files</h5>
-              <Files showRemoveButton ids={files} />
+              <Files showRemoveButton ids={files} fileStatus={fileStatus} />
             </div>
           )}
         </div>
@@ -130,6 +130,7 @@ class Uploader extends React.Component {
 Uploader.propTypes = {
   data: PropTypes.arrayOf(PropTypes.string).isRequired,
   files: PropTypes.arrayOf(PropTypes.string).isRequired,
+  fileStatus: PropTypes.object.isRequired,
   isUploading: PropTypes.bool.isRequired,
   onUpload: PropTypes.func.isRequired,
   requestId: PropTypes.string.isRequired,

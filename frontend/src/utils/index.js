@@ -1,3 +1,2 @@
-export default function() {
-  console.log('arssss');
-}
+// Add any global utils here
+export default {};
