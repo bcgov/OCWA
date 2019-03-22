@@ -1,0 +1,90 @@
+# Default values for ocwaProjectApi.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: bcgovimages/ocwa_project_api
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+
+##Configuration for OCWA Project Api
+apiPort: 3005
+logLevel: error
+
+global:
+  jwtSecret: "ssh this is a secret"
+
+database:
+  host: ocwa-forum-api-mongo.ocwa
+  username: forumApi
+  password: password
+  dbName: forumApi
+
+createRole: "exporter"
+ocGroup: "oc"
+allowDeny: false
+
+user:
+  idField: Email
+  emailField: Email
+  givenNameField: GivenName
+  surNameField: Surname
+  groupField: Groups
+
+forumApi: http://ocwa-forum-api.ocwa
+forumApiSecret: none
+
+storageUri: ocwa-storage-api.ocwa
+storagePort: 9000
+storageKey: myKey
+storageSecret: mySecret
+storageUseSSL: false
+storageWarnSize: 1025
+storageMaxSize: 10000000
+storageBucket: data
+
+autoApprove: false
+
+validationApi: http://ocwa-validation-api.ocwa
+validationApiSecret: validateApiSecret
+
+ocwaUrl: http://ocwa-ui.ocwa
+emailTemplateEnabled: false
+emailTemplate: |-
+emailEnabled: false
+emailService: smtp.gmail.com
+emailSecure: true
+emailPort: 465
+emailUser: me@ocwa.com
+emailPassword: myPass
+emailFrom: donotreply@ocwa.com
+
+resources: {}
+  # If you want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # projects:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
