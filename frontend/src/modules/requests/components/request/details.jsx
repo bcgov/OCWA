@@ -1,14 +1,23 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
 import get from 'lodash/get';
+import { uid } from 'react-uid';
 
+import EditField from './edit-field';
 import Files from '../../containers/files';
 import { RequestSchema } from '../../types';
+import { requestFields } from '../../utils';
 import * as styles from './styles.css';
 
-function RequestDetails({ data }) {
+function RequestDetails({ data, isEditing, onSave }) {
   const files = get(data, 'files', []);
   const supportingFiles = get(data, 'supportingFiles', []);
+  const requestDetails = requestFields.map(d => ({
+    name: d.name,
+    value: get(data, d.value),
+    key: d.value,
+  }));
 
   if (isEmpty(data)) {
     return 'Loading...';
@@ -17,10 +26,16 @@ function RequestDetails({ data }) {
   return (
     <React.Fragment>
       <div className={styles.section}>
-        <h4>Purpose</h4>
-        <p id="request-purpose">
-          {data.purpose || 'No purpose has been added yet.'}
-        </p>
+        {requestDetails
+          .filter(d => (isEditing ? true : !isEmpty(d.value)))
+          .map(d => (
+            <EditField
+              key={uid(d)}
+              data={d}
+              isEditing={isEditing}
+              onSave={onSave}
+            />
+          ))}
       </div>
       <div id="request-export-files" className={styles.section}>
         <div className={styles.sectionHeader}>Output Files</div>
@@ -54,6 +69,8 @@ function RequestDetails({ data }) {
 
 RequestDetails.propTypes = {
   data: RequestSchema,
+  isEditing: PropTypes.bool.isRequired,
+  onSave: PropTypes.func.isRequired,
 };
 
 RequestDetails.defaultProps = {

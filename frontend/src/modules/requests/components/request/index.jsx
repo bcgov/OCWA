@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Date from '@src/components/date';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavLink, Route, Switch } from 'react-router-dom';
 import Discussion from '@src/modules/discussion/containers/discussion';
@@ -17,88 +18,120 @@ import Sidebar from '../../containers/sidebar';
 import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
-function Request({ data, isLoaded, isOutputChecker, updatedAt, match }) {
-  const title = data.name || 'Loading...';
-  if (!isLoaded && isEmpty(data)) {
-    return null;
-  }
+class Request extends React.Component {
+  state = {
+    isEditing: get(this, 'props.location.state.isNewRequest', false),
+  };
 
-  return (
-    <div id="requests-page">
-      <Title>{title}</Title>
-      <Page>
-        <header className={styles.header}>
-          <Grid>
-            <GridColumn medium={9}>
-              <h1 id="request-title">{data.name}</h1>
-              <p id="request-header-details">
-                {'Updated '}
-                <Date value={updatedAt} format="HH:MM on MMMM Do, YYYY" />
-              </p>
-            </GridColumn>
-            <GridColumn medium={3}>
-              <div id="request-status" style={{ textAlign: 'right' }}>
-                <StateLabel value={data.state} />
-              </div>
-            </GridColumn>
-          </Grid>
-          <Grid>
-            <GridColumn>
-              <nav className={styles.tabs}>
-                <NavLink
-                  exact
-                  activeClassName={styles.tabActive}
-                  className={styles.tab}
-                  id="request-details-tab"
-                  to={match.url}
-                >
-                  <InfoIcon size="small" />
-                  {' Details'}
-                </NavLink>
-                <NavLink
-                  exact
-                  activeClassName={styles.tabActive}
-                  className={styles.tab}
-                  id="request-discussion-tab"
-                  to={`${match.url}/discussion`}
-                >
-                  <CommentIcon size="small" />
-                  {' Discussion'}
-                </NavLink>
-              </nav>
-            </GridColumn>
-          </Grid>
-        </header>
-        <div id="request-details" className={styles.main}>
-          <Grid>
-            <GridColumn medium={9}>
-              <Switch>
-                <Route
-                  exact
-                  path={match.url}
-                  render={() => <Details data={data} />}
+  onEdit = () => {
+    this.setState(state => ({
+      isEditing: !state.isEditing,
+    }));
+  };
+
+  onSave = updatedData => {
+    const { data, onSave } = this.props;
+
+    onSave({ ...data, ...updatedData }, { id: data._id });
+  };
+
+  render() {
+    const { data, isLoaded, isOutputChecker, updatedAt, match } = this.props;
+    const { isEditing } = this.state;
+    const title = data.name || 'Loading...';
+    if (!isLoaded && isEmpty(data)) {
+      return null;
+    }
+
+    return (
+      <div id="requests-page">
+        <Title>{title}</Title>
+        <Page>
+          <header className={styles.header}>
+            <Grid>
+              <GridColumn medium={9}>
+                <h1 id="request-title">{data.name}</h1>
+                <p id="request-header-details">
+                  {'Updated at '}
+                  <Date value={updatedAt} format="HH:MMa on MMMM Do, YYYY" />
+                </p>
+              </GridColumn>
+              <GridColumn medium={3}>
+                <div id="request-status" style={{ textAlign: 'right' }}>
+                  <StateLabel value={data.state} />
+                </div>
+              </GridColumn>
+            </Grid>
+            <Grid>
+              <GridColumn>
+                <nav className={styles.tabs}>
+                  <NavLink
+                    exact
+                    activeClassName={styles.tabActive}
+                    className={styles.tab}
+                    id="request-details-tab"
+                    to={match.url}
+                  >
+                    <InfoIcon size="small" />
+                    {' Details'}
+                  </NavLink>
+                  <NavLink
+                    exact
+                    disabled={isEditing}
+                    activeClassName={styles.tabActive}
+                    className={styles.tab}
+                    id="request-discussion-tab"
+                    to={`${match.url}/discussion`}
+                  >
+                    <CommentIcon size="small" />
+                    {' Discussion'}
+                  </NavLink>
+                </nav>
+              </GridColumn>
+            </Grid>
+          </header>
+          <div id="request-details" className={styles.main}>
+            <Grid>
+              <GridColumn medium={9}>
+                <Switch>
+                  <Route
+                    exact
+                    path={match.url}
+                    render={() => (
+                      <Details
+                        data={data}
+                        isEditing={isEditing}
+                        onSave={this.onSave}
+                      />
+                    )}
+                  />
+                  <Route
+                    exact
+                    path={`${match.url}/discussion`}
+                    render={() =>
+                      data.topic ? (
+                        <Discussion id={data.topic} title={title} />
+                      ) : (
+                        <Spinner />
+                      )
+                    }
+                  />
+                </Switch>
+              </GridColumn>
+              <GridColumn medium={3}>
+                <Sidebar
+                  data={data}
+                  isEditing={isEditing}
+                  isOutputChecker={isOutputChecker}
+                  onEdit={this.onEdit}
                 />
-                <Route
-                  exact
-                  path={`${match.url}/discussion`}
-                  render={() =>
-                    data.topic ? (
-                      <Discussion id={data.topic} title={title} />
-                    ) : (
-                      <Spinner />
-                    )
-                  }
-                />
-              </Switch>
-            </GridColumn>
-            <GridColumn medium={3}>
-              <Sidebar data={data} isOutputChecker={isOutputChecker} />
-            </GridColumn>
-          </Grid>
-        </div>
-      </Page>
-    </div>
-  );
+              </GridColumn>
+            </Grid>
+          </div>
+        </Page>
+      </div>
+    );
+  }
 }
 
 Request.propTypes = {
@@ -109,6 +142,7 @@ Request.propTypes = {
   match: PropTypes.shape({
     url: PropTypes.string.isRequired,
   }).isRequired,
+  onSave: PropTypes.func.isRequired,
 };
 
 export default Request;

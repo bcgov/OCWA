@@ -1,12 +1,4 @@
-import {
-  all,
-  call,
-  fork,
-  put,
-  select,
-  take,
-  takeLatest,
-} from 'redux-saga/effects';
+import { all, call, fork, put, take, takeLatest } from 'redux-saga/effects';
 import { channel, delay, eventChannel, END } from 'redux-saga';
 import get from 'lodash/get';
 import { getToken } from '@src/services/auth';
@@ -162,7 +154,16 @@ function* onSaveRequest(action) {
   }
 }
 
+function onCreateRequest(action) {
+  const id = get(action, 'payload.result.result');
+
+  if (id) {
+    action.meta.history.push(`/requests/${id}`, { isNewRequest: true });
+  }
+}
+
 export default function* root() {
+  yield takeLatest('request/post/success', onCreateRequest);
   yield takeLatest('request/put/success', onSaveRequest);
   yield call(uploadFileWatcher);
 }
