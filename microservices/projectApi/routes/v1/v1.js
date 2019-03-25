@@ -1,21 +1,29 @@
-var express = require('express');
-var router = express.Router();
-var path = require('path');
+const express = require('express');
+const router = express.Router();
+const path = require('path');
 
-var requestRouter = require('./routes/requests');
+const adminRouter = require('./routes/admin');
+const permissionsRouter = require('./routes/permissions');
+const projectRouter = require('./routes/project');
 
-var auth = require('./auth/auth');
+const auth = require('./auth/auth');
 
-//api spec
+// API Spec
 router.use('/spec', express.static(path.join(__dirname, 'spec')));
 
-//api docs
-router.use('/api-docs', function(req, res){
+// API Docs
+router.use('/api-docs', function (_, res) {
     var docs = require('./docs/docs');
     res.send(docs.getDocHTML("v1"));
 });
 
-//requests
-router.use('/', auth.authenticate('jwt', {session: false}), requestRouter);
+// Admin
+router.use('/admin', auth.authenticate('jwt', { session: false }), adminRouter);
+
+// Permissions
+router.use('/permissions', auth.authenticate('jwt', { session: false }), permissionsRouter);
+
+// Project
+router.use('/', auth.authenticate('jwt', { session: false }), projectRouter);
 
 module.exports = router;

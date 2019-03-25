@@ -1,22 +1,22 @@
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var log = require ('npmlog');
-var config = require('config');
+const config = require('config');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const log = require('npmlog');
 
-var db = require('./db/db').init();
-var v1Router = require('./routes/v1/v1');
+require('./db/db').init();
+const v1Router = require('./routes/v1/v1');
 
-app.get("/version", function(req, res){
-    var hash = (process.env.GITHASH) ? process.env.GITHASH : "";
-    var pjson = require('./package.json');
-    var v = pjson.version;
+app.get('/version', function (req, res) {
+    const hash = (process.env.GITHASH) ? process.env.GITHASH : '';
+    const pjson = require('./package.json');
+    const v = pjson.version;
+    const version = v
 
-    var version = v
-    if (hash !== ""){
-        version += "-"+hash
+    if (hash !== '') {
+        version += '-' + hash
     }
 
     res.json({
@@ -38,7 +38,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// v1 Router
 app.use('/v1', v1Router);
 
 module.exports = app;
-

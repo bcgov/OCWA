@@ -1,5 +1,5 @@
-var mongoose = require('mongoose');
-var config = require('config');
+const mongoose = require('mongoose');
+const config = require('config');
 
 mongoose.set('useCreateIndex', true);
 
@@ -10,29 +10,24 @@ dbUser = dbProps.username;
 dbPass = dbProps.password;
 dbName = dbProps.dbName;
 
-var db = {};
+const db = {};
 
-db.init = function(){
-    var logger = require('npmlog');
-    var connString = "mongodb://" + dbUser + ":" + dbPass + "@" + dbHost + "/" + dbName + "?authSource="+dbName;
+db.init = function () {
+    const logger = require('npmlog');
+    const connString = 'mongodb://' + dbUser + ':' + dbPass + '@' + dbHost + '/' + dbName + '?authSource=' + dbName;
     mongoose.connect(connString, {
         useNewUrlParser: true
     });
     db.db = mongoose.connection;
 
-    db.db.on('error', function(error){
+    db.db.on('error', function (error) {
         logger.error(error);
         throw (error);
     });
-    db.db.once('open', function(){
-        logger.debug("Db connection established");
+    db.db.once('open', function () {
+        logger.debug('DB connection established');
     });
-    db.Request = require('./model/request');
-    db.User = require('./model/project');
-
-    var collections = Object.keys(db.db.collections);
+    db.Request = require('./model/project');
 };
-
-
 
 module.exports = db;

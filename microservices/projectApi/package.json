@@ -1,9 +1,12 @@
 {
-  "name": "projectApi",
+  "name": "project-api",
   "author": "Brandon Sharratt",
   "version": "1.0.0",
+  "license": "Apache-2.0",
   "private": true,
   "scripts": {
+    "clean": "rm -rf coverage dist",
+    "purge": "rm -rf node_modules",
     "start": "node ./bin/www",
     "test": "nyc --reporter=lcov mocha --exit --timeout 10000"
   },
@@ -13,11 +16,9 @@
     "debug": "^2.6.9",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.3.0",
-    "minio": "^7.0.1",
     "mongoose": "^5.3.8",
     "morgan": "^1.9.1",
     "ms": "^2.1.1",
-    "nodemailer": "^4.7.0",
     "npmlog": "^4.1.2",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",

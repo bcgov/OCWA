@@ -1,54 +1,26 @@
 {
-    "apiPort": 3002,
-    "logLevel": "info",
-    "morganLogType": "dev",
+  "apiPort": 3005,
+  "logLevel": "verbose",
+  "morganLogType": "dev",
 
-    "database": {
-      "host": "localhost",
-      "username": "dbUser",
-      "password": "dbPass",
-      "dbName": "dbName"
-    },
+  "database": {
+    "host": "localhost",
+    "username": "user",
+    "password": "pwd",
+    "dbName": "ocwa"
+  },
 
-    "forumApi": "http://localhost:3000",
-    "validationApi": "http://localhost:3003",
-    "validationApiSecret": "MySecret",
+  "jwtSecret": "superSecretHere",
+  "ocwaUrl": "http://localhost:8000/",
 
-    "storageApi": {
-        "uri": "localhost",
-        "port": 9000,
-        "key": "myKey",
-        "secret": "mySecret",
-        "useSSL": false,
-        "warnRequestBundlesize": 1024,
-        "maxRequestBundlesize": 0,
-        "bucket": "mybucket"
-      },
+  "adminGroup": "/admin",
+  "outputCheckerGroup": "/oc",
 
-    "jwtSecret": "jwtSecret",
-    "ocwaUrl": "http://localhost:8000/",
-
-    "email":{
-      "enabled": false,
-      "service": "smtp.gmail.com",
-      "secure": true,
-      "port": 465,
-      "user": "ocwa@gmail.com",
-      "pass": "ocwaPassword",
-      "from": "ocwa@donotreply.com"
-    },
-
-    "requiredRoleToCreateRequest": "exporter",
-    "outputCheckerGroup": "oc",
-    "allowDenyRequest": true,
-
-    "autoAccept": false,
-
-    "user":{
-        "idField": "Email",
-        "emailField": "Email",
-        "givenNameField": "GivenName",
-        "surNameField": "Surname",
-        "groupField": "Groups"
+  "user": {
+    "idField": "preferred_username",
+    "emailField": "email",
+    "givenNameField": "given_name",
+    "surNameField": "family_name",
+    "groupField": "groups"
   }
 }
