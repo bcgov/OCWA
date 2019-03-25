@@ -9,7 +9,7 @@ passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.get("jwtSecret"),
     passReqToCallback: true,
-}, function (req, jwtPayload, cb) {
+}, function(req, jwtPayload, cb) {
     const encodedJWT = req.headers['authorization'].substring("Bearer ".length);
     const userConf = config.get('user');
     const user = {

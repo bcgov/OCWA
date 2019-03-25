@@ -3,7 +3,7 @@ info:
   version: 1.0.0
   title: Project API
   description: |
-    This is a request api that provides access to requests, for the OCWA it manages comments ands files as well.
+    This is a project api that provides access to project management and permission lookup.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html

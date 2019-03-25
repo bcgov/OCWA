@@ -4,33 +4,57 @@ const mongoose = require('mongoose');
 const db = require('../db/db');
 
 // all projects (paginated, admin only)
-admin.get('/projects', function(req, res, next) {
+admin.get('/list/project', function(req, res, next) {
     res.status(501);
-    res.send('Not Implemented');
+    res.json({
+        status: 501,
+        message: 'Not Implemented'
+    });
 });
 
 // all groups with specific permissions (admin only)
-admin.get('/permissions', function(req, res, next) {
+admin.get('/list/permission', function(req, res, next) {
     res.status(501);
-    res.send('Not Implemented');
+    res.json({
+        status: 501,
+        message: 'Not Implemented'
+    });
+});
+
+// create new project (default no perms, can list perms optionally)
+admin.post('/create', function(req, res, next) {
+    res.status(501);
+    res.json({
+        status: 501,
+        message: 'Not Implemented'
+    });
 });
 
 // add permisison to project
-admin.put('/project', function(req, res, next) {
+admin.put('/:projectId/:permissionId', function(req, res, next) {
     res.status(501);
-    res.send('Not Implemented');
+    res.json({
+        status: 501,
+        message: 'Not Implemented'
+    });
 });
 
 // remove project
-admin.delete('/project', function(req, res, next) {
+admin.delete('/:projectId', function(req, res, next) {
     res.status(501);
-    res.send('Not Implemented');
+    res.json({
+        status: 501,
+        message: 'Not Implemented'
+    });
 });
 
 // remove permission from project
-admin.delete('/permission', function(req, res, next) {
+admin.delete('/:projectId/:permissionId', function(req, res, next) {
     res.status(501);
-    res.send('Not Implemented');
+    res.json({
+        status: 501,
+        message: 'Not Implemented'
+    });
 });
 
 module.exports = admin;
