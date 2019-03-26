@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import escapeRegExp from 'lodash/escapeRegExp';
 import get from 'lodash/get';
 import keys from 'lodash/keys';
 import isArray from 'lodash/isArray';
@@ -29,7 +30,7 @@ const mapStateToProps = state => {
   const userId = get(state, 'app.auth.user.id');
   const entities = get(state, 'data.entities.requests', {});
   const ids = keys(entities);
-  const regex = new RegExp(search, 'i');
+  const regex = new RegExp(escapeRegExp(search), 'i');
   const sliceStartIndex = Math.max((page - 1) * limit, 0);
   const dataEntities = ids.map(id => get(entities, id, {})).filter(d => {
     if (isNull(filter)) return true;

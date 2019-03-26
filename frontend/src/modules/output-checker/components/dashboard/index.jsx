@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { CreatableSelect } from '@atlaskit/select';
 import TextField from '@atlaskit/field-text';
+import Title from '@src/components/title';
 
 import RequestsList from '../../containers/requests';
 import * as styles from './styles.css';
@@ -22,6 +23,7 @@ function Dashboard({ filter, onFilterChange, onSearchChange, search }) {
 
   return (
     <div className={styles.container}>
+      <Title>Dashboard</Title>
       <div className={styles.toolbar}>
         <div>
           <CreatableSelect
