@@ -14,7 +14,7 @@ permissions.get('/list', function(req, res, next) {
 });
 
 // specific project's permissions
-permissions.get('/:projectId', function(req, res, next) {
+permissions.get('/:permissionName', function(req, res, next) {
     res.status(501);
     res.json({
         status: 501,

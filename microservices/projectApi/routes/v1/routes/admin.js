@@ -43,39 +43,12 @@ admin.post('/create', function (req, res, next) {
         return;
     }
 
-    if (req.body.permissions
-        && typeof req.body.permissions === 'object'
-        && Array.isArray(req.body.permissions)) {
+    if (req.body.permissions &&
+        typeof req.body.permissions === 'object' &&
+        Array.isArray(req.body.permissions)) {
         const permissions = req.body.permissions;
         for (let i = 0; i < permissions.length; i++) {
-            const permission = permissions[i];
-            if (!permission || typeof permission !== 'object') {
-                log.error('User ' + req.user.id + ' tried to create a project with an invalid permission object');
-                res.status(400);
-                res.json({
-                    status: 400,
-                    error: 'Missing or invalid required permission object'
-                });
-                return;
-            }
-            if (!permission.label || typeof permission.label !== 'string') {
-                log.error('User ' + req.user.id + ' tried to create a project with an invalid or missing label string');
-                res.status(400);
-                res.json({
-                    status: 400,
-                    error: 'Missing or invalid required label string in permission'
-                });
-                return;
-            }
-            if (!permission.value) {
-                log.error('User ' + req.user.id + ' tried to create a project without a permission value object');
-                res.status(400);
-                res.json({
-                    status: 400,
-                    error: 'Missing required value object in permission'
-                });
-                return;
-            }
+            if (!validatePermission(req, res, permissions[i], true)) return;
         }
 
         project.permissions = req.body.permissions;
@@ -95,7 +68,7 @@ admin.post('/create', function (req, res, next) {
 });
 
 // add permisison to project
-admin.put('/:projectId/:permissionId', function (req, res, next) {
+admin.put('/:projectName/:permissionName', function (req, res, next) {
     if (!hasAdminGroup(req, res)) return;
 
     res.status(501);
@@ -117,7 +90,7 @@ admin.delete('/:projectId', function (req, res, next) {
 });
 
 // remove permission from project
-admin.delete('/:projectId/:permissionId', function (req, res, next) {
+admin.delete('/:permissionName/:permissionName', function (req, res, next) {
     if (!hasAdminGroup(req, res)) return;
 
     res.status(501);
@@ -127,7 +100,7 @@ admin.delete('/:projectId/:permissionId', function (req, res, next) {
     });
 });
 
-// Returns a boolean on the presence of the admin group
+// Returns true if there an admin group
 function hasAdminGroup(req, res) {
     if (config.has('adminGroup')) {
         const reqRole = config.get('adminGroup');
@@ -144,6 +117,46 @@ function hasAdminGroup(req, res) {
         }
     }
     return false;
+}
+
+// Returns true if the permission object is correct
+// Set respond to true if a response is needed
+function validatePermission(req, res, permission, respond = false) {
+    if (!permission || typeof permission !== 'object') {
+        if (respond) {
+            log.error('User ' + req.user.id + ' tried to create a project with an invalid permission object');
+            res.status(400);
+            res.json({
+                status: 400,
+                error: 'Missing or invalid required permission object'
+            });
+        }
+        return false;
+    }
+    if (!permission.label || typeof permission.label !== 'string') {
+        if (respond) {
+            log.error('User ' + req.user.id + ' tried to create a project with an invalid or missing label string');
+            res.status(400);
+            res.json({
+                status: 400,
+                error: 'Missing or invalid required label string in permission'
+            });
+        }
+        return false;
+    }
+    if (!permission.value) {
+        if (respond) {
+            log.error('User ' + req.user.id + ' tried to create a project without a permission value object');
+            res.status(400);
+            res.json({
+                status: 400,
+                error: 'Missing required value object in permission'
+            });
+        }
+        return false;
+    }
+
+    return true;
 }
 
 module.exports = admin;
