@@ -27,7 +27,7 @@ db.init = function () {
     db.db.once('open', function () {
         logger.debug('DB connection established');
     });
-    db.Request = require('./model/project');
+    db.Project = require('./model/project');
 };
 
 module.exports = db;

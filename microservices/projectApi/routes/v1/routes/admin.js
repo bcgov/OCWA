@@ -30,11 +30,67 @@ admin.get('/list/permission', function (req, res, next) {
 admin.post('/create', function (req, res, next) {
     if (!hasAdminGroup(req, res)) return;
 
+    const project = new db.Project;
+    if (req.body.name && typeof req.body.name === 'string') {
+        project.name = req.body.name;
+    } else {
+        log.error('User ' + req.user.id + ' tried to create a project without a name string');
+        res.status(400);
+        res.json({
+            status: 400,
+            error: 'Missing required name string in project'
+        });
+        return;
+    }
+
+    if (req.body.permissions
+        && typeof req.body.permissions === 'object'
+        && Array.isArray(req.body.permissions)) {
+        const permissions = req.body.permissions;
+        for (let i = 0; i < permissions.length; i++) {
+            const permission = permissions[i];
+            if (!permission || typeof permission !== 'object') {
+                log.error('User ' + req.user.id + ' tried to create a project with an invalid permission object');
+                res.status(400);
+                res.json({
+                    status: 400,
+                    error: 'Missing or invalid required permission object'
+                });
+                return;
+            }
+            if (!permission.label || typeof permission.label !== 'string') {
+                log.error('User ' + req.user.id + ' tried to create a project with an invalid or missing label string');
+                res.status(400);
+                res.json({
+                    status: 400,
+                    error: 'Missing or invalid required label string in permission'
+                });
+                return;
+            }
+            if (!permission.value) {
+                log.error('User ' + req.user.id + ' tried to create a project without a permission value object');
+                res.status(400);
+                res.json({
+                    status: 400,
+                    error: 'Missing required value object in permission'
+                });
+                return;
+            }
+        }
+
+        project.permissions = req.body.permissions;
+    } else {
+        log.info('Permissions is either missing or invalid format - defaulting to empty array')
+        project.permissions = [];
+    }
+
+    log.debug("Creating project:", project);
+
     res.status(201);
     res.json({
         status: 201,
-        message: "Successfully written",
-        result: "TBD"
+        message: 'Successfully written',
+        _id: project._id
     });
 });
 
@@ -78,11 +134,11 @@ function hasAdminGroup(req, res) {
         if (req.user.groups.includes(reqRole)) {
             return true;
         } else {
-            log.error('User ' + req.user.id + " tried to create a project but lacks required role: " + reqRole);
+            log.error('User ' + req.user.id + ' tried to create a project but lacks required role: ' + reqRole);
             res.status(403);
             res.json({
                 status: 403,
-                error: "Lack required role to create a request"
+                error: 'Lack required role to create a request'
             });
             return false;
         }
