@@ -61,6 +61,11 @@ ocwa-frontend:
 
   downloadCallbackUrl: "chart-example-download.local/auth"
 
+  tls:
+    enabled: false
+    crt: "cert here"
+    key: "key here"
+
   storage:
     endPoint: "ocwa-storage-api.ocwa"
     port: 9000

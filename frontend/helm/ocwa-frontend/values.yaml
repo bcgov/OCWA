@@ -73,6 +73,11 @@ user:
 global:
   jwtSecret: "ssh this is a secret"
 
+tls:
+  enabled: false
+  crt: "cert here"
+  key: "key here"
+
 resources: {}
   # If you want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
