@@ -1,7 +1,8 @@
 // Path /v1/permissions/
 const permissions = require('express').Router();
-const mongoose = require('mongoose');
+const config = require('config');
 const db = require('../db/db');
+const log = require('npmlog');
 
 // all unique permissions
 permissions.get('/list', function(req, res, next) {
