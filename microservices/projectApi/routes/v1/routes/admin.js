@@ -8,10 +8,17 @@ const db = require('../db/db');
 admin.get('/list/project', function (req, res, next) {
     if (!hasAdminGroup(req, res)) return;
 
-    res.status(501);
-    res.json({
-        status: 501,
-        message: 'Not Implemented'
+    // TODO: Pagination and result ordering
+    db.Project.find({}, 'name -_id', function (err, result) {
+        if (err || !result) {
+            res.status(500);
+            res.json({
+                status: 500,
+                error: err.message
+            });
+        } else {
+            res.json(result.map(function (e) { return e.name }));
+        }
     });
 });
 
@@ -52,7 +59,7 @@ admin.post('/create', function (req, res, next) {
 
     log.debug("Creating project:", project);
 
-    project.save(function(err) {
+    project.save(function (err) {
         if (err) {
             res.status(500);
             res.json({
