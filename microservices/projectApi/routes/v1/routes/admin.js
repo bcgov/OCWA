@@ -5,12 +5,13 @@ const log = require('npmlog');
 const db = require('../db/db');
 
 // all projects (paginated, admin only)
-admin.get('/list/project', function (req, res, next) {
+admin.get('/list/project', function (req, res) {
     if (!hasAdminGroup(req, res)) return;
 
     // TODO: Pagination and result ordering
     db.Project.find({}, 'name -_id', function (err, result) {
         if (err || !result) {
+            log.debug(err);
             res.status(500);
             res.json({
                 status: 500,
@@ -34,7 +35,7 @@ admin.get('/list/permission', function (req, res, next) {
 });
 
 // create new project (default no perms, can list perms optionally)
-admin.post('/create', function (req, res, next) {
+admin.post('/create', function (req, res) {
     if (!hasAdminGroup(req, res)) return;
 
     const project = new db.Project;
@@ -61,6 +62,7 @@ admin.post('/create', function (req, res, next) {
 
     project.save(function (err) {
         if (err) {
+            log.debug(err);
             res.status(500);
             res.json({
                 status: 500,

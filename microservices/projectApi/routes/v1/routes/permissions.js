@@ -1,24 +1,64 @@
 // Path /v1/permissions/
 const permissions = require('express').Router();
-const config = require('config');
 const db = require('../db/db');
 const log = require('npmlog');
 
 // all unique permissions
-permissions.get('/list', function(req, res, next) {
-    res.status(501);
-    res.json({
-        status: 501,
-        message: 'Not Implemented'
+permissions.get('/list', function(_, res) {
+    db.Project.aggregate([
+        {
+            $group: {
+                _id: null,
+                permissions: {
+                    $mergeObjects: '$permissions'
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                permissions: 1
+            },
+        }
+    ]).exec(function(err, result) {
+        if (err || !result) {
+            log.debug(err);
+            res.status(500);
+            res.json({
+                status: 500,
+                error: err.message
+            });
+        } else {
+            res.json(Object.keys(result[0].permissions));
+        }
     });
 });
 
 // specific project's permissions
-permissions.get('/:permissionName', function(req, res, next) {
-    res.status(501);
-    res.json({
-        status: 501,
-        message: 'Not Implemented'
+permissions.get('/:projectName', function(req, res) {
+    db.Project.find({
+        name: req.params.projectName
+    }, function(err, result) {
+        if (err || !result) {
+            log.debug(err);
+            res.status(500);
+            res.json({
+                status: 500,
+                error: err.message
+            });
+        } else {
+            if (result.length === 1){
+                res.json(result[0].permissions);
+            } else if (result.length > 1) {
+                res.json({
+                    message: 'No distinct project ' + req.params.projectName + ' found'
+                })
+            } else {
+                res.json({
+                    message: 'Project ' + req.params.projectName + ' not found'
+                })
+            }
+        }
     });
 });
 
