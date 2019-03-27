@@ -36,9 +36,10 @@ permissions.get('/list', function(_, res) {
 
 // specific project's permissions
 permissions.get('/:projectName', function(req, res) {
+    const projectName = req.params.projectName;
     db.Project.find({
-        name: req.params.projectName
-    }, function(err, result) {
+        name: projectName
+    }, 'permissions -_id', function(err, result) {
         if (err || !result) {
             log.debug(err);
             res.status(500);
@@ -51,11 +52,11 @@ permissions.get('/:projectName', function(req, res) {
                 res.json(result[0].permissions);
             } else if (result.length > 1) {
                 res.json({
-                    message: 'No distinct project ' + req.params.projectName + ' found'
+                    message: 'No distinct project ' + projectName + ' found'
                 })
             } else {
                 res.json({
-                    message: 'Project ' + req.params.projectName + ' not found'
+                    message: 'Project ' + projectName + ' not found'
                 })
             }
         }

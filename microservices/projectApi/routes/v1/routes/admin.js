@@ -23,14 +23,26 @@ admin.get('/list/project', function (req, res) {
     });
 });
 
-// all groups with specific permissions (admin only)
-admin.get('/list/permission', function (req, res, next) {
+// all projects with specific permissions (admin only)
+admin.get('/list/permission/:permissionName', function (req, res) {
     if (!hasAdminGroup(req, res)) return;
 
-    res.status(501);
-    res.json({
-        status: 501,
-        message: 'Not Implemented'
+    const permissionName = req.params.permissionName
+    db.Project.find({
+        ['permissions.' + permissionName]: {
+            $exists: true
+        }
+    }, function (err, result) {
+        if (err || !result) {
+            log.debug(err);
+            res.status(500);
+            res.json({
+                status: 500,
+                error: err.message
+            });
+        } else {
+            res.json(result.map(function (e) { return e.name }));
+        }
     });
 });
 
