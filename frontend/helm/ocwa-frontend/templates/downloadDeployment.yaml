@@ -27,11 +27,19 @@ spec:
             - name: PORT
               value: "{{ .Values.port }}"
             - name: HOST
-              value: {{ .Values.host }}
+              value: {{ .Values.downloadHost }}
             - name: FORUM_API_HOST
+              {{ if .Values.tls.enabled }}
+              value: "https://none"
+              {{ else }}
               value: "none"
+              {{ end }}
             - name: FORUM_SOCKET_HOST
+              {{ if .Values.tls.enabled }}
+              value: "wss://none"
+              {{ else }}
               value: "none"
+              {{ end }}
             - name: REQUEST_API_HOST
               value: "{{ .Values.requestApiHost }}"
             - name: FILES_API_HOST
