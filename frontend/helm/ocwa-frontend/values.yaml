@@ -40,6 +40,7 @@ port: 8000
 logLevel: error
 
 host: "serverHostedOnHere"
+downloadHost: "downloadServerHostedOnHere"
 
 cookieSecret: "COOKIE_SECRET_HERE"
 forumApiHost: "ocwa-forum-api.ocwa"
@@ -72,6 +73,11 @@ user:
 
 global:
   jwtSecret: "ssh this is a secret"
+
+tls:
+  enabled: false
+  crt: "cert here"
+  key: "key here"
 
 resources: {}
   # If you want to specify resources, uncomment the following
