@@ -80,7 +80,12 @@ function RequestSidebar({
             <Button
               appearance="link"
               id="request-sidebar-submit-button"
-              isDisabled={isSaving || data.state < 1 || data.files.length <= 0}
+              isDisabled={
+                isEditing ||
+                isSaving ||
+                data.state < 1 ||
+                data.files.length <= 0
+              }
               iconBefore={<SignInIcon />}
               onClick={() => onSubmit(data._id)}
             >

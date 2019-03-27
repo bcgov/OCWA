@@ -23,6 +23,15 @@ class Request extends React.Component {
     isEditing: get(this, 'props.location.state.isNewRequest', false),
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    const { data, onFinishEditing } = this.props;
+    const { isEditing } = this.state;
+
+    if (prevState.isEditing && !isEditing) {
+      onFinishEditing(data._id);
+    }
+  }
+
   onEdit = () => {
     this.setState(state => ({
       isEditing: !state.isEditing,
@@ -39,6 +48,7 @@ class Request extends React.Component {
     const { data, isLoaded, isOutputChecker, updatedAt, match } = this.props;
     const { isEditing } = this.state;
     const title = data.name || 'Loading...';
+
     if (!isLoaded && isEmpty(data)) {
       return null;
     }
@@ -142,6 +152,7 @@ Request.propTypes = {
   match: PropTypes.shape({
     url: PropTypes.string.isRequired,
   }).isRequired,
+  onFinishEditing: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 };
 

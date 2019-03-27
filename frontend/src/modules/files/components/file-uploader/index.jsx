@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
 import cx from 'classnames';
 import CopyIcon from '@atlaskit/icon/glyph/copy';
-import InfoIcon from '@atlaskit/icon/glyph/info';
 import UploadIcon from '@atlaskit/icon/glyph/upload';
 
 import * as styles from './styles.css';
-import Files from '../../containers/files';
 import FileItem from '../../containers/file-item';
 
 class Uploader extends React.Component {
@@ -15,7 +13,7 @@ class Uploader extends React.Component {
     isDragging: false,
   };
 
-  onDragLeave = event => {
+  onDragOut = event => {
     event.preventDefault();
     this.setState({ isDragging: false });
   };
@@ -48,7 +46,7 @@ class Uploader extends React.Component {
   };
 
   uploadFiles = files => {
-    const { requestId, onUpload } = this.props;
+    const { filesKey, onUpload } = this.props;
     const payload = [];
 
     for (let i = 0; i < files.length; i += 1) {
@@ -60,13 +58,13 @@ class Uploader extends React.Component {
     }
 
     if (files.length > 0) {
-      onUpload(payload, requestId);
+      onUpload(payload, filesKey);
     }
   };
 
   render() {
     const { isDragging } = this.state;
-    const { data, files, fileStatus, uploadText } = this.props;
+    const { data, filesKey, uploadText } = this.props;
 
     return (
       <div className={styles.uploadContainer}>
@@ -74,51 +72,44 @@ class Uploader extends React.Component {
           className={cx('file-uploader-drop-zone', styles.dropZone, {
             [styles.dropZoneDragOver]: isDragging,
           })}
-          onDragLeave={this.onDragLeave}
+          onDragExit={this.onDragOut}
           onDragOver={this.onDragOver}
           onDrop={this.onDrop}
         >
-          <div className={cx('file-uploader-text', styles.uploadText)}>
-            <div>
+          {isDragging && <div className={styles.dragOver}>Drop your files</div>}
+          {!data.length && (
+            <div className={cx('file-uploader-text', styles.uploadText)}>
               <div>
-                <CopyIcon primaryColor="#ccc" size="xlarge" />
+                <div>
+                  <CopyIcon primaryColor="#ccc" size="xlarge" />
+                </div>
+                <p>{isDragging ? 'Drop your files' : uploadText}</p>
+                <small>Or</small>
+                <div
+                  id="file-uploader-button-container"
+                  className={styles.uploadButtonContainer}
+                >
+                  <Button id="file-uploader-button" iconBefore={<UploadIcon />}>
+                    Upload Files
+                  </Button>
+                  <input
+                    multiple
+                    id="file-uploader-input"
+                    className={styles.uploadInput}
+                    type="file"
+                    onChange={this.onFileInputChange}
+                  />
+                </div>
               </div>
-              <p>{isDragging ? 'Drop your files' : uploadText}</p>
-              <small>Or</small>
-              <div
-                id="file-uploader-button-container"
-                className={styles.uploadButtonContainer}
-              >
-                <Button id="file-uploader-button" iconBefore={<UploadIcon />}>
-                  Upload Files
-                </Button>
-                <input
-                  multiple
-                  id="file-uploader-input"
-                  className={styles.uploadInput}
-                  type="file"
-                  onChange={this.onFileInputChange}
-                />
-              </div>
-              <small>
-                <InfoIcon size="small" />
-                <strong>Heads up!</strong> Make sure you save your request after
-                uploading to enable submission.
-              </small>
-            </div>
-          </div>
-        </div>
-        <div className={cx('file-uploader-list', styles.fileUploaderList)}>
-          {data.length > 0 && (
-            <div className={styles.uploadQueueList}>
-              <h5>Upload Queue</h5>
-              {data.map(id => <FileItem key={id} id={id} />)}
             </div>
           )}
-          {files.length > 0 && (
-            <div className={styles.loadedFiles}>
-              <h5>Uploaded Files</h5>
-              <Files showRemoveButton ids={files} fileStatus={fileStatus} />
+          {data.length > 0 && (
+            <div className={cx('file-uploader-list', styles.fileUploaderList)}>
+              <div className={styles.uploadQueueList}>
+                {data.map(id => (
+                  <FileItem key={id} id={id} filesKey={filesKey} />
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -129,11 +120,9 @@ class Uploader extends React.Component {
 
 Uploader.propTypes = {
   data: PropTypes.arrayOf(PropTypes.string).isRequired,
-  files: PropTypes.arrayOf(PropTypes.string).isRequired,
-  fileStatus: PropTypes.object.isRequired,
+  filesKey: PropTypes.string.isRequired, // Which key to look up on the request object
   isUploading: PropTypes.bool.isRequired,
   onUpload: PropTypes.func.isRequired,
-  requestId: PropTypes.string.isRequired,
   uploadText: PropTypes.string.isRequired,
 };
 

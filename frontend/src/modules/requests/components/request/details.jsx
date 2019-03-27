@@ -1,11 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import isEmpty from 'lodash/isEmpty';
+import Files from '@src/modules/files/containers/files';
+import FileUploader from '@src/modules/files/containers/file-uploader';
 import get from 'lodash/get';
 import { uid } from 'react-uid';
 
 import EditField from './edit-field';
-import Files from '../../containers/files';
 import { RequestSchema } from '../../types';
 import { requestFields } from '../../utils';
 import * as styles from './styles.css';
@@ -38,28 +39,40 @@ function RequestDetails({ data, isEditing, onSave }) {
           ))}
       </div>
       <div id="request-export-files" className={styles.section}>
-        <div className={styles.sectionHeader}>Output Files</div>
+        <div className={styles.sectionHeader}>
+          Output Files
+          {isEditing && ' (Drop files here to upload)'}
+        </div>
         <div className={styles.sectionContent}>
-          {files.length > 0 && (
+          {!isEditing && (
             <Files
               showDownloadButton
               ids={files}
               fileStatus={data.fileStatus}
             />
           )}
-          {!files.length && (
-            <div className={styles.empty}>No files have been added</div>
+          {isEditing && (
+            <FileUploader
+              data={data}
+              filesKey="files"
+              uploadText="Upload files you wish to request for output"
+            />
           )}
         </div>
       </div>
       <div id="request-support-files" className={styles.section}>
-        <div className={styles.sectionHeader}>Support Files</div>
+        <div className={styles.sectionHeader}>
+          Support Files
+          {isEditing && ' (Drop files here to upload)'}
+        </div>
         <div className={styles.sectionContent}>
-          {supportingFiles.length > 0 && (
-            <Files showDownloadButton ids={supportingFiles} />
-          )}
-          {!supportingFiles.length && (
-            <div className={styles.empty}>No files have been added</div>
+          {!isEditing && <Files showDownloadButton ids={supportingFiles} />}
+          {isEditing && (
+            <FileUploader
+              data={data}
+              filesKey="supportingFiles"
+              uploadText="Upload any files to help support your request"
+            />
           )}
         </div>
       </div>
