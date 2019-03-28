@@ -114,7 +114,7 @@ admin.delete('/:projectName', function (req, res) {
                 status: 500,
                 error: err.message
             });
-        } else if (result.deletedCount === 0) {
+        } else if (!result.deletedCount) {
             log.debug('Project ' + projectName + ' not found');
             res.status(404)
             res.json({
@@ -136,10 +136,35 @@ admin.delete('/:projectName', function (req, res) {
 admin.delete('/:projectName/:permissionName', function (req, res, next) {
     if (!hasAdminGroup(req, res)) return;
 
-    res.status(501);
-    res.json({
-        status: 501,
-        message: 'Not Implemented'
+    const projectName = req.params.projectName
+    const permissionName = req.params.permissionName
+    db.Project.updateOne({name: projectName }, {
+        $unset: {
+            ['permissions.' + permissionName]: ''
+        }
+    }, function(err, result) {
+        if (err) {
+            log.debug(err);
+            res.status(500);
+            res.json({
+                status: 500,
+                error: err.message
+            });
+        } else if (!result.nModified) {
+            log.debug('Project ' + projectName + ' or permission ' + permissionName + ' not found');
+            res.status(404)
+            res.json({
+                status: 404,
+                message: 'Project ' + projectName + ' or permission ' + permissionName + ' not found'
+            });
+        } else {
+            log.debug('Deleted permission ' + permissionName + ' from project ' + projectName);
+            res.status(202)
+            res.json({
+                status: 202,
+                message: 'Permission ' + permissionName + ' from project ' + projectName + ' successfully deleted'
+            });
+        }
     });
 });
 
