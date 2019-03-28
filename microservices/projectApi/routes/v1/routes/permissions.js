@@ -48,7 +48,7 @@ permissions.get('/:projectName', function(req, res) {
                 error: err.message
             });
         } else {
-            if (result.length === 1){
+            if (result.length === 1) {
                 res.json(result[0].permissions);
             } else if (result.length > 1) {
                 res.json({

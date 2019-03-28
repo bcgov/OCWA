@@ -70,7 +70,7 @@ admin.post('/create', function (req, res) {
         project.permissions = {};
     }
 
-    log.debug("Creating project:", project);
+    log.debug('Creating project:', project);
 
     project.save(function (err) {
         if (err) {
@@ -84,13 +84,13 @@ admin.post('/create', function (req, res) {
             res.status(201);
             res.json({
                 status: 201,
-                message: 'Successfully written'
+                message: 'Project ' + project.name + ' successfully created'
             });
         }
     });
 });
 
-// add permisison to project
+// add or update permisison for existing project
 admin.put('/:projectName/:permissionName', function (req, res, next) {
     if (!hasAdminGroup(req, res)) return;
 
@@ -102,18 +102,38 @@ admin.put('/:projectName/:permissionName', function (req, res, next) {
 });
 
 // remove project
-admin.delete('/:projectId', function (req, res, next) {
+admin.delete('/:projectName', function (req, res) {
     if (!hasAdminGroup(req, res)) return;
 
-    res.status(501);
-    res.json({
-        status: 501,
-        message: 'Not Implemented'
+    const projectName = req.params.projectName
+    db.Project.deleteOne({ name: projectName }, function(err, result) {
+        if (err) {
+            log.debug(err);
+            res.status(500);
+            res.json({
+                status: 500,
+                error: err.message
+            });
+        } else if (result.deletedCount === 0) {
+            log.debug('Project ' + projectName + ' not found');
+            res.status(404)
+            res.json({
+                status: 404,
+                message: 'Project ' + projectName + ' not found'
+            });
+        } else {
+            log.debug('Deleted project', projectName);
+            res.status(202)
+            res.json({
+                status: 202,
+                message: 'Project ' + projectName + ' successfully deleted'
+            });
+        }
     });
 });
 
 // remove permission from project
-admin.delete('/:permissionName/:permissionName', function (req, res, next) {
+admin.delete('/:projectName/:permissionName', function (req, res, next) {
     if (!hasAdminGroup(req, res)) return;
 
     res.status(501);
