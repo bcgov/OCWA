@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
 import DateTime from '@src/components/date';
 import DynamicTable from '@atlaskit/dynamic-table';
+import DocumentIcon from '@atlaskit/icon/glyph/document';
 import DownloadIcon from '@atlaskit/icon/glyph/download';
 import FileIcon from '@src/components/file-icon';
 import filesize from 'filesize';
@@ -34,7 +35,21 @@ const renderEmpty = (isFailed, isLoaded) => {
     );
   }
 
-  return <div className={styles.empty}>There are no files present</div>;
+  return (
+    <div className={styles.empty}>
+      <div>
+        <div>
+          <DocumentIcon primaryColor={colors.N70} size="xlarge" />
+        </div>
+        <div>
+          <p>No files have been uploaded.</p>
+          <small style={{ color: colors.N70 }}>
+            Click <em>Edit Request</em> to upload.
+          </small>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 class FilesTable extends React.Component {
@@ -172,12 +187,14 @@ class FilesTable extends React.Component {
     }
 
     return (
-      <DynamicTable
-        emptyView={renderEmpty(isFailed, isLoaded)}
-        isLoading={isLoading}
-        head={head}
-        rows={rows}
-      />
+      <div className={styles.container}>
+        <DynamicTable
+          emptyView={renderEmpty(isFailed, isLoaded)}
+          isLoading={isLoading}
+          head={head}
+          rows={rows}
+        />
+      </div>
     );
   }
 }

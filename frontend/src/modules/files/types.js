@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 export const FileSchema = PropTypes.shape({
   fileName: PropTypes.string.isRequired,
   fileType: PropTypes.string.isRequired,
-  size: PropTypes.number.isRequired,
+  size: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   state: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   lastModified: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
     .isRequired,

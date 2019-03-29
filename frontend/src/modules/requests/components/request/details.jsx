@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 import Files from '@src/modules/files/containers/files';
 import FileUploader from '@src/modules/files/containers/file-uploader';
 import get from 'lodash/get';
+import { Prompt } from 'react-router-dom';
 import { uid } from 'react-uid';
 
 import EditField from './edit-field';
@@ -26,6 +27,10 @@ function RequestDetails({ data, isEditing, onSave }) {
 
   return (
     <React.Fragment>
+      <Prompt
+        when={isEditing}
+        message="Are you sure you want to leave this page before finishing your edits?"
+      />
       <div className={styles.section}>
         {requestDetails
           .filter(d => (isEditing ? true : !isEmpty(d.value)))

@@ -1,9 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import ArrowDownCircleIcon from '@atlaskit/icon/glyph/arrow-down-circle';
 import Button from '@atlaskit/button';
 import cx from 'classnames';
 import CopyIcon from '@atlaskit/icon/glyph/copy';
 import UploadIcon from '@atlaskit/icon/glyph/upload';
+import { colors } from '@atlaskit/theme';
 
 import * as styles from './styles.css';
 import FileItem from '../../containers/file-item';
@@ -65,6 +67,23 @@ class Uploader extends React.Component {
   render() {
     const { isDragging } = this.state;
     const { data, filesKey, uploadText } = this.props;
+    const uploadButton = (
+      <div
+        id="file-uploader-button-container"
+        className={styles.uploadButtonContainer}
+      >
+        <Button id="file-uploader-button" iconBefore={<UploadIcon />}>
+          Upload Files
+        </Button>
+        <input
+          multiple
+          id="file-uploader-input"
+          className={styles.uploadInput}
+          type="file"
+          onChange={this.onFileInputChange}
+        />
+      </div>
+    );
 
     return (
       <div className={styles.uploadContainer}>
@@ -76,7 +95,18 @@ class Uploader extends React.Component {
           onDragOver={this.onDragOver}
           onDrop={this.onDrop}
         >
-          {isDragging && <div className={styles.dragOver}>Drop your files</div>}
+          {isDragging && (
+            <div className={styles.dragOver}>
+              <div>
+                <ArrowDownCircleIcon
+                  primaryColor="white"
+                  secondaryColor={colors.B500}
+                  size="large"
+                />
+                <div>Drop your files here</div>
+              </div>
+            </div>
+          )}
           {!data.length && (
             <div className={cx('file-uploader-text', styles.uploadText)}>
               <div>
@@ -85,21 +115,7 @@ class Uploader extends React.Component {
                 </div>
                 <p>{isDragging ? 'Drop your files' : uploadText}</p>
                 <small>Or</small>
-                <div
-                  id="file-uploader-button-container"
-                  className={styles.uploadButtonContainer}
-                >
-                  <Button id="file-uploader-button" iconBefore={<UploadIcon />}>
-                    Upload Files
-                  </Button>
-                  <input
-                    multiple
-                    id="file-uploader-input"
-                    className={styles.uploadInput}
-                    type="file"
-                    onChange={this.onFileInputChange}
-                  />
-                </div>
+                {uploadButton}
               </div>
             </div>
           )}
@@ -110,6 +126,7 @@ class Uploader extends React.Component {
                   <FileItem key={id} id={id} filesKey={filesKey} />
                 ))}
               </div>
+              <div className={styles.inlineUploadButton}>{uploadButton}</div>
             </div>
           )}
         </div>
