@@ -230,11 +230,11 @@ function hasAdminGroup(req, res) {
         if (req.user.groups.includes(reqRole)) {
             return true;
         } else {
-            log.error('User ' + req.user.id + ' tried to create a project but lacks required role: ' + reqRole);
+            log.error('User ' + req.user.id + ' tried to perform an action but lacks required role: ' + reqRole);
             res.status(403);
             res.json({
                 status: 403,
-                error: 'Lack required role to create a request'
+                error: 'Lack required role to perform action'
             });
             return false;
         }
