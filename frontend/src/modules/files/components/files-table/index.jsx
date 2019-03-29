@@ -1,4 +1,5 @@
 import * as React from 'react';
+import cx from 'classnames';
 import PropTypes from 'prop-types';
 // import { Checkbox } from '@atlaskit/checkbox';
 import Button from '@atlaskit/button';
@@ -33,10 +34,8 @@ const renderEmpty = (isFailed, isLoaded) => {
         <p>There was an error while requesting your files.</p>
       </div>
     );
-  }
-
-  return (
-    <div className={styles.empty}>
+  } else {
+    text = (
       <div>
         <div>
           <DocumentIcon primaryColor={colors.N70} size="xlarge" />
@@ -48,7 +47,11 @@ const renderEmpty = (isFailed, isLoaded) => {
           </small>
         </div>
       </div>
-    </div>
+    );
+  }
+
+  return (
+    <div className={cx(styles.empty, 'request-files-empty-text')}>{text}</div>
   );
 };
 
@@ -114,7 +117,10 @@ class FilesTable extends React.Component {
           {
             key: file.fileName,
             content: (
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div
+                className="request-files-file-name"
+                style={{ display: 'flex', alignItems: 'center' }}
+              >
                 <FileIcon type={file.fileType} />
                 <span style={{ marginLeft: 10 }}>
                   {file.fileName || 'File not found'}
@@ -146,7 +152,12 @@ class FilesTable extends React.Component {
         row.cells.push({
           key: file.id,
           content: (
-            <div className={styles.downloadButton}>
+            <div
+              className={cx(
+                styles.downloadButton,
+                'request-file-download-button'
+              )}
+            >
               <Button
                 download
                 appearance="subtle"

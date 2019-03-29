@@ -52,6 +52,7 @@ function FileItem({ data, filesKey, id, onRemove, progress, uploadStatus }) {
         <div className={styles.fileItemRemoveButton}>
           <Button
             appearance="subtle"
+            className="file-remove-button"
             iconBefore={<CrossCircleIcon />}
             spacing="compact"
             onClick={() => onRemove(id, filesKey)}

@@ -35,6 +35,7 @@ class EditField extends React.Component {
 
     return (
       <InlineEdit
+        isFitContainerWidthReadView
         isConfirmOnBlurDisabled
         label={data.name}
         editView={
@@ -42,13 +43,16 @@ class EditField extends React.Component {
             <SingleLineTextInput
               isEditing
               isInitiallySelected
+              id={`request-${data.key}-input`}
               onChange={this.onChange}
               value={value}
             />
           )
         }
         readView={
-          <p id="request-purpose">{value || 'Nothing added. Click to edit'}</p>
+          <p id={`request-${data.key}-text`}>
+            {value || 'Nothing added. Click to edit'}
+          </p>
         }
         onCancel={this.onCancel}
         onConfirm={this.onSubmit}

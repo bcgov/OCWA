@@ -69,16 +69,17 @@ class Uploader extends React.Component {
     const { data, filesKey, uploadText } = this.props;
     const uploadButton = (
       <div
-        id="file-uploader-button-container"
-        className={styles.uploadButtonContainer}
+        className={cx(
+          styles.uploadButtonContainer,
+          'file-uploader-button-container'
+        )}
       >
-        <Button id="file-uploader-button" iconBefore={<UploadIcon />}>
+        <Button className="file-uploader-button" iconBefore={<UploadIcon />}>
           Upload Files
         </Button>
         <input
           multiple
-          id="file-uploader-input"
-          className={styles.uploadInput}
+          className={cx(styles.uploadInput, 'file-uploader-input')}
           type="file"
           onChange={this.onFileInputChange}
         />
