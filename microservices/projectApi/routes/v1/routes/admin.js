@@ -4,7 +4,7 @@ const config = require('config');
 const log = require('npmlog');
 const db = require('../db/db');
 
-// all projects (paginated, admin only)
+// list all projects
 admin.get('/list/project', function (req, res) {
     if (!hasAdminGroup(req, res)) return;
 
@@ -23,7 +23,7 @@ admin.get('/list/project', function (req, res) {
     });
 });
 
-// all projects with specific permissions (admin only)
+// list all projects with a specific permission
 admin.get('/list/permission/:permissionName', function (req, res) {
     if (!hasAdminGroup(req, res)) return;
 
@@ -47,7 +47,7 @@ admin.get('/list/permission/:permissionName', function (req, res) {
 });
 
 // create new project (default no perms, can list perms optionally)
-admin.post('/create', function (req, res) {
+admin.post('/project/create', function (req, res) {
     if (!hasAdminGroup(req, res)) return;
 
     const project = new db.Project;
@@ -90,19 +90,74 @@ admin.post('/create', function (req, res) {
     });
 });
 
-// add or update permisison for existing project
-admin.put('/:projectName/:permissionName', function (req, res, next) {
+// add or update permissions for an existing project
+admin.put('/project/:projectName/permission', function (req, res) {
     if (!hasAdminGroup(req, res)) return;
 
-    res.status(501);
-    res.json({
-        status: 501,
-        message: 'Not Implemented'
+    const projectName = req.params.projectName
+
+    if (!req.body || Object.getOwnPropertyNames(req.body).length === 0) {
+        log.debug('Empty or missing body in request');
+        res.status(400)
+        res.json({
+            status: 400,
+            message: 'Empty or missing body in request'
+        });
+        return;
+    }
+
+    db.Project.find({ name: projectName }, 'permissions -_id', function(err, result) {
+        if (err || !result) {
+            log.debug(err);
+            res.status(500);
+            res.json({
+                status: 500,
+                error: err.message
+            });
+        } else {
+            if (result.length === 1) {
+                // Merge permissions by overlaying incoming permissions
+                const currentPerms = (result[0].permissions) ? result[0].permissions : {}
+                const permissions = Object.assign(currentPerms, req.body);
+
+                db.Project.findOneAndUpdate({ name: projectName }, {
+                    permissions: permissions
+                }, function(err) {
+                    if (err) {
+                        log.debug(err);
+                        res.status(500);
+                        res.json({
+                            status: 500,
+                            error: err.message
+                        });
+                    } else {
+                        log.debug('Updated permissions for project ' + projectName);
+                        res.status(202)
+                        res.json({
+                            status: 202,
+                            message: 'Permissions for project ' + projectName + ' updated'
+                        });
+                    }
+                });
+            } else if (result.length > 1) {
+                res.status(500);
+                res.json({
+                    status: 500,
+                    message: 'No distinct project ' + projectName + ' found'
+                })
+            } else {
+                res.status(404);
+                res.json({
+                    status: 404,
+                    message: 'Project ' + projectName + ' not found'
+                })
+            }
+        }
     });
 });
 
 // remove project
-admin.delete('/:projectName', function (req, res) {
+admin.delete('/project/:projectName', function (req, res) {
     if (!hasAdminGroup(req, res)) return;
 
     const projectName = req.params.projectName
@@ -133,12 +188,12 @@ admin.delete('/:projectName', function (req, res) {
 });
 
 // remove permission from project
-admin.delete('/:projectName/:permissionName', function (req, res, next) {
+admin.delete('/project/:projectName/permission/:permissionName', function (req, res, next) {
     if (!hasAdminGroup(req, res)) return;
 
     const projectName = req.params.projectName
     const permissionName = req.params.permissionName
-    db.Project.updateOne({name: projectName }, {
+    db.Project.updateOne({ name: projectName }, {
         $unset: {
             ['permissions.' + permissionName]: ''
         }

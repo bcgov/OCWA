@@ -49,13 +49,18 @@ permissions.get('/:projectName', function(req, res) {
             });
         } else {
             if (result.length === 1) {
-                res.json(result[0].permissions);
+                const currentPerms = (result[0].permissions) ? result[0].permissions : {}
+                res.json(currentPerms);
             } else if (result.length > 1) {
+                res.status(500);
                 res.json({
+                    status: 500,
                     message: 'No distinct project ' + projectName + ' found'
                 })
             } else {
+                res.status(404);
                 res.json({
+                    status: 404,
                     message: 'Project ' + projectName + ' not found'
                 })
             }
