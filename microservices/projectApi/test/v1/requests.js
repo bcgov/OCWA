@@ -16,69 +16,6 @@ chai.use(chaiHttp);
 describe("Requests", function() {
     var activeRequestId = '';
     var fileId = 'test.jpeg';
-    after(function(done){
-        db.Request.deleteMany({}, function(err){
-            var minio = require('minio');
-            var config = require('config');
-            var storageConfig = config.get('storageApi');
-            var Minio = require('minio');
-            var minioClient = new Minio.Client({
-                endPoint: storageConfig['uri'],
-                port: storageConfig['port'],
-                useSSL: storageConfig['useSSL'],
-                accessKey: storageConfig['key'],
-                secretKey: storageConfig['secret']
-            });
-            minioClient.removeObject(storageConfig.bucket, fileId, function(err) {
-                if (err) {
-                    console.log('Unable to remove object', err);
-                    done();
-                    return;
-                }
-                done();
-            })
-        });
-    });
-
-    before(function(done){
-        var minio = require('minio');
-        var config = require('config');
-        var storageConfig = config.get('storageApi');
-        var Minio = require('minio');
-        var minioClient = new Minio.Client({
-            endPoint: storageConfig['uri'],
-            port: storageConfig['port'],
-            useSSL: storageConfig['useSSL'],
-            accessKey: storageConfig['key'],
-            secretKey: storageConfig['secret']
-        });
-
-        var Fs = require('fs');
-        var file = __dirname+'/../file/gov.jpeg';
-        var fileStream = Fs.createReadStream(file);
-
-        minioClient.bucketExists(storageConfig.bucket, function(err, exists) {
-            if (err) {
-                return console.log(err)
-            }
-            if (!exists) {
-                minioClient.makeBucket(storageConfig.bucket, 'us-east-1', function(err) {
-                    if (err) {
-                        console.log('Error creating bucket.', err);
-                        done();
-                    }
-                    minioClient.putObject(storageConfig.bucket, fileId, fileStream, function(err, etag) {
-                        done();
-                    });
-                })
-            }else{
-                minioClient.putObject(storageConfig.bucket, fileId, fileStream, function(err, etag) {
-                    done();
-                });
-            }
-        });
-
-    });
 
     describe('/GET v1/', function () {
         it('it should get unauthorized', function (done) {
