@@ -22,7 +22,7 @@ app.get('/version', function(_, res) {
         v: v,
         hash: hash,
         version: version,
-        name: 'Request API'
+        name: 'Project API'
     })
 });
 

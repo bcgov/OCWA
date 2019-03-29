@@ -23,7 +23,7 @@ spec:
       volumes:
       - name: emailtemplate
         configMap:
-          name: {{ template "ocwaProjectApi.fullname" . }}-requestapi-configmap
+          name: {{ template "ocwaProjectApi.fullname" . }}-projectapi-configmap
           defaultMode: 511
       {{ end }}
       containers:
@@ -52,31 +52,17 @@ spec:
                   key: dbPassword
             - name: DB_NAME
               value: {{ .Values.database.dbName }}
-            - name: FORUM_API
-              value: {{ .Values.forumApi }}
-            - name: FORUM_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "ocwaProjectApi.fullname" . }}-secrets
-                  key: forumApiSecret
-            - name: VALIDATION_API
-              value: {{ .Values.validationApi }}
-            - name: VALIDATION_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "ocwaProjectApi.fullname" . }}-secrets
-                  key: validationApiSecret
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ template "ocwaProjectApi.fullname" . }}-secrets
                   key: jwtSecret
-            - name: CREATE_ROLE
-              value: {{ .Values.createRole }}
+            - name: OCWA_URL
+              value: "{{ .Values.ocwaUrl }}"
+            - name: ADMIN_GROUP
+              value: {{ .Values.adminGroup }}
             - name: OC_GROUP
               value: {{ .Values.ocGroup }}
-            - name: ALLOW_DENY
-              value: "{{ .Values.allowDeny }}"
             - name: USER_ID_FIELD
               value: {{ .Values.user.idField }}
             - name: EMAIL_FIELD
@@ -87,47 +73,6 @@ spec:
               value: {{ .Values.user.surNameField }}
             - name: GROUP_FIELD
               value: {{ .Values.user.groupField }}
-            - name: STORAGE_URI
-              value: {{ .Values.storageUri }}
-            - name: STORAGE_PORT
-              value: "{{ .Values.storagePort }}"
-            - name: STORAGE_KEY
-              value: {{ .Values.storageKey }}
-            - name: STORAGE_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "ocwaProjectApi.fullname" . }}-secrets
-                  key: storageSecret
-            - name: STORAGE_USESSL
-              value: "{{ .Values.storageUseSSL }}"
-            - name: STORAGE_WARN_SIZE
-              value: "{{ .Values.storageWarnSize }}"
-            - name: STORAGE_MAX_SIZE
-              value: "{{ .Values.storageMaxSize }}"
-            - name: STORAGE_BUCKET
-              value: {{ .Values.storageBucket }}
-            - name: AUTO_APPROVE
-              value: "{{ .Values.autoApprove }}"
-            - name: OCWA_URL
-              value: "{{ .Values.ocwaUrl }}"
-            - name: EMAIL_ENABLED
-              value: "{{ .Values.emailEnabled }}"
-            - name: EMAIL_SERVICE
-              value: "{{ .Values.emailService }}"
-            - name: EMAIL_SECURE
-              value: "{{ .Values.emailSecure }}"
-            - name: EMAIL_PORT
-              value: "{{ .Values.emailPort }}"
-            - name: EMAIL_USER
-              value: "{{ .Values.emailUser }}"
-            - name: EMAIL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "ocwaProjectApi.fullname" . }}-secrets
-                  key: emailPassword
-            - name: EMAIL_FROM
-              value: "{{ .Values.emailFrom }}"
-
           ports:
             - name: http
               containerPort: {{ .Values.apiPort }}
