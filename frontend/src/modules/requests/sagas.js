@@ -21,7 +21,7 @@ function onCreateRequest(action) {
   const id = get(action, 'payload.result.result');
 
   if (id) {
-    action.meta.history.push(`/requests/${id}`, { isNewRequest: true });
+    action.meta.history.push(`/requests/${id}`, { isEditing: true });
   }
 }
 

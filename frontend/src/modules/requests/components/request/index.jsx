@@ -5,6 +5,7 @@ import Date from '@src/components/date';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavLink, Route, Switch } from 'react-router-dom';
+import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import Spinner from '@atlaskit/spinner';
 import Title from '@src/components/title';
@@ -20,7 +21,7 @@ import * as styles from './styles.css';
 
 class Request extends React.Component {
   state = {
-    isEditing: get(this, 'props.location.state.isNewRequest', false),
+    isEditing: get(this, 'props.location.state.isEditing', false),
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -60,7 +61,12 @@ class Request extends React.Component {
           <header className={styles.header}>
             <Grid>
               <GridColumn medium={9}>
-                <h1 id="request-title">{data.name}</h1>
+                <h1 id="request-title">
+                  <span>{data.name}</span>
+                  {isEditing && (
+                    <Lozenge appearance="inprogress">Editing</Lozenge>
+                  )}
+                </h1>
                 <p id="request-header-details">
                   {'Updated at '}
                   <Date value={updatedAt} format="HH:MMa on MMMM Do, YYYY" />

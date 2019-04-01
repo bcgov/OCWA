@@ -8,6 +8,10 @@
   background-color: #f5f5f5;
 }
 
+.header h1 > span:first-child {
+  margin-right: 15px;
+}
+
 .tabs {
   height: 28px;
   padding-top: 30px;

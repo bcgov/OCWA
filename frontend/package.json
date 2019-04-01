@@ -76,6 +76,7 @@
     "@atlaskit/inline-dialog": "^9.0.13",
     "@atlaskit/inline-edit": "^8.0.1",
     "@atlaskit/layer-manager": "^6.0.1",
+    "@atlaskit/lozenge": "^7.0.1",
     "@atlaskit/media-card": "^58.0.0",
     "@atlaskit/media-core": "^29.0.2",
     "@atlaskit/modal-dialog": "^7.0.1",

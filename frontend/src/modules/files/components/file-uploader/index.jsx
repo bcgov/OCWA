@@ -4,6 +4,7 @@ import ArrowDownCircleIcon from '@atlaskit/icon/glyph/arrow-down-circle';
 import Button from '@atlaskit/button';
 import cx from 'classnames';
 import CopyIcon from '@atlaskit/icon/glyph/copy';
+import Spinner from '@atlaskit/spinner';
 import UploadIcon from '@atlaskit/icon/glyph/upload';
 import { colors } from '@atlaskit/theme';
 
@@ -66,7 +67,7 @@ class Uploader extends React.Component {
 
   render() {
     const { isDragging } = this.state;
-    const { data, filesKey, uploadText } = this.props;
+    const { data, fetchStatus, filesKey, uploadText } = this.props;
     const uploadButton = (
       <div
         className={cx(
@@ -120,16 +121,24 @@ class Uploader extends React.Component {
               </div>
             </div>
           )}
-          {data.length > 0 && (
-            <div className={cx('file-uploader-list', styles.fileUploaderList)}>
-              <div className={styles.uploadQueueList}>
-                {data.map(id => (
-                  <FileItem key={id} id={id} filesKey={filesKey} />
-                ))}
-              </div>
-              <div className={styles.inlineUploadButton}>{uploadButton}</div>
+          {fetchStatus === 'loading' && (
+            <div className={styles.loading}>
+              <Spinner />
             </div>
           )}
+          {fetchStatus !== 'loading' &&
+            data.length > 0 && (
+              <div
+                className={cx('file-uploader-list', styles.fileUploaderList)}
+              >
+                <div className={styles.uploadQueueList}>
+                  {data.map(id => (
+                    <FileItem key={id} id={id} filesKey={filesKey} />
+                  ))}
+                </div>
+                <div className={styles.inlineUploadButton}>{uploadButton}</div>
+              </div>
+            )}
         </div>
       </div>
     );
@@ -138,6 +147,8 @@ class Uploader extends React.Component {
 
 Uploader.propTypes = {
   data: PropTypes.arrayOf(PropTypes.string).isRequired,
+  fetchStatus: PropTypes.oneOf(['idle', 'loading', 'loaded', 'failed'])
+    .isRequired,
   filesKey: PropTypes.string.isRequired, // Which key to look up on the request object
   isUploading: PropTypes.bool.isRequired,
   onUpload: PropTypes.func.isRequired,

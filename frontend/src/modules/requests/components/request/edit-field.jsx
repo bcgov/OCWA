@@ -34,29 +34,31 @@ class EditField extends React.Component {
     const { value } = this.state;
 
     return (
-      <InlineEdit
-        isFitContainerWidthReadView
-        isConfirmOnBlurDisabled
-        label={data.name}
-        editView={
-          isEditing && (
-            <SingleLineTextInput
-              isEditing
-              isInitiallySelected
-              id={`request-${data.key}-input`}
-              onChange={this.onChange}
-              value={value}
-            />
-          )
-        }
-        readView={
-          <p id={`request-${data.key}-text`}>
-            {value || 'Nothing added. Click to edit'}
-          </p>
-        }
-        onCancel={this.onCancel}
-        onConfirm={this.onSubmit}
-      />
+      <div id={`request-${data.key}-field`}>
+        <InlineEdit
+          isFitContainerWidthReadView
+          isConfirmOnBlurDisabled
+          label={data.name}
+          editView={
+            isEditing && (
+              <SingleLineTextInput
+                isEditing
+                isInitiallySelected
+                id={`request-${data.key}-input`}
+                onChange={this.onChange}
+                value={value}
+              />
+            )
+          }
+          readView={
+            <p id={`request-${data.key}-text`}>
+              {value || 'Nothing added. Click to edit'}
+            </p>
+          }
+          onCancel={this.onCancel}
+          onConfirm={this.onSubmit}
+        />
+      </div>
     );
   }
 }

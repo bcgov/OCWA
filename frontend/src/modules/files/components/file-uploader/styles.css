@@ -9,6 +9,13 @@
   flex-direction: column;
 }
 
+.loading {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .nav {
   margin-bottom: 20px;
 }

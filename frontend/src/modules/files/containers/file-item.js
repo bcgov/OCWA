@@ -13,7 +13,9 @@ const mapStateToProps = (state, { id }) => {
     ? 'loaded'
     : get(state, `files.uploadStatus.${id}`, 'queued');
   const keyPath = isUploadedFile ? loadedFileKeyPath : `files.entities.${id}`;
-  const data = get(state, keyPath, {});
+  const data = get(state, keyPath, {
+    fileName: '',
+  });
 
   return {
     data,
