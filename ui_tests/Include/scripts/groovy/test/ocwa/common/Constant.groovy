@@ -53,8 +53,10 @@ public class Constant {
 		static final def REQUEST_DISCUSSION_TAB_ID = 'request-discussion-tab'
 		static final def REQUEST_EDIT_BTN_ID = 'request-sidebar-edit-button'
 		//static final def REQUEST_FILES_UPLOAD_BTN_ID = 'file-uploader-input'
-		static final def REQUEST_OUTPUT_FILES_UPLOAD_BTN_ID = 'request-export-files'
-		static final def REQUEST_SUPPORTING_FILES_UPLOAD_BTN_ID = 'request-supporting-files'
+		//static final def REQUEST_OUTPUT_FILES_UPLOAD_BTN_ID = 'request-export-files'
+		static final def REQUEST_OUTPUT_FILES_UPLOAD_BTN_XPATH = "//div[@id='request-export-files']/descendant::input[@type='file']"
+		static final def REQUEST_SUPPORT_FILES_UPLOAD_BTN_XPATH = "//div[@id='request-support-files']/descendant::input[@type='file']"
+		//static final def REQUEST_SUPPORTING_FILES_UPLOAD_BTN_ID = 'request-supporting-files'
 		//static final def REQUEST_NAME_TXT_ID = 'name'
 		static final def REQUEST_NAME_TXT_ID = 'name-uid7'
 		static final def REQUEST_PATH = '/requests/'
