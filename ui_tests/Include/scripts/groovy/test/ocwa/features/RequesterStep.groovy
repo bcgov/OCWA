@@ -56,11 +56,17 @@ public class RequesterStep extends Step {
 	/**
 	 * Uploads each file specified in the files array
 	 * @param files String array of filenames to be used for uploading
-	 * @param isUploadScreenAlreadyOpen Optional Boolean regarding the state of upload screen. Defaults to false if not specified.
+	 * @param isSupportingFile Optional Boolean regarding whether the file is an output or supporting file. Defaults to false if not specified.
 	 */
-	def requester_uploads_files(String[] files, boolean isUploadScreenAlreadyOpen = false) {
+	def requester_uploads_files(String[] files, boolean isSupportingFile = false) {
 		// Upload files
-		TestObject uploadFileButton = Utils.getTestObjectById(Constant.Requester.REQUEST_FILES_UPLOAD_BTN_ID)
+		TestObject uploadFileButton
+		if (isSupportingFile) {
+			uploadFileButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SUPPORTING_FILES_UPLOAD_BTN_ID)
+		}
+		else {
+			uploadFileButton = Utils.getTestObjectById(Constant.Requester.REQUEST_OUTPUT_FILES_UPLOAD_BTN_ID)
+		}
 		files.each { file ->
 			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", Constant.DEFAULT_TIMEOUT)
 			WebUI.waitForElementClickable(uploadFileButton, Constant.DEFAULT_TIMEOUT)
@@ -87,7 +93,7 @@ public class RequesterStep extends Step {
 		]
 		if (numSupportingFilesToUpload == "2") files << GlobalVariable.SupportingFileName2
 
-		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_UPLOAD_TAB_SUPPORT_ID))
+		//WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_UPLOAD_TAB_SUPPORT_ID))
 		requester_uploads_files(files, true)
 	}
 
@@ -225,15 +231,11 @@ public class RequesterStep extends Step {
 	def requester_submits_request() {
 		TestObject requestSubmitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
 		
-		//WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/button_save_request'), "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
 
 		//WebUI.delay(3) // Stopgap related to https://github.com/bcgov/OCWA/issues/89
 		WebUI.click(requestSubmitBtn)
-//		if(!WebUI.waitForElementNotPresent(findTestObject('Object Repository/OCWA/button_save_request'), Constant.DEFAULT_TIMEOUT)) {
-//			throw new com.kms.katalon.core.exception.StepFailedException("Submission failed - modal window still present")
-//		}
 	}
 
 	@When("requester writes and submits a new comment")
@@ -289,11 +291,6 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID), Constant.DEFAULT_TIMEOUT)
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID))
 		WebUI.acceptAlert()
-
-		// Click Add Files button
-//		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
-//		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
-//		WebUI.click(requestFormSaveFilesButton)
 	}
 
 	@When("requester views (.+) requests")
@@ -406,11 +403,8 @@ public class RequesterStep extends Step {
 	}
 
 	@Then("requester should be able to re-submit the request")
-	def requester_should_be_able_to_resubmit_request() {
-//		WebUI.waitForElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", Constant.DEFAULT_TIMEOUT)
-//		WebUI.waitForElementClickable(findTestObject('Object Repository/OCWA/span_Submit for Review'), Constant.DEFAULT_TIMEOUT)
-//		WebUI.click(findTestObject('Object Repository/OCWA/span_Submit for Review'))
-		
+	def requester_should_be_able_to_resubmit_request() {		
+		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID)) //need to click "done editing" to enable submit button
 		
 		TestObject requestSubmitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
