@@ -62,10 +62,10 @@ public class RequesterStep extends Step {
 		// Upload files
 		TestObject uploadFileButton
 		if (isSupportingFile) {
-			uploadFileButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SUPPORTING_FILES_UPLOAD_BTN_ID)
+			uploadFileButton = Utils.getTestObjectByXPath(Constant.Requester.REQUEST_SUPPORT_FILES_UPLOAD_BTN_XPATH)
 		}
 		else {
-			uploadFileButton = Utils.getTestObjectById(Constant.Requester.REQUEST_OUTPUT_FILES_UPLOAD_BTN_ID)
+			uploadFileButton = Utils.getTestObjectByXPath(Constant.Requester.REQUEST_OUTPUT_FILES_UPLOAD_BTN_XPATH)
 		}
 		files.each { file ->
 			WebUI.waitForElementNotHasAttribute(uploadFileButton, "disabled", Constant.DEFAULT_TIMEOUT)
@@ -93,7 +93,6 @@ public class RequesterStep extends Step {
 		]
 		if (numSupportingFilesToUpload == "2") files << GlobalVariable.SupportingFileName2
 
-		//WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_UPLOAD_TAB_SUPPORT_ID))
 		requester_uploads_files(files, true)
 	}
 
@@ -234,7 +233,6 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
 
-		//WebUI.delay(3) // Stopgap related to https://github.com/bcgov/OCWA/issues/89
 		WebUI.click(requestSubmitBtn)
 	}
 
@@ -334,17 +332,13 @@ public class RequesterStep extends Step {
 
 	@Then("the requester should not be able to submit the request")
 	def requester_is_not_able_to_submit_request() {
-		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
-		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
-		WebUI.click(requestFormSaveFilesButton)
-
-		WebUI.verifyElementNotHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'), "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.verifyElementHasAttribute(Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID), "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.closeBrowser()
 	}
 
 	@Then("the requester should be able to submit the request")
 	def requester_is_able_to_submit_request() {
-		WebUI.verifyElementHasAttribute(findTestObject('Object Repository/OCWA/span_Submit for Review'),"disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.verifyElementNotHasAttribute(Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID),"disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.closeBrowser()
 	}
 
