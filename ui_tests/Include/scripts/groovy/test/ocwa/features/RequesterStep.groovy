@@ -47,6 +47,7 @@ public class RequesterStep extends Step {
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 	}
 
 	@Given("has not submitted the request")
@@ -218,11 +219,7 @@ public class RequesterStep extends Step {
 	}
 
 	@When("the requester saves their request")
-	def requester_saves_new_request() {
-		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
-		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-		
+	def requester_saves_new_request() {		
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 	}
 
@@ -230,6 +227,10 @@ public class RequesterStep extends Step {
 	def requester_submits_request() {
 		TestObject requestSubmitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
 		
+		if (WebUI.verifyElementNotClickable(requestSubmitBtn)) {
+			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
+			WebUI.comment('Submit button is disabled so try clicking the "Done editing" link')
+		}
 		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
 
