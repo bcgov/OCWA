@@ -67,7 +67,7 @@ class Uploader extends React.Component {
 
   render() {
     const { isDragging } = this.state;
-    const { data, fetchStatus, filesKey, uploadText } = this.props;
+    const { data, fetchStatus, filesKey, isUploading, uploadText } = this.props;
     const uploadButton = (
       <div
         className={cx(
@@ -75,12 +75,18 @@ class Uploader extends React.Component {
           'file-uploader-button-container'
         )}
       >
-        <Button className="file-uploader-button" iconBefore={<UploadIcon />}>
-          Upload Files
+        <Button
+          className="file-uploader-button"
+          disabled={isUploading}
+          isLoading={isUploading}
+          iconBefore={<UploadIcon />}
+        >
+          {isUploading ? 'Uploading...' : 'Upload Files'}
         </Button>
         <input
           multiple
           className={cx(styles.uploadInput, 'file-uploader-input')}
+          disabled={isUploading}
           type="file"
           onChange={this.onFileInputChange}
         />
