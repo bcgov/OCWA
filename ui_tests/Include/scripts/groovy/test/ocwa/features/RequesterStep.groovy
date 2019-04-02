@@ -227,7 +227,7 @@ public class RequesterStep extends Step {
 	def requester_submits_request() {
 		TestObject requestSubmitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
 		
-		if (WebUI.verifyElementNotClickable(requestSubmitBtn)) {
+		if (WebUI.verifyElementNotClickable(requestSubmitBtn, FailureHandling.OPTIONAL)) {
 			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 			WebUI.comment('Submit button is disabled so try clicking the "Done editing" link')
 		}
@@ -287,8 +287,8 @@ public class RequesterStep extends Step {
 	@When("the requester withdraws the request")
 	def requester_withdraws_request() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
-		WebUI.waitForElementClickable(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID), Constant.DEFAULT_TIMEOUT)
-		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID))
+		WebUI.waitForElementClickable(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID), Constant.DEFAULT_TIMEOUT)
+		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 		WebUI.acceptAlert()
 	}
 
