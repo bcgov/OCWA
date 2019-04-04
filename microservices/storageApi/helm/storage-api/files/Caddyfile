@@ -1,6 +1,7 @@
 0.0.0.0:2015 {
+
     rewrite {
-        if {method} GET
+        if {method} is GET
         to /method_not_allowed
     }
     status 405 /method_not_allowed
