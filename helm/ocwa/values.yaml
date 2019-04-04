@@ -315,6 +315,10 @@ storage-api:
     region: us-east-1 #likely irrelevant
     jwtHook: true
 
+  caddy:
+    image: abiosoft/caddy
+    tag: no-stats
+
   jwtAud: "foo"
 
   minio:

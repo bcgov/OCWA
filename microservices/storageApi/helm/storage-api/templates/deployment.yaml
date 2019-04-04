@@ -28,6 +28,10 @@ spec:
           name: {{ template "ocwaForumApi.fullname" . }}-tusd-configmap
           defaultMode: 511
       {{ end }}
+      - name: caddy-config
+        configMap:
+          name: {{ template "ocwaForumApi.fullname" . }}-caddy-configmap
+          defaultMode: 511
 
       containers:
         - name: {{ template "ocwaStorageApi.name" . }}-minio
@@ -65,6 +69,19 @@ spec:
             httpGet:
               path: /minio/health/live
               port: minio
+
+        - name: {{ template "ocwaStorageApi.name" . }}-caddy
+          image: "{{ .Values.caddy.image }}:{{ .Values.caddy.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["caddy", "-conf", "/conf/Caddyfile", "-quic"]
+          ports:
+            - name: caddy
+              containerPort: 2015
+              protocol: TCP
+          volumeMounts:
+            - name: caddy-config
+              mountPath: /conf
+
 
         - name: {{ template "ocwaStorageApi.name" . }}-tusd
           image: "{{ .Values.tus.image }}:{{ .Values.tus.tag }}"
@@ -105,14 +122,6 @@ spec:
             - name: tusd
               containerPort: 8888
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 1080
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 1080
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
