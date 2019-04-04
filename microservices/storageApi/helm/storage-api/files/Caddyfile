@@ -1,8 +1,9 @@
-http://0.0.0.0:2015 {
-  redir https://{host}{uri}
-}
+http://0.0.0.0:2015, https://0.0.0.0:2015 {
 
-https://0.0.0.0:2015 {
+    redir {
+        if {scheme} is http
+        / https://{host}{uri}
+      }
 
     rewrite {
         if {method} is GET
