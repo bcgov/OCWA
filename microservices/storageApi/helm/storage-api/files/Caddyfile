@@ -1,10 +1,15 @@
-0.0.0.0:2015 {
+http://0.0.0.0:2015 {
+  redir https://{host}{uri}
+}
+
+http://0.0.0.0:2015 {
 
     rewrite {
         if {method} is GET
         to /method_not_allowed
     }
     status 405 /method_not_allowed
+
 
     proxy / http://127.0.0.1:1080 {
         transparent

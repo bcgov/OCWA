@@ -120,7 +120,7 @@ spec:
               value: "{{ .Values.tus.region }}"
           ports:
             - name: tusd
-              containerPort: 8888
+              containerPort: 1080
               protocol: TCP
           resources:
 {{ toYaml .Values.resources | indent 12 }}
