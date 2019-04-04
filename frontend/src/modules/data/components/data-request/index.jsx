@@ -4,6 +4,8 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import compact from 'lodash/compact';
 import get from 'lodash/get';
+import isArray from 'lodash/isArray';
+import isEmpty from 'lodash/isEmpty';
 
 import ErrorComponent from '../error';
 
@@ -15,6 +17,11 @@ function withRequest(Component) {
 
     componentDidMount() {
       const { id, ids, initialRequest } = this.props;
+
+      // Don't make request if the array of ids is empty
+      if (isArray(ids) && isEmpty(ids)) {
+        return;
+      }
 
       if (initialRequest) {
         const params = this.getParams();

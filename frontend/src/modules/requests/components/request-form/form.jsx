@@ -1,130 +1,111 @@
 import * as React from 'react';
-import FieldText from '@atlaskit/field-text';
-import FieldTextArea from '@atlaskit/field-text-area';
-import Form, { Field, FormSection } from '@atlaskit/form';
-import isEqual from 'lodash/isEqual';
+import PropTypes from 'prop-types';
+import ArrowRightCircleIcon from '@atlaskit/icon/glyph/arrow-right-circle';
+import Button, { ButtonGroup } from '@atlaskit/button';
+import { colors } from '@atlaskit/theme';
+import TextField from '@atlaskit/textfield';
+import TextArea from '@atlaskit/textarea';
+import Form, {
+  ErrorMessage,
+  Field,
+  FormFooter,
+  FormHeader,
+  FormSection,
+  HelperMessage,
+} from '@atlaskit/form';
+import { uid } from 'react-uid';
+import { withRouter } from 'react-router-dom';
 
-import { RequestSchema } from '../../types';
+import { requestFields } from '../../utils';
 
-class NewRequestForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.formRef = React.createRef();
-  }
-
-  shouldComponentUpdate(nextProps) {
-    const { data } = this.props;
-
-    return !isEqual(data, nextProps.data);
-  }
-
-  validate = () => {
-    const validation = this.formRef.current.validate();
-    return validation;
-  };
-
-  render() {
-    const { data } = this.props;
-
-    return (
-      <div id="request-form">
-        <Form ref={this.formRef}>
-          <Field isRequired label="Request Title" id="name">
-            <FieldText
-              shouldFitContainer
-              name="name"
-              id="name"
-              value={data.name || ''}
+function NewRequestForm({ history, isCreating, onSubmit }) {
+  return (
+    <div id="request-form">
+      <Form onSubmit={onSubmit}>
+        {({ formProps }) => (
+          <form {...formProps}>
+            <FormHeader
+              title="Initiate a New Request"
+              description="Output Files can be added once the request has been created."
             />
-          </Field>
-          <FormSection
-            name="additional"
-            title="Additional Information"
-            description="These fields aren't required but are recommended"
-          >
             <Field
-              id="purpose"
-              label="Purpose"
-              helperText="Purpose of the request"
+              isRequired
+              name="name"
+              label="Request Title"
+              defaultValue=""
+              isDisabled={isCreating}
             >
-              <FieldTextArea
-                shouldFitContainer
-                name="purpose"
-                id="purpose"
-                value={data.purpose}
-              />
+              {({ fieldProps, error }) => (
+                <React.Fragment>
+                  <TextField autoFocus autoComplete="off" {...fieldProps} />
+                  {!error && (
+                    <HelperMessage>
+                      Must be a unique request name.
+                    </HelperMessage>
+                  )}
+                  {error && (
+                    <ErrorMessage>
+                      This user name is already in use, try another one.
+                    </ErrorMessage>
+                  )}
+                </React.Fragment>
+              )}
             </Field>
-            <Field
-              id="variableDescriptions"
-              label="Variable Descriptions"
-              helperText="Description of variables in the request"
-            >
-              <FieldTextArea
-                shouldFitContainer
-                name="variableDescriptions"
-                id="variableDescriptions"
-                value={data.variableDescriptions}
-              />
-            </Field>
-            <Field
-              id="selectionCriteria"
-              label="Selection Criteria"
-              helperText="Selection criteria and sample size description for the request"
-            >
-              <FieldTextArea
-                shouldFitContainer
-                name="selectionCriteria"
-                id="selectionCriteria"
-                value={data.selectionCriteria}
-              />
-            </Field>
-            <Field
-              id="steps"
-              label="Steps"
-              helperText="Annotation of steps taken"
-            >
-              <FieldTextArea
-                shouldFitContainer
-                name="steps"
-                id="steps"
-                value={data.steps}
-              />
-            </Field>
-            <Field
-              id="freq"
-              label="Frequency"
-              helperText="Weighted results and unweighted frequencies"
-            >
-              <FieldTextArea
-                shouldFitContainer
-                id="freq"
-                name="freq"
-                value={data.freq}
-              />
-            </Field>
-            <Field
-              id="confidentiality"
-              label="Confidentiality"
-              helperText="Confidentiality disclosure to describe how it's upheld when criteria isn't met"
-            >
-              <FieldTextArea
-                shouldFitContainer
-                id="confidentiality"
-                name="confidentiality"
-                value={data.confidentiality}
-              />
-            </Field>
-          </FormSection>
-        </Form>
-      </div>
-    );
-  }
+            <FormSection title="Additional Fields">
+              {requestFields.map(d => (
+                <Field
+                  key={uid(d)}
+                  name={d.value}
+                  defaultValue=""
+                  label={d.name}
+                  isDisabled={isCreating}
+                >
+                  {({ fieldProps }) => (
+                    <React.Fragment>
+                      <TextArea {...fieldProps} />
+                      <HelperMessage>{d.helperText}</HelperMessage>
+                    </React.Fragment>
+                  )}
+                </Field>
+              ))}
+            </FormSection>
+            <FormFooter>
+              <ButtonGroup>
+                <Button
+                  appearance="default"
+                  id="request-form-cancel-button"
+                  isDisabled={isCreating}
+                  onClick={() => history.push('/')}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  id="request-form-save-files-button"
+                  iconAfter={
+                    <ArrowRightCircleIcon secondaryColor={colors.B500} />
+                  }
+                  isDisabled={isCreating}
+                  isLoading={isCreating}
+                  appearance="primary"
+                  type="submit"
+                >
+                  Create Request
+                </Button>
+              </ButtonGroup>
+            </FormFooter>
+          </form>
+        )}
+      </Form>
+    </div>
+  );
 }
 
 NewRequestForm.propTypes = {
-  data: RequestSchema.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  isCreating: PropTypes.bool.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
-export default React.forwardRef((props, ref) => (
-  <NewRequestForm {...props} ref={ref} />
-));
+export default withRouter(NewRequestForm);

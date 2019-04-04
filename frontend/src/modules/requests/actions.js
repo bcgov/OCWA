@@ -53,52 +53,18 @@ export const closeDraftRequest = () => ({
   type: 'request/close/draft',
 });
 
-// Request File Upload Actions
-export const uploadFile = (file, requestId) => ({
-  type: 'request/file/upload',
-  meta: {
-    requestId,
-  },
-  payload: file,
-});
+export const reset = () => ({ type: 'request/reset' });
 
-// Same as above, but with some extra flags for separate upload features.
-export const uploadSupportingFile = (file, requestId) => ({
-  type: 'request/file/upload',
-  meta: {
-    requestId,
-    isSupportingFile: true,
-  },
-  payload: file,
-});
-
-export const uploadFileProgress = (meta, progress) => ({
-  type: 'request/file/upload/progress',
-  meta,
-  payload: progress,
-});
-
-export const uploadFileFailure = (meta, error) => ({
-  type: 'request/file/upload/failed',
-  meta,
-  error: true,
-  payload: error,
-});
-
-export const uploadFileSuccess = (meta, payload) => ({
-  type: 'request/file/upload/success',
-  meta,
-  payload,
-});
-
-export const uploadFileReset = id => ({
-  type: 'request/file/upload/reset',
+export const finishEditing = id => ({
+  type: 'request/finish-editing',
   payload: id,
 });
 
-export const reset = () => ({ type: 'request/reset' });
-
-export const removeFile = id => ({ type: 'request/remove-file', payload: id });
+export const removeFile = (id, filesKey) => ({
+  type: 'request/remove-file',
+  meta: { filesKey },
+  payload: id,
+});
 
 export const toggleMyRequests = () => ({ type: 'requests/toggle-my-requests' });
 
@@ -109,13 +75,11 @@ export default {
   closeDraftRequest,
   duplicateRequest,
   fetchRequests,
+  finishEditing,
   removeFile,
   reset,
   saveRequest,
   sortRequests,
   toggleMyRequests,
-  uploadSupportingFile,
-  uploadFile,
-  uploadFileReset,
   viewDraftRequest,
 };

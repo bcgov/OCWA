@@ -15,6 +15,7 @@ const defaultData = {
 const defaultProps = {
   data: defaultData,
   isSaving: false,
+  isEditing: false,
   onCancel: () => null,
   onDelete: () => null,
   onDuplicate: () => null,

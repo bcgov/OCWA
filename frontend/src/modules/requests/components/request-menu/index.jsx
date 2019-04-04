@@ -9,10 +9,10 @@ import { RequestSchema } from '../../types';
 
 function RequestMenu({
   data,
+  history,
   menuText,
   onCancel,
   onDelete,
-  onEdit,
   onSubmit,
   onWithdraw,
 }) {
@@ -35,7 +35,13 @@ function RequestMenu({
             <DropdownItem onClick={() => onSubmit(data._id)}>
               Submit
             </DropdownItem>
-            <DropdownItem onClick={() => onEdit(data._id)}>Edit</DropdownItem>
+            <DropdownItem
+              onClick={() =>
+                history.push(`/requests/${data._id}`, { isEditing: true })
+              }
+            >
+              Edit
+            </DropdownItem>
             <DropdownItem onClick={() => onDelete(data._id)}>
               Delete
             </DropdownItem>
@@ -48,10 +54,12 @@ function RequestMenu({
 
 RequestMenu.propTypes = {
   data: RequestSchema.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
   menuText: PropTypes.string,
   onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onWithdraw: PropTypes.func.isRequired,
 };

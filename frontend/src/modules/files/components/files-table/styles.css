@@ -1,9 +1,17 @@
+.container > div {
+  border-bottom: none !important;
+}
+
 .startCell {
   padding-left: 10px;
 }
 
 .empty {
   margin: 20px 0;
+}
+
+.empty p {
+  margin-top: 0;
 }
 
 .statusRow {

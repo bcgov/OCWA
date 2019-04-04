@@ -1,13 +1,15 @@
 import { connect } from 'react-redux';
-import isEmpty from 'lodash/isEmpty';
+import { withRouter } from 'react-router-dom';
 
 import NewRequest from '../components/new-request';
 import { viewDraftRequest } from '../actions';
 
-const mapStateToProps = state => ({
-  disabled: !isEmpty(state.requests.viewState.currentRequestId),
+const mapStateToProps = (state, props) => ({
+  disabled: props.location.pathname === '/new',
 });
 
-export default connect(mapStateToProps, {
-  onClick: viewDraftRequest,
-})(NewRequest);
+export default withRouter(
+  connect(mapStateToProps, {
+    onClick: viewDraftRequest,
+  })(NewRequest)
+);
