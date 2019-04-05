@@ -83,6 +83,7 @@
     "@atlaskit/notification-indicator": "^4.0.5",
     "@atlaskit/page": "^8.0.5",
     "@atlaskit/renderer": "^22.1.0",
+    "@atlaskit/section-message": "^2.0.1",
     "@atlaskit/smart-card": "8.4.0",
     "@atlaskit/spinner": "^9.0.10",
     "@atlaskit/tabs": "^8.0.9",

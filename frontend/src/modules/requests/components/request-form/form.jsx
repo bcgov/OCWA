@@ -4,7 +4,6 @@ import ArrowRightCircleIcon from '@atlaskit/icon/glyph/arrow-right-circle';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
 import TextField from '@atlaskit/textfield';
-import TextArea from '@atlaskit/textarea';
 import Form, {
   ErrorMessage,
   Field,
@@ -13,9 +12,11 @@ import Form, {
   FormSection,
   HelperMessage,
 } from '@atlaskit/form';
+import SectionMessage from '@atlaskit/section-message';
 import { uid } from 'react-uid';
 import { withRouter } from 'react-router-dom';
 
+import FormField from './field';
 import { requestFields } from '../../utils';
 
 function NewRequestForm({ history, isCreating, onSubmit }) {
@@ -26,7 +27,7 @@ function NewRequestForm({ history, isCreating, onSubmit }) {
           <form {...formProps}>
             <FormHeader
               title="Initiate a New Request"
-              description="Output Files can be added once the request has been created."
+              description="Please ensure that you also have the following elements, as appropriate, with your output submission: descriptive labeling (ideally alongside each component), information for specific output types, and, log files or annotated steps of analysis."
             />
             <Field
               isRequired
@@ -51,7 +52,10 @@ function NewRequestForm({ history, isCreating, onSubmit }) {
                 </React.Fragment>
               )}
             </Field>
-            <FormSection title="Additional Fields">
+            <FormSection
+              title="Output Package and/or Output Groups Description "
+              description="Describe the context for this output package. If appropriate, you may choose to create Output Groups, which are a collection of output components that are batched for the purposes of description."
+            >
               {requestFields.map(d => (
                 <Field
                   key={uid(d)}
@@ -59,15 +63,29 @@ function NewRequestForm({ history, isCreating, onSubmit }) {
                   defaultValue=""
                   label={d.name}
                   isDisabled={isCreating}
+                  isRequired={d.isRequired}
                 >
                   {({ fieldProps }) => (
                     <React.Fragment>
-                      <TextArea {...fieldProps} />
+                      <FormField type={d.type} fieldProps={fieldProps} />
                       <HelperMessage>{d.helperText}</HelperMessage>
                     </React.Fragment>
                   )}
                 </Field>
               ))}
+            </FormSection>
+            <FormSection>
+              <SectionMessage
+                appearance="warning"
+                title="Affirmation of Confidentiality"
+              >
+                <p>
+                  By completing this form and submitting the output package for
+                  review, I affirm that the requested outputs are safe for
+                  release and protect the confidentiality of data, to the best
+                  of my knowledge.
+                </p>
+              </SectionMessage>
             </FormSection>
             <FormFooter>
               <ButtonGroup>
