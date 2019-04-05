@@ -32,9 +32,9 @@ public class RequesterStep extends Step {
 	def requester_starts_new_request() {
 		G_REQUESTNAME = Utils.generateRequestNameDate()
 
-		
+
 		TestObject newRequestButtonObject = Utils.getTestObjectByText(Constant.Requester.NEW_REQUEST_BTN_TXT)
-		
+
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementVisible(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
@@ -43,7 +43,7 @@ public class RequesterStep extends Step {
 
 		WebUI.setText(Utils.getTestObjectById(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
 		WebUI.setText(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID), Constant.Requester.CONFIDENTIALITY_TEXT)
-		
+
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
@@ -219,22 +219,30 @@ public class RequesterStep extends Step {
 	}
 
 	@When("the requester saves their request")
-	def requester_saves_new_request() {		
+	def requester_saves_new_request() {
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
+		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
+		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
 	}
 
 	@When("requester submits their request")
 	def requester_submits_request() {
 		TestObject requestSubmitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
+		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
 		
 		if (WebUI.verifyElementNotClickable(requestSubmitBtn, FailureHandling.OPTIONAL)) {
 			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 			WebUI.comment('Submit button is disabled so try clicking the "Done editing" link')
+			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
 		}
 		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
-
 		WebUI.click(requestSubmitBtn)
+	
+		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)	
 	}
 
 	@When("requester writes and submits a new comment")
@@ -287,8 +295,8 @@ public class RequesterStep extends Step {
 	@When("the requester withdraws the request")
 	def requester_withdraws_request() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
-		WebUI.waitForElementClickable(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID), Constant.DEFAULT_TIMEOUT)
-		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
+		WebUI.waitForElementClickable(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID), Constant.DEFAULT_TIMEOUT)
+		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID))
 		WebUI.acceptAlert()
 	}
 
@@ -384,12 +392,13 @@ public class RequesterStep extends Step {
 	def requester_should_be_able_to_make_changes_to_the_request() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
+		WebUI.waitForElementPresent(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_LBL_TXT_ID), Constant.DEFAULT_TIMEOUT)
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_LBL_TXT_ID))
 
 		TestObject confidentialityField = Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_EDT_TXT_ID)
 		WebUI.setText(confidentialityField, Constant.Requester.EDITED_CONFIDENTIALITY_TEXT)
-		WebUI.sendKeys(confidentialityField, Keys.chord(Keys.TAB, Keys.ENTER))	
-		
+		WebUI.sendKeys(confidentialityField, Keys.chord(Keys.TAB, Keys.ENTER))
+
 		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
 		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
@@ -398,14 +407,14 @@ public class RequesterStep extends Step {
 	}
 
 	@Then("requester should be able to re-submit the request")
-	def requester_should_be_able_to_resubmit_request() {		
-		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID)) //need to click "done editing" to enable submit button
-		
+	def requester_should_be_able_to_resubmit_request() {
+		//WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID)) //need to click "done editing" to enable submit button
+
 		TestObject requestSubmitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestSubmitBtn)
-		
+
 		request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
 		WebUI.closeBrowser()
 	}
