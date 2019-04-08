@@ -20,17 +20,20 @@ spec:
         release: {{ .Release.Name }}
     spec:
       volumes:
+      - name: minio-storage
+        persistentVolumeClaim:
+          claimName: {{ template "ocwaStorageApi.fullname" . }}-mongo-pvc
       - name: minio-config
         emptyDir: {}
       {{ if .Values.tus.jwtHook }}
       - name: tus-config
         configMap:
-          name: {{ template "ocwaForumApi.fullname" . }}-tusd-configmap
+          name: {{ template "ocwaStorageApi.fullname" . }}-tusd-configmap
           defaultMode: 511
       {{ end }}
       - name: caddy-config
         configMap:
-          name: {{ template "ocwaForumApi.fullname" . }}-caddy-configmap
+          name: {{ template "ocwaStorageApi.fullname" . }}-caddy-configmap
           defaultMode: 511
 
       containers:
@@ -46,6 +49,8 @@ spec:
           volumeMounts:
           - mountPath: /.minio
             name: minio-config
+          - name: minio-storage
+            mountPath: /minioStore
           env:
             - name: MINIO_ACCESS_KEY
               valueFrom:

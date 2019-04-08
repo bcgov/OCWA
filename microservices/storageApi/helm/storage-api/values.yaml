@@ -50,6 +50,9 @@ ingress:
       port: 80
   tls: []
 
+storageClassName: default
+storageSize: 1Gi
+
 
 resources: {}
   # If you want to specify resources, uncomment the following

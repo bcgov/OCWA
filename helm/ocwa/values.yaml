@@ -305,6 +305,9 @@ storage-api:
   access_key: key
   access_secret: s3secretkey
 
+  storageClassName: default
+  storageSize: 1Gi
+
   image:
     pullPolicy: Always
 
