@@ -69,6 +69,66 @@ matrix:
       on:
         all_branches: true
         condition: "$TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG"
+  - name: Project Api
+    stage: APIs
+    language: node_js
+    node_js:
+    - lts/*
+    cache: npm
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - g++-4.8
+    before_install:
+    - |-
+      cd /home/travis/build/bcgov/OCWA/microservices/projectApi
+      npm ci
+    - npm audit
+    before_script:
+    - |-
+      cd /home/travis/build/bcgov/OCWA/microservices/projectApi
+      cp config/test.json.example config/test.json
+      cp config/default.json.example config/default.json
+    - |-
+      wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+      tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+      mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+      ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+      ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo projectDb --eval 'db.createUser({user:"projectUser", pwd:"projectPass", roles:["readWrite"]});'
+    - |-
+      wget -q ${HELM_URL}/${HELM_TGZ}
+      tar xzfv ${HELM_TGZ}
+      PATH=`pwd`/linux-amd64/:$PATH
+      helm init --client-only
+    - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+    - |-
+      cd /home/travis/build/bcgov/OCWA
+      wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
+      unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
+      PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+    script:
+    - |-
+      cd /home/travis/build/bcgov/OCWA/microservices/projectApi
+      npm test
+    - helm lint helm/project-api
+    - |-
+      cd /home/travis/build/bcgov/OCWA/microservices/projectApi
+      bash docker_quayio_push ocwa_project_api
+    - |-
+      cd /home/travis/build/bcgov/OCWA
+      PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+      sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_project_api -Dsonar.projectName="OCWA Project API" -Dsonar.modules=projectApi
+    before_deploy:
+    - cd /home/travis/build/bcgov/OCWA/microservices/projectApi
+    deploy:
+      provider: script
+      script: bash docker_push ocwa_project_api || travis_terminate 1
+      on:
+        all_branches: true
+        condition: "$TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG"
+
   - name: Request Api
     stage: APIs
     language: node_js
