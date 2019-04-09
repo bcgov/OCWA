@@ -11,8 +11,13 @@
   },
 
   "jwtSecret": "superSecretHere",
-  "apiKey": "superSecretHere",
+
   "ocwaUrl": "http://localhost:8000/",
+
+  "apiKey": "apiKeySecret",
+  "projectApi": "http://ocwa_project_api:2005/",
+  "projectApiSecret": "apiKeySecret",
+  "autoAccept": false,
 
   "adminGroup": "/admin",
   "outputCheckerGroup": "/oc",
