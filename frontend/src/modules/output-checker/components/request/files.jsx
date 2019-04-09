@@ -1,6 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Files from '@src/modules/requests/containers/files';
+import Files from '@src/modules/files/containers/files';
 import Title from '@src/components/title';
 
 import { RequestSchema } from '@src/modules/requests/types';

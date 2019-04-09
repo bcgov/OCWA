@@ -11,7 +11,7 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.tusPort }}
-      targetPort: tusd
+      targetPort: 2015
       protocol: TCP
       name: tusd
     - port: {{ .Values.service.minioPort }}

@@ -17,6 +17,10 @@ tus:
   region: us-east-1 #likely irrelevant
   jwtHook: true
 
+caddy:
+  image: abiosoft/caddy
+  tag: no-stats
+
 global:
   jwtSecret: "ssh this is a secret"
 
@@ -45,6 +49,9 @@ ingress:
       service: ocwa-storage-api
       port: 80
   tls: []
+
+storageClassName: default
+storageSize: 1Gi
 
 
 resources: {}

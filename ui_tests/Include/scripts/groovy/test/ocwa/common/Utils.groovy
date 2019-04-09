@@ -52,4 +52,15 @@ public class Utils {
 		tObject.addProperty('class', ConditionType.EQUALS, cls, true)
 		return tObject
 	}
+	
+	/**
+	 * Returns the TestObject correlating to the given xpath
+	 * @param path The xpath string to filter on
+	 * @return TestObject
+	 */
+	static def getTestObjectByXPath(String path) {
+		TestObject tObject = new TestObject(path)
+		tObject.addProperty('xpath', ConditionType.EQUALS, path, true)
+		return tObject
+	}
 }
