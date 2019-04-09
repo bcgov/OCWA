@@ -1,14 +1,10 @@
 
 const log = require('npmlog');
-
-log.level = "verbose";
-log.addLevel('debug', 2900, { fg: 'green' });
-
 const request = require("request");
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const projectConfig = require('../client/project_config_client');
+const projectConfig = require('../../client/project_config_client');
 
 describe('project_config_client', function () {
 
