@@ -11,6 +11,7 @@
   },
 
   "jwtSecret": "superSecretHere",
+  "apiKey": "superSecretHere",
   "ocwaUrl": "http://localhost:8000/",
 
   "adminGroup": "/admin",

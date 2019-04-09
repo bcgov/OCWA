@@ -24,7 +24,7 @@ Run `docker build . -t ocwa_project_api` to build the docker container and the f
 hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
 apiport=3005
 docker run -e API_PORT=$apiport -e LOG_LEVEL=info -e DB_HOST=docker -e DB_USERNAME=mongoUser \
-        -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e JWT_SECRET=MySecret \
+        -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e JWT_SECRET=MySecret -e API_KEY=ApiKeySecret \
         -e OCWA_URL=http://localhost:8000 -e ADMIN_GROUP="admin" -e OC_GROUP="oc" \
         -e USER_ID_FIELD=email -e EMAIL_FIELD=Email -e GIVENNAME_FIELD=GivenName \
         -e SURNAME_FIELD=Surname -e GROUP_FIELD=Groups \
