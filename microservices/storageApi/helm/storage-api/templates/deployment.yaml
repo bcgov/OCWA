@@ -22,7 +22,7 @@ spec:
       volumes:
       - name: minio-storage
         persistentVolumeClaim:
-          claimName: {{ template "ocwaStorageApi.fullname" . }}-mongo-pvc
+          claimName: {{ template "ocwaStorageApi.fullname" . }}-minio-pvc
       - name: minio-config
         emptyDir: {}
       {{ if .Values.tus.jwtHook }}
