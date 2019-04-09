@@ -1,10 +1,28 @@
 const passport = require('passport');
 const passJwt = require('passport-jwt');
+const passApiKey = require('passport-headerapikey');
 const JWTStrategy = passJwt.Strategy;
+const HeaderAPIKeyStrategy = passApiKey.HeaderAPIKeyStrategy;
 const ExtractJWT = passJwt.ExtractJwt;
 const config = require('config');
 const logger = require('npmlog');
 
+passport.use(new HeaderAPIKeyStrategy(
+    { header: 'Authorization', prefix: 'Api-Key ' },
+    false,
+    function(apiKey, done) {
+        if (config.get("apiKey") == apiKey) {
+            const user = {
+                "groups": ["admin"]
+            }
+            return done(null, user);
+        } else {
+            return done(null, null);
+        }
+    }
+));
+
+/*
 passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.get("jwtSecret"),
@@ -25,5 +43,5 @@ passport.use(new JWTStrategy({
 
     cb(null, user);
 }));
-
+*/
 module.exports = passport;
