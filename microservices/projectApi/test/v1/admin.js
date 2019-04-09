@@ -6,6 +6,8 @@ const should = chai.should();
 
 const config = require('config');
 const jwt = config.get('testJWT');
+const apiKey = config.get('apiKey');
+const authToken = "Api-Key " + apiKey;
 
 const db = require('../../routes/v1/db/db');
 
@@ -35,7 +37,7 @@ describe("Admin", function() {
         it('it should get all records (currently 0)', function (done) {
             chai.request(server)
                 .get('/v1/admin/list/project')
-                .set("Authorization", "Bearer "+jwt)
+                .set("Authorization", authToken)
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.length.should.be.eql(0);
@@ -57,7 +59,7 @@ describe("Admin", function() {
         it('it should successfully create a new project', function (done) {
             chai.request(server)
                 .post('/v1/admin/project/create')
-                .set("Authorization", "Bearer " + jwt)
+                .set("Authorization", authToken)
                 .send({
                     'name': "project1",
                     'permissions': {
@@ -82,7 +84,7 @@ describe("Admin", function() {
 
                 chai.request(server)
                     .get('/v1/admin/list/permission/autoAccept')
-                    .set("Authorization", "Bearer " + jwt)              
+                    .set("Authorization", authToken)              
                     .end(function (err, res) {
                         res.should.have.status(200);
                         res.body.length.should.be.eql(1);
@@ -103,7 +105,7 @@ describe("Admin", function() {
 
                 chai.request(server)
                     .put('/v1/admin/project/project1/permission')
-                    .set("Authorization", "Bearer " + jwt)       
+                    .set("Authorization", authToken)       
                     .send({
                         "autoAccept": false
                     })       
@@ -133,7 +135,7 @@ describe("Admin", function() {
 
                 chai.request(server)
                     .delete('/v1/admin/project/project1')
-                    .set("Authorization", "Bearer " + jwt)       
+                    .set("Authorization", authToken)       
                     .end(function (err, res) {
                         res.should.have.status(202);
                         res.body.should.be.a('object');
@@ -159,7 +161,7 @@ describe("Admin", function() {
 
                 chai.request(server)
                     .delete('/v1/admin/project/project1/permission/specialPermission')
-                    .set("Authorization", "Bearer " + jwt)       
+                    .set("Authorization", authToken)       
                     .end(function (err, res) {
                         res.should.have.status(404);
                         res.body.should.be.a('object');
@@ -176,7 +178,7 @@ describe("Admin", function() {
 
                 chai.request(server)
                     .delete('/v1/admin/project/project1/permission/autoAccept')
-                    .set("Authorization", "Bearer " + jwt)       
+                    .set("Authorization", authToken)       
                     .end(function (err, res) {
                         res.should.have.status(202);
                         res.body.should.be.a('object');

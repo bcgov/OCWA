@@ -17,9 +17,9 @@ router.use('/api-docs', function(_, res) {
 });
 
 // Admin
-router.use('/admin', auth.authenticate('headerapikey', { session: false }), adminRouter);
+router.use('/admin', auth.authenticate(['headerapikey','jwt'], { session: false }), adminRouter);
 
 // Permissions
-router.use('/permissions', auth.authenticate('headerapikey', { session: false }), permissionsRouter);
+router.use('/permissions', auth.authenticate(['headerapikey','jwt'], { session: false }), permissionsRouter);
 
 module.exports = router;

@@ -10,24 +10,27 @@ const logger = require('npmlog');
 passport.use(new HeaderAPIKeyStrategy(
     { header: 'Authorization', prefix: 'Api-Key ' },
     false,
-    function(apiKey, done) {
+    function(apiKey, cb) {
         if (config.get("apiKey") == apiKey) {
             const user = {
-                "groups": ["admin"]
+                "groups": [config.get("adminGroup")]
             }
-            return done(null, user);
+            return cb(null, user);
         } else {
-            return done(null, null);
+            return cb(null, false);
         }
     }
 ));
 
-/*
+
 passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.get("jwtSecret"),
     passReqToCallback: true,
 }, function(req, jwtPayload, cb) {
+    if (req.headers['authorization'].indexOf("Bearer") == -1) {
+        return cb(null, false);
+    }
     const encodedJWT = req.headers['authorization'].substring("Bearer ".length);
     const userConf = config.get('user');
     const user = {
@@ -43,5 +46,6 @@ passport.use(new JWTStrategy({
 
     cb(null, user);
 }));
-*/
+
+
 module.exports = passport;

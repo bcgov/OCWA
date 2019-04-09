@@ -6,6 +6,8 @@ const should = chai.should();
 
 const config = require('config');
 const jwt = config.get('testJWT');
+const apiKey = config.get('apiKey');
+const authToken = "Api-Key " + apiKey;
 
 const db = require('../../routes/v1/db/db');
 
@@ -46,7 +48,7 @@ describe("Permissions", function() {
         it('it should list all configured permissions', function (done) {
             chai.request(server)
                 .get('/v1/permissions/list')
-                .set("Authorization", "Bearer "+jwt)
+                .set("Authorization", authToken)
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.length.should.be.eql(2);
@@ -69,7 +71,7 @@ describe("Permissions", function() {
         it('it should get all permissions for projectY', function (done) {
             chai.request(server)
                 .get('/v1/permissions/projectY')
-                .set("Authorization", "Bearer "+jwt)
+                .set("Authorization", authToken)
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
