@@ -181,7 +181,7 @@ admin.delete('/project/:projectName', function (req, res) {
             res.status(202)
             res.json({
                 status: 202,
-                message: 'Project ' + projectName + ' successfully deleted'
+                message: 'Project ' + projectName + ' deleted'
             });
         }
     });
@@ -217,7 +217,7 @@ admin.delete('/project/:projectName/permission/:permissionName', function (req, 
             res.status(202)
             res.json({
                 status: 202,
-                message: 'Permission ' + permissionName + ' from project ' + projectName + ' successfully deleted'
+                message: 'Permission ' + permissionName + ' from project ' + projectName + ' deleted'
             });
         }
     });
