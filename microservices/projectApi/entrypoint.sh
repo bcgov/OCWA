@@ -14,11 +14,14 @@ printf "\"dbName\": \"${DB_NAME}\"\n" >> ./config/default.json
 printf "},\n" >> ./config/default.json
 
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
-printf "\"apiKey\": \"${API_KEY}\",\n" >> ./config/default.json
 printf "\"ocwaUrl\": \"${OCWA_URL}\",\n" >> ./config/default.json
 
 printf "\"adminGroup\": \"${ADMIN_GROUP}\",\n" >> ./config/default.json
 printf "\"outputCheckerGroup\": \"${OC_GROUP}\",\n" >> ./config/default.json
+
+printf "\"apiKey\": \"${API_KEY}\",\n" >> ./config/default.json
+printf "\"projectApi\": \"${PROJECT_API}\",\n" >> ./config/default.json
+printf "\"projectApiSecret\": \"${PROJECT_API_KEY}\",\n" >> ./config/default.json
 
 printf "\"user\": {\n" >> ./config/default.json
 printf "\"idField\": \"${USER_ID_FIELD}\",\n" >> ./config/default.json

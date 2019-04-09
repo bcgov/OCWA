@@ -16,6 +16,8 @@ resource "docker_container" "ocwa_project_api" {
   env = [
       "JWT_SECRET=${random_string.jwtSecret.result}",
       "API_KEY=${random_string.apiKey.result}",
+      "PROJECT_API=http://ocwa_project_api:3005",
+      "PROJECT_API_KEY=${random_string.apiKey.result}",
       "LOG_LEVEL=debug",
       "API_PORT=3005",
       "DB_HOST=ocwa_mongodb",
