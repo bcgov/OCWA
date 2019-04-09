@@ -33,6 +33,20 @@ docker run -e API_PORT=$apiport -e LOG_LEVEL=info -e DB_HOST=docker -e DB_USERNA
 
 Replace the the configuration values above as necessary.
 
+### Test Data
+
+#### Create custom settings for a project
+```
+curl -v -H "Authorization: Bearer $TOK" http://localhost:3005/v1/admin/project/create -X POST -H "Content-Type: application/json" -d '{"name":"project1", "permissions":{"autoAccept":true}}'
+```
+
+#### Retrieve project settings
+
+````
+curl -v -H "Authorization: Bearer $TOK" http://localhost:3005/v1/permissions/project1
+````
+
+
 ## Helm
 
 For both below helm commands make a copy of values.yaml within the helm/project-api directory
