@@ -28,6 +28,8 @@ permissions.get('/list', function(_, res) {
                 status: 500,
                 error: err.message
             });
+        } else if (result.length == 0) {
+            res.json([]);
         } else {
             res.json(Object.keys(result[0].permissions));
         }
