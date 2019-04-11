@@ -7,7 +7,7 @@ import FileUploader from '../components/file-uploader/uploader';
 import { uploadSupportingFile } from '../actions';
 
 const mapStateToProps = (state, props) => {
-  const ids = keys(state.requests.supportingFiles);
+  const ids = keys(state.files.supportingFiles);
   const files = get(props, 'data.supportingFiles', []);
   const data = difference(ids, files);
   const isUploading = data.length > 0;

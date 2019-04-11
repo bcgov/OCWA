@@ -305,6 +305,9 @@ storage-api:
   access_key: key
   access_secret: s3secretkey
 
+  storageClassName: default
+  storageSize: 1Gi
+
   image:
     pullPolicy: Always
 
@@ -314,6 +317,10 @@ storage-api:
     bucket: bucket
     region: us-east-1 #likely irrelevant
     jwtHook: true
+
+  caddy:
+    image: abiosoft/caddy
+    tag: no-stats
 
   jwtAud: "foo"
 

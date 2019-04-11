@@ -15,6 +15,7 @@ import { RequestSchema } from '../../types';
 
 function RequestSidebar({
   data,
+  isEditing,
   isSaving,
   history,
   onCancel,
@@ -79,7 +80,12 @@ function RequestSidebar({
             <Button
               appearance="link"
               id="request-sidebar-submit-button"
-              isDisabled={isSaving || data.state < 1 || data.files.length <= 0}
+              isDisabled={
+                isEditing ||
+                isSaving ||
+                data.state < 1 ||
+                data.files.length <= 0
+              }
               iconBefore={<SignInIcon />}
               onClick={() => onSubmit(data._id)}
             >
@@ -94,7 +100,7 @@ function RequestSidebar({
               isDisabled={isSaving}
               onClick={() => onEdit(data._id)}
             >
-              Edit Request
+              {isEditing ? 'Done Editing' : 'Edit Request'}
             </Button>
           </div>
           <div>
@@ -102,7 +108,7 @@ function RequestSidebar({
               appearance="link"
               id="request-sidebar-delete-button"
               iconBefore={<TrashIcon />}
-              isDisabled={isSaving}
+              isDisabled={isEditing || isSaving}
               onClick={() => {
                 history.push('/');
                 onDelete(data._id);
@@ -133,6 +139,7 @@ RequestSidebar.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
+  isEditing: PropTypes.bool.isRequired,
   isSaving: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,

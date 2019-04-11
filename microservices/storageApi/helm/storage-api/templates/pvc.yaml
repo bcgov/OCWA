@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "ocwaStorageApi.fullname" . }}-minio-pvc
+  labels:
+      app: {{ template "ocwaStorageApi.name" . }}-minio
+      chart: {{ template "ocwaStorageApi.chart" . }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{.Values.storageClassName}}
+  resources:
+    requests:
+      storage: {{.Values.storageSize}}

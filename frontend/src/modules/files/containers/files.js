@@ -1,8 +1,9 @@
 import { connect } from 'react-redux';
 import withRequest from '@src/modules/data/components/data-request';
 import get from 'lodash/get';
+import { removeFile } from '@src/modules/requests/actions';
 
-import { fetchFiles, removeFile } from '../actions';
+import { fetchFiles } from '../actions';
 import FilesTable from '../components/files-table';
 import { filesListSchema } from '../schemas';
 
