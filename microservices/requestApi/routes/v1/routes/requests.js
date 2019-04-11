@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 
-const projectConfig = require('../../../../projectApi/clients/js/project_config_client');
+const projectConfig = require('../clients/project_config_client');
 
 // path /v1/
 
