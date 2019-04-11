@@ -5,7 +5,10 @@ const request = require("request");
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const projectConfig = require('../../clients/js/project_config_client');
+log.level = config.get('logLevel');
+log.addLevel('debug', 2900, { fg: 'green' });
+
+const projectConfig = require('../src/project_config_client');
 
 describe('project_config_client', function () {
 

@@ -1,0 +1,10 @@
+{
+  "logLevel": "verbose",
+  "morganLogType": "dev",
+
+  "jwtSecret": "superSecretHere",
+
+  "apiKey": "apiKeySecret",
+  "projectApi": "http://ocwa_project_api:2005/",
+  "projectApiSecret": "apiKeySecret",
+}

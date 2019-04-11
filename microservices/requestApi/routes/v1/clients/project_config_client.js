@@ -1,1 +1,1 @@
-module.exports = require('../../../../projectApi/clients/js/project_config_client');
+module.exports = require('../../../../shared/js/project_config_client');
