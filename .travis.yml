@@ -168,7 +168,7 @@ matrix:
       npm ci
     - npm audit
     - |-
-      cd /home/travis/build/bcgov/OCWA/shared/js
+      cd /home/travis/build/bcgov/OCWA/microservices/shared/js
       npm ci
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/forumApi
