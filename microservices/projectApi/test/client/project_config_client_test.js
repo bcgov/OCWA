@@ -1,10 +1,11 @@
 
+const config = require("config");
 const log = require('npmlog');
 const request = require("request");
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const projectConfig = require('../../client/project_config_client');
+const projectConfig = require('../../clients/js/project_config_client');
 
 describe('project_config_client', function () {
 
@@ -64,4 +65,23 @@ describe('project_config_client', function () {
         
     });
 
+    it('should return expected project name from user', function (done) {
+
+        const user = {
+            groups: ["/oc", "project1"]
+        }
+        const project = projectConfig.deriveProjectFromUser(user);
+        expect(project).is.eq("project1");
+        done();
+    });
+
+    it('should return null because no valid project', function (done) {
+
+        const user = {
+            groups: ["/oc"]
+        }
+        const project = projectConfig.deriveProjectFromUser(user);
+        expect(project).is.null;
+        done();
+    });    
 });
