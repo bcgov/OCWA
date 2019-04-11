@@ -15,9 +15,9 @@ resource "docker_container" "ocwa_project_api" {
   networks_advanced = { name = "${docker_network.private_network.name}" }
   env = [
       "JWT_SECRET=${random_string.jwtSecret.result}",
-      "API_KEY=${random_string.apiKey.result}",
+      "API_KEY=${random_string.apiSecret.result}",
       "PROJECT_API=http://ocwa_project_api:3005",
-      "PROJECT_API_KEY=${random_string.apiKey.result}",
+      "PROJECT_API_KEY=${random_string.apiSecret.result}",
       "LOG_LEVEL=debug",
       "API_PORT=3005",
       "DB_HOST=ocwa_mongodb",
