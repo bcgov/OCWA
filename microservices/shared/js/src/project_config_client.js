@@ -12,8 +12,10 @@ function getProjectConfig (project, key) {
             headers: {
                 'Authorization': "Api-Key " + config.get("projectApiSecret")
             }
-        }, function(apiErr, apiRes, pconfig){
+        }, function(apiErr, apiRes, _pconfig){
             if ((!apiErr) && (apiRes.statusCode === 200)){
+
+                var pconfig = (typeof _pconfig === "string" ? JSON.parse(_pconfig):_pconfig);
 
                 // if the key is defined in the project, then return its value,
                 // otherwise return the one defined globally
