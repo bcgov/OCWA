@@ -39,6 +39,8 @@ database:
 adminGroup: "admin"
 ocGroup: "oc"
 
+apiKey: "ApiSecretKey"
+
 user:
   idField: Email
   emailField: Email

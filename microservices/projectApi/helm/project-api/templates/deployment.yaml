@@ -57,6 +57,11 @@ spec:
                 secretKeyRef:
                   name: {{ template "ocwaProjectApi.fullname" . }}-secrets
                   key: jwtSecret
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaProjectApi.fullname" . }}-secrets
+                  key: apiKey
             - name: OCWA_URL
               value: "{{ .Values.ocwaUrl }}"
             - name: ADMIN_GROUP
