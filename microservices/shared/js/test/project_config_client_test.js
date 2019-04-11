@@ -6,7 +6,6 @@ const sinon = require('sinon');
 const { expect } = require('chai');
 
 log.level = config.get('logLevel');
-log.addLevel('debug', 2900, { fg: 'green' });
 
 const projectConfig = require('../src/project_config_client');
 
