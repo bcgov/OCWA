@@ -6,6 +6,7 @@ var projectConfig = {};
 
 function getProjectConfig (project, key) {
     return new Promise(function(resolve, reject) {    
+
         httpReq.get({
             url: config.get('projectApi') + '/v1/permissions/' + project,
             headers: {
@@ -35,8 +36,8 @@ projectConfig.deriveProjectFromUser = function (user) {
     var groups = user.groups.slice();
 
     var ignoreGroups = config.has('ignoreGroupsFromConsideration') ? config.get('ignoreGroupsFromConsideration') : [];
-    if (config.has('requiredRoleToCreateTopic')) {
-        ignoreGroups.push(config.get('requiredRoleToCreateTopic'));
+    if (config.has('requiredRoleToCreateRequest')) {
+        ignoreGroups.push(config.get('requiredRoleToCreateRequest'));
     }
 
     for (var i=0; i<ignoreGroups.length; i++){
@@ -51,7 +52,7 @@ projectConfig.deriveProjectFromUser = function (user) {
         groups.splice(index,1);
     }
 
-    return groups.length == 0 ? null:groups[0];
+    return groups.length == 0 ? null: (groups[0].startsWith('/') ? groups[0].substring(1):groups[0]);
 };
 
 projectConfig.get = async function(project, key) {

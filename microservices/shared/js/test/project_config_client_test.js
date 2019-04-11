@@ -77,6 +77,17 @@ describe('project_config_client', function () {
         done();
     });
 
+
+    it('should return expected project name from user when group is hierarchical', function (done) {
+
+        const user = {
+            groups: ["/oc", "/project1"]
+        }
+        const project = projectConfig.deriveProjectFromUser(user);
+        expect(project).is.eq("project1");
+        done();
+    });
+
     it('should return null because no valid project', function (done) {
 
         const user = {
