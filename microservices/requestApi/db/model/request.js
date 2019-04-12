@@ -20,10 +20,11 @@ var chronologySchema = new Schema({
 var requestSchema = new Schema({
     state: {type: Number, required: true, default: DRAFT_STATE, index: true},
     tags: {type: [String], required: false},
-
+    phoneNumber: {type: String, required: true},
     supportingFiles: {type: [String], required: false},
     purpose: {type: String, required: false},
-    variableDescriptions: {type: String, required: false},
+    variableDescriptions: {type: String, required: true},
+    subPopulation: {type: String, required: true},
     selectionCriteria: {type: String, required: false},
     steps: {type: String, required: false},
     freq: {type: String, required: false},
@@ -47,7 +48,7 @@ model.setChrono = function(doc, userId, objectDelta){
     if ( (typeof(doc._canSetChrono) === "undefined") || (doc._canSetChrono) ) {
         doc._canSetChrono = false;
         var chrono = {
-            timestamp: Date.now(),
+            timestamp: new Date(),
             enteredState: doc.state,
             change_by: userId
         };

@@ -7,6 +7,8 @@ import Field from '../request-form/field';
 
 import { phoneNumberRegex } from '../../utils';
 
+const phoneNumberValidation = new RegExp(phoneNumberRegex, 'g');
+
 class EditField extends React.PureComponent {
   state = {
     value: get(this, 'props.data.value', ''),
@@ -45,7 +47,7 @@ class EditField extends React.PureComponent {
     let isInvalid = data.isRequired ? isEmpty(value.trim()) : false;
 
     if (data.type === 'tel' && !isInvalid) {
-      isInvalid = !phoneNumberRegex.test(value);
+      isInvalid = !phoneNumberValidation.test(value);
     }
 
     return isInvalid;

@@ -42,7 +42,9 @@ export const requestFields = [
   },
 ];
 
-export const phoneNumberRegex = /[0-9]{3}-[0-9]{3}-[0-9]{4}/;
+// Stored as a string here for native input[type="tel"] elements, so make into
+// a RegExp if using anywhere else
+export const phoneNumberRegex = '[0-9]{3}-[0-9]{3}-[0-9]{4}$';
 
 export const getRequestStateColor = (value = 0) => {
   switch (value) {
