@@ -28,6 +28,17 @@ public class Utils {
 	}
 
 	/**
+	 * Returns the TestObject correlating to a web element that has an id which contains idPart
+	 * @param id The id of the element to filter on
+	 * @return TestObject
+	 */
+	static def getTestObjectByIdPart(String idPart) {
+		TestObject tObject = new TestObject(idPart)
+		tObject.addProperty('id', ConditionType.CONTAINS, idPart, true)
+		return tObject
+	}
+	
+	/**
 	 * Returns the TestObject correlating to the text
 	 * @param text The text string to filter on
 	 * @param tag The optional html tag element to filter on.
@@ -52,7 +63,7 @@ public class Utils {
 		tObject.addProperty('class', ConditionType.EQUALS, cls, true)
 		return tObject
 	}
-	
+
 	/**
 	 * Returns the TestObject correlating to the given xpath
 	 * @param path The xpath string to filter on

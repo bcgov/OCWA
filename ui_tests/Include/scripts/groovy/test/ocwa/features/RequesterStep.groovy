@@ -41,9 +41,12 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(newRequestButtonObject)
 
-		WebUI.setText(Utils.getTestObjectById(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
-		WebUI.setText(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID), Constant.Requester.CONFIDENTIALITY_TEXT)
-
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID), Constant.Requester.CONFIDENTIALITY_TEXT)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_PHONE_TXT_ID), Constant.Requester.REQUEST_PHONE_TEXT)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_VARIABLE_TXT_ID), Constant.Requester.REQUEST_VARIABLE_TEXT)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_SUBPOP_TXT_ID), Constant.Requester.REQUEST_SUBPOP_TEXT)
+		
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
