@@ -25,15 +25,16 @@ function RequestSidebar({
   onSubmit,
   onWithdraw,
 }) {
-  const submitHandler = () => {
-    /* eslint-disable no-alert, no-restricted-globals */
-    const c = confirm(
-      'A reminder that you are responsible for ensuring Outputs are non-disclosive and uphold the secrecy provisions of the Statistics Act.'
-    );
-    if (c) {
-      onSubmit(data._id);
-    }
-  };
+  /* eslint-disable no-alert, no-restricted-globals */
+  // NOTE: Revomving for now, add back if needed
+  // const submitHandler = () => {
+  //   const c = confirm(
+  //     'A reminder that you are responsible for ensuring Outputs are non-disclosive and uphold the secrecy provisions of the Statistics Act.'
+  //   );
+  //   if (c) {
+  //     onSubmit(data._id);
+  //   }
+  // };
   const withdrawHandler = () => {
     const c = confirm(
       'Editing a submitted request automatically withdraws it. Do you still wish to proceed?'
@@ -97,7 +98,7 @@ function RequestSidebar({
                 data.files.length <= 0
               }
               iconBefore={<SignInIcon />}
-              onClick={submitHandler}
+              onClick={() => onSubmit(data._id)}
             >
               Submit Request
             </Button>
