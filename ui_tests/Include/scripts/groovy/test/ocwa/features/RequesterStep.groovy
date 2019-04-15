@@ -225,8 +225,8 @@ public class RequesterStep extends Step {
 	def requester_saves_new_request() {
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
-		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
+		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
 	}
 
 	@When("requester submits their request")
@@ -237,15 +237,15 @@ public class RequesterStep extends Step {
 		if (WebUI.verifyElementNotClickable(requestSubmitBtn, FailureHandling.OPTIONAL)) {
 			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 			WebUI.comment('Submit button is disabled so try clicking the "Done editing" link')
-			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+//			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+//			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
 		}
 		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestSubmitBtn)
 	
-		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)	
+		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
+		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)	
 	}
 
 	@When("requester writes and submits a new comment")
