@@ -271,6 +271,7 @@ public class RequesterStep extends Step {
 
 	@When("the requester views the request")
 	def requester_views_request_they_created() {
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
 			WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 		}
