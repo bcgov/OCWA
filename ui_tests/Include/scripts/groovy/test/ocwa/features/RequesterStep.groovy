@@ -232,7 +232,7 @@ public class RequesterStep extends Step {
 	@When("requester submits their request")
 	def requester_submits_request() {
 		TestObject requestSubmitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
-		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
+		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_SUBMIT_TEXT, null)
 		
 		if (WebUI.verifyElementNotClickable(requestSubmitBtn, FailureHandling.OPTIONAL)) {
 			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
@@ -244,8 +244,8 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestSubmitBtn)
 	
-//		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-//		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)	
+		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)	
 	}
 
 	@When("requester writes and submits a new comment")
@@ -271,7 +271,6 @@ public class RequesterStep extends Step {
 
 	@When("the requester views the request")
 	def requester_views_request_they_created() {
-		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
 			WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 		}

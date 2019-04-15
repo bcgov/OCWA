@@ -14,6 +14,7 @@ public class Constant {
 	final class Alerts {
 		static final def SUCCESS_UPDATED_TEXT = 'Successfully updated'
 		static final def LOADING_TEXT = 'Loading...'
+		static final def SUCCESS_SUBMIT_TEXT = 'Request submitted'
 	}
 
 	final class Checker {
