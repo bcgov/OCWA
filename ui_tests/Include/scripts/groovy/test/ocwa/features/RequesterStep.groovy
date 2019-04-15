@@ -77,8 +77,8 @@ public class RequesterStep extends Step {
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$file")
 
 			TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
-			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
+			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
 		}
 	}
 
@@ -244,8 +244,8 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestSubmitBtn)
 	
-		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)	
+//		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+//		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)	
 	}
 
 	@When("requester writes and submits a new comment")
@@ -403,8 +403,8 @@ public class RequesterStep extends Step {
 		WebUI.sendKeys(confidentialityField, Keys.chord(Keys.TAB, Keys.ENTER))
 
 		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
-		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
+		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID)) //need to click "done editing" to save changes
 		WebUI.closeBrowser()
 	}
