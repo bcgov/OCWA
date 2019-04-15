@@ -35,7 +35,7 @@ public class Utils {
 	static def getTestObjectByIdPart(String idPart, String tag = 'input') {
 		TestObject tObject = new TestObject(idPart)
 		tObject.addProperty('id', ConditionType.CONTAINS, idPart, true)
-		if(tag) tObject.addProperty('tag', ConditionType.EQUALS, 'input', true)
+		if(tag) tObject.addProperty('tag', ConditionType.EQUALS, tag, true)
 		return tObject
 	}
 	
