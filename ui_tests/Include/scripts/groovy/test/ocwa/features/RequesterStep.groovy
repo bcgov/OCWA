@@ -8,6 +8,7 @@ import com.kms.katalon.core.model.FailureHandling
 import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.TestObject
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
+import com.kms.katalon.core.util.KeywordUtil
 
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
@@ -83,7 +84,8 @@ public class RequesterStep extends Step {
 			TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)
 			if (WebUI.waitForElementPresent(errorAlert, Constant.FILE_UPLOAD_TIMEOUT, FailureHandling.OPTIONAL)) {
 				WebUI.takeScreenshot()
-				throw new Exception('An error alert displayed upon submission.')
+				//throw new Exception('An error alert displayed upon submission.')
+				KeywordUtil.markFailed('An error alert displayed upon file upload.')
 			}
 			WebUI.comment("File uploaded without error.")
 		}
@@ -255,7 +257,8 @@ public class RequesterStep extends Step {
 		//test if an error alert displays when request is submitted. 
 		if (WebUI.waitForElementPresent(errorAlert, Constant.SUBMISSION_TIMEOUT, FailureHandling.OPTIONAL)) {
 			WebUI.takeScreenshot()
-			throw new Exception('An error alert displayed upon submission.')
+			//throw new Exception('An error alert displayed upon submission.')
+			KeywordUtil.markFailed('An error alert displayed upon submission.')
 		}
 		WebUI.comment('No error message displayed so submission looks good.')
 //		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
