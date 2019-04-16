@@ -245,7 +245,8 @@ public class RequesterStep extends Step {
 		WebUI.click(requestSubmitBtn)
 	
 		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
-		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)	
+		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
+		WebUI.verifyTextPresent(Constant.Status.AWAITING_REVIEW, false)
 	}
 
 	@When("requester writes and submits a new comment")
