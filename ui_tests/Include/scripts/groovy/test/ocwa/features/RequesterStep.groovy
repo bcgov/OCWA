@@ -77,14 +77,9 @@ public class RequesterStep extends Step {
 			WebUI.waitForElementClickable(uploadFileButton, Constant.DEFAULT_TIMEOUT)
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$file")
 
-			TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
-//			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
-//			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
-
 			TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)
 			if (WebUI.waitForElementPresent(errorAlert, Constant.FILE_UPLOAD_TIMEOUT, FailureHandling.OPTIONAL)) {
 				WebUI.takeScreenshot()
-				//throw new Exception('An error alert displayed upon submission.')
 				KeywordUtil.markFailed('An error alert displayed upon file upload.')
 			}
 			WebUI.comment("File uploaded without error.")
@@ -241,7 +236,7 @@ public class RequesterStep extends Step {
 	@When("requester submits their request")
 	def requester_submits_request() {
 		TestObject requestSubmitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
-		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_SUBMIT_TEXT, null)
+		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
 		TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)
 		
 		if (WebUI.verifyElementNotClickable(requestSubmitBtn, FailureHandling.OPTIONAL)) {
@@ -258,13 +253,9 @@ public class RequesterStep extends Step {
 		//test if an error alert displays when request is submitted. 
 		if (WebUI.waitForElementPresent(errorAlert, Constant.SUBMISSION_TIMEOUT, FailureHandling.OPTIONAL)) {
 			WebUI.takeScreenshot()
-			//throw new Exception('An error alert displayed upon submission.')
 			KeywordUtil.markFailed('An error alert displayed upon submission.')
 		}
 		WebUI.comment('No error message displayed so submission looks good.')
-//		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
-//		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
-		//WebUI.verifyTextPresent(Constant.Status.AWAITING_REVIEW, false)
 	}
 
 	@When("requester writes and submits a new comment")
