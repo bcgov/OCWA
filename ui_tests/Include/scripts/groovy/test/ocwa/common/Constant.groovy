@@ -10,8 +10,8 @@ public class Constant {
 	}
 
 	static final def DEFAULT_TIMEOUT = 10
-	static final def FILE_UPLOAD_TIMEOUT = 10
-	static final def SUBMISSION_TIMEOUT = 5
+	static final def FILE_UPLOAD_TIMEOUT = 5
+	static final def SUBMISSION_TIMEOUT = 10
 
 	final class Alerts {
 		static final def SUCCESS_UPDATED_TEXT = 'Successfully updated'

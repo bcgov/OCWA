@@ -245,13 +245,14 @@ public class RequesterStep extends Step {
 		TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)
 		
 		if (WebUI.verifyElementNotClickable(requestSubmitBtn, FailureHandling.OPTIONAL)) {
-			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 			WebUI.comment('Submit button is disabled so try clicking the "Done editing" link')
-//			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-//			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
+			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
 		}
 		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
+		WebUI.comment('Clicking the submit button')
 		WebUI.click(requestSubmitBtn)
 	
 		//test if an error alert displays when request is submitted. 
@@ -263,7 +264,7 @@ public class RequesterStep extends Step {
 		WebUI.comment('No error message displayed so submission looks good.')
 //		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
 //		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
-		WebUI.verifyTextPresent(Constant.Status.AWAITING_REVIEW, false)
+		//WebUI.verifyTextPresent(Constant.Status.AWAITING_REVIEW, false)
 	}
 
 	@When("requester writes and submits a new comment")
