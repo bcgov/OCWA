@@ -244,6 +244,7 @@ public class RequesterStep extends Step {
 			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
 			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+			WebUI.delay(Constant.DEFAULT_TIMEOUT) //need to give more time to run validation rules on files
 		}
 		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
