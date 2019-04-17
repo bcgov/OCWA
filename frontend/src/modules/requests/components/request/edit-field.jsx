@@ -79,7 +79,7 @@ class EditField extends React.PureComponent {
                   appearance: 'none',
                   id: `request-${data.key}-input`,
                   onChange: this.onChange,
-                  value,
+                  value: value || '',
                 }}
               />
             )

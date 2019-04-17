@@ -28,7 +28,7 @@ export const requestFields = [
   },
   {
     name: 'Relationship to previous or future (planned) outputs',
-    value: 'relationship',
+    value: 'selectionCriteria',
     type: 'textarea',
     helperText:
       'Describe any relationship to previous outputs. For example, a small adaptation of a previous output, pulled from the same or similar data, poses a risk of disclosure by differencing. This is especially for previously submitted tables within the same project, but could be, for example, other similar studies or projects based on the same sample of the population.',

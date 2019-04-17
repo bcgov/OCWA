@@ -12,22 +12,27 @@ function fileTypes(state = initialState, action = {}) {
   const filesKey = get(action, 'meta.filesKey');
   const values = get(state, filesKey, []);
 
-  if (action.type === 'file/upload/success') {
-    // fileType can only be one of the keys in the initialState
-    return {
-      ...state,
-      [filesKey]: union(values, [action.meta.file.id]),
-    };
-  }
+  switch (action.type) {
+    case 'request/reset':
+    case 'request/put/success':
+      return initialState;
 
-  if (action.type === 'request/remove-file') {
-    return {
-      ...state,
-      [filesKey]: values.filter(id => id !== action.payload),
-    };
-  }
+    case 'file/upload/success':
+      // fileType can only be one of the keys in the initialState
+      return {
+        ...state,
+        [filesKey]: union(values, [action.meta.file.id]),
+      };
 
-  return state;
+    case 'request/remove-file':
+      return {
+        ...state,
+        [filesKey]: values.filter(id => id !== action.payload),
+      };
+
+    default:
+      return state;
+  }
 }
 
 export default fileTypes;

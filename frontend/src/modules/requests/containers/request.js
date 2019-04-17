@@ -3,7 +3,7 @@ import get from 'lodash/get';
 import last from 'lodash/last';
 import withRequest from '@src/modules/data/components/data-request';
 
-import { fetchRequest, finishEditing, saveRequest } from '../actions';
+import { fetchRequest, finishEditing, reset, saveRequest } from '../actions';
 import Request from '../components/request';
 import { requestSchema } from '../schemas';
 
@@ -43,6 +43,7 @@ export default connect(mapStateToProps, {
       schema: requestSchema,
       id: requestId,
     }),
+  onReset: reset,
   onFinishEditing: finishEditing,
   onSave: (payload, meta) =>
     saveRequest(payload, meta, {

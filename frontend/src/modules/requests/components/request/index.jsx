@@ -33,6 +33,10 @@ class Request extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.props.onReset();
+  }
+
   onEdit = () => {
     this.setState(state => ({
       isEditing: !state.isEditing,
@@ -159,6 +163,7 @@ Request.propTypes = {
     url: PropTypes.string.isRequired,
   }).isRequired,
   onFinishEditing: PropTypes.func.isRequired,
+  onReset: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
 };
 
