@@ -33,6 +33,7 @@ function entities(state = initialState, action = {}) {
     case 'file/upload/progress':
       return mapKeys(state, uploadIdMapper.bind(null, action));
 
+    case 'request/reset':
     case 'request/put/success':
       return {};
 

@@ -97,8 +97,16 @@ router.post("/", function(req, res, next){
         request.purpose = req.body.purpose;
     }
 
+    if (typeof(req.body.phoneNumber) !== "undefined") {
+        request.phoneNumber = req.body.phoneNumber;
+    }
+
     if (typeof(req.body.variableDescriptions) !== "undefined") {
         request.variableDescriptions = req.body.variableDescriptions;
+    }
+
+    if (typeof(req.body.subPopulation) !== "undefined") {
+        request.subPopulation = req.body.subPopulation;
     }
 
     if (typeof(req.body.selectionCriteria) !== "undefined") {
@@ -245,9 +253,11 @@ router.put("/save/:requestId", function(req, res, next){
         }
 
         findRes.name = (typeof(req.body.name) !== "undefined") ? req.body.name : findRes.name;
+        findRes.phoneNumber = (typeof(req.body.phoneNumber) !== "undefined") ? req.body.phoneNumber : findRes.phoneNumber;
         findRes.tags = (typeof(req.body.tags) !== "undefined") ? req.body.tags : findRes.tags;
         findRes.purpose = (typeof(req.body.purpose) !== "undefined") ? req.body.purpose : findRes.purpose;
         findRes.variableDescriptions = (typeof(req.body.variableDescriptions) !== "undefined") ? req.body.variableDescriptions : findRes.variableDescriptions;
+        findRes.subPopulation = (typeof(req.body.subPopulation) !== "undefined") ? req.body.subPopulation : findRes.subPopulation;
         findRes.selectionCriteria = (typeof(req.body.selectionCriteria) !== "undefined") ? req.body.selectionCriteria : findRes.selectionCriteria;
         findRes.steps = (typeof(req.body.steps) !== "undefined") ? req.body.steps : findRes.steps;
         findRes.freq = (typeof(req.body.freq) !== "undefined") ? req.body.freq : findRes.freq;
