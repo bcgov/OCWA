@@ -19,23 +19,10 @@ spec:
         app: {{ template "ocwaProjectApi.name" . }}
         release: {{ .Release.Name }}
     spec:
-      {{ if .Values.emailTemplateEnabled }}
-      volumes:
-      - name: emailtemplate
-        configMap:
-          name: {{ template "ocwaProjectApi.fullname" . }}-projectapi-configmap
-          defaultMode: 511
-      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{ if .Values.emailTemplateEnabled }}
-          volumeMounts:
-          - name: emailtemplate
-            mountPath: ./notifications
-            subPath: "emailTemplate"
-          {{ end }}
           env:
             - name: API_PORT
               value: "{{ .Values.apiPort }}"

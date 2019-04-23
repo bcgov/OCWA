@@ -12,6 +12,9 @@ dependencies:
     version: 0.1.0
     repository: file://../../microservices/policyApi/helm/policy-api
 
+  - name: project-api
+    version: 0.1.0
+    repository: file://../../microservices/projectApi/helm/project-api
 
   - name: request-api
     version: 0.1.0
