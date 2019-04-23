@@ -4,6 +4,7 @@ import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
 import ky from 'ky';
 import { get } from '@src/services/api';
 import { getRefreshToken, saveSession } from '@src/services/auth';
+import { sessionStorageKey } from '@src/services/config';
 
 import { versionsRequested, versionsSuccess, versionsFailed } from './actions';
 
@@ -87,8 +88,18 @@ export function* fetchVersions() {
   }
 }
 
+export function saveProject(action) {
+  sessionStorage.setItem(sessionStorageKey, action.payload);
+}
+
+export function clearAuth() {
+  sessionStorage.clear();
+}
+
 export default function* root() {
   yield takeLatest('app/get/token', tokenWatcher);
+  yield takeLatest('app/get/token/failed', clearAuth);
   yield takeLatest('app/get/refresh-token', refreshTokenWatcher);
   yield takeLatest('app/about/toggle', fetchVersions);
+  yield takeLatest('app/project-selected', saveProject);
 }

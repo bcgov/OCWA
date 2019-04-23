@@ -21,9 +21,15 @@ export const versionsFailed = payload => ({
   payload,
 });
 
+export const selectProject = project => ({
+  type: 'app/project-selected',
+  payload: project,
+});
+
 export default {
   fetchToken,
   toggleAbout,
+  selectProject,
   versionsFailed,
   versionsRequested,
   versionsSuccess,

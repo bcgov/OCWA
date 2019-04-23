@@ -11,6 +11,7 @@ import '@atlaskit/css-reset';
 import About from '../../containers/about';
 import Auth from '../auth';
 import Loading from './loading';
+import ProjectSelection from './project-selection';
 import Unauthorized from './unauthorized';
 import * as styles from './styles.css';
 
@@ -42,7 +43,13 @@ class App extends React.Component {
   }
 
   renderMain = () => {
-    const { authFetchStatus, isAuthenticated, user } = this.props;
+    const {
+      authFetchStatus,
+      isAuthenticated,
+      onProjectSelect,
+      project,
+      user,
+    } = this.props;
     // TODO: These values should be in config.json
     const validGroups = [exporterGroup, ocGroup];
     let el = null;
@@ -57,6 +64,12 @@ class App extends React.Component {
 
       if (!hasValidGroupAccess) {
         return <Unauthorized />;
+      }
+
+      if (!project) {
+        return (
+          <ProjectSelection data={user.groups} onSelect={onProjectSelect} />
+        );
       }
 
       // Load bundle for output checker if that's the only role, otherwise always send exporter
@@ -99,8 +112,11 @@ App.propTypes = {
   fetchToken: PropTypes.func.isRequired,
   initSocket: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
+  onProjectSelect: PropTypes.func.isRequired,
+  project: PropTypes.string,
   user: PropTypes.shape({
     displayName: PropTypes.string,
+    groups: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
 };
 

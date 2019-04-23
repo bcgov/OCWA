@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { sessionStorageKey } from '@src/services/config';
 
 const initialViewState = {
   isAboutOpen: false,
@@ -21,6 +22,7 @@ const initialAuthState = {
   fetchStatus: 'idle',
   isAuthenticated: false,
   user: {},
+  project: sessionStorage.getItem(sessionStorageKey) || null,
 };
 
 function auth(state = initialAuthState, action) {
@@ -43,6 +45,12 @@ function auth(state = initialAuthState, action) {
       return {
         ...state,
         fetchStatus: 'failed',
+      };
+
+    case 'app/project-selected':
+      return {
+        ...state,
+        project: action.payload,
       };
 
     default:
