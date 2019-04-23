@@ -12,7 +12,8 @@ import { filesListSchema } from '../schemas';
 
 const mapStateToProps = (state, props) => {
   const { filesToDelete } = state.requests.viewState;
-  const ids = keys(state.files.entities)
+  const queuedFileIds = keys(state.files.entities);
+  const ids = queuedFileIds
     .map(id => {
       const file = get(state, `files.entities.${id}`, { id });
       // Unfortunately there is a temp ID and it can change, so we're
@@ -26,8 +27,11 @@ const mapStateToProps = (state, props) => {
     .map(d => d.id);
   const fileIds = get(props, ['data', props.filesKey], []);
   const data = union(fileIds, ids).filter(id => !filesToDelete.includes(id));
-  const uploadStatuses = values(state.files.entities);
-  const isUploading = uploadStatuses.some(isNumber);
+  const uploadStatuses = values(state.files.uploadStatus);
+  const isUploading =
+    uploadStatuses.length > 0 &&
+    (uploadStatuses.length !== queuedFileIds.length ||
+      uploadStatuses.some(isNumber));
   const fetchStatus = get(state, 'data.fetchStatus.dataTypes.files', 'idle');
 
   return {
