@@ -6,5 +6,5 @@
 
   "apiKey": "apiKeySecret",
   "projectApi": "http://ocwa_project_api:2005/",
-  "projectApiSecret": "apiKeySecret",
+  "projectApiSecret": "apiKeySecret"
 }

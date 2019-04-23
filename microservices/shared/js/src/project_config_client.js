@@ -49,7 +49,7 @@ projectConfig.deriveProjectFromUser = function (user) {
         }
     }
 
-    var index = groups.indexOf('/oc');
+    var index = config.has('outputCheckerGroup') ? groups.indexOf(config.get('outputCheckerGroup')) : -1;
     if (index !== -1){
         groups.splice(index,1);
     }

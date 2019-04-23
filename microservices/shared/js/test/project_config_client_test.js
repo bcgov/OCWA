@@ -8,6 +8,7 @@ const { expect } = require('chai');
 log.level = config.get('logLevel');
 
 const projectConfig = require('../src/project_config_client');
+//const projectConfig = require('../../../requestApi/routes/v1/clients/project_config_client');
 
 describe('project_config_client', function () {
 
