@@ -46,6 +46,9 @@ printf "\"requiredRoleToCreateRequest\": \"${CREATE_ROLE}\",\n" >> ./config/defa
 printf "\"outputCheckerGroup\": \"${OC_GROUP}\",\n" >> ./config/default.json
 printf "\"allowDenyRequest\": ${ALLOW_DENY},\n" >> ./config/default.json
 
+printf "\"projectApi\": \"${PROJECT_API}\",\n" >> ./config/default.json
+printf "\"projectApiSecret\": \"${PROJECT_API_KEY}\",\n" >> ./config/default.json
+
 printf "\"user\": {\n" >> ./config/default.json
 printf "\"idField\": \"${USER_ID_FIELD}\",\n" >> ./config/default.json
 printf "\"emailField\": \"${EMAIL_FIELD}\",\n" >> ./config/default.json

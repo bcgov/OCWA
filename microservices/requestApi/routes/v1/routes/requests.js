@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 
+const projectConfig = require('../clients/project_config_client');
+
 // path /v1/
 
 router.get('/status_codes', function(req, res, next) {
@@ -309,7 +311,9 @@ router.put('/submit/:requestId', function(req, res, next){
     var logger = require('npmlog');
     var requestId = mongoose.Types.ObjectId(req.params.requestId);
     var httpReq = require('request');
-    var autoAccept = config.get('autoAccept');
+
+    // Lookup project from user groups
+    var project = projectConfig.deriveProjectFromUser(req.user);
 
     db.Request.getAll({_id: requestId}, 1, 1, req.user, function (reqErr, reqRes) {
         if (reqErr || !reqRes || reqRes.length<0) {
@@ -318,80 +322,136 @@ router.put('/submit/:requestId', function(req, res, next){
             return;
         }
 
-        reqRes = reqRes[0];
+        projectConfig.get(project, 'autoAccept').then((autoAccept) => {
 
-        if (reqRes.state !== db.Request.WIP_STATE){
-            res.status(400);
-            res.json({error: "Can't submit a request that isn't in wip state"});
-            return;
-        }
+            reqRes = reqRes[0];
 
-        if (req.user.id !== reqRes.author){
-            res.status(403);
-            logger.error("User " + res.user.id + " tried to submit a request they don't own");
-            res.json({error: "Can't submit a request that isn't yours"});
-            return;
-        }
+            if (reqRes.state !== db.Request.WIP_STATE){
+                res.status(400);
+                res.json({error: "Can't submit a request that isn't in wip state"});
+                return;
+            }
 
-        if (reqRes.files.length <= 0){
-            res.json({error: "Can't submit a request without files. Nothing to export."});
-            return;
-        }
+            if (req.user.id !== reqRes.author){
+                res.status(403);
+                logger.error("User " + res.user.id + " tried to submit a request they don't own");
+                res.json({error: "Can't submit a request that isn't yours"});
+                return;
+            }
 
-        var numResults = 0;
-        var allResults = [];
-        var pass = true;
+            if (reqRes.files.length <= 0){
+                res.json({error: "Can't submit a request without files. Nothing to export."});
+                return;
+            }
+
+            var numResults = 0;
+            var allResults = [];
+            var pass = true;
 
 
-        if (reqRes.reviewers.length > 0) {
-            reqRes.state = db.Request.IN_REVIEW_STATE;
-        } else if (autoAccept) {
-            reqRes.state = db.Request.APPROVED_STATE;
-        } else {
-            reqRes.state = db.Request.AWAITING_REVIEW_STATE;
-        }
+            if (reqRes.reviewers.length > 0) {
+                reqRes.state = db.Request.IN_REVIEW_STATE;
+            } else if (autoAccept) {
+                reqRes.state = db.Request.APPROVED_STATE;
+            } else {
+                reqRes.state = db.Request.AWAITING_REVIEW_STATE;
+            }
 
-        db.Request.setChrono(reqRes, req.user.id);
+            db.Request.setChrono(reqRes, req.user.id);
 
-        var util = require('../util/util');
+            var util = require('../util/util');
 
-        var config = require('config');
-        var storageApi = config.get('storageApi');
-        var warnSize =  storageApi.warnRequestBundlesize;
-        var maxSize = storageApi.maxRequestBundlesize;
-        if ( (warnSize > 0) || (maxSize > 0)){
-            util.getBundleMeta(reqRes.files, function(metadataRes){
+            var config = require('config');
+            var storageApi = config.get('storageApi');
+            var warnSize =  storageApi.warnRequestBundlesize;
+            var maxSize = storageApi.maxRequestBundlesize;
+            if ( (warnSize > 0) || (maxSize > 0)){
+                util.getBundleMeta(reqRes.files, function(metadataRes){
 
-                var bundleSize = 0;
-                for (var i=0; i<metadataRes.length; i++){
-                    bundleSize += metadataRes[i].size;
-                    //also available: etag, metaData, lastModified: note this is the stuff from minio/s3 not tus.
-                }
+                    var bundleSize = 0;
+                    for (var i=0; i<metadataRes.length; i++){
+                        bundleSize += metadataRes[i].size;
+                        //also available: etag, metaData, lastModified: note this is the stuff from minio/s3 not tus.
+                    }
 
-                if ( (warnSize > 0) && (bundleSize >= warnSize) && (bundleSize < maxSize)){
-                    logger.warn("Bundle exceeds warn size but not max size");
-                }
+                    if ( (warnSize > 0) && (bundleSize >= warnSize) && (bundleSize < maxSize)){
+                        logger.warn("Bundle exceeds warn size but not max size");
+                    }
 
-                if ( (maxSize > 0) && (bundleSize >= maxSize)){
-                    logger.error("Bundle exceeds max size");
-                    res.status(403);
-                    res.json({error: "Request submission failed, total request filesize exceeds maximum", info: maxSize});
-                    return;
-                }
+                    if ( (maxSize > 0) && (bundleSize >= maxSize)){
+                        logger.error("Bundle exceeds max size");
+                        res.status(403);
+                        res.json({error: "Request submission failed, total request filesize exceeds maximum", info: maxSize});
+                        return;
+                    }
 
+                    util.getFileStatus(reqRes.files, function(status) {
+                        if (Object.keys(status).length !== reqRes.files.length){
+                            res.status(403);
+                            res.json({error: "Not all files were submitted for validation, did you let save finish?"});
+                            return;
+                        }
+
+                        var pass = true;
+                        var blocked = false;
+                        var pending = false;
+                        for (var i=0; i < reqRes.files.length; i++) {
+                            for (var j=0; j < status[reqRes.files[i]].length; j++) {
+
+                                if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
+                                    blocked = true;
+                                }
+
+                                if (status[reqRes.files[i]][j].state === 2){
+                                    pending = true;
+                                }
+
+                                if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
+                                    pass = false;
+                                }
+                            }
+                        }
+
+                        if (pass) {
+                            db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
+                                if (!updateErr) {
+                                    reqRes.fileStatus = status;
+                                    var notify = require('../notifications/notifications');
+                                    notify.notify(reqRes, req.user);
+                                    if (autoAccept) {
+                                        logRequestFinalState(reqRes, req.user);
+                                        res.json({message: "Request approved", result: reqRes});
+                                    }else{
+                                        res.json({message: "Request submitted", result: reqRes});
+                                    }
+                                    return;
+                                }
+                                res.status(403);
+                                res.json({error: updateErr.message});
+                                return;
+                            });
+
+                            return;
+                        }
+                        res.status(403);
+                        if (blocked){
+                            res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
+                            return;
+                        }
+                        res.json({error: "Request submission failed, validation pending, please wait", fileStatus: status});
+                        return;
+                    });
+                });
+            }else{
                 util.getFileStatus(reqRes.files, function(status) {
                     if (Object.keys(status).length !== reqRes.files.length){
                         res.status(403);
                         res.json({error: "Not all files were submitted for validation, did you let save finish?"});
                         return;
                     }
-
                     var pass = true;
-                    var blocked = false;
-                    var pending = false;
-                    for (var i=0; i < reqRes.files.length; i++) {
+                    for (var i=0; i < reqRes.files.length; i++){
                         for (var j=0; j < status[reqRes.files[i]].length; j++) {
-
                             if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
                                 blocked = true;
                             }
@@ -405,7 +465,6 @@ router.put('/submit/:requestId', function(req, res, next){
                             }
                         }
                     }
-
                     if (pass) {
                         db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                             if (!updateErr) {
@@ -435,60 +494,8 @@ router.put('/submit/:requestId', function(req, res, next){
                     res.json({error: "Request submission failed, validation pending, please wait", fileStatus: status});
                     return;
                 });
-            });
-        }else{
-            util.getFileStatus(reqRes.files, function(status) {
-                if (Object.keys(status).length !== reqRes.files.length){
-                    res.status(403);
-                    res.json({error: "Not all files were submitted for validation, did you let save finish?"});
-                    return;
-                }
-                var pass = true;
-                for (var i=0; i < reqRes.files.length; i++){
-                    for (var j=0; j < status[reqRes.files[i]].length; j++) {
-                        if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
-                            blocked = true;
-                        }
-
-                        if (status[reqRes.files[i]][j].state === 2){
-                            pending = true;
-                        }
-
-                        if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
-                            pass = false;
-                        }
-                    }
-                }
-                if (pass) {
-                    db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
-                        if (!updateErr) {
-                            reqRes.fileStatus = status;
-                            var notify = require('../notifications/notifications');
-                            notify.notify(reqRes, req.user);
-                            if (autoAccept) {
-                                logRequestFinalState(reqRes, req.user);
-                                res.json({message: "Request approved", result: reqRes});
-                            }else{
-                                res.json({message: "Request submitted", result: reqRes});
-                            }
-                            return;
-                        }
-                        res.status(403);
-                        res.json({error: updateErr.message});
-                        return;
-                    });
-
-                    return;
-                }
-                res.status(403);
-                if (blocked){
-                    res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
-                    return;
-                }
-                res.json({error: "Request submission failed, validation pending, please wait", fileStatus: status});
-                return;
-            });
-        }
+            }
+        });
     });
 });
 

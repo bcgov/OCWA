@@ -1,0 +1,273 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Project API
+  description: >
+    This is a project api that provides access to project management and
+    permission lookup.
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+  contact:
+    name: Jeremy Ho
+servers:
+  - url: /v1
+    description: This Server
+security:
+  - bearerAuth: []
+paths:
+  /admin/list/project:
+    get:
+      summary: List all projects
+      operationId: listProjects
+      tags:
+        - Admin
+      responses:
+        '200':
+          description: A paged array of requests that the user has access to
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/list/permission/{permissionName}':
+    get:
+      summary: List all projects with specific permission
+      operationId: listProjectsWithPermission
+      tags:
+        - Admin
+      parameters:
+        - name: permissionName
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paged array of requests that the user has access to
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /admin/project/create:
+    post:
+      summary: Create new project
+      operationId: createProject
+      tags:
+        - Admin
+      responses:
+        '200':
+          description: A paged array of requests that the user has access to
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/project/{projectName}/permission':
+    put:
+      summary: Update project permissions
+      operationId: updateProject
+      tags:
+        - Admin
+      parameters:
+        - name: projectName
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paged array of requests that the user has access to
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/project/{projectName}':
+    delete:
+      summary: Delete project
+      operationId: deleteProject
+      tags:
+        - Admin
+      parameters:
+        - name: projectName
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A paged array of requests that the user has access to
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/admin/project/{projectName}/permission/{permissionName}':
+    delete:
+      summary: Delete specific permission from project
+      operationId: deleteProjectPermission
+      tags:
+        - Admin
+      parameters:
+        - name: projectName
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+        - name: permissionName
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /permissions/list:
+    get:
+      summary: Get all known unique permissions
+      operationId: listPermissions
+      tags:
+        - Permissions
+      responses:
+        '200':
+          description: An array of all known permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/permissions/{projectName}':
+    get:
+      summary: Get all permissions for a specific project
+      operationId: listProjectPermissions
+      tags:
+        - Permissions
+      parameters:
+        - name: projectName
+          in: path
+          description: Name of the project
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A permissions object containing key-value permission pairs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permissions'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: contains a message about the failure
+    PermissionList:
+      minItems: 0
+    Permissions:
+      minItems: 1
+    Success:
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: 'Contains message about the success, normally "Written successfully"'
+  responses:
+    Forbidden:
+      description: Lack required role to perform action
+    NotFound:
+      description: Not found
+    UnauthorizedError:
+      description: Access token is missing or invalid

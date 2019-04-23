@@ -9,6 +9,9 @@ db.createUser(
 db.topics.insert({"name":"topic1", "contributors" : [ ], "author_groups" : [ "/exporter" ]});
 db.permissions.insert({"priority":100,"allow":true, "group_ids":["*"], "topic_id":"*"});
 
+db.projects.insert({name:"project_override_1",permissions:{autoAccept:true}});
+db.projects.insert({name:"project_override_2",permissions:{autoAccept:false}});
+
 db.rules.remove({});
 db.rules.insert({name:"Not a warning file type", source:"print('$${file.Filename}'['$${file.Filename}'.rfind('.')+1:] not in ['sav','dbf','dat','csv','bin','egp'])",mandatory:false});
 db.rules.insert({name:"Not a blocked file type", source:"print('$${file.Filename}'['$${file.Filename}'.rfind('.')+1:] not in ['zip','tgz','gzip','tar','com','exe','dll','scr','sas7bdat','spv','rda','dta'])",mandatory:true});

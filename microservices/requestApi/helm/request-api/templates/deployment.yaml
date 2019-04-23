@@ -66,6 +66,13 @@ spec:
                 secretKeyRef:
                   name: {{ template "ocwaRequestApi.fullname" . }}-secrets
                   key: validationApiSecret
+            - name: PROJECT_API
+              value: {{ .Values.projectApi }}
+            - name: PROJECT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaRequestApi.fullname" . }}-secrets
+                  key: projectApiSecret
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:

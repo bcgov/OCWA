@@ -1,0 +1,31 @@
+{
+  "name": "project-api",
+  "author": "Jeremy Ho",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf coverage dist",
+    "purge": "rm -rf node_modules",
+    "start": "node ./bin/www",
+    "test": "nyc --reporter=lcov mocha --exit --timeout 10000"
+  },
+  "dependencies": {
+    "config": "^3.0.1",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.20",
+    "morgan": "^1.9.1",
+    "npmlog": "^4.1.2",
+    "passport": "^0.4.0",
+    "passport-headerapikey": "^1.1.0",
+    "passport-jwt": "^4.0.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-http": "^4.2.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.0.0",
+    "sinon": "^7.3.1"
+  }
+}
