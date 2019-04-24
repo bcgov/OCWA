@@ -104,4 +104,14 @@
       <initValue>'http://localhost:8001'</initValue>
       <name>OCWA_DL_URL</name>
    </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'researcher_2'</initValue>
+      <name>OCWA_USER_RESEARCHER_2</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'researcher_2_password'</initValue>
+      <name>OCWA_USER_RESEARCHER_2_PSWD</name>
+   </GlobalVariableEntity>
 </GlobalVariableEntities>
