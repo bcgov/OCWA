@@ -42,8 +42,6 @@ public class Constant {
 
 	final class Requester {
 		static final def TEST_COMMENT = 'Test Comment'
-		//		static final def PURPOSE_TEXT = 'The purpose of my project is X'
-		//		static final def EDITED_PURPOSE_TEXT = 'Edited the purpose to be Y'
 		static final def CONFIDENTIALITY_TEXT = 'My results are confidential because... X'
 		static final def EDITED_CONFIDENTIALITY_TEXT = 'Edited the reason my results are confidential'
 
@@ -62,24 +60,24 @@ public class Constant {
 		static final def REQUEST_NAME_TXT_ID = 'name-uid'
 		static final def REQUEST_PATH = '/requests/'
 
-		//		static final def REQUEST_PURPOSE_TXT_ID = 'purpose-uid8'
-		//		static final def REQUEST_PURPOSE_EDT_TXT_ID = 'request-purpose-input'
-		//		static final def REQUEST_PURPOSE_LBL_TXT_ID = 'request-purpose-text'
 		static final def REQUEST_CONFIDENTIALITY_TXT_ID = 'confidentiality-uid'
 		static final def REQUEST_CONFIDENTIALITY_EDT_TXT_ID = 'request-confidentiality-input'
 		static final def REQUEST_CONFIDENTIALITY_LBL_TXT_ID = 'request-confidentiality-text'
 		static final def REQUEST_PHONE_TXT_ID = 'phoneNumber-uid'
 		static final def REQUEST_VARIABLE_TXT_ID = 'variableDescriptions-uid'
 		static final def REQUEST_SUBPOP_TXT_ID = 'subPopulation-uid'
-		
+
 		static final def REQUEST_PHONE_TEXT = '555-555-5555'
 		static final def REQUEST_VARIABLE_TEXT = 'My variables are...'
 		static final def REQUEST_SUBPOP_TEXT = 'My sub-population is...'
-		
+
 		static final def REQUEST_SAVE_FILES_BTN_ID = 'request-form-save-files-button'
 		// Submit button on the request page
 		static final def REQUEST_SUBMIT_BTN_ID = 'request-sidebar-submit-button'
 		static final def REQUEST_WITHDRAW_BTN_ID = 'request-sidebar-withdraw-button'
+
+		// Download interface
+		static final def DOWNLOAD_INTERFACE_HEADER = 'Approved Requests'
 	}
 
 	final class Status {
