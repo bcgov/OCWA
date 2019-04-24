@@ -23,11 +23,6 @@ import test.ocwa.common.Utils
  * @author Jeremy Ho, Paul Ripley
  */
 public class RequesterStep extends Step {
-	@Then("the output checker should see the status of the request updated to '(.+)'")
-	def checker_should_see_request_is_in_given_status(String status) {
-		//TODO: placeholder until status is displayed on individual requests in the oc interface
-		WebUI.closeBrowser()
-	}
 
 	@Given("requester has started a request")
 	def requester_starts_new_request() {
