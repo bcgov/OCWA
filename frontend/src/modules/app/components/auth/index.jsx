@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
 import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
@@ -7,6 +8,7 @@ import * as styles from './styles.css';
 
 function Auth({ fetchStatus, isAuthenticated }) {
   const isFailed = fetchStatus === 'failed';
+
   return (
     <ModalTransition>
       {!isAuthenticated && (
@@ -45,5 +47,11 @@ function Auth({ fetchStatus, isAuthenticated }) {
     </ModalTransition>
   );
 }
+
+Auth.propTypes = {
+  fetchStatus: PropTypes.oneOf(['idle', 'loading', 'loaded', 'failed'])
+    .isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+};
 
 export default Auth;

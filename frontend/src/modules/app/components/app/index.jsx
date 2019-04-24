@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import LayerManager from '@atlaskit/layer-manager';
 import Loadable from 'react-loadable';
 import includes from 'lodash/includes';
+import isEmpty from 'lodash/isEmpty';
 import Messages from '@src/modules/data/containers/messages';
 import some from 'lodash/some';
 import { exporterGroup, ocGroup, exporterMode } from '@src/services/config';
@@ -30,29 +31,32 @@ const Download = Loadable({
 
 class App extends React.Component {
   componentDidMount() {
-    const { fetchToken } = this.props;
-    fetchToken();
-  }
+    const { fetchGroups, fetchToken, project } = this.props;
 
-  componentDidUpdate(prevProps) {
-    const { isAuthenticated, initSocket } = this.props;
-
-    if (isAuthenticated && !prevProps.isAuthenticated) {
-      initSocket();
+    if (project) {
+      fetchToken(project);
+    } else {
+      fetchGroups();
     }
   }
 
   renderMain = () => {
     const {
       authFetchStatus,
+      fetchToken,
+      fetchStatus,
+      groups,
       isAuthenticated,
-      onProjectSelect,
       project,
       user,
     } = this.props;
     // TODO: These values should be in config.json
     const validGroups = [exporterGroup, ocGroup];
     let el = null;
+
+    if (!project && !isEmpty(groups)) {
+      return <ProjectSelection data={groups} onSelect={fetchToken} />;
+    }
 
     if (isAuthenticated) {
       // Using `includes` here incase groups isn't an array depending on the auth env
@@ -62,14 +66,8 @@ class App extends React.Component {
         validGroups.includes(g)
       );
 
-      if (!hasValidGroupAccess) {
+      if (!hasValidGroupAccess && user.groups) {
         return <Unauthorized />;
-      }
-
-      if (!project) {
-        return (
-          <ProjectSelection data={user.groups} onSelect={onProjectSelect} />
-        );
       }
 
       // Load bundle for output checker if that's the only role, otherwise always send exporter
@@ -109,10 +107,10 @@ class App extends React.Component {
 
 App.propTypes = {
   authFetchStatus: PropTypes.string.isRequired,
+  fetchGroups: PropTypes.func.isRequired,
   fetchToken: PropTypes.func.isRequired,
-  initSocket: PropTypes.func.isRequired,
+  groups: PropTypes.arrayOf(PropTypes.string).isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
-  onProjectSelect: PropTypes.func.isRequired,
   project: PropTypes.string,
   user: PropTypes.shape({
     displayName: PropTypes.string,

@@ -23,10 +23,19 @@ const initialAuthState = {
   isAuthenticated: false,
   user: {},
   project: sessionStorage.getItem(sessionStorageKey) || null,
+  groups: [],
 };
 
 function auth(state = initialAuthState, action) {
   switch (action.type) {
+    case 'app/get/groups/success':
+      return {
+        ...state,
+        fetchStatus: 'loaded',
+        groups: action.payload,
+      };
+
+    case 'app/get/groups/requested':
     case 'app/get/token/requested':
       return {
         ...state,
@@ -41,13 +50,14 @@ function auth(state = initialAuthState, action) {
         user: action.payload,
       };
 
+    case 'app/get/groups/failed':
     case 'app/get/token/failed':
       return {
         ...state,
         fetchStatus: 'failed',
       };
 
-    case 'app/project-selected':
+    case 'app/get/token':
       return {
         ...state,
         project: action.payload,

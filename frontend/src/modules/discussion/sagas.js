@@ -51,14 +51,13 @@ function createSocketChannel(socket, username) {
   });
 }
 
-function* authWatcher() {
+function* authWatcher(action) {
   if (isEmpty(socketHost.replace(/wss?:\/\//, ''))) return;
 
   try {
     const socket = yield call(createSocket);
-    const user = yield select(state => get(state, 'app.auth.user', {}));
-    const email = get(user, 'email', '');
-    const username = get(user, 'id', email);
+    const email = get(action.payload, 'email', '');
+    const username = get(action.payload, 'id', email);
     const channel = yield call(createSocketChannel, socket, username);
 
     while (true) {
@@ -71,5 +70,5 @@ function* authWatcher() {
 }
 
 export default function* root() {
-  yield takeLatest('discussion/socket/init', authWatcher);
+  yield takeLatest('app/get/token/success', authWatcher);
 }

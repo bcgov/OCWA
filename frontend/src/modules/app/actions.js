@@ -1,5 +1,10 @@
-export const fetchToken = () => ({
+export const fetchGroups = () => ({
+  type: 'app/get/groups',
+});
+
+export const fetchToken = group => ({
   type: 'app/get/token',
+  payload: group,
 });
 
 export const toggleAbout = () => ({
@@ -27,6 +32,7 @@ export const selectProject = project => ({
 });
 
 export default {
+  fetchGroups,
   fetchToken,
   toggleAbout,
   selectProject,

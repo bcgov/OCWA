@@ -11,6 +11,28 @@ const request = require('request');
 const addMonths = require('date-fns/add_months');
 
 const router = express.Router();
+const exporterGroup = config.get('exporterGroup');
+const ocGroup = config.get('ocGroup');
+
+// Derive a token from a request
+function getToken(req, jwtSecret) {
+  let token = null;
+
+  // If there is no jwtSecret defined go with OCID only
+  if (isEmpty(jwtSecret)) {
+    if (req.isAuthenticated()) {
+      token = req.user.accessToken;
+    }
+  } else {
+    token = get(req, 'user.accessToken');
+  }
+
+  return token;
+}
+
+// Only pass through required groups and the one selected by a user at login
+const groupFilter = (groups, validGroups) =>
+  groups.filter(g => validGroups.includes(g));
 
 // Test token generator
 function generateTestSession(req) {
@@ -50,23 +72,38 @@ router.get(
   }
 );
 
-// Return the session token
-router.get('/session', (req, res, done) => {
+router.get('/groups', (req, res) => {
   const jwtSecret = config.get('jwtSecret');
-  let token = null;
+  const token = getToken(req, jwtSecret);
+
+  if (token) {
+    jwt.verify(token, jwtSecret, err => {
+      if (err) {
+        res.status(401).end();
+      }
+
+      const groups = get(req, 'user.groups', []).filter(
+        group => group !== exporterGroup
+      );
+
+      return res.json({
+        groups,
+      });
+    });
+  } else {
+    res.status(401).end();
+  }
+});
+
+// Return the session token
+router.get('/session', (req, res) => {
+  const jwtSecret = config.get('jwtSecret');
+  const token = getToken(req, jwtSecret);
+  const { group } = req.query;
 
   if (process.env.NODE_ENV === 'development' && config.has('testGroup')) {
     const session = generateTestSession(req);
     return res.json(session);
-  }
-
-  // If there is no jwtSecret defined go with OCID only
-  if (isEmpty(jwtSecret)) {
-    if (req.isAuthenticated()) {
-      token = req.user.accessToken;
-    }
-  } else {
-    token = get(req, 'user.accessToken');
   }
 
   if (token) {
@@ -74,6 +111,17 @@ router.get('/session', (req, res, done) => {
       if (err) {
         res.status(401).end();
       }
+
+      // Limit a token's groups to the one selected by a user at login
+      // and/or either the exporter or output checker group
+      const validGroups = [group, ocGroup, exporterGroup];
+      const tokenWithModifiedGroups = jwt.sign(
+        {
+          ...claims,
+          groups: groupFilter(claims.groups, validGroups),
+        },
+        jwtSecret
+      );
 
       const userFields = pick(req.user, [
         'displayName',
@@ -84,10 +132,13 @@ router.get('/session', (req, res, done) => {
       ]);
 
       return res.json({
-        token,
+        token: tokenWithModifiedGroups,
         refreshToken: req.user.refreshToken,
         expiresAt: new Date(claims.exp * 1000),
-        user: userFields,
+        user: {
+          ...userFields,
+          groups: groupFilter(userFields.groups, validGroups),
+        },
       });
     });
   } else {
@@ -96,6 +147,7 @@ router.get('/session', (req, res, done) => {
 });
 
 router.post('/refresh', (req, res) => {
+  const { group } = req.query;
   const jwtSecret = config.get('jwtSecret');
   const tokenURL = config.get('auth.tokenEndpoint');
   const clientID = config.get('auth.clientID');
@@ -106,6 +158,7 @@ router.post('/refresh', (req, res) => {
     grant_type: 'refresh_token',
     refresh_token: req.body.refreshToken,
   };
+  const validGroups = [group, ocGroup, exporterGroup];
 
   request.post(
     tokenURL,
@@ -118,7 +171,14 @@ router.post('/refresh', (req, res) => {
       }
       const json = JSON.parse(body);
       const claims = jwt.decode(json.id_token);
-      const token = jwt.sign(claims, jwtSecret);
+      // Make sure to remove extra groups from the refresh token as well
+      const token = jwt.sign(
+        {
+          ...claims,
+          groups: groupFilter(claims.groups, validGroups),
+        },
+        jwtSecret
+      );
 
       // Update the session under the hood so refreshes work.
       if (has(req, 'session.passport.user')) {
