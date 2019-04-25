@@ -44,7 +44,6 @@ public class CheckerStep extends Step {
 		WebUI.waitForElementClickable(assignToMeButtonObject, 30)
 		WebUI.click(assignToMeButtonObject)
 		WebUI.comment("found and clicked the Assign to Me button")
-
 	}
 
 	@When("the output checker marks the request as approved")
@@ -75,9 +74,17 @@ public class CheckerStep extends Step {
 		WebUI.closeBrowser()
 	}
 
+	@Then("the output checker should see the status of the request updated to '(.+)'")
+	def checker_should_see_request_is_in_given_status(String status) {
+		WebUI.verifyTextPresent(status, false)
+		WebUI.closeBrowser()
+	}
+
 	@Then("the approved files are available for download outside of the secure environment")
 	def requester_should_see_files_available_for_download() {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
+		//give time for the dl interface to load
+		WebUI.waitForElementPresent(Utils.getTestObjectByText(Constant.Requester.DOWNLOAD_INTERFACE_HEADER, 'h1'), Constant.DEFAULT_TIMEOUT)
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.closeBrowser()
 	}

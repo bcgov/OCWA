@@ -218,6 +218,67 @@ policy-api:
 
   affinity: {}
 
+#Project Api configuration
+project-api:
+  replicaCount: 1
+
+  image:
+    repository: bcgovimages/ocwa_project_api
+    tag: latest
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    enabled: false
+    annotations: {}
+    path: /
+    hosts:
+      - chart-example.local
+    tls: []
+
+  ##Configuration for OCWA Project Api
+  apiPort: 3005
+  logLevel: error
+
+  ocwaUrl: http://ocwa-ui.ocwa
+
+  database:
+    host: ocwa-project-api-mongo.ocwa
+    username: projectApi
+    password: password
+    dbName: projectApi
+
+  adminGroup: "admin"
+  ocGroup: "oc"
+
+  apiKey: "ApiSecretKey"
+
+  user:
+    idField: Email
+    emailField: Email
+    givenNameField: GivenName
+    surNameField: Surname
+    groupField: Groups
+
+  resources: {}
+    # If you want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # projects:
+    #  cpu: 100m
+    #  memory: 128Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
 
 #Request Api configuration
 request-api:

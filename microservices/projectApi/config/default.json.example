@@ -1,0 +1,31 @@
+{
+  "apiPort": 3005,
+  "logLevel": "verbose",
+  "morganLogType": "dev",
+
+  "database": {
+    "host": "localhost",
+    "username": "user",
+    "password": "pwd",
+    "dbName": "ocwa"
+  },
+
+  "jwtSecret": "superSecretHere",
+
+  "ocwaUrl": "http://localhost:8000/",
+
+  "apiKey": "apiKeySecret",
+  "projectApi": "http://ocwa_project_api:2005/",
+  "projectApiSecret": "apiKeySecret",
+
+  "adminGroup": "/admin",
+  "outputCheckerGroup": "/oc",
+
+  "user": {
+    "idField": "preferred_username",
+    "emailField": "email",
+    "givenNameField": "given_name",
+    "surNameField": "family_name",
+    "groupField": "groups"
+  }
+}

@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "ocwaProjectApi.fullname" . }}
+  labels:
+    app: {{ template "ocwaProjectApi.name" . }}
+    chart: {{ template "ocwaProjectApi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ocwaProjectApi.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ocwaProjectApi.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: API_PORT
+              value: "{{ .Values.apiPort }}"
+            - name: LOG_LEVEL
+              value: {{ .Values.logLevel }}
+            - name: DB_HOST
+              value: {{ .Values.database.host }}
+            - name: DB_USERNAME
+              value: {{ .Values.database.username }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaProjectApi.fullname" . }}-secrets
+                  key: dbPassword
+            - name: DB_NAME
+              value: {{ .Values.database.dbName }}
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaProjectApi.fullname" . }}-secrets
+                  key: jwtSecret
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaProjectApi.fullname" . }}-secrets
+                  key: apiKey
+            - name: OCWA_URL
+              value: "{{ .Values.ocwaUrl }}"
+            - name: ADMIN_GROUP
+              value: {{ .Values.adminGroup }}
+            - name: OC_GROUP
+              value: {{ .Values.ocGroup }}
+            - name: USER_ID_FIELD
+              value: {{ .Values.user.idField }}
+            - name: EMAIL_FIELD
+              value: {{ .Values.user.emailField }}
+            - name: GIVENNAME_FIELD
+              value: {{ .Values.user.givenNameField }}
+            - name: SURNAME_FIELD
+              value: {{ .Values.user.surNameField }}
+            - name: GROUP_FIELD
+              value: {{ .Values.user.groupField }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.apiPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /v1/api-docs
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /v1/api-docs
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

@@ -42,6 +42,9 @@
     "outputCheckerGroup": "oc",
     "allowDenyRequest": true,
 
+    "projectApi": "http://localhost:2005/",
+    "projectApiSecret": "apiKeySecret",
+
     "autoAccept": false,
 
     "user":{

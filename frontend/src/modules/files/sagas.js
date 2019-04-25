@@ -1,12 +1,12 @@
 import { all, call, fork, put, take } from 'redux-saga/effects';
-import { channel, delay, eventChannel, END } from 'redux-saga';
+import { buffers, channel, delay, eventChannel, END } from 'redux-saga';
 import { getToken } from '@src/services/auth';
 import difference from 'lodash/difference';
 import head from 'lodash/head';
-import { normalize } from 'normalizr';
+// import { normalize } from 'normalizr';
 import tus from 'tus-js-client';
 
-import { fileSchema } from './schemas';
+// import { fileSchema } from './schemas';
 import {
   uploadFileFailure,
   uploadFileProgress,
@@ -129,7 +129,7 @@ function* uploadDispatcher(chan) {
 // This saga is responsible for setting up the worker threads for uploading
 // before setting up a watcher for the upload action
 function* uploadFileWatcher() {
-  const chan = yield call(channel);
+  const chan = yield call(channel, buffers.expanding(10));
 
   for (let i = 0; i < 3; i += 1) {
     yield fork(uploadDispatcher, chan);

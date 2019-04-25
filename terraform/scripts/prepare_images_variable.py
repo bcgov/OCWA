@@ -7,6 +7,7 @@ images = {
     owner = "quay.io/ikethecoder"
     request_api = ":${TAG}"
     policy_api = ":${TAG}"
+    project_api = ":${TAG}"
     validate_api = ":${TAG}"
     forum_api = ":${TAG}"
     frontend = ":${TAG}"

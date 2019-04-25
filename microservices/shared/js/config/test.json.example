@@ -1,0 +1,8 @@
+{
+  "logLevel": "silent",
+  "testJWT": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE1NDA5MTUzMzAsImV4cCI6MTYwMjQ1MTMzMCwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsInByZWZlcnJlZF91c2VybmFtZSI6Impyb2NrZXQiLCJnaXZlbl9uYW1lIjoiSm9obm55IiwiZmFtaWx5X25hbWUiOiJSb2NrZXQiLCJlbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJncm91cHMiOlsiL2V4cG9ydGVyIiwiL3Byb2plY3RfYSIsIi9vYyIsIi9hZG1pbiJdfQ.V_LDJlheaAucOuUqUJl4rXGKbEZQCQeq9TMBs6YfLvo",
+  "autoAccept": false,
+
+  "requiredRoleToCreateRequest": "/exporter",
+  "outputCheckerGroup": "/oc"
+}

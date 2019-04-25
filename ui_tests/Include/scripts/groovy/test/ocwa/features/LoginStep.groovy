@@ -42,6 +42,10 @@ public class LoginStep extends Step {
 				username = GlobalVariable.OCWA_USER_CHECKER1
 				password = GlobalVariable.OCWA_USER_CHECKER1_PSWD
 				break
+			case 'requester in auto approve project':
+				username = GlobalVariable.OCWA_USER_RESEARCHER_2
+				password = GlobalVariable.OCWA_USER_RESEARCHER_2_PSWD
+				break
 			default:
 				throw new Exception("User ${user} is not defined")
 				break

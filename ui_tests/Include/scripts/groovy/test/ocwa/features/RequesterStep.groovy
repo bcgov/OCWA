@@ -8,6 +8,7 @@ import com.kms.katalon.core.model.FailureHandling
 import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.TestObject
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
+import com.kms.katalon.core.util.KeywordUtil
 
 import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
@@ -22,11 +23,6 @@ import test.ocwa.common.Utils
  * @author Jeremy Ho, Paul Ripley
  */
 public class RequesterStep extends Step {
-	@Then("the output checker should see the status of the request updated to '(.+)'")
-	def checker_should_see_request_is_in_given_status(String status) {
-		//TODO: placeholder until status is displayed on individual requests in the oc interface
-		WebUI.closeBrowser()
-	}
 
 	@Given("requester has started a request")
 	def requester_starts_new_request() {
@@ -41,9 +37,12 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(newRequestButtonObject)
 
-		WebUI.setText(Utils.getTestObjectById(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
-		WebUI.setText(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID), Constant.Requester.CONFIDENTIALITY_TEXT)
-
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID, 'textarea'), Constant.Requester.CONFIDENTIALITY_TEXT)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_PHONE_TXT_ID), Constant.Requester.REQUEST_PHONE_TEXT)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_VARIABLE_TXT_ID, 'textarea'), Constant.Requester.REQUEST_VARIABLE_TEXT)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_SUBPOP_TXT_ID, 'textarea'), Constant.Requester.REQUEST_SUBPOP_TEXT)
+		
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
@@ -73,9 +72,12 @@ public class RequesterStep extends Step {
 			WebUI.waitForElementClickable(uploadFileButton, Constant.DEFAULT_TIMEOUT)
 			WebUI.sendKeys(uploadFileButton, "$GlobalVariable.TestFilePath$file")
 
-			TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
-			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+			TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)
+			if (WebUI.waitForElementPresent(errorAlert, Constant.FILE_UPLOAD_TIMEOUT, FailureHandling.OPTIONAL)) {
+				WebUI.takeScreenshot()
+				KeywordUtil.markFailed('An error alert displayed upon file upload.')
+			}
+			WebUI.comment("File uploaded without error.")
 		}
 	}
 
@@ -222,27 +224,34 @@ public class RequesterStep extends Step {
 	def requester_saves_new_request() {
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
-		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
+		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
 	}
 
 	@When("requester submits their request")
 	def requester_submits_request() {
 		TestObject requestSubmitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
 		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
+		TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)
 		
 		if (WebUI.verifyElementNotClickable(requestSubmitBtn, FailureHandling.OPTIONAL)) {
-			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 			WebUI.comment('Submit button is disabled so try clicking the "Done editing" link')
+			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
 			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+			WebUI.delay(Constant.DEFAULT_TIMEOUT) //need to give more time to run validation rules on files
 		}
 		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
+		WebUI.comment('Clicking the submit button')
 		WebUI.click(requestSubmitBtn)
 	
-		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)	
+		//test if an error alert displays when request is submitted. 
+		if (WebUI.waitForElementPresent(errorAlert, Constant.SUBMISSION_TIMEOUT, FailureHandling.OPTIONAL)) {
+			WebUI.takeScreenshot()
+			KeywordUtil.markFailed('An error alert displayed upon submission.')
+		}
+		WebUI.comment('No error message displayed so submission looks good.')
 	}
 
 	@When("requester writes and submits a new comment")
@@ -400,8 +409,8 @@ public class RequesterStep extends Step {
 		WebUI.sendKeys(confidentialityField, Keys.chord(Keys.TAB, Keys.ENTER))
 
 		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
-		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
+		WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID)) //need to click "done editing" to save changes
 		WebUI.closeBrowser()
 	}

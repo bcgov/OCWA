@@ -1,0 +1,23 @@
+#!/bin/bash
+set -e
+trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
+trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
+
+QUAYIO_REPO=$1
+QUAYIO_BASE="quay.io/ikethecoder"
+
+echo "Logging into Quay..."
+echo "$QUAYIO_PASSWORD" | docker login -u "$QUAYIO_USERNAME" --password-stdin quay.io
+
+echo "Building Docker image..."
+docker build -t $QUAYIO_BASE/$QUAYIO_REPO .
+
+echo "Pushing image $QUAYIO_REPO to Quay..."
+docker push $QUAYIO_BASE/$QUAYIO_REPO
+if [ ! -z "$TRAVIS_BRANCH" ]; then
+    echo "Tagging image $QUAYIO_REPO with ${TRAVIS_BRANCH/\//-} on Quay..."
+    docker tag $QUAYIO_BASE/$QUAYIO_REPO $QUAYIO_BASE/$QUAYIO_REPO:${TRAVIS_BRANCH/\//-}
+    docker push $QUAYIO_BASE/$QUAYIO_REPO:${TRAVIS_BRANCH/\//-}
+fi
+
+echo "Docker image push completed"

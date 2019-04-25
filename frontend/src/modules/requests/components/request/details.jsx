@@ -17,8 +17,10 @@ function RequestDetails({ data, isEditing, onSave }) {
   const supportingFiles = get(data, 'supportingFiles', []);
   const requestDetails = requestFields.map(d => ({
     name: d.name,
-    value: get(data, d.value),
+    type: d.type,
+    value: get(data, d.value, ''),
     key: d.value,
+    isRequired: d.isRequired,
   }));
 
   if (isEmpty(data)) {

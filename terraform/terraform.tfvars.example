@@ -29,6 +29,7 @@ images = {
     owner = "bcgovimages"
     request_api = ":edge"
     validate_api = ":edge"
+    project_api = ":edge"
     forum_api = ":edge"
     policy_api = ":edge"
     frontend = ":edge"

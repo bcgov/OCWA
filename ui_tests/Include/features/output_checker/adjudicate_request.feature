@@ -10,7 +10,7 @@ Feature: Adjudicate request
 
   Scenario: Request is needs revisions
     When the output checker marks the request as needs revisions
-    Then the output checker should see the status of the request updated to 'Work in progress'
+    Then the output checker should see the status of the request updated to 'Work in Progress'
 
   Scenario: Request is worthy of approval
     When the output checker marks the request as approved

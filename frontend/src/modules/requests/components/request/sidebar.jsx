@@ -25,6 +25,16 @@ function RequestSidebar({
   onSubmit,
   onWithdraw,
 }) {
+  /* eslint-disable no-alert, no-restricted-globals */
+  // NOTE: Revomving for now, add back if needed
+  // const submitHandler = () => {
+  //   const c = confirm(
+  //     'A reminder that you are responsible for ensuring Outputs are non-disclosive and uphold the secrecy provisions of the Statistics Act.'
+  //   );
+  //   if (c) {
+  //     onSubmit(data._id);
+  //   }
+  // };
   const withdrawHandler = () => {
     const c = confirm(
       'Editing a submitted request automatically withdraws it. Do you still wish to proceed?'
@@ -34,6 +44,7 @@ function RequestSidebar({
       onWithdraw(data._id);
     }
   };
+  /* eslint-enable no-alerts, no-restricted-globals */
 
   return (
     <aside id="request-sidebar">

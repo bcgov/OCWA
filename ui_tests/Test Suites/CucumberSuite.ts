@@ -64,4 +64,10 @@
       <isRun>true</isRun>
       <testCaseId>Test Cases/Checker/ClaimRequestTest</testCaseId>
    </testCaseLink>
+   <testCaseLink>
+      <guid>e29a6d29-8c12-4ae3-ae0e-e5d756315b05</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/Requester/ProjAutoApproveTest</testCaseId>
+   </testCaseLink>
 </TestSuiteEntity>
