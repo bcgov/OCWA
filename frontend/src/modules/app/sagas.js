@@ -6,7 +6,12 @@ import { get } from '@src/services/api';
 import { getRefreshToken, saveSession } from '@src/services/auth';
 import { sessionStorageKey } from '@src/services/config';
 
-import { versionsRequested, versionsSuccess, versionsFailed } from './actions';
+import {
+  fetchToken,
+  versionsRequested,
+  versionsSuccess,
+  versionsFailed,
+} from './actions';
 
 const requestGroups = async () => {
   const response = await ky.get('/auth/groups');
@@ -36,7 +41,8 @@ const requestToken = async group => {
 
 const requestRefreshToken = async group => {
   const refreshToken = getRefreshToken();
-  const response = await ky.post(`/auth/refresh?group=${group}`, {
+  const query = group ? `?group=${group}` : '';
+  const response = await ky.post(`/auth/refresh${query}`, {
     json: { refreshToken },
   });
 
@@ -56,11 +62,24 @@ function* groupsWatcher() {
   });
 
   try {
-    const { groups } = yield call(requestGroups);
+    const { expiresAt, groups } = yield call(requestGroups);
     yield put({
       type: 'app/get/groups/success',
       payload: groups,
     });
+
+    if (groups.length === 1) {
+      yield put(fetchToken(groups[0]));
+    } else {
+      const refreshInt = differenceInMilliseconds(expiresAt, Date.now());
+      yield call(delay, refreshInt);
+      const project = yield select(state => state.app.auth.project);
+
+      // Reload if there's no project selected to start auth process again
+      if (!project) {
+        window.location.reload();
+      }
+    }
   } catch (err) {
     yield put({
       type: 'app/get/groups/failed',

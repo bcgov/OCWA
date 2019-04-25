@@ -1,4 +1,5 @@
 const config = require('config');
+const compact = require('lodash/compact');
 const express = require('express');
 const get = require('lodash/get');
 const has = require('lodash/has');
@@ -77,7 +78,7 @@ router.get('/groups', (req, res) => {
   const token = getToken(req, jwtSecret);
 
   if (token) {
-    jwt.verify(token, jwtSecret, err => {
+    jwt.verify(token, jwtSecret, (err, claims) => {
       if (err) {
         res.status(401).end();
       }
@@ -88,6 +89,7 @@ router.get('/groups', (req, res) => {
 
       return res.json({
         groups,
+        expiresAt: new Date(claims.exp * 1000),
       });
     });
   } else {
@@ -147,7 +149,7 @@ router.get('/session', (req, res) => {
 });
 
 router.post('/refresh', (req, res) => {
-  const { group } = req.query;
+  const group = get(req, 'query.group');
   const jwtSecret = config.get('jwtSecret');
   const tokenURL = config.get('auth.tokenEndpoint');
   const clientID = config.get('auth.clientID');
@@ -158,7 +160,7 @@ router.post('/refresh', (req, res) => {
     grant_type: 'refresh_token',
     refresh_token: req.body.refreshToken,
   };
-  const validGroups = [group, ocGroup, exporterGroup];
+  const validGroups = compact([group, ocGroup, exporterGroup]);
 
   request.post(
     tokenURL,
