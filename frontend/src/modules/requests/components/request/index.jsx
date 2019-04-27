@@ -5,6 +5,7 @@ import Date from '@src/components/date';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavLink, Route, Switch } from 'react-router-dom';
+import merge from 'lodash/merge';
 import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import Spinner from '@atlaskit/spinner';
@@ -44,14 +45,23 @@ class Request extends React.Component {
   };
 
   onSave = updatedData => {
-    const { data, onSave } = this.props;
+    const { data, location, onSave } = this.props;
+    const duplicateFiles = get(location, 'state.duplicateFiles');
 
-    onSave({ ...data, ...updatedData }, { id: data._id });
+    onSave(merge({}, data, updatedData, duplicateFiles), { id: data._id });
   };
 
   render() {
-    const { data, isLoaded, isOutputChecker, updatedAt, match } = this.props;
+    const {
+      data,
+      isLoaded,
+      isOutputChecker,
+      location,
+      updatedAt,
+      match,
+    } = this.props;
     const { isEditing } = this.state;
+    const duplicateFiles = get(location, 'state.duplicateFiles');
     const title = data.name || 'Loading...';
 
     if (!isLoaded && isEmpty(data)) {
@@ -120,6 +130,7 @@ class Request extends React.Component {
                     render={() => (
                       <Details
                         data={data}
+                        duplicateFiles={duplicateFiles}
                         isEditing={isEditing}
                         onSave={this.onSave}
                       />
@@ -158,6 +169,14 @@ Request.propTypes = {
   data: RequestSchema.isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.shape({
+      duplicateFiles: PropTypes.shape({
+        files: PropTypes.arrayOf(PropTypes.string),
+        supportingFiles: PropTypes.arrayOf(PropTypes.string),
+      }),
+    }),
+  }).isRequired,
   updatedAt: PropTypes.string.isRequired,
   match: PropTypes.shape({
     url: PropTypes.string.isRequired,

@@ -19,9 +19,13 @@ function* onSaveRequest(action) {
 
 function onCreateRequest(action) {
   const id = get(action, 'payload.result.result');
+  const duplicateFiles = get(action, 'meta.files', {});
 
   if (id) {
-    action.meta.history.push(`/requests/${id}`, { isEditing: true });
+    action.meta.history.push(`/requests/${id}`, {
+      isEditing: true,
+      duplicateFiles,
+    });
   }
 }
 

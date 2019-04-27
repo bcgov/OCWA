@@ -4,6 +4,7 @@ import isEmpty from 'lodash/isEmpty';
 import Files from '@src/modules/files/containers/files';
 import FileUploader from '@src/modules/files/containers/file-uploader';
 import get from 'lodash/get';
+import merge from 'lodash/merge';
 import { Prompt } from 'react-router-dom';
 import { uid } from 'react-uid';
 
@@ -12,7 +13,7 @@ import { RequestSchema } from '../../types';
 import { requestFields } from '../../utils';
 import * as styles from './styles.css';
 
-function RequestDetails({ data, isEditing, onSave }) {
+function RequestDetails({ data, duplicateFiles, isEditing, onSave }) {
   const files = get(data, 'files', []);
   const supportingFiles = get(data, 'supportingFiles', []);
   const requestDetails = requestFields.map(d => ({
@@ -22,6 +23,8 @@ function RequestDetails({ data, isEditing, onSave }) {
     key: d.value,
     isRequired: d.isRequired,
   }));
+  console.log(duplicateFiles);
+  const uploadData = merge({}, data, duplicateFiles);
 
   if (isEmpty(data)) {
     return 'Loading...';
@@ -60,7 +63,7 @@ function RequestDetails({ data, isEditing, onSave }) {
           )}
           {isEditing && (
             <FileUploader
-              data={data}
+              data={uploadData}
               filesKey="files"
               uploadText="Upload files you wish to request for output"
             />
@@ -76,7 +79,7 @@ function RequestDetails({ data, isEditing, onSave }) {
           {!isEditing && <Files showDownloadButton ids={supportingFiles} />}
           {isEditing && (
             <FileUploader
-              data={data}
+              data={uploadData}
               filesKey="supportingFiles"
               uploadText="Upload any files to help support your request"
             />
@@ -89,12 +92,20 @@ function RequestDetails({ data, isEditing, onSave }) {
 
 RequestDetails.propTypes = {
   data: RequestSchema,
+  duplicateFiles: PropTypes.shape({
+    files: PropTypes.arrayOf(PropTypes.string),
+    supportingFiles: PropTypes.arrayOf(PropTypes.string),
+  }),
   isEditing: PropTypes.bool.isRequired,
   onSave: PropTypes.func.isRequired,
 };
 
 RequestDetails.defaultProps = {
   data: {},
+  duplicateFiles: {
+    files: [],
+    supportingFiles: [],
+  },
 };
 
 export default RequestDetails;
