@@ -45,23 +45,21 @@ class Request extends React.Component {
   };
 
   onSave = updatedData => {
-    const { data, location, onSave } = this.props;
-    const duplicateFiles = get(location, 'state.duplicateFiles');
+    const { data, onSave } = this.props;
 
-    onSave(merge({}, data, updatedData, duplicateFiles), { id: data._id });
+    onSave(merge({}, data, updatedData), { id: data._id });
   };
 
   render() {
     const {
       data,
+      duplicateFiles,
       isLoaded,
       isOutputChecker,
-      location,
       updatedAt,
       match,
     } = this.props;
     const { isEditing } = this.state;
-    const duplicateFiles = get(location, 'state.duplicateFiles');
     const title = data.name || 'Loading...';
 
     if (!isLoaded && isEmpty(data)) {
@@ -167,14 +165,15 @@ class Request extends React.Component {
 
 Request.propTypes = {
   data: RequestSchema.isRequired,
+  duplicateFiles: PropTypes.shape({
+    files: PropTypes.arrayOf(PropTypes.string),
+    supportingFiles: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   location: PropTypes.shape({
     state: PropTypes.shape({
-      duplicateFiles: PropTypes.shape({
-        files: PropTypes.arrayOf(PropTypes.string),
-        supportingFiles: PropTypes.arrayOf(PropTypes.string),
-      }),
+      isEditing: PropTypes.bool,
     }),
   }).isRequired,
   updatedAt: PropTypes.string.isRequired,

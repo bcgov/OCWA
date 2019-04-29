@@ -23,7 +23,6 @@ function RequestDetails({ data, duplicateFiles, isEditing, onSave }) {
     key: d.value,
     isRequired: d.isRequired,
   }));
-  console.log(duplicateFiles);
   const uploadData = merge({}, data, duplicateFiles);
 
   if (isEmpty(data)) {
