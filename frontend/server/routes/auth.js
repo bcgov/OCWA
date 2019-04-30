@@ -149,9 +149,11 @@ router.post('/refresh', (req, res) => {
 });
 
 router.get('/logout', (req, res) => {
+  const logoutURL = config.get('auth.logoutURL');
+
   req.logout();
   req.user = null;
-  res.redirect('/');
+  res.redirect(logoutURL);
 });
 
 module.exports = router;

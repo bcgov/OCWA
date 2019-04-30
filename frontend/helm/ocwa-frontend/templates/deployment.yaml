@@ -65,6 +65,8 @@ spec:
                   key: jwtSecret
             - name: AUTH_ISSUER
               value: {{ .Values.auth.issuer }}
+            - name: AUTH_LOGOUT_URL
+              value: {{ .Values.auth.logoutURL }}
             - name: AUTH_SCOPES
               value: {{ .Values.auth.scope }}
             - name: TOKEN_ENDPOINT

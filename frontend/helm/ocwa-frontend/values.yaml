@@ -55,6 +55,7 @@ auth:
   clientID: "outputchecker"
   clientSecret: "ssh this is a secret"
   issuer: "openid.auth.issuer"
+  logoutURL: "openid.auth.logout_url"
   scope: "openid offline_access"
   tokenEndpoint: "openid.auth.tokenEndpoint"
   userInfoURL: "openid.userinfo.url"

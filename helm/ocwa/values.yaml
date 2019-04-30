@@ -55,6 +55,7 @@ ocwa-frontend:
     clientID: "outputchecker"
     clientSecret: "CLIENT_SECRET_HERE"
     issuer: "openid.auth.issuer"
+    logoutURL: "openid.auth.logoutURL"
     scope: "openid offline_access"
     tokenEndpoint: "openid.auth.tokenEndpoint"
     userInfoURL: "openid.userinfo.url"
