@@ -98,7 +98,7 @@ function RequestSidebar({
                 data.files.length <= 0
               }
               iconBefore={<SignInIcon />}
-              onClick={() => onSubmit(data._id)}
+              onClick={() => onSubmit(data)}
             >
               Submit Request
             </Button>

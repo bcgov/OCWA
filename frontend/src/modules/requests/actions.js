@@ -68,6 +68,11 @@ export const removeFile = (id, filesKey) => ({
 
 export const toggleMyRequests = () => ({ type: 'requests/toggle-my-requests' });
 
+export const submitRequest = id => ({
+  type: 'request/submit',
+  payload: id,
+});
+
 export default {
   createRequest,
   changeStep,
@@ -82,4 +87,5 @@ export default {
   sortRequests,
   toggleMyRequests,
   viewDraftRequest,
+  submitRequest,
 };

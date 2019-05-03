@@ -1,7 +1,12 @@
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 
-import { deleteRequest, duplicateRequest, saveRequest } from '../actions';
+import {
+  deleteRequest,
+  duplicateRequest,
+  saveRequest,
+  submitRequest,
+} from '../actions';
 import Sidebar from '../components/request/sidebar';
 import { requestSchema } from '../schemas';
 
@@ -50,12 +55,13 @@ export default connect(mapStateToProps, {
         url: `/api/v1/requests/withdraw/${id}`,
       }
     ),
-  onSubmit: id =>
-    saveRequest(
-      null,
-      { id, dataType: 'requests', schema: { result: requestSchema } },
-      {
-        url: `/api/v1/requests/submit/${id}`,
-      }
-    ),
+  onSubmit: submitRequest,
+  // onSubmit: id =>
+  //   saveRequest(
+  //     null,
+  //     { id, dataType: 'requests', schema: { result: requestSchema } },
+  //     {
+  //       url: `/api/v1/requests/submit/${id}`,
+  //     }
+  //   ),
 })(Sidebar);
