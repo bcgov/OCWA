@@ -191,7 +191,11 @@ describe('components/request/sidebar', () => {
       wrapper.find('button#request-sidebar-submit-button').simulate('click');
       expect(onDelete).toHaveBeenCalledWith('123');
       expect(onEdit).toHaveBeenCalledWith('123');
-      expect(onSubmit).toHaveBeenCalledWith('123');
+      expect(onSubmit).toHaveBeenCalledWith({
+        ...defaultData,
+        files: ['1223'],
+        state: 1,
+      });
     });
 
     it('should have a disabled submit button if necessary', () => {
