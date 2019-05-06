@@ -8,7 +8,9 @@
     "start:prod": "cross-env NODE_ENV=production node server/index.js",
     "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
     "lint": "eslint src/index.js",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
@@ -129,7 +131,7 @@
     "redux": "^4.0.0",
     "redux-saga": "^0.16.2",
     "request": "^2.88.0",
-    "snyk": "^1.151.0",
+    "snyk": "^1.161.1",
     "styled-components": "^3.4.6",
     "tus-js-client": "^1.7.1"
   },
