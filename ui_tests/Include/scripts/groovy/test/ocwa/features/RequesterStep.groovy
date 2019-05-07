@@ -77,7 +77,9 @@ public class RequesterStep extends Step {
 				WebUI.takeScreenshot()
 				KeywordUtil.markFailed('An error alert displayed upon file upload.')
 			}
-			WebUI.comment("File uploaded without error.")
+			else {
+				WebUI.comment("File uploaded without error.")
+			}
 		}
 	}
 
@@ -239,7 +241,7 @@ public class RequesterStep extends Step {
 			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 			WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT)
 			WebUI.waitForElementNotPresent(successAlert, Constant.DEFAULT_TIMEOUT)
-			WebUI.delay(Constant.DEFAULT_TIMEOUT) //need to give more time to run validation rules on files
+			WebUI.delay(Constant.VALIDATION_TIMEOUT) //need to give more time to run validation rules on files
 		}
 		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
@@ -251,7 +253,9 @@ public class RequesterStep extends Step {
 			WebUI.takeScreenshot()
 			KeywordUtil.markFailed('An error alert displayed upon submission.')
 		}
-		WebUI.comment('No error message displayed so submission looks good.')
+		else {
+			WebUI.comment('No error message displayed so submission looks good.')
+		}
 	}
 
 	@When("requester writes and submits a new comment")
