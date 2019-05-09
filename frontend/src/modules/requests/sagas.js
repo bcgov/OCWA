@@ -110,7 +110,7 @@ function* requestReadyForSubmitWatcher(action) {
     const requestId = action.payload.result;
     const fileStatus = get(
       action,
-      `payload.entities.${requestId}.fileStatus`,
+      `payload.entities.requests.${requestId}.fileStatus`,
       {}
     );
     const isRequestFilesPending = checkRequestForPending(fileStatus);
