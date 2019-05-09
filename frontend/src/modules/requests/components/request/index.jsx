@@ -5,6 +5,7 @@ import Date from '@src/components/date';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavLink, Route, Switch } from 'react-router-dom';
+import merge from 'lodash/merge';
 import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import Spinner from '@atlaskit/spinner';
@@ -46,11 +47,18 @@ class Request extends React.Component {
   onSave = updatedData => {
     const { data, onSave } = this.props;
 
-    onSave({ ...data, ...updatedData }, { id: data._id });
+    onSave(merge({}, data, updatedData), { id: data._id });
   };
 
   render() {
-    const { data, isLoaded, isOutputChecker, updatedAt, match } = this.props;
+    const {
+      data,
+      duplicateFiles,
+      isLoaded,
+      isOutputChecker,
+      updatedAt,
+      match,
+    } = this.props;
     const { isEditing } = this.state;
     const title = data.name || 'Loading...';
 
@@ -120,6 +128,7 @@ class Request extends React.Component {
                     render={() => (
                       <Details
                         data={data}
+                        duplicateFiles={duplicateFiles}
                         isEditing={isEditing}
                         onSave={this.onSave}
                       />
@@ -156,8 +165,17 @@ class Request extends React.Component {
 
 Request.propTypes = {
   data: RequestSchema.isRequired,
+  duplicateFiles: PropTypes.shape({
+    files: PropTypes.arrayOf(PropTypes.string),
+    supportingFiles: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.shape({
+      isEditing: PropTypes.bool,
+    }),
+  }).isRequired,
   updatedAt: PropTypes.string.isRequired,
   match: PropTypes.shape({
     url: PropTypes.string.isRequired,

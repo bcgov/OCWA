@@ -11,7 +11,18 @@ import SignInIcon from '@atlaskit/icon/glyph/sign-in';
 import SignOutIcon from '@atlaskit/icon/glyph/sign-out';
 import TrashIcon from '@atlaskit/icon/glyph/trash';
 
+import { duplicateRequest } from '../../utils';
 import { RequestSchema } from '../../types';
+
+const omitProps = [
+  '_id',
+  'state',
+  'reviewers',
+  'author',
+  'chronology',
+  'fileStatus',
+  'topic',
+];
 
 function RequestSidebar({
   data,
@@ -20,7 +31,6 @@ function RequestSidebar({
   history,
   onCancel,
   onDelete,
-  onDuplicate,
   onEdit,
   onSubmit,
   onWithdraw,
@@ -136,7 +146,7 @@ function RequestSidebar({
           id="request-sidebar-duplicate-button"
           iconBefore={<CopyIcon />}
           isDisabled={isSaving}
-          onClick={() => onDuplicate(data)}
+          onClick={() => history.push('/new', duplicateRequest(data))}
         >
           Duplicate Request
         </Button>
@@ -154,7 +164,6 @@ RequestSidebar.propTypes = {
   isSaving: PropTypes.bool.isRequired,
   onCancel: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  onDuplicate: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   onWithdraw: PropTypes.func.isRequired,

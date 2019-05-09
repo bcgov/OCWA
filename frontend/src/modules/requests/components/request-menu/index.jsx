@@ -5,6 +5,7 @@ import DropdownMenu, {
   DropdownItem,
 } from '@atlaskit/dropdown-menu';
 
+import { duplicateRequest } from '../../utils';
 import { RequestSchema } from '../../types';
 
 function RequestMenu({
@@ -46,6 +47,13 @@ function RequestMenu({
               Delete
             </DropdownItem>
           </React.Fragment>
+        )}
+        {data.state === 4 && (
+          <DropdownItem
+            onClick={() => history.push('/new', duplicateRequest(data))}
+          >
+            Duplicate
+          </DropdownItem>
         )}
       </DropdownItemGroup>
     </DropdownMenu>

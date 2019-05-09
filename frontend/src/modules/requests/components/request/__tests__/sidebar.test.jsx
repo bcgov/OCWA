@@ -18,7 +18,6 @@ const defaultProps = {
   isEditing: false,
   onCancel: () => null,
   onDelete: () => null,
-  onDuplicate: () => null,
   onEdit: () => null,
   onSubmit: () => null,
   onWithdraw: () => null,
@@ -206,19 +205,6 @@ describe('components/request/sidebar', () => {
       );
       const button = wrapper.find('button#request-sidebar-submit-button');
       expect(button.prop('disabled')).toBeTruthy();
-    });
-
-    it('should handle the duplicate button', () => {
-      const onDuplicate = jest.fn();
-      const data = {
-        ...defaultData,
-        state: 6,
-      };
-      const wrapper = renderer(
-        <Sidebar {...defaultProps} onDuplicate={onDuplicate} data={data} />
-      );
-      wrapper.find('button#request-sidebar-duplicate-button').simulate('click');
-      expect(onDuplicate).toHaveBeenCalledWith(data);
     });
   });
 });
