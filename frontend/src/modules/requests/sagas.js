@@ -17,11 +17,19 @@ function* onSaveRequest(action) {
   }
 }
 
-function onCreateRequest(action) {
+function* onCreateRequest(action) {
   const id = get(action, 'payload.result.result');
+  const duplicateFiles = get(action, 'meta.files', {});
 
   if (id) {
-    action.meta.history.push(`/requests/${id}`, { isEditing: true });
+    action.meta.history.push(`/requests/${id}`, {
+      isEditing: true,
+      duplicateFiles,
+    });
+    yield put({
+      type: 'request/duplicate/files',
+      payload: duplicateFiles,
+    });
   }
 }
 
@@ -35,14 +43,20 @@ function* onFinishEditing(action) {
   const request = yield select(state =>
     get(state, `data.entities.requests.${id}`, {})
   );
-  const { filesToDelete } = yield select(state => state.requests.viewState);
+  const { filesToDelete, filesToDuplicate } = yield select(
+    state => state.requests.viewState
+  );
   const deletedFilesHandler = fileId => !filesToDelete.includes(fileId);
   const payload = {
     ...request,
-    files: union(request.files, files).filter(deletedFilesHandler),
-    supportingFiles: union(request.supportingFiles, supportingFiles).filter(
+    files: union(request.files, files, filesToDuplicate.files).filter(
       deletedFilesHandler
     ),
+    supportingFiles: union(
+      request.supportingFiles,
+      supportingFiles,
+      filesToDuplicate.supportingFiles
+    ).filter(deletedFilesHandler),
   };
   const meta = { id };
 

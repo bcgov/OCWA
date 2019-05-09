@@ -1,4 +1,8 @@
 import { colors } from '@atlaskit/theme';
+import flow from 'lodash/flow';
+import isNil from 'lodash/isNil';
+import pick from 'lodash/pick';
+import mapValues from 'lodash/mapValues';
 
 // Request fields. Useful for forms/edit
 export const requestFields = [
@@ -65,7 +69,20 @@ export const getRequestStateColor = (value = 0) => {
   }
 };
 
+// Tidy up a request for duplication
+export const duplicateRequest = data => {
+  const formConfigKeys = requestFields.map(d => d.value);
+  const keys = [...formConfigKeys, 'name', 'files', 'supportingFiles'];
+  const cleaner = flow([
+    d => pick(d, keys),
+    d => mapValues(d, v => (isNil(v) ? '' : v)),
+  ]);
+
+  return cleaner({ ...data, name: `${data.name} Duplicate` });
+};
+
 export default {
+  duplicateRequest,
   getRequestStateColor,
   requestFields,
   phoneNumberRegex,

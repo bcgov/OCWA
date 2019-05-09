@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ArrowRightCircleIcon from '@atlaskit/icon/glyph/arrow-right-circle';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import { colors } from '@atlaskit/theme';
+import get from 'lodash/get';
 import TextField from '@atlaskit/textfield';
 import Form, {
   ErrorMessage,
@@ -12,17 +13,22 @@ import Form, {
   FormSection,
   HelperMessage,
 } from '@atlaskit/form';
+import pick from 'lodash/pick';
 import SectionMessage from '@atlaskit/section-message';
 import { uid } from 'react-uid';
 import { withRouter } from 'react-router-dom';
 
 import FormField from './field';
 import { requestFields } from '../../utils';
+import { RequestSchema } from '../../types';
 
-function NewRequestForm({ history, isCreating, onSubmit }) {
+function NewRequestForm({ data, history, isCreating, onSubmit }) {
+  // Grab the files if there is a duplicate getting passed through
+  const duplicateFiles = pick(data, ['files', 'supportingFiles']);
+
   return (
     <div id="request-form">
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={formData => onSubmit(formData, duplicateFiles)}>
         {({ formProps }) => (
           <form {...formProps}>
             <FormHeader
@@ -33,7 +39,7 @@ function NewRequestForm({ history, isCreating, onSubmit }) {
               isRequired
               name="name"
               label="Request Title"
-              defaultValue=""
+              defaultValue={get(data, 'name', '')}
               isDisabled={isCreating}
             >
               {({ fieldProps, error }) => (
@@ -60,7 +66,7 @@ function NewRequestForm({ history, isCreating, onSubmit }) {
                 <Field
                   key={uid(d)}
                   name={d.value}
-                  defaultValue=""
+                  defaultValue={get(data, d.value, '')}
                   label={d.name}
                   isDisabled={isCreating}
                   isRequired={d.isRequired}
@@ -119,11 +125,16 @@ function NewRequestForm({ history, isCreating, onSubmit }) {
 }
 
 NewRequestForm.propTypes = {
+  data: RequestSchema,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
   isCreating: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
+};
+
+NewRequestForm.defaultProps = {
+  data: {},
 };
 
 export default withRouter(NewRequestForm);

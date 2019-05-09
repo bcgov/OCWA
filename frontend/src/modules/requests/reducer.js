@@ -25,12 +25,17 @@ const duplicateValueMapper = (value, key) => {
   return value;
 };
 
+const filesToDuplicate = {
+  files: [],
+  supportingFiles: [],
+};
 const initialViewState = {
   currentRequestId: null,
   currentNewRequestStep: 0,
   duplicateRequest: undefined,
   filter: null,
   filesToDelete: [],
+  filesToDuplicate,
   showMyRequestsOnly: false,
   sortKey: 'state',
   sortOrder: 'DESC',
@@ -81,9 +86,16 @@ const viewState = (state = initialViewState, action = {}) => {
       return {
         ...state,
         filesToDelete: [],
+        filesToDuplicate,
         currentRequestId: null,
         currentNewRequestStep: 0,
         duplicateRequest: undefined,
+      };
+
+    case 'request/duplicate/files':
+      return {
+        ...state,
+        filesToDuplicate: action.payload,
       };
 
     case 'requests/change-step':
@@ -96,6 +108,7 @@ const viewState = (state = initialViewState, action = {}) => {
       return {
         ...state,
         filesToDelete: [],
+        filesToDuplicate,
         currentRequestId: action.meta.quitEditing
           ? null
           : state.currentRequestId,
