@@ -10,6 +10,7 @@ function LinkElement({ children, className, onMouseEnter, onMouseLeave }) {
     <Link
       to="/downloads"
       className={className}
+      id="downloads-button"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
