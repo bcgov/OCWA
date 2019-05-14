@@ -14,7 +14,8 @@
     "ID_FIELD": true,
     "EXPORTER_GROUP": true,
     "OC_GROUP": true,
-    "EXPORTER_MODE": true
+    "EXPORTER_MODE": true,
+    "ZONE": true
   },
   "parser": "babel-eslint",
   "rules": {

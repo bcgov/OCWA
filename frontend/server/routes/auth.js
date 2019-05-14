@@ -10,6 +10,8 @@ const pick = require('lodash/pick');
 const request = require('request');
 const addMonths = require('date-fns/add_months');
 
+const { getZone } = require('../utils');
+
 const router = express.Router();
 
 // Test token generator
@@ -42,8 +44,13 @@ router.get(
     }
 
     if (jwtClaims) {
+      const zone = getZone();
+      const claims = {
+        ...jwtClaims,
+        zone,
+      };
       // Passport/KeyCloak doesn't sign the token correctly, sign here
-      req.user.accessToken = jwt.sign(jwtClaims, jwtSecret);
+      req.user.accessToken = jwt.sign(claims, jwtSecret);
     }
 
     res.redirect(redirectTo || '/');
@@ -118,7 +125,14 @@ router.post('/refresh', (req, res) => {
       }
       const json = JSON.parse(body);
       const claims = jwt.decode(json.id_token);
-      const token = jwt.sign(claims, jwtSecret);
+      const zone = getZone();
+      const token = jwt.sign(
+        {
+          ...claims,
+          zone,
+        },
+        jwtSecret
+      );
 
       // Update the session under the hood so refreshes work.
       if (has(req, 'session.passport.user')) {

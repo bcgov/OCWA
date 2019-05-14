@@ -22,10 +22,6 @@ const OutputChecker = Loadable({
   loader: () => import('../../../output-checker/components/app'),
   loading: () => <Loading text="Initializing Output Checker interface" />,
 });
-const Download = Loadable({
-  loader: () => import('../../../download/components/app'),
-  loading: () => <Loading text="Initializing Exporter Download interface" />,
-});
 
 class App extends React.Component {
   componentDidMount() {
@@ -62,8 +58,6 @@ class App extends React.Component {
       // Load bundle for output checker if that's the only role, otherwise always send exporter
       if (hasOcRole && !hasExporterRole) {
         el = <OutputChecker user={user} />;
-      } else if (exporterMode === 'download') {
-        el = <Download user={user} />;
       } else {
         el = <Exporter user={user} />;
       }
