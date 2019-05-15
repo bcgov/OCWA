@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
 import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 import Spinner from '@atlaskit/spinner';
@@ -26,9 +27,7 @@ function Auth({ fetchStatus, isAuthenticated }) {
             {isFailed && (
               <div id="app-auth-failed">
                 <p>
-                  There was an error authenticating.
-                  <br />
-                  Please sign in.
+                  Redirecting to sign in page. Click below if nothing happens.
                 </p>
                 <Button
                   appearance="warning"
@@ -45,5 +44,11 @@ function Auth({ fetchStatus, isAuthenticated }) {
     </ModalTransition>
   );
 }
+
+Auth.propTypes = {
+  isAuthenticated: PropTypes.bool.isRequired,
+  fetchStatus: PropTypes.oneOf(['loaded', 'loading', 'idle', 'failed'])
+    .isRequired,
+};
 
 export default Auth;
