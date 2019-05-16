@@ -45,7 +45,16 @@ function ids(state = [], action = {}) {
   return state;
 }
 
+function requestTypes(state = {}, action = {}) {
+  if (action.type === 'request-types/get/success') {
+    return action.payload;
+  }
+
+  return state;
+}
+
 export default combineReducers({
   ids,
+  requestTypes,
   viewState,
 });

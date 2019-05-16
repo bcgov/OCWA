@@ -8,6 +8,7 @@ import Downloads from '@src/modules/download/containers/requests';
 import NewRequest from '@src/modules/requests/containers/new-request';
 import RequestForm from '@src/modules/requests/containers/request-form';
 import Requests from '@src/modules/requests/containers/requests-list';
+import RequestTypes from '@src/modules/download/containers/request-types';
 import Request from '@src/modules/requests/containers/request';
 import { Switch, Route } from 'react-router-dom';
 import Title from '@src/components/title';
@@ -31,7 +32,14 @@ function App({ user }) {
           <Route exact path="/" component={Requests} />
           <Route path="/requests/:requestId" component={Request} />
           <Route path="/new" component={RequestForm} />
-          <Route path="/downloads" component={Downloads} />
+          <Route
+            path="/downloads"
+            render={props => (
+              <RequestTypes>
+                <Downloads {...props} />
+              </RequestTypes>
+            )}
+          />
           <Route render={() => '404'} />
         </Switch>
       </div>
