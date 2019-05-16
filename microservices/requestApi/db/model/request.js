@@ -9,6 +9,9 @@ const APPROVED_STATE = 4;
 const DENIED_STATE = 5;
 const CANCELLED_STATE = 6;
 
+const INPUT_TYPE = "import";
+const EXPORT_TYPE = "export";
+
 var chronologySchema = new Schema({
     timestamp: {type: Date, default: Date.now(), required: true},
     enteredState: {type: Number, required: true, default: DRAFT_STATE},
@@ -32,13 +35,18 @@ var requestSchema = new Schema({
     topic: {type: String, required: false},
     reviewers: {type: [String], required: false, default: []},
     chronology: {type: [chronologySchema], required: true, default: []},
-    name: {type: String, required: true, index: true, unique: true},
+    name: {type: String, required: true, index: true},
     files: {type: [String], required: true},
-    author: {type: String, required: true}
+    author: {type: String, required: true},
+    type: {
+        type: String,
+        required: false,
+        enum: [EXPORT_TYPE, INPUT_TYPE],
+        default: EXPORT_TYPE
+    }
 });
 
 var model = mongoose.model('request', requestSchema);
-
 
 model.setChrono = function(doc, userId, objectDelta){
     if (typeof(doc.chronology) === "undefined"){
@@ -68,6 +76,9 @@ model.IN_REVIEW_STATE = IN_REVIEW_STATE;
 model.APPROVED_STATE = APPROVED_STATE;
 model.DENIED_STATE = DENIED_STATE;
 model.CANCELLED_STATE = CANCELLED_STATE;
+
+model.INPUT_TYPE = INPUT_TYPE;
+model.EXPORT_TYPE = EXPORT_TYPE;
 
 model.validState = function(state){
     return state >= DRAFT_STATE && state <= CANCELLED_STATE;
@@ -174,6 +185,36 @@ model.getAll = function(query, limit, page, user, callback){
     var skip = limit * (page - 1);
     logger.verbose("request get all, skip, limit", skip, limit);
 
+
+    var zoneRestrict = {
+        $match: {
+            $or: [
+                {type: INPUT_TYPE},
+                {$and: [
+                        {type: EXPORT_TYPE},
+                        {state: APPROVED_STATE}
+                    ]
+                }
+            ]
+        }
+    };
+
+    if (user.zone === user.EXPORT_ZONE){
+        zoneRestrict = {
+            $match: {
+                $or: [
+                    {type: EXPORT_TYPE},
+                    {$and: [
+                            {type: INPUT_TYPE},
+                            {state: APPROVED_STATE}
+                        ]
+                    }
+                ]
+            }
+        };
+    }
+
+
     getAllTopics(user, function(err, topicR){
         logger.verbose("get all topics model get all", topicR);
 
@@ -183,6 +224,31 @@ model.getAll = function(query, limit, page, user, callback){
                     topic: {$in: topicR}
                 }
             },
+            {
+                $project: {
+                    type: {
+                        $ifNull: ["$type", EXPORT_TYPE]
+                    },
+                    state: 1,
+                    tags: 1,
+                    phoneNumber: 1,
+                    supportingFiles: 1,
+                    purpose: 1,
+                    variableDescriptions: 1,
+                    subPopulation: 1,
+                    selectionCriteria: 1,
+                    steps: 1,
+                    freq: 1,
+                    confidentiality: 1,
+                    topic: 1,
+                    reviewers: 1,
+                    chronology: 1,
+                    name: 1,
+                    files: 1,
+                    author: 1
+                }
+            },
+            zoneRestrict,
             {
                 $match: query
             },
