@@ -14,7 +14,7 @@ const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
 require('./auth');
-const { parseApiHost, parseWsHost, storeUrl } = require('./utils');
+const { getZone, parseApiHost, parseWsHost, storeUrl } = require('./utils');
 const proxy = require('./proxy');
 const authRoute = require('./routes/auth');
 const filesRoute = require('./routes/files');
@@ -102,6 +102,7 @@ app.get('*', storeUrl, (req, res) => {
     exporterGroup,
     ocGroup,
     exporterMode,
+    zone: getZone(),
   });
 });
 

@@ -20,7 +20,10 @@ passport.use(new JWTStrategy({
             lastName: jwtPayload[userConf.surNameField],
             name: jwtPayload[userConf.givenNameField] + " " + jwtPayload[userConf.surNameField],
             groups: jwtPayload[userConf.groupField],
-            id: jwtPayload[userConf.idField]
+            id: jwtPayload[userConf.idField],
+            zone: (jwtPayload.zone) ? jwtPayload.zone : "external",
+            IMPORT_ZONE: 'external',
+            EXPORT_ZONE: 'internal',
         };
         logger.verbose('user ' + user.id + ' authenticated successfully');
 
