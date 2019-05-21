@@ -1,4 +1,6 @@
 import { combineReducers } from 'redux';
+import get from 'lodash/get';
+import union from 'lodash/union';
 
 const inititalViewState = {
   page: 1,
@@ -33,6 +35,26 @@ function viewState(state = inititalViewState, action = {}) {
   }
 }
 
+function ids(state = [], action = {}) {
+  if (action.type === 'requests/get/success') {
+    if (get(action, 'meta.state') === 4) {
+      return union(state, action.payload.result);
+    }
+  }
+
+  return state;
+}
+
+function requestTypes(state = {}, action = {}) {
+  if (action.type === 'request-types/get/success') {
+    return action.payload;
+  }
+
+  return state;
+}
+
 export default combineReducers({
+  ids,
+  requestTypes,
   viewState,
 });

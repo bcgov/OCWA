@@ -2,6 +2,15 @@
   margin: 20px 0;
 }
 
+.header h1 {
+  margin-top: 0;
+}
+
+.backButton {
+  font-size: 12px;
+  font-weight: 500;
+}
+
 .actionsColumn {
   display: flex;
   align-items: center;

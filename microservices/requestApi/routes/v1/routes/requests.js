@@ -12,11 +12,18 @@ router.get('/status_codes', function(req, res, next) {
 });
 
 router.get('/file_status_codes', function(req, res, next) {
-    var db = require('../db/db');
     res.json({
         "0": "Pass",
         "1": "Fail",
         "2": "Pending"
+    });
+});
+
+router.get('/request_types', function(req, res, next) {
+    var db = require('../db/db');
+    res.json({
+        "import": db.Request.INPUT_TYPE,
+        "export": db.Request.EXPORT_TYPE
     });
 });
 
@@ -56,6 +63,10 @@ router.get('/', function(req, res, next) {
 
     if (typeof(req.query.topic_id) !== "undefined"){
         q['topic'] = req.query.topic_id;
+    }
+
+    if (typeof(req.query.type) !== "undefined"){
+        q['type'] = req.query.type;
     }
 
     db.Request.getAll(q, limit, page, req.user, function(err, requestRes){
@@ -125,6 +136,11 @@ router.post("/", function(req, res, next){
 
     if (typeof(req.body.confidentiality) !== "undefined") {
         request.confidentiality = req.body.confidentiality;
+    }
+
+    request.type = db.Request.INPUT_TYPE;
+    if (req.user.zone && req.user.zone == req.user.EXPORT_ZONE){
+        request.type = db.Request.EXPORT_TYPE;
     }
 
     request.author = req.user.id;
