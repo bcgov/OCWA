@@ -19,6 +19,7 @@ printf "\"callbackURL\": \"${AUTH_CALLBACK_URL}\",\n" >> ./config/default.json
 printf "\"clientID\": \"${AUTH_CLIENT}\",\n" >> ./config/default.json
 printf "\"clientSecret\": \"${CLIENT_SECRET}\",\n" >> ./config/default.json
 printf "\"issuer\": \"${AUTH_ISSUER}\",\n" >> ./config/default.json
+printf "\"logoutURL\": \"${AUTH_LOGOUT_URL}\",\n" >> ./config/default.json
 printf "\"scope\": \"${AUTH_SCOPES}\",\n" >> ./config/default.json
 printf "\"tokenEndpoint\": \"${TOKEN_ENDPOINT}\",\n" >> ./config/default.json
 printf "\"userInfoURL\": \"${USER_INFO_ENDPOINT}\"\n" >> ./config/default.json

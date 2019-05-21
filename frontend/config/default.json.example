@@ -17,6 +17,7 @@
     "clientID": "URL_REQUIRED",
     "clientSecret": "CLIENT_SECRET_HERE",
     "issuer": "URL_REQUIRED",
+    "logoutURL": "URL_REQUIRED (MAKE SURE TO INCLUDE `?redirect_uri=...`)",
     "scope": "SCOPE_REQUIRED",
     "tokenEndpoint": "URL_REQUIRED",
     "userInfoURL": "URL_REQUIRED"
