@@ -6,3 +6,8 @@ patch:
   'npm:lodash:20180130':
     - express-manifest-helpers > lodash:
         patched: '2019-01-15T20:49:25.769Z'
+  SNYK-JS-AXIOS-174505:
+    - '@atlaskit/renderer > @atlaskit/media-card > axios':
+        patched: '2019-05-06T06:19:33.576Z'
+    - '@atlaskit/renderer > @atlaskit/media-filmstrip > @atlaskit/media-card > axios':
+        patched: '2019-05-06T06:19:33.576Z'
