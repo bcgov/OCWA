@@ -34,7 +34,9 @@ const Downloads = ({
           <ModalDialog
             actions={actions}
             heading={`Download Export Files (${data.length})`}
-            onOpenComplete={() => fetchFiles({ ids: request.files })}
+            onOpenComplete={() =>
+              fetchFiles({ id: request._id, ids: request.files })
+            }
           >
             {isLoading && (
               <div className={styles.loading}>
@@ -51,7 +53,7 @@ const Downloads = ({
                     </div>
                     <div>
                       <Button
-                        href={`/api/v1/files/${d.id}`}
+                        href={`/api/v1/files/${d.id}?request_id=${request._id}`}
                         iconBefore={<BitbucketCloneIcon />}
                       >
                         Download

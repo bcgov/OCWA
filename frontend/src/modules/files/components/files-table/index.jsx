@@ -57,10 +57,10 @@ const renderEmpty = (isFailed, isLoaded) => {
 
 class FilesTable extends React.Component {
   componentDidUpdate(prevProps) {
-    const { ids, sendAction } = this.props;
+    const { id, ids, sendAction } = this.props;
 
     if (!isEqual(prevProps.ids, ids) && !isEmpty(ids)) {
-      sendAction('initialRequest', { ids });
+      sendAction('initialRequest', { id, ids });
     }
   }
 
@@ -223,6 +223,7 @@ FilesTable.propTypes = {
     })
   ).isRequired,
   fileStatus: PropTypes.objectOf(PropTypes.arrayOf(FileStatusSchema)),
+  id: PropTypes.string.isRequired,
   ids: PropTypes.arrayOf(PropTypes.string).isRequired,
   isLoading: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
