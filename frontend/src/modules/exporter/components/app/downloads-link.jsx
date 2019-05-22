@@ -26,7 +26,9 @@ LinkElement.propTypes = {
   onMouseLeave: PropTypes.func.isRequired,
 };
 
-function DownloadsLink({ location }) {
+function DownloadsLink({ location, zone }) {
+  const text = zone === 'internal' ? 'Imports' : 'Exports';
+
   return (
     <Button
       appearance="primary"
@@ -39,7 +41,7 @@ function DownloadsLink({ location }) {
         />
       }
     >
-      Downloads
+      {`Approved ${text}`}
     </Button>
   );
 }
@@ -48,6 +50,7 @@ DownloadsLink.propTypes = {
   location: PropTypes.shape({
     pathname: PropTypes.string,
   }).isRequired,
+  zone: PropTypes.string.isRequired,
 };
 
 export default withRouter(DownloadsLink);

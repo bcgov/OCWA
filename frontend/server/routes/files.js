@@ -52,7 +52,7 @@ const validateFileRequest = async (req, requestId) => {
 
     // For downloading a file
     if (has(req, 'params.fileId')) {
-      if (json.files.includes(req.params.fileId)) {
+      if (json.state === 4 && json.files.includes(req.params.fileId)) {
         return true;
       }
     }
@@ -85,6 +85,7 @@ router.get('/', authenticateRequest, async (req, res, next) => {
 
   try {
     const isFileValid = await validateFileRequest(req, requestId);
+
     if (isFileValid) {
       const files = await fetchIds(ids);
       return res.json(files);

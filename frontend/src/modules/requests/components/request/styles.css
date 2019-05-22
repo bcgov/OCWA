@@ -3,13 +3,17 @@
 }
 
 .header {
-  padding: 30px 0 0;
+  padding: 30px 0;
   border-bottom: 1px solid #dee2e6;
   background-color: #f5f5f5;
 }
 
 .header h1 > span:first-child {
   margin-right: 15px;
+}
+
+.headerWithDiscussion {
+  padding-bottom: 0;
 }
 
 .tabs {

@@ -16,13 +16,13 @@ import Title from '@src/components/title';
 import DownloadsLink from './downloads-link';
 import * as styles from './styles.css';
 
-function App({ user }) {
+function App({ user, zone }) {
   return (
     <React.Fragment>
       <Title>Exporter</Title>
-      <AppBar icon={<Changes24Icon />} title="OCWA Exporter Tool">
+      <AppBar icon={<Changes24Icon />} title="OCWA">
         <ButtonGroup>
-          <DownloadsLink />
+          <DownloadsLink zone={zone} />
           <NewRequest />
         </ButtonGroup>
         <AppBarMenu user={user} />
@@ -51,6 +51,7 @@ App.propTypes = {
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,
   }).isRequired,
+  zone: PropTypes.string.isRequired,
 };
 
 export default App;
