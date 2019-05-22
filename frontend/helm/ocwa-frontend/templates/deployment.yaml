@@ -28,6 +28,8 @@ spec:
               value: "{{ .Values.port }}"
             - name: HOST
               value: {{ .Values.host }}
+            - name: HELP_URL
+              value: "{{ .Values.helpURL }}"
             - name: FORUM_API_HOST
               value: "{{ .Values.forumApiHost }}"
             - name: FORUM_SOCKET_HOST

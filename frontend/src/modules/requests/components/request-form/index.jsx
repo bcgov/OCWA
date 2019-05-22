@@ -12,7 +12,7 @@ class NewRequestDialog extends React.PureComponent {
   };
 
   render() {
-    const { isCreating, location } = this.props;
+    const { helpURL, isCreating, location } = this.props;
 
     return (
       <Page>
@@ -21,6 +21,7 @@ class NewRequestDialog extends React.PureComponent {
             <GridColumn medium={12}>
               <Form
                 data={location.state || {}}
+                helpURL={helpURL}
                 isCreating={isCreating}
                 onSubmit={this.onSubmit}
               />
@@ -33,12 +34,17 @@ class NewRequestDialog extends React.PureComponent {
 }
 
 NewRequestDialog.propTypes = {
+  helpURL: PropTypes.string,
   history: PropTypes.object.isRequired,
   isCreating: PropTypes.bool.isRequired,
   location: PropTypes.shape({
     state: PropTypes.object,
   }).isRequired,
   sendAction: PropTypes.func.isRequired,
+};
+
+NewRequestDialog.defaultProps = {
+  helpURL: null,
 };
 
 export default NewRequestDialog;

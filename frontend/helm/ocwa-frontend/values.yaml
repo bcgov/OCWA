@@ -43,6 +43,7 @@ host: "serverHostedOnHere"
 downloadHost: "downloadServerHostedOnHere"
 
 cookieSecret: "COOKIE_SECRET_HERE"
+helpURL: "ocwaHelpURL"
 forumApiHost: "ocwa-forum-api.ocwa"
 forumSocket: "ocwa-forum-api.ocwa:3001"
 requestApiHost: "ocwa-requests-api.ocwa"

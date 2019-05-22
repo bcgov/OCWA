@@ -4,6 +4,7 @@ mkdir -p ./config
 printf "{\n" > ./config/default.json
 printf "\"port\": \"${PORT}\",\n" >> ./config/default.json
 printf "\"host\": \"${HOST}\",\n" >> ./config/default.json
+printf "\"helpURL\": \"${HELP_URL}\",\n" >> ./config/default.json
 printf "\"forumApiHost\": \"${FORUM_API_HOST}\",\n" >> ./config/default.json
 printf "\"forumSocket\": \"${FORUM_SOCKET_HOST}\",\n" >> ./config/default.json
 printf "\"requestApiHost\": \"${REQUEST_API_HOST}\",\n" >> ./config/default.json

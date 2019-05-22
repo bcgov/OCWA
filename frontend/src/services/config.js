@@ -8,11 +8,13 @@ export const exporterGroup = EXPORTER_GROUP;
 export const ocGroup = OC_GROUP;
 export const exporterMode = EXPORTER_MODE; // Can be (undefined || 'export') or 'download'
 export const zone = ZONE;
+export const helpURL = HELP_URL;
 
 export default {
   commit,
   limit,
   version,
+  helpURL,
   idField,
   exporterGroup,
   ocGroup,
