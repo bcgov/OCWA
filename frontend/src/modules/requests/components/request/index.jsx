@@ -55,14 +55,17 @@ class Request extends React.Component {
     const {
       data,
       duplicateFiles,
-      isDiscussionEnabled,
       isLoaded,
       isOutputChecker,
       updatedAt,
       match,
+      zone,
     } = this.props;
     const { isEditing } = this.state;
     const title = data.name || 'Loading...';
+    const isDiscussionEnabled =
+      (data.type === 'export' && zone === 'internal') ||
+      (data.type === 'import' && zone === 'external');
 
     if (!isLoaded && isEmpty(data)) {
       return null;
@@ -182,7 +185,6 @@ Request.propTypes = {
     files: PropTypes.arrayOf(PropTypes.string),
     supportingFiles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
-  isDiscussionEnabled: PropTypes.bool.isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   location: PropTypes.shape({
@@ -197,6 +199,7 @@ Request.propTypes = {
   onFinishEditing: PropTypes.func.isRequired,
   onReset: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
+  zone: PropTypes.string.isRequired,
 };
 
 export default Request;

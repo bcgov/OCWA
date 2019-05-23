@@ -33,9 +33,9 @@ const mapStateToProps = (state, props) => {
     data,
     duplicateFiles: get(state, 'requests.viewState.filesToDuplicate'),
     isOutputChecker: state.app.auth.user.groups.includes('/oc'),
-    isDiscussionEnabled: zone !== 'external',
     updatedAt,
     fetchStatus: get(state, `data.fetchStatus.entities.requests.${requestId}`),
+    zone,
   };
 };
 

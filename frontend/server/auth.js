@@ -58,7 +58,7 @@ passport.deserializeUser((obj, done) => {
 
 exports.checkAuth = (req, res, done) => {
   if (!req.user || !req.isAuthenticated || !req.isAuthenticated()) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
 
   done();
