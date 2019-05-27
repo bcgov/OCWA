@@ -24,12 +24,17 @@ const authenticateRequest = (req, res, done) => {
   const requestId = get(req, 'query.request_id');
 
   if (!requestId) {
-    return res.send(500).end();
+    return res
+      .status(500)
+      .send({ message: 'No request is attached to these files' })
+      .end();
   }
 
   done();
 };
 
+// Checks the request before allowing access to the file.
+// @returns { Boolean | Error }
 const validateFileRequest = async (req, requestId) => {
   const requestApiHost = config.get('requestApiHost');
   const token = req.headers.authorization || `Bearer ${req.user.accessToken}`;
@@ -52,14 +57,15 @@ const validateFileRequest = async (req, requestId) => {
 
     // For downloading a file
     if (has(req, 'params.fileId')) {
+      console.log(json);
       if (json.state === 4 && json.files.includes(req.params.fileId)) {
         return true;
       }
     }
     // if we get this far we have to assume there is a mismatch and prevent access
-    return false;
+    return new Error('Files unavailable');
   } catch (err) {
-    return false;
+    return err;
   }
 };
 
@@ -86,12 +92,17 @@ router.get('/', authenticateRequest, async (req, res, next) => {
   try {
     const isFileValid = await validateFileRequest(req, requestId);
 
-    if (isFileValid) {
+    if (isFileValid === true) {
       const files = await fetchIds(ids);
       return res.json(files);
+    } else {
+      throw new Error(isFileValid);
     }
   } catch (err) {
-    next(err);
+    return res
+      .status(401)
+      .send({ message: err.message })
+      .end();
   }
 });
 
@@ -100,7 +111,7 @@ router.get('/:fileId', authenticateRequest, async (req, res) => {
   const requestId = get(req, 'query.request_id');
   const isFileValid = await validateFileRequest(req, requestId);
 
-  if (isFileValid) {
+  if (isFileValid === true) {
     const { metaData } = await minioClient.statObject(bucket, fileId);
     const stream = await minioClient.getObject(bucket, fileId);
     const data = [];
@@ -118,7 +129,10 @@ router.get('/:fileId', authenticateRequest, async (req, res) => {
       res.end(fileData);
     });
   } else {
-    res.send(401).end();
+    return res
+      .status(401)
+      .send(get(isFileValid, 'message', 'File Unavailable'))
+      .end();
   }
 });
 

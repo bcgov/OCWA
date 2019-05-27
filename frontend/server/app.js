@@ -112,6 +112,7 @@ app.use((err, req, res) => {
   res.locals.message = err.message;
   res.locals.error = isDevelopment ? err : {};
 
+  console.log('app error', err);
   // render the error page
   if (isFunction(res.status)) {
     res.status(err.status || 500);
