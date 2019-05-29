@@ -22,6 +22,10 @@ const OutputChecker = Loadable({
   loader: () => import('../../../output-checker/components/app'),
   loading: () => <Loading text="Initializing Output Checker interface" />,
 });
+const Reports = Loadable({
+  loader: () => import('../../../reports/components/app'),
+  loading: () => <Loading text="Initializing Reports interface" />,
+});
 
 class App extends React.Component {
   componentDidMount() {
@@ -47,6 +51,8 @@ class App extends React.Component {
       // Using `includes` here incase groups isn't an array depending on the auth env
       const hasExporterRole = includes(user.groups, exporterGroup);
       const hasOcRole = includes(user.groups, ocGroup);
+      const hasAdmin = includes(user.groups, 'admin');
+      // const hasAdmin = true; // TODO: Use this when testing.
       const hasValidGroupAccess = some(user.groups, g =>
         validGroups.includes(g)
       );
@@ -61,7 +67,9 @@ class App extends React.Component {
       }
 
       // Load bundle for output checker if that's the only role, otherwise always send exporter
-      if (hasOcRole && !hasExporterRole) {
+      if (hasAdmin) {
+        el = <Reports />;
+      } else if (hasOcRole && !hasExporterRole) {
         el = <OutputChecker {...props} />;
       } else {
         el = <Exporter {...props} />;
