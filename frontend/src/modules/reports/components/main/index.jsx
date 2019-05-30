@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Pagination from '@src/components/pagination';
-import { RadialChart } from 'react-vis';
+import {
+  HorizontalGridLines,
+  VerticalGridLines,
+  VerticalBarSeries,
+  XAxis,
+  FlexibleWidthXYPlot,
+  YAxis,
+} from 'react-vis';
 import { RequestSchema } from '@src/modules/requests/types';
 import { limit } from '@src/services/config';
 
@@ -22,13 +29,37 @@ function ReportsMain({
 }) {
   const rows = makeRows(data);
   const isPaginationVisible = data.length > 0;
+  const lineStyles = {
+    line: { stroke: '#DFE1E6' },
+  };
 
   return (
     <Page>
       <Grid>
         <GridColumn medium={12}>
+          <header className={styles.header}>
+            <h2>Recent Adjudications</h2>
+          </header>
           <div className={styles.charts}>
-            <RadialChart showLabels data={chartData} width={300} height={300} />
+            <FlexibleWidthXYPlot
+              height={300}
+              margin={{ bottom: 70 }}
+              xType="time"
+            >
+              <HorizontalGridLines />
+              <VerticalBarSeries
+                barWidth={0.1}
+                color="#1a5a96"
+                data={chartData}
+                style={{}}
+              />
+              <XAxis
+                tickLabelAngle={-45}
+                title="Adjudication Date"
+                style={lineStyles}
+              />
+              <YAxis title="Total" style={lineStyles} />
+            </FlexibleWidthXYPlot>
           </div>
         </GridColumn>
       </Grid>
@@ -46,7 +77,7 @@ function ReportsMain({
             />
             {isPaginationVisible && (
               <Pagination
-                fetch={fetchRequests}
+                onClick={fetchRequests}
                 isLastPage={data.length < limit * page}
                 page={page}
               />
