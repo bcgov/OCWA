@@ -1,50 +1,31 @@
 import { connect } from 'react-redux';
 import forIn from 'lodash/forIn';
 import get from 'lodash/get';
-import head from 'lodash/head';
-import last from 'lodash/last';
 import groupBy from 'lodash/groupBy';
 import isEmpty from 'lodash/isEmpty';
 import keys from 'lodash/keys';
 import withRequest from '@src/modules/data/components/data-request';
-import { getRequestStateText } from '@src/modules/requests/utils';
 
 import { sortReports } from '../actions';
 import { fetchRequests } from '../../requests/actions';
 import { requestsListSchema } from '../../requests/schemas';
 import Reports from '../components/main';
-
-const getAdjudicationDate = request => {
-  const change = request.chronology.find(c => c.enteredState > 3);
-  if (change) {
-    return change.timestamp;
-  }
-
-  return '';
-};
+import { makeRequest } from './selectors';
 
 const mapStateToProps = state => {
   const { sortKey, sortOrder } = state.reports.filters;
   const entities = get(state, 'data.entities.requests', {});
   const ids = keys(entities);
-  const data = ids.map(id => {
-    const request = get(entities, id, {});
-    const submittedOn = head(request.chronology).timestamp;
-    const updatedOn = last(request.chronology).timestamp;
-    const outputChecker = head(request.reviewers);
-    const adjudicationDate = getAdjudicationDate(request);
-
-    return {
-      ...request,
-      submittedOn,
-      updatedOn,
-      outputChecker,
-      adjudicationDate,
-    };
-  });
+  const data = ids
+    .map(id => get(entities, id, {}))
+    .filter(d => d.state > 2)
+    .map(makeRequest);
 
   const chartData = [];
-  const dataByState = groupBy(data, 'adjudicationDate');
+  const dataByState = groupBy(
+    data.filter(d => !isEmpty(d.approvedDate)),
+    'approvedDate'
+  );
 
   forIn(dataByState, (value, key) => {
     if (key) {

@@ -1,0 +1,153 @@
+import * as React from 'react';
+import DateTime from '@src/components/date';
+import Files from '@src/modules/files/containers/files';
+import { Link } from 'react-router-dom';
+import Page, { Grid, GridColumn } from '@atlaskit/page';
+import RequestIcon from '@src/modules/requests/components/request-icon';
+import { uid } from 'react-uid';
+import { getRequestStateColor } from '@src/modules/requests/utils';
+
+import * as styles from './styles.css';
+
+const getChronologyText = state => {
+  switch (state) {
+    case 0:
+      return 'Request created';
+    case 1:
+      return 'Request updated';
+    case 2:
+      return 'Request submitted';
+    case 3:
+      return 'Request claimed';
+    case 4:
+      return 'Request approved';
+    case 5:
+      return 'Errors in request stopped and reported';
+    case 6:
+      return 'Request cancelled';
+    default:
+      return 'Unknown';
+  }
+};
+const getBorderColor = state =>
+  state > 3 ? getRequestStateColor(state) : null;
+
+const DATE_FORMAT = 'MMMM Do YYYY [at] h:mm:ss aa';
+
+function Request({ data }) {
+  return (
+    <Page>
+      <Grid>
+        <GridColumn medium={12}>
+          <header className={styles.header}>
+            <small>
+              <Link to="/">&laquo; Back to Reports</Link>
+            </small>
+            <h2>{data.name}</h2>
+            <small>
+              Created on{' '}
+              <DateTime value={data.createdAt} format={DATE_FORMAT} />
+            </small>
+          </header>
+        </GridColumn>
+      </Grid>
+      <Grid>
+        <GridColumn medium={12}>
+          <div className={styles.summaryTable}>
+            <div className={styles.summaryCell}>
+              <div className={styles.summaryCellValueText}>
+                <DateTime
+                  value={data.firstSubmittedDate}
+                  format="MMM Do YYYY"
+                />
+              </div>
+              <h6>First Submission Date</h6>
+            </div>
+            <div className={styles.summaryCell}>
+              <div className={styles.summaryCellValueText}>
+                <DateTime value={data.approvedDate} format="MMM Do YYYY" />
+              </div>
+              <h6>Approval Date</h6>
+            </div>
+            <div className={styles.summaryCell}>
+              <div className={styles.summaryCellValueText}>
+                {data.daysUntilApproval}
+              </div>
+              <h6>Days To Approval</h6>
+            </div>
+            <div className={styles.summaryCell}>
+              <div className={styles.summaryCellValueText}>
+                {data.submissionsCount}
+              </div>
+              <h6>Submissions Total</h6>
+            </div>
+          </div>
+          <header className={styles.chronologyHeader}>
+            <h4>Request Timeline</h4>
+          </header>
+          <ol className={styles.chronologyList}>
+            {data.chronology.reverse().map(d => (
+              <li key={uid(d)} className={styles.chronologyListItem}>
+                <div
+                  className={styles.icon}
+                  style={{
+                    borderColor: getBorderColor(d.enteredState),
+                  }}
+                >
+                  <RequestIcon value={d.enteredState} size="lg" />
+                </div>
+                <div
+                  className={styles.content}
+                  style={{
+                    borderColor: getBorderColor(d.enteredState),
+                  }}
+                >
+                  <header>
+                    <h6>
+                      <strong>
+                        <DateTime value={d.timestamp} format={DATE_FORMAT} />
+                      </strong>
+                    </h6>
+                  </header>
+                  <div>
+                    <div className={styles.body}>
+                      {`${getChronologyText(d.enteredState)} by ${d.changeBy}`}
+                    </div>
+                    {d.changes &&
+                      d.changes.files &&
+                      d.changes.files.length > 0 && (
+                        <div className={styles.files}>
+                          <header>
+                            <h6>Export Files</h6>
+                          </header>
+                          <Files
+                            ids={d.changes.files}
+                            fileStatus={data.fileStatus}
+                          />
+                        </div>
+                      )}
+                    {d.changes &&
+                      d.changes.supportingFiles &&
+                      d.changes.supportingFiles.length > 0 && (
+                        <div className={styles.files}>
+                          <header>
+                            <h6>Supporting Files</h6>
+                          </header>
+                          <Files
+                            ids={d.changes.supportingFiles}
+                            fileStatus={data.fileStatus}
+                          />
+                        </div>
+                      )}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </GridColumn>
+      </Grid>
+    </Page>
+  );
+}
+
+export default Request;

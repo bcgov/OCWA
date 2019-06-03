@@ -7,6 +7,7 @@ import { Switch, Route } from 'react-router-dom';
 import Title from '@src/components/title';
 
 import Reports from '../../containers/main';
+import Request from '../../containers/request';
 import * as styles from './styles.css';
 
 function ReportsApp({ user }) {
@@ -19,6 +20,7 @@ function ReportsApp({ user }) {
       <div id="app-content" className={styles.container}>
         <Switch>
           <Route exact path="/" component={Reports} />
+          <Route exact path="/view/:requestId" component={Request} />
         </Switch>
       </div>
     </React.Fragment>

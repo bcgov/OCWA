@@ -8,3 +8,28 @@
   align-items: center;
   margin: 20px 0;
 }
+
+.filters {
+  padding: 10px 0;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 2px solid #DFE1E6;
+  border-bottom: 2px solid #DFE1E6;
+}
+
+.dateRange {
+  width: 35%;
+  display: flex;
+  align-items: center;
+}
+
+.dateRange div[role="presentation"] {
+  width: calc(50% - 15px);
+}
+
+.dateRangeDivider {
+  width: 30px;
+  text-align: center;
+}

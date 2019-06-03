@@ -1,5 +1,5 @@
 const initialState = {
-  sortKey: 'submittedOn',
+  sortKey: 'approvedDate',
   sortOrder: 'DESC',
 };
 

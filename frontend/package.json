@@ -65,6 +65,7 @@
     "@atlaskit/comment": "^6.0.14",
     "@atlaskit/css-reset": "^3.0.7",
     "@atlaskit/date": "^0.1.2",
+    "@atlaskit/datetime-picker": "^8.0.3",
     "@atlaskit/dropdown-menu": "^6.1.20",
     "@atlaskit/dynamic-table": "^10.0.15",
     "@atlaskit/editor-core": "^107.13.3",

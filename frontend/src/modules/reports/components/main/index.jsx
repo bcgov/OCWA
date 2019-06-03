@@ -5,7 +5,6 @@ import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Pagination from '@src/components/pagination';
 import {
   HorizontalGridLines,
-  VerticalGridLines,
   VerticalBarSeries,
   XAxis,
   FlexibleWidthXYPlot,
@@ -16,6 +15,7 @@ import { limit } from '@src/services/config';
 
 import head from './head';
 import makeRows from './rows';
+import Filters from './filters';
 import * as styles from './styles.css';
 
 function ReportsMain({
@@ -61,6 +61,7 @@ function ReportsMain({
               <YAxis title="Total" style={lineStyles} />
             </FlexibleWidthXYPlot>
           </div>
+          <Filters />
         </GridColumn>
       </Grid>
       <Grid>

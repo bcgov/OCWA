@@ -1,5 +1,6 @@
 import * as React from 'react';
 import DateTime from '@src/components/date';
+import { Link } from 'react-router-dom';
 import RequestIcon from '@src/modules/requests/components/request-icon';
 import { getRequestStateText } from '@src/modules/requests/utils';
 
@@ -16,21 +17,27 @@ export default data =>
         },
         {
           key: d.name,
-          content: d.name,
+          content: <Link to={`/view/${d._id}`}>{d.name}</Link>,
         },
         {
-          key: d.submittedOn,
-          content: <DateTime value={d.submittedOn} format={format} />,
+          key: d.firstSubmittedDate,
+          content: <DateTime value={d.firstSubmittedDate} format={format} />,
         },
         {
-          key: d.updatedOn,
-          content: <DateTime value={d.updatedOn} format={format} />,
+          key: d.approvedDate,
+          content: <DateTime value={d.approvedDate} format={format} />,
         },
         {
-          key: d.adjudicationDate,
-          content: d.adjudicationDate && (
-            <DateTime value={d.adjudicationDate} format={format} />
-          ),
+          key: d.daysUntilApproval,
+          content: d.daysUntilApproval,
+        },
+        {
+          key: d.submissionsCount,
+          content: d.submissionsCount,
+        },
+        {
+          key: d.revisionsCount,
+          content: d.revisionsCount,
         },
         {
           key: d.state,
