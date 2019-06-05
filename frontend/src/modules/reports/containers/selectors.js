@@ -1,5 +1,6 @@
 import differenceInDays from 'date-fns/difference_in_days';
 import get from 'lodash/get';
+import last from 'lodash/last';
 import memoize from 'lodash/memoize';
 import head from 'lodash/head';
 import values from 'lodash/values';
@@ -18,6 +19,7 @@ export const makeRequest = memoize(
       (prev, d) => (d.enteredState === 5 ? prev + 1 : prev),
       0
     );
+    const lastEditDate = last(request.chronology).timestamp;
     const submissionsCount = request.chronology.reduce(
       (prev, d) => (d.enteredState === 2 ? prev + 1 : prev),
       0
@@ -31,6 +33,7 @@ export const makeRequest = memoize(
       createdAt,
       firstSubmittedDate,
       approvedDate,
+      lastEditDate,
       outputChecker,
       revisionsCount,
       daysUntilApproval,

@@ -94,7 +94,7 @@ app.get('/hello', (req, res) => {
   res.status(200).send('hi');
 });
 
-app.get('*', storeUrl, (req, res) => {
+app.get('*', checkAuth, storeUrl, (req, res) => {
   res.render('index', {
     isDevelopment,
     title: 'OCWA | Output Checker Workflow App',

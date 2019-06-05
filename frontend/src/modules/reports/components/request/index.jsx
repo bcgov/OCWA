@@ -43,11 +43,9 @@ function Request({ data }) {
             <small>
               <Link to="/">&laquo; Back to Reports</Link>
             </small>
-            <h2>{data.name}</h2>
-            <small>
-              Created on{' '}
-              <DateTime value={data.createdAt} format={DATE_FORMAT} />
-            </small>
+            <h2 className={styles.title}>
+              <RequestIcon value={data.state} size="xlarge" /> {data.name}
+            </h2>
           </header>
         </GridColumn>
       </Grid>
@@ -65,7 +63,11 @@ function Request({ data }) {
             </div>
             <div className={styles.summaryCell}>
               <div className={styles.summaryCellValueText}>
-                <DateTime value={data.approvedDate} format="MMM Do YYYY" />
+                {data.approvedDate ? (
+                  <DateTime value={data.approvedDate} format="MMM Do YYYY" />
+                ) : (
+                  'N/A'
+                )}
               </div>
               <h6>Approval Date</h6>
             </div>
@@ -86,7 +88,7 @@ function Request({ data }) {
             <h4>Request Timeline</h4>
           </header>
           <ol className={styles.chronologyList}>
-            {data.chronology.reverse().map(d => (
+            {data.chronology.map(d => (
               <li key={uid(d)} className={styles.chronologyListItem}>
                 <div
                   className={styles.icon}

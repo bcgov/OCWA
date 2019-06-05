@@ -25,7 +25,11 @@ export default data =>
         },
         {
           key: d.approvedDate,
-          content: <DateTime value={d.approvedDate} format={format} />,
+          content: d.approvedDate ? (
+            <DateTime value={d.approvedDate} format={format} />
+          ) : (
+            'N/A'
+          ),
         },
         {
           key: d.daysUntilApproval,
