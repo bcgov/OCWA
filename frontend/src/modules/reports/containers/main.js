@@ -31,7 +31,9 @@ const mapStateToProps = state => {
   const data = ids
     .map(id => get(entities, id, {}))
     .filter(
-      d => d.state > 2 && (requestState === 'all' || d.state === requestState)
+      d =>
+        d.chronology.some(c => c.enteredState > 2) &&
+        (requestState === 'all' || d.state === requestState)
     )
     .map(makeRequest)
     .filter(d => isWithinRange(d.lastEditDate, startDate, endDate));

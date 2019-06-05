@@ -40,12 +40,6 @@ function Filters({
         >
           Approved
         </Button>
-        <Button
-          appearance={requestState === 5 && 'primary'}
-          onClick={() => onRequestStateChange(5)}
-        >
-          Rejected
-        </Button>
       </ButtonGroup>
       <div className={styles.dateRange}>
         <DatePicker
