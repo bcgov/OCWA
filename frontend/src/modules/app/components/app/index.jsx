@@ -5,7 +5,12 @@ import Loadable from 'react-loadable';
 import includes from 'lodash/includes';
 import Messages from '@src/modules/data/containers/messages';
 import some from 'lodash/some';
-import { exporterGroup, ocGroup, exporterMode } from '@src/services/config';
+import {
+  exporterGroup,
+  ocGroup,
+  reportsGroup,
+  exporterMode,
+} from '@src/services/config';
 import '@atlaskit/css-reset';
 
 import About from '../../containers/about';
@@ -51,8 +56,7 @@ class App extends React.Component {
       // Using `includes` here incase groups isn't an array depending on the auth env
       const hasExporterRole = includes(user.groups, exporterGroup);
       const hasOcRole = includes(user.groups, ocGroup);
-      const hasAdmin = includes(user.groups, 'admin');
-      // const hasAdmin = true; // TODO: Use this when testing.
+      const hasReports = includes(user.groups, reportsGroup);
       const hasValidGroupAccess = some(user.groups, g =>
         validGroups.includes(g)
       );
@@ -67,7 +71,7 @@ class App extends React.Component {
       }
 
       // Load bundle for output checker if that's the only role, otherwise always send exporter
-      if (hasAdmin) {
+      if (hasReports) {
         el = <Reports />;
       } else if (hasOcRole && !hasExporterRole) {
         el = <OutputChecker {...props} />;

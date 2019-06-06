@@ -51,7 +51,10 @@ ocwa-frontend:
   exporterGroup: "/exporter"
   ocGroup: "/oc"
   codeExportEnabled: false
-  repositoryHost: "repository-host"
+  repositoryHost: ""
+  reportsGroup: "/reports"
+
+>>>>>>> Add `REPORTS_GROUP` to the config.
   auth:
     authorizationEndpoint: "openid.auth.endpoint"
     callbackURL: "chart-example.local/auth"
