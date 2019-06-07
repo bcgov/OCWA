@@ -33,3 +33,12 @@
   width: 30px;
   text-align: center;
 }
+
+.empty {
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

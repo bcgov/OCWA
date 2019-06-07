@@ -4,6 +4,7 @@ import Button, { ButtonGroup } from '@atlaskit/button';
 import { DatePicker } from '@atlaskit/datetime-picker';
 import isAfter from 'date-fns/is_after';
 import isBefore from 'date-fns/is_before';
+import parse from 'date-fns/parse';
 
 import * as styles from './styles.css';
 
@@ -15,7 +16,8 @@ function Filters({
   startDate,
 }) {
   const onChange = key => date => {
-    const value = new Date(date);
+    const value = parse(date);
+
     if (key === 'endDate') {
       if (isBefore(value, startDate)) return;
     } else if (key === 'startDate') {
@@ -43,12 +45,14 @@ function Filters({
       </ButtonGroup>
       <div className={styles.dateRange}>
         <DatePicker
+          dateFormat="DD/MM/YYYY"
           onChange={onChange('startDate')}
           spacing="compact"
           value={startDate}
         />
         <div className={styles.dateRangeDivider}>to</div>
         <DatePicker
+          dateFormat="DD/MM/YYYY"
           onChange={onChange('endDate')}
           spacing="compact"
           value={endDate}
@@ -59,12 +63,14 @@ function Filters({
 }
 
 Filters.propTypes = {
-  endDate: PropTypes.string.isRequired,
+  endDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])
+    .isRequired,
   onDateChange: PropTypes.func.isRequired,
   onRequestStateChange: PropTypes.func.isRequired,
   requestState: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     .isRequired,
-  startDate: PropTypes.string.isRequired,
+  startDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])
+    .isRequired,
 };
 
 export default Filters;

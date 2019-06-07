@@ -18,6 +18,7 @@ import { colors } from '@atlaskit/theme';
 
 import head from './head';
 import makeRows from './rows';
+import Empty from './empty';
 import Filters from './filters';
 import * as styles from './styles.css';
 
@@ -44,7 +45,9 @@ function ReportsMain({
   };
   const xAxisStartPadding = { y: 0, x: new Date(startDate).getTime() };
   const xAxisEndPadding = { y: 0, x: new Date(endDate).getTime() };
-  const onDragEnd = ({ left, right }) => {
+  const onDragEnd = event => {
+    if (!event) return;
+    const { left, right } = event;
     if (!left || !right || isSameDay(left, right)) return;
     onDateRangeChange({ left, right });
   };
@@ -95,7 +98,7 @@ function ReportsMain({
         <GridColumn medium={12}>
           <div id="reports-list-table">
             <DynamicTableStateless
-              emptyView={<div>Empty</div>}
+              emptyView={<Empty />}
               head={head}
               rows={rows}
               loadingSpinnerSize="large"
@@ -131,7 +134,8 @@ ReportsMain.propTypes = {
     })
   ).isRequired,
   data: PropTypes.arrayOf(RequestSchema).isRequired,
-  endDate: PropTypes.string.isRequired,
+  endDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])
+    .isRequired,
   fetchRequests: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
   onDateChange: PropTypes.func.isRequired,
@@ -142,7 +146,8 @@ ReportsMain.propTypes = {
     .isRequired,
   sortKey: PropTypes.string.isRequired,
   sortOrder: PropTypes.oneOf(['ASC', 'DESC']).isRequired,
-  startDate: PropTypes.string.isRequired,
+  startDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])
+    .isRequired,
 };
 
 export default ReportsMain;
