@@ -8,7 +8,7 @@ import {
   FlexibleWidthXYPlot,
   Highlight,
   HorizontalGridLines,
-  VerticalBarSeries,
+  HorizontalRectSeries,
   XAxis,
   YAxis,
 } from 'react-vis';
@@ -43,8 +43,6 @@ function ReportsMain({
     line: { stroke: colors.N60 },
     text: { stroke: 'none', fill: colors.N60 },
   };
-  const xAxisStartPadding = { y: 0, x: new Date(startDate).getTime() };
-  const xAxisEndPadding = { y: 0, x: new Date(endDate).getTime() };
   const onDragEnd = event => {
     if (!event) return;
     const { left, right } = event;
@@ -61,22 +59,17 @@ function ReportsMain({
           </header>
           <div className={styles.charts}>
             <FlexibleWidthXYPlot
-              height={300}
-              xType="time"
+              colorType="literal"
+              height={350}
               margin={{ bottom: 70 }}
+              xType="time"
+              xDomain={[
+                new Date(startDate).getTime(),
+                new Date(endDate).getTime(),
+              ]}
             >
-              <HorizontalGridLines />
-              <VerticalBarSeries
-                barWidth={0.1}
-                color={colors.Y300}
-                data={[xAxisStartPadding, ...chartData, xAxisEndPadding]}
-              />
-              <XAxis
-                tickLabelAngle={-45}
-                title="Adjudication Date"
-                style={lineStyles}
-              />
-              <YAxis title="Total" style={lineStyles} />
+              <XAxis tickLabelAngle={-45} title="Date" style={lineStyles} />
+              <HorizontalRectSeries color={colors.Y300} data={chartData} />
               <Highlight
                 drag
                 color={colors.DN900}

@@ -6,7 +6,6 @@ import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import DocumentFilledIcon from '@atlaskit/icon/glyph/document-filled';
 import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled';
-import ErrorIcon from '@atlaskit/icon/glyph/error';
 import RecentIcon from '@atlaskit/icon/glyph/recent';
 import WatchFilledIcon from '@atlaskit/icon/glyph/watch-filled';
 import MoreIcon from '@atlaskit/icon/glyph/more';

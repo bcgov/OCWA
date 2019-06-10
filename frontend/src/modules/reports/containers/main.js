@@ -6,6 +6,9 @@ import isEmpty from 'lodash/isEmpty';
 import isWithinRange from 'date-fns/is_within_range';
 import keys from 'lodash/keys';
 import withRequest from '@src/modules/data/components/data-request';
+import { fetchRequests } from '@src/modules/requests/actions';
+import { requestsListSchema } from '@src/modules/requests/schemas';
+import { getRequestStateColor } from '@src/modules/requests/utils';
 
 import {
   setDateRange,
@@ -13,8 +16,6 @@ import {
   setRequestFilter,
   sortReports,
 } from '../actions';
-import { fetchRequests } from '../../requests/actions';
-import { requestsListSchema } from '../../requests/schemas';
 import Reports from '../components/main';
 import { makeRequest } from './selectors';
 
@@ -35,23 +36,16 @@ const mapStateToProps = state => {
         d.chronology.some(c => c.enteredState > 2) &&
         (requestState === 'all' || d.state === requestState)
     )
-    .map(makeRequest)
-    .filter(d => isWithinRange(d.lastEditDate, startDate, endDate));
+    .map(makeRequest);
 
-  const chartData = [];
-  const dataByState = groupBy(
-    data.filter(d => !isEmpty(d.lastEditDate)),
-    'lastEditDate'
-  );
-
-  forIn(dataByState, (value, key) => {
-    if (key) {
-      chartData.push({
-        y: value.length,
-        x: new Date(key).getTime(),
-      });
-    }
-  });
+  const chartData = data.map((d, index) => ({
+    x: new Date(d.firstSubmittedDate).getTime(),
+    x0:
+      new Date(d.approvedDate).getTime() || new Date(d.lastEditDate).getTime(),
+    y: index,
+    y0: index + 1,
+    color: getRequestStateColor(d.state),
+  }));
 
   return {
     chartData,
