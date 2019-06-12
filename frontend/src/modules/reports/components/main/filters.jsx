@@ -1,9 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import CrossIcon from '@atlaskit/icon/glyph/cross';
 import { DatePicker } from '@atlaskit/datetime-picker';
 import isAfter from 'date-fns/is_after';
 import isBefore from 'date-fns/is_before';
+import MentionIcon from '@atlaskit/icon/glyph/mention';
 import parse from 'date-fns/parse';
 
 import * as styles from './styles.css';
@@ -12,6 +14,10 @@ function Filters({
   endDate,
   onDateChange,
   onRequestStateChange,
+  onSelectRequester,
+  onSelectProject,
+  project,
+  requester,
   requestState,
   startDate,
 }) {
@@ -42,6 +48,16 @@ function Filters({
         >
           Approved
         </Button>
+        {requester && (
+          <Button
+            appearance="primary"
+            iconAfter={<CrossIcon />}
+            iconBefore={<MentionIcon />}
+            onClick={() => onSelectRequester(null)}
+          >
+            {requester}
+          </Button>
+        )}
       </ButtonGroup>
       <div className={styles.dateRange}>
         <DatePicker
@@ -66,11 +82,20 @@ Filters.propTypes = {
   endDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])
     .isRequired,
   onDateChange: PropTypes.func.isRequired,
+  onSelectProject: PropTypes.func.isRequired,
   onRequestStateChange: PropTypes.func.isRequired,
+  onSelectRequester: PropTypes.func.isRequired,
+  project: PropTypes.string,
+  requester: PropTypes.string,
   requestState: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     .isRequired,
   startDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])
     .isRequired,
+};
+
+Filters.defaultProps = {
+  project: null,
+  requester: null,
 };
 
 export default Filters;

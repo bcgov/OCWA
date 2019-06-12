@@ -24,7 +24,10 @@ export const makeRequest = memoize(
       (prev, d) => (d.enteredState === 2 ? prev + 1 : prev),
       0
     );
-    console.log(approvedDate);
+    const daysActive = Math.max(
+      1,
+      differenceInDays(lastEditDate, firstSubmittedDate)
+    );
     const daysUntilApproval = approvedDate
       ? Math.max(1, differenceInDays(approvedDate, firstSubmittedDate))
       : 'N/A';
@@ -34,6 +37,7 @@ export const makeRequest = memoize(
       createdAt,
       firstSubmittedDate,
       approvedDate,
+      daysActive,
       lastEditDate,
       outputChecker,
       revisionsCount,

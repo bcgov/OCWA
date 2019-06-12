@@ -19,6 +19,16 @@ export const setRequestFilter = value => ({
   payload: value,
 });
 
+export const setRequester = value => ({
+  type: 'reports/filter-requester',
+  payload: value,
+});
+
+export const setProject = value => ({
+  type: 'reports/filter-project',
+  payload: value,
+});
+
 export const setDateRange = ({ left, right }) => ({
   type: 'reports/filter-date-range',
   payload: {
@@ -30,6 +40,8 @@ export const setDateRange = ({ left, right }) => ({
 export default {
   setDateFilter,
   setDateRange,
+  setProject,
+  setRequester,
   setRequestFilter,
   sortReports,
 };

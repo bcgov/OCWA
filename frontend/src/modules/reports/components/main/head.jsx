@@ -12,10 +12,10 @@ export default {
       content: 'First Submission Date',
       isSortable: true,
     },
-    { key: 'approvedDate', content: 'Approved Date', isSortable: true },
+    { key: 'lastEditDate', content: 'Last Output Date', isSortable: true },
     {
-      key: 'daysUntilApproval',
-      content: 'Days Until Approval',
+      key: 'daysActive',
+      content: 'Days Active',
       isSortable: true,
     },
     { key: 'submissionsCount', content: 'Submissions', isSortable: true },

@@ -12,6 +12,8 @@ import {
   setDateRange,
   setDateFilter,
   setRequestFilter,
+  setProject,
+  setRequester,
   sortReports,
 } from '../actions';
 import Reports from '../components/main';
@@ -20,8 +22,10 @@ import { makeRequest } from './selectors';
 const mapStateToProps = state => {
   const {
     endDate,
-    sortKey,
+    project,
+    requester,
     requestState,
+    sortKey,
     sortOrder,
     startDate,
   } = state.reports.filters;
@@ -29,15 +33,24 @@ const mapStateToProps = state => {
   const ids = keys(entities);
   const data = ids
     .map(id => get(entities, id, {}))
-    .filter(
-      d =>
+    .filter(d => {
+      if (requester && requester !== d.author) {
+        return false;
+      }
+
+      if (project && project !== d.project) {
+        return false;
+      }
+
+      return (
         d.chronology.some(c => c.enteredState > 2) &&
         (requestState === 'all' || d.state === requestState)
-    )
+      );
+    })
     .map(makeRequest)
     .filter(
       d =>
-        isAfter(d.firstSubmittedDate, startDate) ||
+        isAfter(d.firstSubmittedDate, startDate) &&
         isBefore(d.lastEditDate, endDate)
     );
 
@@ -55,6 +68,8 @@ const mapStateToProps = state => {
     data,
     endDate,
     fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests'),
+    project,
+    requester,
     requestState,
     sortKey,
     sortOrder,
@@ -80,7 +95,9 @@ export default connect(mapStateToProps, {
         schema: requestsListSchema,
       }
     ),
+  onSelectProject: setProject,
   onSort: sortReports,
+  onSelectRequester: setRequester,
   onDateChange: setDateFilter,
   onDateRangeChange: setDateRange,
   onRequestStateChange: setRequestFilter,

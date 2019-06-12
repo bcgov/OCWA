@@ -6,6 +6,8 @@ const initialState = {
   startDate: addMonths(new Date(), -4),
   endDate: new Date(),
   requestState: 'all',
+  requester: null,
+  project: null,
 };
 
 function filters(state = initialState, action = {}) {
@@ -26,6 +28,18 @@ function filters(state = initialState, action = {}) {
       return {
         ...state,
         ...action.payload,
+      };
+
+    case 'reports/filter-requester':
+      return {
+        ...state,
+        requester: action.payload,
+      };
+
+    case 'reports/filter-project':
+      return {
+        ...state,
+        project: action.payload,
       };
 
     case 'reports/filter-state':

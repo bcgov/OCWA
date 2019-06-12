@@ -2,11 +2,8 @@
   margin-top: 20px;
 }
 
-.charts {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 20px 0;
+.projectsTable {
+  margin: 20px 0 50px;
 }
 
 .filters {
