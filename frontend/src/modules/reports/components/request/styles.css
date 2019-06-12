@@ -1,10 +1,21 @@
+.header {
+  margin: 30px 0;
+}
+
 .title {
   display: flex;
   align-items: center;
+  margin: 0;
 }
 
 .title > div {
-  margin-right: 15px;
+  margin-right: 6px;
+}
+
+.header small,
+.header p {
+  margin-top: 0;
+  margin-left: 57px;
 }
 
 .chronologyHeader {
@@ -59,14 +70,6 @@
   border-top: 1px solid #dfe1e6;
 }
 
-.header {
-  margin: 30px 0;
-}
-
-.header h2 {
-  margin: 10px 0;
-}
-
 .summaryTable {
   display: flex;
   border: 1px solid #dfe1e6;
@@ -91,4 +94,39 @@
 
 .summaryTable .summaryCell:last-child {
   border: none;
+}
+
+.details {
+  margin: 20px 0;
+}
+
+.details dl {
+  padding-left: 53px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.details dt,
+.details dd {
+  padding: 5px 0;
+  box-sizing: border-box;
+  border-top: 1px solid #dfe1e6;
+}
+
+.details dt:first-of-type,
+.details dd:first-of-type {
+  border: none;
+}
+
+.details dt {
+  width: 300px;
+  padding-right: 20px;
+  font-weight: 500;
+  margin: 0;
+  color: #8993a4;
+}
+
+.details dd {
+  width: calc(100% - 300px);
+  margin: 0;
 }

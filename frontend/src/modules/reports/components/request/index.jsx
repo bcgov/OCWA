@@ -46,6 +46,9 @@ function Request({ data }) {
             <h2 className={styles.title}>
               <RequestIcon value={data.state} size="xlarge" /> {data.name}
             </h2>
+            <p>
+              Export request by <strong>{data.author}</strong>
+            </p>
           </header>
         </GridColumn>
       </Grid>
@@ -83,6 +86,17 @@ function Request({ data }) {
               </div>
               <h6>Submissions Total</h6>
             </div>
+          </div>
+          <header className={styles.chronologyHeader}>
+            <h4>Request Details</h4>
+          </header>
+          <div className={styles.details}>
+            <dl>
+              <dt>Variable Descriptions</dt>
+              <dd>{data.variableDescriptions}</dd>
+              <dt>Relationship to previous or future (planned) outputs</dt>
+              <dd>{data.selectionCriteria}</dd>
+            </dl>
           </div>
           <header className={styles.chronologyHeader}>
             <h4>Request Timeline</h4>

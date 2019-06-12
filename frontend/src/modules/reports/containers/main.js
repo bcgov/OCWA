@@ -1,9 +1,7 @@
 import { connect } from 'react-redux';
-import forIn from 'lodash/forIn';
 import get from 'lodash/get';
-import groupBy from 'lodash/groupBy';
-import isEmpty from 'lodash/isEmpty';
-import isWithinRange from 'date-fns/is_within_range';
+import isAfter from 'date-fns/is_after';
+import isBefore from 'date-fns/is_before';
 import keys from 'lodash/keys';
 import withRequest from '@src/modules/data/components/data-request';
 import { fetchRequests } from '@src/modules/requests/actions';
@@ -36,7 +34,12 @@ const mapStateToProps = state => {
         d.chronology.some(c => c.enteredState > 2) &&
         (requestState === 'all' || d.state === requestState)
     )
-    .map(makeRequest);
+    .map(makeRequest)
+    .filter(
+      d =>
+        isAfter(d.firstSubmittedDate, startDate) ||
+        isBefore(d.lastEditDate, endDate)
+    );
 
   const chartData = data.map((d, index) => ({
     x: new Date(d.firstSubmittedDate).getTime(),

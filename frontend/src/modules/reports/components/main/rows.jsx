@@ -48,6 +48,10 @@ export default data =>
           content: getRequestStateText(d.state),
         },
         {
+          key: d.author,
+          content: d.author,
+        },
+        {
           key: d.outputChecker,
           content: d.outputChecker || <em>Unassigned</em>,
         },

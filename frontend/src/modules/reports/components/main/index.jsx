@@ -69,7 +69,11 @@ function ReportsMain({
               ]}
             >
               <XAxis tickLabelAngle={-45} title="Date" style={lineStyles} />
-              <HorizontalRectSeries color={colors.Y300} data={chartData} />
+              <HorizontalRectSeries
+                animation
+                color={colors.Y300}
+                data={chartData}
+              />
               <Highlight
                 drag
                 color={colors.DN900}
