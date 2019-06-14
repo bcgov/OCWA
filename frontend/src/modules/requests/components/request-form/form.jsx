@@ -15,24 +15,37 @@ import Form, {
 } from '@atlaskit/form';
 import pick from 'lodash/pick';
 import SectionMessage from '@atlaskit/section-message';
+import Select from '@atlaskit/select';
 import { uid } from 'react-uid';
 import { withRouter } from 'react-router-dom';
 
 import FormField from './field';
-import { requestFields } from '../../utils';
+import { formText, requestFields } from '../../utils';
 import { RequestSchema } from '../../types';
 
 function NewRequestForm({ data, history, isCreating, onSubmit }) {
   // Grab the files if there is a duplicate getting passed through
   const duplicateFiles = pick(data, ['files', 'supportingFiles']);
+  const exportTypeOptions = [
+    { label: 'Data Export', value: 'data' },
+    { label: 'Code Export', value: 'code' },
+  ];
+  const [exportType, setExportType] = React.useState(exportTypeOptions[0]);
+  console.log(exportType);
+  const test = Math.random();
+  const onSubmitHandler = React.useCallback(formData => {
+    console.log(test);
+    // onSubmit({ ...formData, exportType: exportTypeValue }, duplicateFiles);
+  });
+  console.log(test);
 
   return (
     <div id="request-form">
-      <Form onSubmit={formData => onSubmit(formData, duplicateFiles)}>
+      <Form onSubmit={onSubmitHandler}>
         {({ formProps }) => (
           <form {...formProps}>
             <FormHeader
-              title="Initiate a New Request"
+              title={`Initiate a New ${exportType.label} Request`}
               description="Please ensure that you also have the following elements, as appropriate, with your output submission: descriptive labeling (ideally alongside each component), information for specific output types, and, log files or annotated steps of analysis."
             />
             <Field
@@ -58,27 +71,38 @@ function NewRequestForm({ data, history, isCreating, onSubmit }) {
                 </React.Fragment>
               )}
             </Field>
+            <Select
+              options={exportTypeOptions}
+              placeholder="Choose an Export Type"
+              defaultValue={exportType}
+              onChange={value => setExportType(value)}
+            />
             <FormSection
-              title="Output Package and/or Output Groups Description "
-              description="Describe the context for this output package. If appropriate, you may choose to create Output Groups, which are a collection of output components that are batched for the purposes of description."
+              title={get(formText, ['code', 'title'])}
+              description={get(formText, ['code', 'description'])}
             >
-              {requestFields.map(d => (
-                <Field
-                  key={uid(d)}
-                  name={d.value}
-                  defaultValue={get(data, d.value, '')}
-                  label={d.name}
-                  isDisabled={isCreating}
-                  isRequired={d.isRequired}
-                >
-                  {({ fieldProps }) => (
-                    <React.Fragment>
-                      <FormField type={d.type} fieldProps={fieldProps} />
-                      <HelperMessage>{d.helperText}</HelperMessage>
-                    </React.Fragment>
-                  )}
-                </Field>
-              ))}
+              {requestFields
+                .filter(
+                  d =>
+                    d.exportType === 'all' || d.exportType === exportType.value
+                )
+                .map(d => (
+                  <Field
+                    key={uid(d)}
+                    name={d.value}
+                    defaultValue={get(data, d.value, '')}
+                    label={d.name}
+                    isDisabled={isCreating}
+                    isRequired={d.isRequired}
+                  >
+                    {({ fieldProps }) => (
+                      <React.Fragment>
+                        <FormField type={d.type} fieldProps={fieldProps} />
+                        <HelperMessage>{d.helperText}</HelperMessage>
+                      </React.Fragment>
+                    )}
+                  </Field>
+                ))}
             </FormSection>
             <FormSection>
               <SectionMessage

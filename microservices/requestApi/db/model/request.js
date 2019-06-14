@@ -12,6 +12,9 @@ const CANCELLED_STATE = 6;
 const INPUT_TYPE = "import";
 const EXPORT_TYPE = "export";
 
+const DATA_EXPORT_TYPE = 'data';
+const CODE_EXPORT_TYPE = 'code';
+
 var chronologySchema = new Schema({
     timestamp: {type: Date, default: Date.now(), required: true},
     enteredState: {type: Number, required: true, default: DRAFT_STATE},
@@ -27,7 +30,7 @@ var requestSchema = new Schema({
     supportingFiles: {type: [String], required: false},
     purpose: {type: String, required: false},
     variableDescriptions: {type: String, required: true},
-    subPopulation: {type: String, required: true},
+    subPopulation: {type: String, required: false}, // NOTE: Might need to make this dependant the exportType value
     selectionCriteria: {type: String, required: false},
     steps: {type: String, required: false},
     freq: {type: String, required: false},
@@ -38,6 +41,12 @@ var requestSchema = new Schema({
     name: {type: String, required: true, index: true},
     files: {type: [String], required: true},
     author: {type: String, required: true},
+    exportType: {
+        type: String,
+        required: false,
+        enum: [DATA_EXPORT_TYPE, CODE_EXPORT_TYPE],
+        default: DATA_EXPORT_TYPE
+    },
     type: {
         type: String,
         required: false,

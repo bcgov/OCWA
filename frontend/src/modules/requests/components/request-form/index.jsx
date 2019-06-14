@@ -8,6 +8,7 @@ import * as styles from './styles.css';
 class NewRequestDialog extends React.PureComponent {
   onSubmit = (data, files) => {
     const { history, sendAction } = this.props;
+    console.log(data);
     sendAction('onCreate', data, { history, files });
   };
 

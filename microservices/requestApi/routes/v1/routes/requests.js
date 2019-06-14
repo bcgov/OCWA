@@ -134,6 +134,10 @@ router.post("/", function(req, res, next){
         request.freq = req.body.freq;
     }
 
+    if (typeof(req.body.exportType) !== "undefined") {
+        request.exportType = req.body.exportType;
+    }
+    
     if (typeof(req.body.confidentiality) !== "undefined") {
         request.confidentiality = req.body.confidentiality;
     }

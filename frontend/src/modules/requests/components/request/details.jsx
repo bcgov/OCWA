@@ -15,14 +15,17 @@ import * as styles from './styles.css';
 
 function RequestDetails({ data, duplicateFiles, isEditing, onSave }) {
   const files = get(data, 'files', []);
+  const exportType = get(data, 'exportType', 'data');
   const supportingFiles = get(data, 'supportingFiles', []);
-  const requestDetails = requestFields.map(d => ({
-    name: d.name,
-    type: d.type,
-    value: get(data, d.value, ''),
-    key: d.value,
-    isRequired: d.isRequired,
-  }));
+  const requestDetails = requestFields
+    .filter(d => d.exportType === 'all' || d.exportType === exportType)
+    .map(d => ({
+      name: d.name,
+      type: d.type,
+      value: get(data, d.value, ''),
+      key: d.value,
+      isRequired: d.isRequired,
+    }));
   const uploadData = merge({}, data, duplicateFiles);
 
   if (isEmpty(data)) {
@@ -47,44 +50,48 @@ function RequestDetails({ data, duplicateFiles, isEditing, onSave }) {
             />
           ))}
       </div>
-      <div id="request-export-files" className={styles.section}>
-        <div className={styles.sectionHeader}>
-          Output Files
-          {isEditing && ' (Drop files here to upload)'}
-        </div>
-        <div className={styles.sectionContent}>
-          {!isEditing && (
-            <Files
-              showDownloadButton
-              ids={files}
-              fileStatus={data.fileStatus}
-            />
-          )}
-          {isEditing && (
-            <FileUploader
-              data={uploadData}
-              filesKey="files"
-              uploadText="Upload files you wish to request for output"
-            />
-          )}
-        </div>
-      </div>
-      <div id="request-support-files" className={styles.section}>
-        <div className={styles.sectionHeader}>
-          Support Files
-          {isEditing && ' (Drop files here to upload)'}
-        </div>
-        <div className={styles.sectionContent}>
-          {!isEditing && <Files showDownloadButton ids={supportingFiles} />}
-          {isEditing && (
-            <FileUploader
-              data={uploadData}
-              filesKey="supportingFiles"
-              uploadText="Upload any files to help support your request"
-            />
-          )}
-        </div>
-      </div>
+      {(data.exportType === 'data' || !data.exportType) && (
+        <React.Fragment>
+          <div id="request-export-files" className={styles.section}>
+            <div className={styles.sectionHeader}>
+              Output Files
+              {isEditing && ' (Drop files here to upload)'}
+            </div>
+            <div className={styles.sectionContent}>
+              {!isEditing && (
+                <Files
+                  showDownloadButton
+                  ids={files}
+                  fileStatus={data.fileStatus}
+                />
+              )}
+              {isEditing && (
+                <FileUploader
+                  data={uploadData}
+                  filesKey="files"
+                  uploadText="Upload files you wish to request for output"
+                />
+              )}
+            </div>
+          </div>
+          <div id="request-support-files" className={styles.section}>
+            <div className={styles.sectionHeader}>
+              Support Files
+              {isEditing && ' (Drop files here to upload)'}
+            </div>
+            <div className={styles.sectionContent}>
+              {!isEditing && <Files showDownloadButton ids={supportingFiles} />}
+              {isEditing && (
+                <FileUploader
+                  data={uploadData}
+                  filesKey="supportingFiles"
+                  uploadText="Upload any files to help support your request"
+                />
+              )}
+            </div>
+          </div>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 }
