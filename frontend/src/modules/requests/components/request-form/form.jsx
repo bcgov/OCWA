@@ -9,13 +9,11 @@ import Form, {
   ErrorMessage,
   Field,
   FormFooter,
-  FormHeader,
   FormSection,
   HelperMessage,
 } from '@atlaskit/form';
 import pick from 'lodash/pick';
 import SectionMessage from '@atlaskit/section-message';
-import Select from '@atlaskit/select';
 import { uid } from 'react-uid';
 import { withRouter } from 'react-router-dom';
 
@@ -23,31 +21,15 @@ import FormField from './field';
 import { formText, requestFields } from '../../utils';
 import { RequestSchema } from '../../types';
 
-function NewRequestForm({ data, history, isCreating, onSubmit }) {
+function NewRequestForm({ data, exportType, history, isCreating, onSubmit }) {
   // Grab the files if there is a duplicate getting passed through
   const duplicateFiles = pick(data, ['files', 'supportingFiles']);
-  const exportTypeOptions = [
-    { label: 'Data Export', value: 'data' },
-    { label: 'Code Export', value: 'code' },
-  ];
-  const [exportType, setExportType] = React.useState(exportTypeOptions[0]);
-  console.log(exportType);
-  const test = Math.random();
-  const onSubmitHandler = React.useCallback(formData => {
-    console.log(test);
-    // onSubmit({ ...formData, exportType: exportTypeValue }, duplicateFiles);
-  });
-  console.log(test);
 
   return (
     <div id="request-form">
-      <Form onSubmit={onSubmitHandler}>
+      <Form onSubmit={formData => onSubmit(formData, duplicateFiles)}>
         {({ formProps }) => (
           <form {...formProps}>
-            <FormHeader
-              title={`Initiate a New ${exportType.label} Request`}
-              description="Please ensure that you also have the following elements, as appropriate, with your output submission: descriptive labeling (ideally alongside each component), information for specific output types, and, log files or annotated steps of analysis."
-            />
             <Field
               isRequired
               name="name"
@@ -71,20 +53,13 @@ function NewRequestForm({ data, history, isCreating, onSubmit }) {
                 </React.Fragment>
               )}
             </Field>
-            <Select
-              options={exportTypeOptions}
-              placeholder="Choose an Export Type"
-              defaultValue={exportType}
-              onChange={value => setExportType(value)}
-            />
             <FormSection
-              title={get(formText, ['code', 'title'])}
-              description={get(formText, ['code', 'description'])}
+              title={get(formText, [exportType, 'title'])}
+              description={get(formText, [exportType, 'description'])}
             >
               {requestFields
                 .filter(
-                  d =>
-                    d.exportType === 'all' || d.exportType === exportType.value
+                  d => d.exportType === 'all' || d.exportType === exportType
                 )
                 .map(d => (
                   <Field
@@ -150,6 +125,7 @@ function NewRequestForm({ data, history, isCreating, onSubmit }) {
 
 NewRequestForm.propTypes = {
   data: RequestSchema,
+  exportType: PropTypes.oneOf(['code', 'data']),
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,

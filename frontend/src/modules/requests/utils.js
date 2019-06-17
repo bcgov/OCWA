@@ -33,7 +33,7 @@ export const requestFields = [
     value: 'variableDescriptions',
     isRequired: true,
     type: 'textarea',
-    exportType: 'all',
+    exportType: 'data',
     helperText:
       'Provide a description of original and self-constructed variables (include full labeling of all variables and value labels)',
   },
