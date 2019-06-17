@@ -12,7 +12,7 @@ export default ({ data, onSelectProject }) =>
         {
           key: d.name,
           content: (
-            <Button appearance="link" onClick={() => onSelectProject(d._id)}>
+            <Button appearance="link" onClick={() => onSelectProject(d.name)}>
               {d.name}
             </Button>
           ),

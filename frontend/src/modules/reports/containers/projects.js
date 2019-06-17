@@ -1,21 +1,13 @@
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import withRequest from '@src/modules/data/components/data-request';
-import { fetchRequests } from '@src/modules/requests/actions';
+// import { fetchProjects } from '@src/modules/requests/actions';
 
-import { setProject, sortReports } from '../actions';
+import { setProject, sortProjects } from '../actions';
 import ProjectsTable from '../components/projects-table';
 
 const mapStateToProps = state => {
-  const {
-    endDate,
-    project,
-    requester,
-    requestState,
-    sortKey,
-    sortOrder,
-    startDate,
-  } = state.reports.filters;
+  const { sortKey, sortOrder } = state.reports.projects;
 
   return {
     data: [
@@ -34,19 +26,13 @@ const mapStateToProps = state => {
         requests: 14,
       },
     ],
-    endDate,
-    fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests'),
-    project,
-    requester,
-    requestState,
+    fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests', 'loaded'),
     sortKey,
     sortOrder,
-    startDate,
-    page: 1,
   };
 };
 
 export default connect(mapStateToProps, {
   onSelectProject: setProject,
-  onSort: sortReports,
+  onSort: sortProjects,
 })(withRequest(ProjectsTable));

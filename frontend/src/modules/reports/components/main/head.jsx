@@ -25,6 +25,7 @@ export default {
       content: 'Current request status',
       isSortable: true,
     },
+    { key: 'project', content: 'Project', isSortable: true },
     { key: 'author', content: 'Exporter', isSortable: true },
     { key: 'outputChecker', content: 'Checker name', isSortable: true },
     { key: 'totalFiles', content: 'Total Files', isSortable: true },

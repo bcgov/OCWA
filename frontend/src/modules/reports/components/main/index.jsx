@@ -17,6 +17,7 @@ function ReportsMain({
   data,
   endDate,
   fetchRequests,
+  fetchStatus,
   onSort,
   onDateChange,
   onRequestStateChange,
@@ -38,60 +39,63 @@ function ReportsMain({
   const isPaginationVisible = data.length > 0;
 
   return (
-    <Page>
-      <Grid>
-        <GridColumn medium={12}>
-          <header className={styles.header}>
-            <h2>Projects</h2>
-          </header>
-          <div className={styles.projectsTable}>
-            <Projects />
-          </div>
-          <header className={styles.header}>
-            <h2>Requests</h2>
-          </header>
-          <Filters
-            endDate={endDate}
-            onDateChange={onDateChange}
-            onRequestStateChange={onRequestStateChange}
-            onSelectProject={onSelectProject}
-            onSelectRequester={onSelectRequester}
-            project={project}
-            requester={requester}
-            requestState={requestState}
-            startDate={startDate}
-          />
-        </GridColumn>
-      </Grid>
-      <Grid>
-        <GridColumn medium={12}>
-          <div id="reports-list-table">
-            <DynamicTableStateless
-              emptyView={<Empty />}
-              head={head}
-              rows={rows}
-              loadingSpinnerSize="large"
-              sortKey={sortKey}
-              sortOrder={sortOrder}
-              onSort={sortProps => onSort(sortProps)}
+    <div className={styles.container}>
+      <Page>
+        <Grid layout="fluid">
+          <GridColumn medium={12}>
+            <header className={styles.header}>
+              <h2>Projects</h2>
+            </header>
+            <div className={styles.projectsTable}>
+              <Projects />
+            </div>
+            <header className={styles.header}>
+              <h2>Requests</h2>
+            </header>
+            <Filters
+              endDate={endDate}
+              onDateChange={onDateChange}
+              onRequestStateChange={onRequestStateChange}
+              onSelectProject={onSelectProject}
+              onSelectRequester={onSelectRequester}
+              project={project}
+              requester={requester}
+              requestState={requestState}
+              startDate={startDate}
             />
-            {isPaginationVisible && (
-              <Pagination
-                onClick={fetchRequests}
-                isLastPage={data.length < limit * page}
-                page={page}
+          </GridColumn>
+        </Grid>
+        <Grid layout="fluid">
+          <GridColumn medium={12}>
+            <div id="reports-list-table">
+              <DynamicTableStateless
+                emptyView={<Empty />}
+                head={head}
+                rows={rows}
+                isLoading={fetchStatus === 'loading'}
+                loadingSpinnerSize="large"
+                sortKey={sortKey}
+                sortOrder={sortOrder}
+                onSort={sortProps => onSort(sortProps)}
               />
-            )}
-          </div>
-          <footer>
-            <small>
-              * Date an output checker either approved or requested revisions
-              for a request.
-            </small>
-          </footer>
-        </GridColumn>
-      </Grid>
-    </Page>
+              {isPaginationVisible && (
+                <Pagination
+                  onClick={fetchRequests}
+                  isLastPage={data.length < limit * page}
+                  page={page}
+                />
+              )}
+            </div>
+            <footer>
+              <small>
+                * Date an output checker either approved or requested revisions
+                for a request.
+              </small>
+            </footer>
+          </GridColumn>
+        </Grid>
+      </Page>
+    </div>
   );
 }
 
@@ -100,6 +104,8 @@ ReportsMain.propTypes = {
   endDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)])
     .isRequired,
   fetchRequests: PropTypes.func.isRequired,
+  fetchStatus: PropTypes.oneOf(['loading', 'loaded', 'failed', 'idle'])
+    .isRequired,
   page: PropTypes.number.isRequired,
   project: PropTypes.string,
   onDateChange: PropTypes.func.isRequired,

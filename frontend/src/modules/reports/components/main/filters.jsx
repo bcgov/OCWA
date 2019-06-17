@@ -7,6 +7,7 @@ import isAfter from 'date-fns/is_after';
 import isBefore from 'date-fns/is_before';
 import MentionIcon from '@atlaskit/icon/glyph/mention';
 import parse from 'date-fns/parse';
+import SuitcaseIcon from '@atlaskit/icon/glyph/suitcase';
 
 import * as styles from './styles.css';
 
@@ -48,6 +49,18 @@ function Filters({
         >
           Approved
         </Button>
+      </ButtonGroup>
+      <ButtonGroup>
+        {project && (
+          <Button
+            appearance="primary"
+            iconAfter={<CrossIcon />}
+            iconBefore={<SuitcaseIcon />}
+            onClick={() => onSelectProject(null)}
+          >
+            {project}
+          </Button>
+        )}
         {requester && (
           <Button
             appearance="primary"

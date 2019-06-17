@@ -5,14 +5,7 @@ import { DynamicTableStateless } from '@atlaskit/dynamic-table';
 import head from './head';
 import makeRows from './rows';
 
-function ProjectsTable({
-  data,
-  onSelectProject,
-  onSort,
-  project,
-  sortKey,
-  sortOrder,
-}) {
+function ProjectsTable({ data, onSelectProject, onSort, sortKey, sortOrder }) {
   const rows = makeRows({
     data,
     onSelectProject,
@@ -36,7 +29,6 @@ ProjectsTable.propTypes = {
       name: PropTypes.string,
     })
   ).isRequired,
-  project: PropTypes.string,
   onSort: PropTypes.func.isRequired,
   onSelectProject: PropTypes.func.isRequired,
   sortKey: PropTypes.string.isRequired,

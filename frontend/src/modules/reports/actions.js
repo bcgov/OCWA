@@ -6,6 +6,14 @@ export const sortReports = ({ key, sortOrder }) => ({
   },
 });
 
+export const sortProjects = ({ key, sortOrder }) => ({
+  type: 'projects/sort',
+  payload: {
+    sortKey: key,
+    sortOrder,
+  },
+});
+
 export const setDateFilter = (key, value) => ({
   type: 'reports/filter-date',
   payload: {
@@ -41,6 +49,7 @@ export default {
   setDateFilter,
   setDateRange,
   setProject,
+  sortProjects,
   setRequester,
   setRequestFilter,
   sortReports,

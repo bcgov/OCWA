@@ -45,6 +45,17 @@ export default ({ data, onSelectProject, onSelectRequester }) =>
           content: getRequestStateText(d.state),
         },
         {
+          key: d.project,
+          content: (
+            <Button
+              appearance="link"
+              onClick={() => onSelectProject(d.project)}
+            >
+              {d.project}
+            </Button>
+          ),
+        },
+        {
           key: d.author,
           content: (
             <Button

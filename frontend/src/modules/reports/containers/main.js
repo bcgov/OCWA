@@ -33,6 +33,7 @@ const mapStateToProps = state => {
   const ids = keys(entities);
   const data = ids
     .map(id => get(entities, id, {}))
+    .map(makeRequest) // TODO: Consider moving this back down after this step, the project value is stubbed in right now
     .filter(d => {
       if (requester && requester !== d.author) {
         return false;
@@ -47,7 +48,6 @@ const mapStateToProps = state => {
         (requestState === 'all' || d.state === requestState)
       );
     })
-    .map(makeRequest)
     .filter(
       d =>
         isAfter(d.firstSubmittedDate, startDate) &&

@@ -99,6 +99,12 @@ function Request({ data }) {
             </dl>
           </div>
           <header className={styles.chronologyHeader}>
+            <h4>Request Files</h4>
+          </header>
+          <div className={styles.details}>
+            <Files ids={data.files} fileStatus={data.fileStatus} />
+          </div>
+          <header className={styles.chronologyHeader}>
             <h4>Request Timeline</h4>
           </header>
           <ol className={styles.chronologyList}>

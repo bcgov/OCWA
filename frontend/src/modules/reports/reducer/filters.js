@@ -1,7 +1,7 @@
 import addMonths from 'date-fns/add_months';
 
 const initialState = {
-  sortKey: 'approvedDate',
+  sortKey: 'lastEditDate',
   sortOrder: 'DESC',
   startDate: addMonths(new Date(), -4),
   endDate: new Date(),

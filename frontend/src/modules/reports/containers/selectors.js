@@ -3,6 +3,7 @@ import get from 'lodash/get';
 import last from 'lodash/last';
 import memoize from 'lodash/memoize';
 import head from 'lodash/head';
+import sample from 'lodash/sample';
 import values from 'lodash/values';
 
 export const makeRequest = memoize(
@@ -43,6 +44,7 @@ export const makeRequest = memoize(
       revisionsCount,
       daysUntilApproval,
       submissionsCount,
+      project: sample(['Project 1', 'Project 2']),
     };
   },
   request => values(request).join()
