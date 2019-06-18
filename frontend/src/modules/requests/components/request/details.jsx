@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { Code } from 'react-content-loader';
 import isEmpty from 'lodash/isEmpty';
 import Files from '@src/modules/files/containers/files';
 import FileUploader from '@src/modules/files/containers/file-uploader';
@@ -13,7 +14,13 @@ import { RequestSchema } from '../../types';
 import { requestFields } from '../../utils';
 import * as styles from './styles.css';
 
-function RequestDetails({ data, duplicateFiles, isEditing, onSave }) {
+function RequestDetails({
+  data,
+  duplicateFiles,
+  isEditing,
+  isLoading,
+  onSave,
+}) {
   const files = get(data, 'files', []);
   const exportType = get(data, 'exportType', 'data');
   const supportingFiles = get(data, 'supportingFiles', []);
@@ -28,8 +35,14 @@ function RequestDetails({ data, duplicateFiles, isEditing, onSave }) {
     }));
   const uploadData = merge({}, data, duplicateFiles);
 
-  if (isEmpty(data)) {
-    return 'Loading...';
+  if (isLoading) {
+    return (
+      <React.Fragment>
+        <Code />
+        <Code />
+        <Code />
+      </React.Fragment>
+    );
   }
 
   return (
@@ -103,6 +116,7 @@ RequestDetails.propTypes = {
     supportingFiles: PropTypes.arrayOf(PropTypes.string),
   }),
   isEditing: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   onSave: PropTypes.func.isRequired,
 };
 

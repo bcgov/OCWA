@@ -22,6 +22,13 @@ var chronologySchema = new Schema({
     changes: {type: Map, of: Schema.Types.Mixed, required: false}
 },{_id: false});
 
+function codeTypeValidator() {
+    return this.exportType === CODE_EXPORT_TYPE;
+}
+
+function dataTypeValidator() {
+    return this.exportType === DATA_EXPORT_TYPE;
+}
 
 var requestSchema = new Schema({
     state: {type: Number, required: true, default: DRAFT_STATE, index: true},
@@ -29,8 +36,14 @@ var requestSchema = new Schema({
     phoneNumber: {type: String, required: true},
     supportingFiles: {type: [String], required: false},
     purpose: {type: String, required: false},
-    variableDescriptions: {type: String, required: true},
-    subPopulation: {type: String, required: false}, // NOTE: Might need to make this dependant the exportType value
+    variableDescriptions: {
+        type: String,
+        required: dataTypeValidator
+    },
+    subPopulation: {
+        type: String,
+        required: dataTypeValidator
+    },
     selectionCriteria: {type: String, required: false},
     steps: {type: String, required: false},
     freq: {type: String, required: false},
@@ -41,6 +54,23 @@ var requestSchema = new Schema({
     name: {type: String, required: true, index: true},
     files: {type: [String], required: true},
     author: {type: String, required: true},
+    // Code Attributes
+    branch: {
+        type: String,
+        required: codeTypeValidator
+    },
+    codeDescription: {
+        type: String,
+        required: codeTypeValidator
+    },
+    externalRepository: {
+        type: String,
+        required: codeTypeValidator
+    },
+    repository: {
+        type: String,
+        required: codeTypeValidator
+    },
     exportType: {
         type: String,
         required: false,
@@ -252,6 +282,11 @@ model.getAll = function(query, limit, page, user, callback){
                     topic: 1,
                     reviewers: 1,
                     chronology: 1,
+                    exportType: 1,
+                    branch: 1,
+                    externalRepository: 1,
+                    repository: 1,
+                    codeDescription: 1,
                     name: 1,
                     files: 1,
                     author: 1

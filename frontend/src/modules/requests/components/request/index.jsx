@@ -1,13 +1,16 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import { Code } from 'react-content-loader';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Date from '@src/components/date';
+import Document24Icon from '@atlaskit/icon-file-type/glyph/document/24';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavLink, Route, Switch } from 'react-router-dom';
 import merge from 'lodash/merge';
 import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
+import SourceCode24Icon from '@atlaskit/icon-file-type/glyph/source-code/24';
 import Spinner from '@atlaskit/spinner';
 import Title from '@src/components/title';
 
@@ -55,16 +58,13 @@ class Request extends React.Component {
       data,
       duplicateFiles,
       isLoaded,
+      isLoading,
       isOutputChecker,
       updatedAt,
       match,
     } = this.props;
     const { isEditing } = this.state;
     const title = data.name || 'Loading...';
-
-    if (!isLoaded && isEmpty(data)) {
-      return null;
-    }
 
     return (
       <div id="requests-page">
@@ -74,14 +74,16 @@ class Request extends React.Component {
             <Grid>
               <GridColumn medium={9}>
                 <h1 id="request-title">
-                  <span>{data.name}</span>
-                  {isEditing && (
-                    <Lozenge appearance="inprogress">Editing</Lozenge>
-                  )}
+                  {data.exportType === 'code' && <SourceCode24Icon />}
+                  {data.exportType === 'data' && <Document24Icon />}
+                  <span>{title}</span>
                 </h1>
                 <p id="request-header-details">
                   {'Updated at '}
                   <Date value={updatedAt} format="HH:MMa on MMMM Do, YYYY" />
+                  {isEditing && (
+                    <Lozenge appearance="inprogress">Editing</Lozenge>
+                  )}
                 </p>
               </GridColumn>
               <GridColumn medium={3}>
@@ -130,6 +132,8 @@ class Request extends React.Component {
                         data={data}
                         duplicateFiles={duplicateFiles}
                         isEditing={isEditing}
+                        isLoaded={isLoaded}
+                        isLoading={isLoading}
                         onSave={this.onSave}
                       />
                     )}
@@ -169,6 +173,8 @@ Request.propTypes = {
     files: PropTypes.arrayOf(PropTypes.string),
     supportingFiles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+  fetchStatus: PropTypes.oneOf(['loading', 'loaded', 'failed', 'idle'])
+    .isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   location: PropTypes.shape({

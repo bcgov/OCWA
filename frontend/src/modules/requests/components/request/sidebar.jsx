@@ -2,8 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
 import { withRouter } from 'react-router-dom';
+import startCase from 'lodash/startCase';
 import { uid } from 'react-uid';
 // Icons
+import Document16Icon from '@atlaskit/icon-file-type/glyph/document/16';
+import SourceCode16Icon from '@atlaskit/icon-file-type/glyph/source-code/16';
 import CopyIcon from '@atlaskit/icon/glyph/copy';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled';
@@ -13,6 +16,7 @@ import TrashIcon from '@atlaskit/icon/glyph/trash';
 
 import { duplicateRequest } from '../../utils';
 import { RequestSchema } from '../../types';
+import * as styles from './styles.css';
 
 const omitProps = [
   '_id',
@@ -60,6 +64,14 @@ function RequestSidebar({
     <aside id="request-sidebar">
       <h6>Requester</h6>
       <div id="request-author">{data.author}</div>
+      <h6>Export Type</h6>
+      <div id="request-exportType">
+        {data.exportType === 'code' && <SourceCode16Icon />}
+        {data.exportType === 'data' && <Document16Icon />}
+        <span className={styles.exportTypeText}>
+          {startCase(data.exportType)}
+        </span>
+      </div>
       <h6>Output Checker</h6>
       <div id="request-reviewers">
         {data.reviewers.map(d => <p key={uid(d)}>{d}</p>)}

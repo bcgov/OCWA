@@ -133,7 +133,23 @@ router.post("/", function(req, res, next){
     if (typeof(req.body.freq) !== "undefined") {
         request.freq = req.body.freq;
     }
-
+    
+    if (typeof(req.body.branch) !== "undefined") {
+        request.branch = req.body.branch;
+    }
+    
+    if (typeof(req.body.codeDescription) !== "undefined") {
+        request.codeDescription = req.body.codeDescription;
+    }
+    
+    if (typeof(req.body.externalRepository) !== "undefined") {
+        request.externalRepository = req.body.externalRepository;
+    }
+    
+    if (typeof(req.body.repository) !== "undefined") {
+        request.repository = req.body.repository;
+    }
+    
     if (typeof(req.body.exportType) !== "undefined") {
         request.exportType = req.body.exportType;
     }
@@ -286,6 +302,10 @@ router.put("/save/:requestId", function(req, res, next){
         findRes.confidentiality = (typeof(req.body.confidentiality) !== "undefined") ? req.body.confidentiality : findRes.confidentiality;
         findRes.files = (typeof(req.body.files) !== "undefined") ? req.body.files : findRes.files;
         findRes.supportingFiles = (typeof(req.body.supportingFiles) !== "undefined") ? req.body.supportingFiles : findRes.supportingFiles;
+        findRes.branch = (typeof(req.body.branch) !== "undefined") ? req.body.branch : findRes.branch;
+        findRes.externalRepository = (typeof(req.body.externalRepository) !== "undefined") ? req.body.externalRepository : findRes.externalRepository;
+        findRes.repository = (typeof(req.body.repository) !== "undefined") ? req.body.repository : findRes.repository;
+        findRes.codeDescription = (typeof(req.body.codeDescription) !== "undefined") ? req.body.codeDescription : findRes.codeDescription;
 
         var setChrono = (findRes.state!==db.Request.WIP_STATE) || (Object.keys(objectDelta).length > 0 );
         findRes.state = db.Request.WIP_STATE;
