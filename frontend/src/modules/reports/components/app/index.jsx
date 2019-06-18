@@ -4,6 +4,7 @@ import AppBar from '@src/components/app-bar';
 import AppBarMenu from '@src/components/app-bar/menu';
 import Changes24Icon from '@atlaskit/icon-object/glyph/changes/24';
 import { Switch, Route } from 'react-router-dom';
+import NotFound from '@src/components/not-found';
 import Title from '@src/components/title';
 
 import Reports from '../../containers/main';
@@ -21,6 +22,7 @@ function ReportsApp({ user }) {
         <Switch>
           <Route exact path="/" component={Reports} />
           <Route exact path="/view/:requestId" component={Request} />
+          <Route componet={NotFound} />
         </Switch>
       </div>
     </React.Fragment>

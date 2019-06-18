@@ -1,3 +1,7 @@
+import { createDataAction } from '@src/modules/data/actions';
+
+export const fetchProjects = createDataAction('projects/get');
+
 export const sortReports = ({ key, sortOrder }) => ({
   type: 'reports/sort',
   payload: {
@@ -46,6 +50,7 @@ export const setDateRange = ({ left, right }) => ({
 });
 
 export default {
+  fetchProjects,
   setDateFilter,
   setDateRange,
   setProject,

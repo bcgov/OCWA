@@ -26,12 +26,21 @@ Make sure instead of `Roles` you assign `Groups`, e.g.
 }
 ```
 ### Groups and Modes
-There are 2 default groups a user can belong to; Exporter(/exporter by default)
-or Output Checker (/oc by default). In addition the app has 2 modes it can run in,
-export or download. Note that the `export` value works for both the OC or Exporter
-and can be really any value or nil, but if it is set to `download` it'll open an
-exporter-only download interface.
+There are 3 groups a user can belong to;
 
+##### Exporter (/exporter by default)
+This interface allows a user to create new data or code export requests or download
+files from the SRE, depending on which environment OCWA is running in. In the SRE
+you can download approved import requests and outside of SRE you can download
+approved export requests
+
+##### Output Checker (/oc by default)
+Output Checkers can review requests and approve them or flag the request and
+discuss the reasons why the request has been flagged with the exporter
+
+##### Reports (/reports by default)
+Reports is a simple analytics tool that gathers all _submitted_ requests for purposes
+of analyzing trends like approval time, and can be filtered by project or exporter.
 
 ## Installation
 

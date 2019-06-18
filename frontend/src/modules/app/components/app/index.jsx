@@ -28,7 +28,7 @@ const OutputChecker = Loadable({
   loading: () => <Loading text="Initializing Output Checker interface" />,
 });
 const Reports = Loadable({
-  loader: () => import('../../../reports/components/app'),
+  loader: () => import('../../../reports/containers/app'),
   loading: () => <Loading text="Initializing Reports interface" />,
 });
 
@@ -71,7 +71,7 @@ class App extends React.Component {
       }
 
       // Load bundle for output checker if that's the only role, otherwise always send exporter
-      if (true) {
+      if (hasReports) {
         el = <Reports />;
       } else if (hasOcRole && !hasExporterRole) {
         el = <OutputChecker {...props} />;

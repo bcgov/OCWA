@@ -20,7 +20,7 @@ export const makeRequest = memoize(
       (prev, d) => (d.enteredState === 5 ? prev + 1 : prev),
       0
     );
-    const lastEditDate = last(request.chronology).timestamp;
+    const lastEditDate = get(last(request.chronology), 'timestamp');
     const submissionsCount = request.chronology.reduce(
       (prev, d) => (d.enteredState === 2 ? prev + 1 : prev),
       0

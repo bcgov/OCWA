@@ -48,6 +48,11 @@ function ReportsMain({
             </header>
             <div className={styles.projectsTable}>
               <Projects />
+              <footer>
+                <small>
+                  Select a project above to filter the requests below.
+                </small>
+              </footer>
             </div>
             <header className={styles.header}>
               <h2>Requests</h2>

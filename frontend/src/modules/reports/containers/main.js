@@ -67,7 +67,7 @@ const mapStateToProps = state => {
     chartData,
     data,
     endDate,
-    fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests'),
+    fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests', 'idle'),
     project,
     requester,
     requestState,

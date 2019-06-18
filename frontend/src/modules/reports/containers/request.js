@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import get from 'lodash/get';
-import last from 'lodash/last';
 import withRequest from '@src/modules/data/components/data-request';
 import { fetchRequest } from '@src/modules/requests/actions';
 import { requestSchema } from '@src/modules/requests/schemas';
