@@ -68,7 +68,7 @@ function RequestSidebar({
       <div id="request-exportType">
         {data.exportType === 'code' && <SourceCode16Icon />}
         {data.exportType === 'data' && <Document16Icon />}
-        <span className={styles.exportTypeText}>
+        <span id="request-exportTypeText" className={styles.exportTypeText}>
           {startCase(data.exportType)}
         </span>
       </div>

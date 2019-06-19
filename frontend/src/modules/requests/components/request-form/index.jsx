@@ -47,6 +47,7 @@ function NewRequestForm({ history, isCreating, location, sendAction }) {
                 <Select
                   options={exportTypeOptions}
                   placeholder="Choose an Export Type"
+                  id="request-form-exportTypeSelect"
                   defaultValue={exportType}
                   onChange={value => setExportType(value)}
                 />

@@ -26,7 +26,7 @@ function NewRequestForm({ data, exportType, history, isCreating, onSubmit }) {
   const duplicateFiles = pick(data, ['files', 'supportingFiles']);
 
   return (
-    <div id="request-form">
+    <div id="request-form" className={`${exportType}-form`}>
       <Form onSubmit={formData => onSubmit(formData, duplicateFiles)}>
         {({ formProps }) => (
           <form {...formProps}>
