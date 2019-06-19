@@ -82,7 +82,7 @@
     "@atlaskit/modal-dialog": "^7.0.1",
     "@atlaskit/notification-indicator": "^4.0.5",
     "@atlaskit/page": "^8.0.5",
-    "@atlaskit/renderer": "^22.1.0",
+    "@atlaskit/renderer": "^49.1.0",
     "@atlaskit/section-message": "^2.0.2",
     "@atlaskit/smart-card": "8.4.0",
     "@atlaskit/spinner": "^9.0.10",
