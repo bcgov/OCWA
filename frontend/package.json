@@ -20,7 +20,7 @@
     "@babel/preset-react": "^7.0.0",
     "babel-core": "^7.0.0-bridge",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^24.7.1",
+    "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.2",
     "babel-minify-webpack-plugin": "^0.3.1",
     "clean-webpack-plugin": "^0.1.19",
@@ -36,7 +36,8 @@
     "eslint-plugin-jest": "^21.24.1",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.11.1",
-    "jest": "^24.7.1",
+    "jest": "^24.8.0",
+    "jest-transform-css": "^2.0.0",
     "mini-css-extract-plugin": "^0.4.4",
     "nodemon": "^1.18.11",
     "redux-logger": "^3.0.6",
@@ -70,7 +71,7 @@
     "@atlaskit/field-text-area": "^4.0.10",
     "@atlaskit/flag": "^9.1.2",
     "@atlaskit/form": "^5.2.6",
-    "@atlaskit/icon": "^14.2.1",
+    "@atlaskit/icon": "^18.0.2",
     "@atlaskit/icon-file-type": "^1.0.4",
     "@atlaskit/icon-object": "^3.0.7",
     "@atlaskit/inline-dialog": "^9.0.13",
@@ -146,8 +147,12 @@
       "^\\@src(.*)$": "<rootDir>/src$1"
     },
     "transform": {
-      "^.+\\.jsx?$": "babel-jest"
+      "^.+\\.jsx?$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.css$": "jest-transform-css"
     },
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!@atlaskit/icon).+\\.js$"
+    ],
     "setupFilesAfterEnv": [
       "<rootDir>/tests/setup.js"
     ],
