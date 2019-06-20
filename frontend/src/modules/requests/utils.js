@@ -35,7 +35,7 @@ export const requestFields = [
     type: 'textarea',
     exportType: 'data',
     helperText:
-      'Provide a description of original and self-constructed variables (include full labeling of all variables and value labels)',
+      'Provide the variable/field names of the original and self-constructed variables. For original variables please use the name from the metadata.',
   },
   {
     name: 'Sub-Population',

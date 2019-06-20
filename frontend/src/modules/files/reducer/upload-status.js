@@ -25,6 +25,9 @@ function uploadStatus(state = initialState, action = {}) {
     case 'request/remove-file':
       return omit(state, action.payload);
 
+    case 'request/put/success':
+      return initialState;
+
     default:
       return state;
   }
