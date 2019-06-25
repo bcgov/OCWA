@@ -73,7 +73,7 @@ export const requestFields = [
   {
     name: 'Repository of code to export',
     value: 'repository',
-    type: 'text',
+    type: 'url',
     exportType: 'code',
     isRequired: true,
     helperText: 'Write out the full URL of the repository',
@@ -90,17 +90,18 @@ export const requestFields = [
   {
     name: 'External repository to send approved results',
     value: 'externalRepository',
-    type: 'text',
+    type: 'url',
     exportType: 'code',
     isRequired: true,
-    helperText:
-      'Write out the full URL of the external repository',
+    helperText: 'Write out the full URL of the external repository',
   },
 ];
 
 // Stored as a string here for native input[type="tel"] elements, so make into
 // a RegExp if using anywhere else
 export const phoneNumberRegex = '[0-9]{3}-[0-9]{3}-[0-9]{4}$';
+export const urlRegex =
+  '^(?:(?:https?|ftp)://)?(?:(?!(?:10|127)(?:.d{1,3}){3})(?!(?:169.254|192.168)(?:.d{1,3}){2})(?!172.(?:1[6-9]|2d|3[0-1])(?:.d{1,3}){2})(?:[1-9]d?|1dd|2[01]d|22[0-3])(?:.(?:1?d{1,2}|2[0-4]d|25[0-5])){2}(?:.(?:[1-9]d?|1dd|2[0-4]d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:.(?:[a-z\u00a1-\uffff]{2,})))(?::d{2,5})?(?:/S*)?$';
 
 export const getRequestStateColor = (value = 0) => {
   switch (value) {

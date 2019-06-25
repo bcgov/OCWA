@@ -1,13 +1,12 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
+import ExportTypeIcon from '@src/components/export-type-icon';
 import get from 'lodash/get';
 import startCase from 'lodash/startCase';
 import { withRouter } from 'react-router-dom';
 import { uid } from 'react-uid';
 // Icons
-import Document16Icon from '@atlaskit/icon-file-type/glyph/document/16';
-import SourceCode16Icon from '@atlaskit/icon-file-type/glyph/source-code/16';
 import CopyIcon from '@atlaskit/icon/glyph/copy';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled';
@@ -74,8 +73,7 @@ function RequestSidebar({
       <div id="request-author">{data.author}</div>
       <h6>Export Type</h6>
       <div id="request-exportType">
-        {data.exportType === 'code' && <SourceCode16Icon />}
-        {data.exportType === 'data' && <Document16Icon />}
+        <ExportTypeIcon exportType={data.exportType} />
         <span id="request-exportTypeText" className={styles.exportTypeText}>
           {startCase(get(data, 'exportType', 'data'))}
         </span>

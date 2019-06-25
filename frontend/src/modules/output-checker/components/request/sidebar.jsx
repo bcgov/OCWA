@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import AddCircleIcon from '@atlaskit/icon/glyph/add-circle';
 import Button from '@atlaskit/button';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
+import ExportTypeIcon from '@src/components/export-type-icon';
 import FlagFilledIcon from '@atlaskit/icon/glyph/flag-filled';
 import get from 'lodash/get';
+import startCase from 'lodash/startCase';
 import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
 import { RequestSchema } from '@src/modules/requests/types';
 
@@ -26,6 +28,13 @@ function Sidebar({
     <aside className={styles.sidebar}>
       <h6>Requester</h6>
       <p id="request-author-text">{data.author}</p>
+      <h6>Export Type</h6>
+      <div id="request-exportType">
+        <ExportTypeIcon exportType={data.exportType} />
+        <span id="request-exportTypeText" className={styles.exportTypeText}>
+          {startCase(get(data, 'exportType', 'data'))}
+        </span>
+      </div>
       <h6>Reviewers</h6>
       {data.reviewers.length > 0 && (
         <p id="request-assigned-oc">{assignedUser}</p>
@@ -51,7 +60,11 @@ function Sidebar({
               id="request-sidebar-approve-button"
               iconBefore={<CheckCircleIcon primaryColor="green" />}
               isDisabled={isSaving}
-              onClick={() => onApproveRequest(id)}
+              onClick={() =>
+                data.exportType === 'code'
+                  ? alert('Gitlab URL coming')
+                  : onApproveRequest(id)
+              }
             >
               Approve Request
             </Button>

@@ -1,16 +1,13 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import { Code } from 'react-content-loader';
+import ExportTypeIcon from '@src/components/export-type-icon';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Date from '@src/components/date';
-import Document24Icon from '@atlaskit/icon-file-type/glyph/document/24';
 import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
 import { NavLink, Route, Switch } from 'react-router-dom';
 import merge from 'lodash/merge';
 import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
-import SourceCode24Icon from '@atlaskit/icon-file-type/glyph/source-code/24';
 import Spinner from '@atlaskit/spinner';
 import Title from '@src/components/title';
 
@@ -74,8 +71,7 @@ class Request extends React.Component {
             <Grid>
               <GridColumn medium={9}>
                 <h1 id="request-title">
-                  {data.exportType === 'code' && <SourceCode24Icon />}
-                  {data.exportType === 'data' && <Document24Icon />}
+                  <ExportTypeIcon large exportType={data.exportType} />
                   <span>{title}</span>
                 </h1>
                 <p id="request-header-details">
