@@ -10,7 +10,13 @@ import * as styles from './styles.css';
 // NOTE: This container has to physically switch the forms, due to the black
 // box nature of the `Form` component it cache's the onSubmit callback and will
 // not change if the `exportType` variable changes
-function NewRequestForm({ history, isCreating, location, sendAction }) {
+function NewRequestForm({
+  codeExportEnabled,
+  history,
+  isCreating,
+  location,
+  sendAction,
+}) {
   const data = location.state || {};
   const exportTypeOptions = [
     { label: 'Data Export', value: 'data' },
@@ -42,19 +48,25 @@ function NewRequestForm({ history, isCreating, location, sendAction }) {
               (ideally alongside each component), information for specific
               output types, and, log files or annotated steps of analysis.
             </p>
-            <div className={styles.exportTypeSelect}>
-              <SectionMessage appearance="info" title="Select Data Export Type">
-                <Select
-                  options={exportTypeOptions}
-                  placeholder="Choose an Export Type"
-                  id="request-form-exportTypeSelect"
-                  defaultValue={exportType}
-                  onChange={value => setExportType(value)}
-                />
-              </SectionMessage>
-            </div>
+            {codeExportEnabled && (
+              <div className={styles.exportTypeSelect}>
+                <SectionMessage
+                  appearance="info"
+                  title="Select Data Export Type"
+                >
+                  <Select
+                    options={exportTypeOptions}
+                    placeholder="Choose an Export Type"
+                    id="request-form-exportTypeSelect"
+                    defaultValue={exportType}
+                    onChange={value => setExportType(value)}
+                  />
+                </SectionMessage>
+              </div>
+            )}
             {exportType.value === 'data' && <Form {...formProps} />}
-            {exportType.value === 'code' && <Form {...formProps} />}
+            {exportType.value === 'code' &&
+              codeExportEnabled && <Form {...formProps} />}
           </GridColumn>
         </Grid>
       </div>

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
-import { withRouter } from 'react-router-dom';
+import get from 'lodash/get';
 import startCase from 'lodash/startCase';
+import { withRouter } from 'react-router-dom';
 import { uid } from 'react-uid';
 // Icons
 import Document16Icon from '@atlaskit/icon-file-type/glyph/document/16';
@@ -58,6 +59,13 @@ function RequestSidebar({
       onWithdraw(data._id);
     }
   };
+  const validate = () => {
+    let isInvalid = isEditing || isSaving || data.state < 1;
+    if (data.exportType === 'data') {
+      isInvalid = data.files.length <= 0;
+    }
+    return isInvalid;
+  };
   /* eslint-enable no-alerts, no-restricted-globals */
 
   return (
@@ -69,7 +77,7 @@ function RequestSidebar({
         {data.exportType === 'code' && <SourceCode16Icon />}
         {data.exportType === 'data' && <Document16Icon />}
         <span id="request-exportTypeText" className={styles.exportTypeText}>
-          {startCase(data.exportType)}
+          {startCase(get(data, 'exportType', 'data'))}
         </span>
       </div>
       <h6>Output Checker</h6>
@@ -113,12 +121,7 @@ function RequestSidebar({
             <Button
               appearance="link"
               id="request-sidebar-submit-button"
-              isDisabled={
-                isEditing ||
-                isSaving ||
-                data.state < 1 ||
-                data.files.length <= 0
-              }
+              isDisabled={validate()}
               iconBefore={<SignInIcon />}
               onClick={() => onSubmit(data._id)}
             >
