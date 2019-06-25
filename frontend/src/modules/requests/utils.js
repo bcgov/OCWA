@@ -94,7 +94,7 @@ export const requestFields = [
     exportType: 'code',
     isRequired: true,
     helperText:
-      'Write out the branch name in the repository the Output Checker should review',
+      'Write out the full URL of the external repository',
   },
 ];
 
