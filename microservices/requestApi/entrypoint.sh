@@ -30,8 +30,13 @@ printf "},\n" >> ./config/default.json
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 
 printf "\"ocwaUrl\": \"${OCWA_URL}\",\n" >> ./config/default.json
+printf "\"gitops\": {\n" >> ./config/default.json
+printf "\"enabled\": ${GITOPS_ENABLED},\n" >> ./config/default.json
+printf "\"url\": \"${GITOPS_URL}\",\n" >> ./config/default.json
+printf "\"secret\": \"${GITOPS_SECRET}\"\n" >> ./config/default.json
+printf "},\n" >> ./config/default.json
 printf "\"email\": {\n" >> ./config/default.json
-printf "\"enabled\": \"${EMAIL_ENABLED}\",\n" >> ./config/default.json
+printf "\"enabled\": ${EMAIL_ENABLED},\n" >> ./config/default.json
 printf "\"service\": \"${EMAIL_SERVICE}\",\n" >> ./config/default.json
 printf "\"secure\": ${EMAIL_SECURE},\n" >> ./config/default.json
 printf "\"port\": \"${EMAIL_PORT}\",\n" >> ./config/default.json
