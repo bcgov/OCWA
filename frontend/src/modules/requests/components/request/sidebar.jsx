@@ -63,6 +63,7 @@ function RequestSidebar({
     if (data.exportType === 'data') {
       isInvalid = data.files.length <= 0;
     }
+
     return isInvalid;
   };
   /* eslint-enable no-alerts, no-restricted-globals */

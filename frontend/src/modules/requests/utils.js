@@ -124,8 +124,22 @@ export const getRequestStateColor = (value = 0) => {
 
 // Tidy up a request for duplication
 export const duplicateRequest = data => {
-  const formConfigKeys = requestFields.map(d => d.value);
-  const keys = [...formConfigKeys, 'name', 'files', 'supportingFiles'];
+  const formConfigKeys = requestFields
+    .filter(d => {
+      if (d.exportType === 'all') {
+        return true;
+      }
+
+      return data.exportType === d.exportType;
+    })
+    .map(d => d.value);
+  const keys = [
+    ...formConfigKeys,
+    'exportType',
+    'name',
+    'files',
+    'supportingFiles',
+  ];
   const cleaner = flow([
     d => pick(d, keys),
     d => mapValues(d, v => (isNil(v) ? '' : v)),

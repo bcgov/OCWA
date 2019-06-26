@@ -60,14 +60,12 @@ function* onFinishEditing(action) {
   };
   const meta = { id };
 
-  if (!isEqual(request, payload)) {
-    yield put(
-      saveRequest(payload, meta, {
-        url: `/api/v1/requests/save/${id}`,
-        schema: { result: requestSchema },
-      })
-    );
-  }
+  yield put(
+    saveRequest(payload, meta, {
+      url: `/api/v1/requests/save/${id}`,
+      schema: { result: requestSchema },
+    })
+  );
 }
 
 export default function* root() {

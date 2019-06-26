@@ -22,7 +22,12 @@ function NewRequestForm({
     { label: 'Data Export', value: 'data' },
     { label: 'Code Export', value: 'code' },
   ];
-  const [exportType, setExportType] = React.useState(exportTypeOptions[0]);
+  console.log(data);
+  const defaultState = data.exportType
+    ? exportTypeOptions.find(d => d.value === data.exportType)
+    : exportTypeOptions[0];
+  console.log(defaultState);
+  const [exportType, setExportType] = React.useState(defaultState);
   const onSubmit = (formData, files) =>
     sendAction(
       'onCreate',

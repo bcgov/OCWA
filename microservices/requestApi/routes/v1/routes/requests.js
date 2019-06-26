@@ -379,7 +379,7 @@ router.put('/submit/:requestId', function(req, res, next){
                 return;
             }
 
-            if (reqRes.exportType === 'data' && reqRes.files.length <= 0){
+            if (reqRes.exportType !== 'code' && reqRes.files.length <= 0){
                 res.json({error: "Can't submit a request without files. Nothing to export."});
                 return;
             }
