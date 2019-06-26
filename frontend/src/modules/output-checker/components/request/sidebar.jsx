@@ -23,6 +23,12 @@ function Sidebar({
   user,
 }) {
   const assignedUser = get(data, 'reviewers[0]', '-');
+  const isCodeExport = data.exportType === 'code';
+  const isPreparing = isCodeExport && !data.mergeRequestLink;
+  const isApproveButtonDisabled = isPreparing ? true : isSaving;
+  const approveButtonText = isPreparing
+    ? 'Preparing Merge Request'
+    : 'Approve Request';
 
   return (
     <aside className={styles.sidebar}>
@@ -59,14 +65,11 @@ function Sidebar({
               appearance="link"
               id="request-sidebar-approve-button"
               iconBefore={<CheckCircleIcon primaryColor="green" />}
-              isDisabled={isSaving}
-              onClick={() =>
-                data.exportType === 'code'
-                  ? alert('Gitlab URL coming')
-                  : onApproveRequest(id)
-              }
+              isDisabled={isApproveButtonDisabled}
+              href={isCodeExport && data.mergeRequestLink}
+              onClick={() => !isCodeExport && onApproveRequest(id)}
             >
-              Approve Request
+              {approveButtonText}
             </Button>
             <Button
               appearance="link"
