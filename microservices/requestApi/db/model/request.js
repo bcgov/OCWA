@@ -71,6 +71,10 @@ var requestSchema = new Schema({
         type: String,
         required: codeTypeValidator
     },
+    mergeRequestLink: {
+        type: String,
+        required: false
+    },
     exportType: {
         type: String,
         required: false,
