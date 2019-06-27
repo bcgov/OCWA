@@ -23,7 +23,11 @@ function Details({ data }) {
     <div key={uid(d)} className={styles.detailsRow}>
       <h6>{d.name}</h6>
       <p id={`request-details-${d.value}-text`}>
-        {d.type === 'url' && <a href={get(data, d.value)}>{d.value}</a>}
+        {d.type === 'url' && (
+          <a href={get(data, d.value)} target="_blank">
+            {get(data, d.value)}
+          </a>
+        )}
         {d.type !== 'url' && get(data, d.value)}
         {!get(data, d.value) && <em>{`No ${d.name} details given`}</em>}
       </p>
