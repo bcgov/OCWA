@@ -1,6 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import AddCircleIcon from '@atlaskit/icon/glyph/add-circle';
+import { Checkbox } from '@atlaskit/checkbox';
+import MergeRequestsIcon from '@atlaskit/icon/glyph/bitbucket/pullrequests';
 import Button from '@atlaskit/button';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import ExportTypeIcon from '@src/components/export-type-icon';
@@ -25,10 +27,18 @@ function Sidebar({
   const assignedUser = get(data, 'reviewers[0]', '-');
   const isCodeExport = data.exportType === 'code';
   const isPreparing = isCodeExport && !data.mergeRequestLink;
-  const isApproveButtonDisabled = isPreparing ? true : isSaving;
-  const approveButtonText = isPreparing
+  const mergeButtonText = isPreparing
     ? 'Preparing Merge Request'
-    : 'Approve Request';
+    : 'View Merge Request';
+  const [hasViewedMR, setViewed] = React.useState(false);
+  const isDisabledActionButton = isCodeExport ? !hasViewedMR : false;
+
+  React.useEffect(
+    () => {
+      setViewed(false);
+    },
+    [data]
+  );
 
   return (
     <aside className={styles.sidebar}>
@@ -61,21 +71,41 @@ function Sidebar({
         data.state === 3 && (
           <React.Fragment>
             <h6>Actions</h6>
+            {isCodeExport && (
+              <React.Fragment>
+                <Button
+                  appearance="link"
+                  id="request-sidebar-mergeRequestButton"
+                  iconBefore={<MergeRequestsIcon primaryColor="green" />}
+                  href={isCodeExport && data.mergeRequestLink}
+                  target="_blank"
+                >
+                  {mergeButtonText}
+                </Button>
+                <div className={styles.checkbox}>
+                  <Checkbox
+                    value="viewed"
+                    label="I have viewed the merge request"
+                    onChange={event => setViewed(event.currentTarget.checked)}
+                    name="viewed-mr"
+                  />
+                </div>
+              </React.Fragment>
+            )}
             <Button
               appearance="link"
               id="request-sidebar-approve-button"
               iconBefore={<CheckCircleIcon primaryColor="green" />}
-              isDisabled={isApproveButtonDisabled}
-              href={isCodeExport && data.mergeRequestLink}
-              onClick={() => !isCodeExport && onApproveRequest(id)}
+              isDisabled={isSaving || isDisabledActionButton}
+              onClick={() => onApproveRequest(id)}
             >
-              {approveButtonText}
+              Approve Request
             </Button>
             <Button
               appearance="link"
               id="request-sidebar-approve-button"
               iconBefore={<SelectClearIcon primaryColor="red" />}
-              isDisabled={isSaving}
+              isDisabled={isSaving || isDisabledActionButton}
               onClick={() => onDenyRequest(id)}
             >
               Deny Request
