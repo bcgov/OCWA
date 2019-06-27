@@ -290,6 +290,7 @@ model.getAll = function(query, limit, page, user, callback){
                     branch: 1,
                     externalRepository: 1,
                     repository: 1,
+                    mergeRequestLink: 1,
                     codeDescription: 1,
                     name: 1,
                     files: 1,
