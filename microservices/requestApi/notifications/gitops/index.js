@@ -28,7 +28,8 @@ notifications.process = function(request, user){
 
     let transition = this.getTransition(request);
 
-    if (transition == "1-2" || transition == "1-3") {
+    if (transition == "1-2" /* WIP to Awaiting Review */|| transition == "1-3" /* WIP to In Review */ ) {
+
         let payload = {
             direction: request.type,
             repository: request.repository,
@@ -45,9 +46,10 @@ notifications.process = function(request, user){
             if ((!apiErr) && (apiRes.statusCode === 200)){
                 var data = (typeof _response === "string" ? JSON.parse(_response):_response);
 
+                logger.info("Notification[gitops] Request Success - ", data);
+
                 notifications.updateRequest(request, data.location);
 
-                logger.info("Notification[gitops] Request Success - ", data);
             } else {
                 logger.error("Errors ", apiErr, apiRes.statusCode, apiRes.statusMessage, apiRes.body);
             }
@@ -56,19 +58,13 @@ notifications.process = function(request, user){
     } else if (transition == "3-1" /* back to WIP */ || transition == "2-1" /* back to WIP */ ) {
         this.callGitops(request, 'delete').then (d => {
             notifications.updateRequest(request, null);
-        }).catch (err => {
-            logger.error("Errors deleting MR in Gitops", err);
         });
 
     } else if (request.state == 4 /* approved */) {
-        this.callGitops(request, 'approve').catch (err => {
-            logger.error("Errors approving MR in Gitops", err);
-        });
+        this.callGitops(request, 'approve');
 
     } else if (request.state == 5 /* denied */ || request.state == 6 /* cancelled */) {
-        this.callGitops(request, 'close').catch (err => {
-            logger.error("Errors closing MR in Gitops ", err);
-        });
+        this.callGitops(request, 'close');
 
     } else {
         logger.verbose("Notification[gitops] no action taken.  State=", request.state, ", Transition=", transition);
@@ -109,6 +105,8 @@ notifications.callGitops = function(request, action) {
                 reject(apiErr);
             }
         });
+    }).catch (err => {
+        logger.error("Errors handling ", action, " MR in Gitops", err);
     });
 }
 
