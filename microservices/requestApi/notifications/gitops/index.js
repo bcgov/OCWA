@@ -61,9 +61,9 @@ notifications.process = function(request, user){
         });
 
     } else if (transition == "3-1" /* back to WIP */ || transition == "2-1" /* back to WIP */ ) {
-        this.callGitops(request, 'delete').then (d => {
-            notifications.updateRequest(request, null, 200, '');
-        });
+        //this.callGitops(request, 'delete').then (d => {
+        //    notifications.updateRequest(request, null, 200, '');
+        //});
 
     } else if (request.state == 4 /* approved */) {
         this.callGitops(request, 'merge');
