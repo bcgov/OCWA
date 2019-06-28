@@ -8,4 +8,8 @@ notifications.notify = function(request, user){
     gitops.process(request, user);
 };
 
+notifications.process = function(request, user){
+    gitops.process(request, user);
+};
+
 module.exports = notifications;

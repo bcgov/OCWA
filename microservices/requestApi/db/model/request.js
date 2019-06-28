@@ -75,6 +75,10 @@ var requestSchema = new Schema({
         type: String,
         required: false
     },
+    mergeRequestStatus: {
+        code: {type: Number, required: codeTypeValidator},
+        message: { type: String, required: false }
+    },
     exportType: {
         type: String,
         required: false,
@@ -291,6 +295,7 @@ model.getAll = function(query, limit, page, user, callback){
                     externalRepository: 1,
                     repository: 1,
                     mergeRequestLink: 1,
+                    mergeRequestStatus: 1,
                     codeDescription: 1,
                     name: 1,
                     files: 1,

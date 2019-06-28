@@ -37,6 +37,9 @@ notifications.notify = function(request, user){
         return;
     }
 
+    if (request.state === db.Request.DRAFT_STATE){
+        return;
+    }
 
     var nodemailer = require("nodemailer");
     var db = require('../../db/db');

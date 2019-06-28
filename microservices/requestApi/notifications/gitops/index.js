@@ -29,13 +29,17 @@ notifications.process = function(request, user){
     let transition = this.getTransition(request);
 
     if (transition == "1-2" /* WIP to Awaiting Review */|| transition == "1-3" /* WIP to In Review */ ) {
-
+    } else if (transition == "-0" /* Created */ ) {
+    } else if (transition == "0-1" /* Draft to WIP */ ) {
         let payload = {
             direction: request.type,
             repository: request.repository,
             externalRepository: request.externalRepository,
             branch: request.branch
         }
+
+        notifications.updateRequest(request, null, 100, 'Waiting for merge request to be ready.');
+
         httpReq.post({
             url: gitopsConfig.url + '/v1/request',
             json: payload,
@@ -48,16 +52,17 @@ notifications.process = function(request, user){
 
                 logger.info("Notification[gitops] Request Success - ", data);
 
-                notifications.updateRequest(request, data.location);
+                notifications.updateRequest(request, data.location, 200, '');
 
             } else {
                 logger.error("Errors ", apiErr, apiRes.statusCode, apiRes.statusMessage, apiRes.body);
+                notifications.updateRequest(request, null, 400, (apiErr ? apiErr : apiRes.body['message']));
             }
         });
 
     } else if (transition == "3-1" /* back to WIP */ || transition == "2-1" /* back to WIP */ ) {
         this.callGitops(request, 'delete').then (d => {
-            notifications.updateRequest(request, null);
+            notifications.updateRequest(request, null, 200, '');
         });
 
     } else if (request.state == 4 /* approved */) {
@@ -76,6 +81,9 @@ notifications.process = function(request, user){
 
 notifications.getTransition = function(request) {
     const len = request['chronology'].length;
+    if (len < 2) {
+        return "-" + request['chronology'][len-1].enteredState
+    }
     return "" + request['chronology'][len-2].enteredState + "-" + request['chronology'][len-1].enteredState
 }
 
@@ -107,13 +115,18 @@ notifications.callGitops = function(request, action) {
         });
     }).catch (err => {
         logger.error("Errors handling ", action, " MR in Gitops", err);
+        notifications.updateRequest(request, null, 400, err);
     });
 }
 
-notifications.updateRequest = function(request, link) {
+notifications.updateRequest = function(request, link, code, message) {
     let id = request._id;
     db.Request.findById(id, (err, requestForUpdate) => {
         requestForUpdate.mergeRequestLink = link;
+        requestForUpdate.mergeRequestStatus = {
+            code: code,
+            message: message
+        };
         db.Request.updateOne({_id: id}, requestForUpdate, (err) => {
             if (err){
                 logger.error("Errors updating request", err);

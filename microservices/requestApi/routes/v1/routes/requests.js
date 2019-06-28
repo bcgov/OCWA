@@ -167,6 +167,13 @@ router.post("/", function(req, res, next){
     request.state = db.Request.DRAFT_STATE;
     request.topic = null;
 
+    if (request.exportType === "code") {
+        request.mergeRequestStatus = {
+            code: 0,
+            message: ''
+        }
+    }
+
     db.Request.setChrono(request, req.user.id);
 
 
@@ -193,6 +200,8 @@ router.post("/", function(req, res, next){
                 result.save(function(e, r){
                     if (!e){
                         res.json({message: "Successfully written", result: result});
+                        var notify = require('../notifications/notifications');
+                        notify.notify(request, req.user);
                         return;
                     }
                     //note not returning if an error as it'll force a delete below
@@ -337,6 +346,8 @@ router.put("/save/:requestId", function(req, res, next){
                 });
             }
 
+            var notify = require('../notifications/notifications');
+            notify.process(findRes, req.user);
 
             res.json({message: "Successfully updated", result: findRes});
         });
@@ -381,6 +392,11 @@ router.put('/submit/:requestId', function(req, res, next){
 
             if (reqRes.exportType !== 'code' && reqRes.files.length <= 0){
                 res.json({error: "Can't submit a request without files. Nothing to export."});
+                return;
+            }
+
+            if (reqRes.exportType === 'code' && reqRes.mergeRequestStatus.code != 200) {
+                res.json({error: reqRes.mergeRequestStatus.message});
                 return;
             }
 
