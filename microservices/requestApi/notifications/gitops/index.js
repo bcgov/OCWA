@@ -61,7 +61,7 @@ notifications.process = function(request, user){
         });
 
     } else if (request.state == 4 /* approved */) {
-        this.callGitops(request, 'approve');
+        this.callGitops(request, 'merge');
 
     } else if (request.state == 5 /* denied */ || request.state == 6 /* cancelled */) {
         this.callGitops(request, 'close');
