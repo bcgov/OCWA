@@ -30,7 +30,7 @@ notifications.process = function(request, user){
 
     if (transition == "1-2" /* WIP to Awaiting Review */|| transition == "1-3" /* WIP to In Review */ ) {
     } else if (transition == "-0" /* Created */ ) {
-    } else if (transition == "0-1" /* Draft to WIP */ ) {
+    } else if (transition == "0-1" /* Draft to WIP */ && request.mergeRequestStatus.code == 0) {
         let payload = {
             direction: request.type,
             repository: request.repository,
