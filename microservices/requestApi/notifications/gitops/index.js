@@ -55,8 +55,13 @@ notifications.process = function(request, user){
                 notifications.updateRequest(request, data.location, 200, '');
 
             } else {
+
                 logger.error("Errors ", apiErr, apiRes.statusCode, apiRes.statusMessage, apiRes.body);
-                notifications.updateRequest(request, null, 400, (apiErr ? apiErr : apiRes.body['message']));
+                if (apiErr || apiRes.statusCode === 400) {
+                    notifications.updateRequest(request, null, 400, (apiErr ? apiErr : apiRes.body['message']));
+                } else {
+                    notifications.updateRequest(request, null, 400, 'Unexpected error - please try again later.');
+                }
             }
         });
 
@@ -109,8 +114,12 @@ notifications.callGitops = function(request, action) {
                 logger.info("Notification[gitops] ", action, " Success - ", data);
                 resolve(data);
             } else {
-                logger.error("Errors ", apiErr, apiRes.statusCode, apiRes.statusMessage);
-                reject(apiErr);
+                error = 'Unexpected error - please try again later.';
+                if (apiErr || apiRes.statusCode === 400) {
+                    error = (apiErr ? apiErr : apiRes.body['message']);
+                }
+                logger.error("Errors ", apiErr, apiRes.statusCode, apiRes.statusMessage, error);
+                reject(error);
             }
         });
     }).catch (err => {
