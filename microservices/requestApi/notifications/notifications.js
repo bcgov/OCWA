@@ -12,4 +12,8 @@ notifications.process = function(request, user){
     gitops.process(request, user);
 };
 
+notifications.gitops = function(){
+    return gitops;
+};
+
 module.exports = notifications;

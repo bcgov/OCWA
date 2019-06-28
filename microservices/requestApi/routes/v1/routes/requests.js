@@ -697,12 +697,24 @@ router.put('/approve/:requestId', function(req, res){
 
             db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                 if (!updateErr) {
-                    //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
-                    reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
                     var notify = require('../notifications/notifications');
-                    notify.notify(reqRes, req.user);
-                    logRequestFinalState(reqRes, req.user);
-                    res.json({message: "Request approved successfully", result: reqRes});
+                    notify.gitops().approve(reqRes).then((arg) => {
+                        //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
+                        reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
+                        notify.notify(reqRes, req.user);
+                        logRequestFinalState(reqRes, req.user);
+                        res.json({message: "Request approved successfully", result: reqRes});
+                    }).catch(err => {
+                        reqRes.state = db.Request.IN_REVIEW_STATE;
+                        reqRes.chronology.splice(-1,1);
+                        db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
+                            if (uerr) {
+                                logger.error("Unable to revert changes after failed code merge.", uerr);
+                            }
+                        });
+                        res.status(400)
+                        res.json({error: "Error - " + err});
+                    });
                     return;
                 }
                 res.status(500);

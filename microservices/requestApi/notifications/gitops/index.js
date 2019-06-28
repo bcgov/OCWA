@@ -71,10 +71,13 @@ notifications.process = function(request, user){
         //});
 
     } else if (request.state == 4 /* approved */) {
-        this.callGitops(request, 'merge');
+        //this.callGitops(request, 'merge');
 
     } else if (request.state == 5 /* denied */ || request.state == 6 /* cancelled */) {
-        this.callGitops(request, 'close');
+        this.callGitops(request, 'close').catch (err => {
+            logger.error("Errors handling ", action, " MR in Gitops", err);
+            notifications.updateRequest(request, null, 400, err);
+        });
 
     } else {
         logger.verbose("Notification[gitops] no action taken.  State=", request.state, ", Transition=", transition);
@@ -83,6 +86,25 @@ notifications.process = function(request, user){
     logger.verbose("Notification[gitops] triggered");
 };
 
+notifications.approve = function(request) {
+    if (!config.has('gitops')){
+        logger.debug("Notifications[gitops] - Triggered but not configured");
+        return notifications.noop();
+    }
+
+    logger.info("Approve[gitops]", "exportType=", request.exportType, ",State=", db.Request.stateToText(request.state), ",Type=", request.type);
+
+    var gitopsConfig = config.get('gitops');
+    if (!gitopsConfig.enabled){
+        return notifications.noop();
+    }
+
+    if (request.exportType != "code") {
+        return notifications.noop();
+    }
+
+    return this.callGitops(request, 'merge');
+};
 
 notifications.getTransition = function(request) {
     const len = request['chronology'].length;
@@ -90,6 +112,12 @@ notifications.getTransition = function(request) {
         return "-" + request['chronology'][len-1].enteredState
     }
     return "" + request['chronology'][len-2].enteredState + "-" + request['chronology'][len-1].enteredState
+}
+
+notifications.noop = function() {
+    return new Promise(function(resolve, reject) {
+        resolve(); 
+    });
 }
 
 notifications.callGitops = function(request, action) {
@@ -109,6 +137,7 @@ notifications.callGitops = function(request, action) {
             }
         }, function(apiErr, apiRes, _response){
             if ((!apiErr) && (apiRes.statusCode === 200)){
+                logger.info("Response = " + _response);
                 var data = (typeof _response === "string" ? JSON.parse(_response):_response);
 
                 logger.info("Notification[gitops] ", action, " Success - ", data);
@@ -122,9 +151,6 @@ notifications.callGitops = function(request, action) {
                 reject(error);
             }
         });
-    }).catch (err => {
-        logger.error("Errors handling ", action, " MR in Gitops", err);
-        notifications.updateRequest(request, null, 400, err);
     });
 }
 
