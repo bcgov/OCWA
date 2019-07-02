@@ -38,6 +38,12 @@
       "from": "ocwa@donotreply.com"
     },
 
+   "gitops": {
+      "enabled": false,
+      "url": "http://gitops_simulator:2000",
+      "secret": "s3cr3t"
+    },
+
     "requiredRoleToCreateRequest": "exporter",
     "outputCheckerGroup": "oc",
     "allowDenyRequest": true,

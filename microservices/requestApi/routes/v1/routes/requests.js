@@ -176,7 +176,6 @@ router.post("/", function(req, res, next){
 
     db.Request.setChrono(request, req.user.id);
 
-
     request.save(function(saveErr, result){
         if (saveErr || !result) {
             res.status(500);
@@ -391,11 +390,13 @@ router.put('/submit/:requestId', function(req, res, next){
             }
 
             if (reqRes.exportType !== 'code' && reqRes.files.length <= 0){
+                res.status(403);
                 res.json({error: "Can't submit a request without files. Nothing to export."});
                 return;
             }
 
             if (reqRes.exportType === 'code' && reqRes.mergeRequestStatus.code != 200) {
+                res.status(400);
                 res.json({error: reqRes.mergeRequestStatus.message});
                 return;
             }

@@ -1,21 +1,19 @@
-var notifications = {};
+var gitops = {};
 
-const path = require('path');
 const config = require('config');
 const logger = require('npmlog');
 const httpReq = require('request');
 
 const db = require('../../db/db');
 
-notifications.process = function(request, user){
-
+gitops.process = function(request, user){
 
     if (!config.has('gitops')){
         logger.debug("Notifications[gitops] - Triggered but not configured");
         return;
     }
 
-    logger.info("Notification[gitops]", "exportType=", request.exportType, ",State=", db.Request.stateToText(request.state), ",Type=", request.type);
+    logger.info("[gitops]", "exportType=", request.exportType, ",State=", db.Request.stateToText(request.state), ",Type=", request.type);
 
     var gitopsConfig = config.get('gitops');
     if (!gitopsConfig.enabled){
@@ -38,7 +36,7 @@ notifications.process = function(request, user){
             branch: request.branch
         }
 
-        notifications.updateRequest(request, null, 100, 'Waiting for merge request to be ready.');
+        gitops.updateRequest(request, null, 100, 'Waiting for merge request to be ready.');
 
         httpReq.post({
             url: gitopsConfig.url + '/v1/request',
@@ -50,24 +48,24 @@ notifications.process = function(request, user){
             if ((!apiErr) && (apiRes.statusCode === 200)){
                 var data = (typeof _response === "string" ? JSON.parse(_response):_response);
 
-                logger.info("Notification[gitops] Request Success - ", data);
+                logger.info("[gitops] Request Success - ", data);
 
-                notifications.updateRequest(request, data.location, 200, '');
+                gitops.updateRequest(request, data.location, 200, '');
 
             } else {
 
                 logger.error("Errors ", apiErr, apiRes.statusCode, apiRes.statusMessage, apiRes.body);
                 if (apiErr || apiRes.statusCode === 400) {
-                    notifications.updateRequest(request, null, 400, (apiErr ? apiErr : apiRes.body['message']));
+                    gitops.updateRequest(request, null, 400, (apiErr ? apiErr : apiRes.body['message']));
                 } else {
-                    notifications.updateRequest(request, null, 400, 'Unexpected error - please try again later.');
+                    gitops.updateRequest(request, null, 400, 'Unexpected error - please try again later.');
                 }
             }
         });
 
     } else if (transition == "3-1" /* back to WIP */ || transition == "2-1" /* back to WIP */ ) {
         //this.callGitops(request, 'delete').then (d => {
-        //    notifications.updateRequest(request, null, 200, '');
+        //    gitops.updateRequest(request, null, 200, '');
         //});
 
     } else if (request.state == 4 /* approved */) {
@@ -76,37 +74,37 @@ notifications.process = function(request, user){
     } else if (request.state == 5 /* denied */ || request.state == 6 /* cancelled */) {
         this.callGitops(request, 'close').catch (err => {
             logger.error("Errors handling ", action, " MR in Gitops", err);
-            notifications.updateRequest(request, null, 400, err);
+            gitops.updateRequest(request, null, 400, err);
         });
 
     } else {
-        logger.verbose("Notification[gitops] no action taken.  State=", request.state, ", Transition=", transition);
+        logger.verbose("[gitops] no action taken.  State=", request.state, ", Transition=", transition);
     }
 
-    logger.verbose("Notification[gitops] triggered");
+    logger.verbose("[gitops] triggered");
 };
 
-notifications.approve = function(request) {
+gitops.approve = function(request) {
     if (!config.has('gitops')){
         logger.debug("Notifications[gitops] - Triggered but not configured");
-        return notifications.noop();
+        return gitops.noop();
     }
 
     logger.info("Approve[gitops]", "exportType=", request.exportType, ",State=", db.Request.stateToText(request.state), ",Type=", request.type);
 
     var gitopsConfig = config.get('gitops');
     if (!gitopsConfig.enabled){
-        return notifications.noop();
+        return gitops.noop();
     }
 
     if (request.exportType != "code") {
-        return notifications.noop();
+        return gitops.noop();
     }
 
     return this.callGitops(request, 'merge');
 };
 
-notifications.getTransition = function(request) {
+gitops.getTransition = function(request) {
     const len = request['chronology'].length;
     if (len < 2) {
         return "-" + request['chronology'][len-1].enteredState
@@ -114,13 +112,13 @@ notifications.getTransition = function(request) {
     return "" + request['chronology'][len-2].enteredState + "-" + request['chronology'][len-1].enteredState
 }
 
-notifications.noop = function() {
+gitops.noop = function() {
     return new Promise(function(resolve, reject) {
         resolve(); 
     });
 }
 
-notifications.callGitops = function(request, action) {
+gitops.callGitops = function(request, action) {
     var gitopsConfig = config.get('gitops');
 
     return new Promise(function(resolve, reject) {    
@@ -140,7 +138,7 @@ notifications.callGitops = function(request, action) {
                 logger.info("Response = " + _response);
                 var data = (typeof _response === "string" ? JSON.parse(_response):_response);
 
-                logger.info("Notification[gitops] ", action, " Success - ", data);
+                logger.info("[gitops] ", action, " Success - ", data);
                 resolve(data);
             } else {
                 error = 'Unexpected error - please try again later.';
@@ -154,7 +152,7 @@ notifications.callGitops = function(request, action) {
     });
 }
 
-notifications.updateRequest = function(request, link, code, message) {
+gitops.updateRequest = function(request, link, code, message) {
     let id = request._id;
     db.Request.findById(id, (err, requestForUpdate) => {
         requestForUpdate.mergeRequestLink = link;
@@ -166,9 +164,10 @@ notifications.updateRequest = function(request, link, code, message) {
             if (err){
                 logger.error("Errors updating request", err);
             } else {
-                logger.info("Notification[gitops] Update request with link ", link);
+                logger.info("[gitops] Update request with link ", link);
             }
         });
     });
 }
-module.exports = notifications;
+
+module.exports = gitops;
