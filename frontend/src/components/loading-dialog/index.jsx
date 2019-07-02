@@ -9,9 +9,10 @@ function LoadingDialog({ open, title, text }) {
   return (
     <ModalTransition>
       {open && (
-        <ModalDialog heading={title}>
+        <ModalDialog>
           <div className={styles.container}>
             <Spinner size="large" />
+            <h4>{title}</h4>
             {text && <p>{text}</p>}
           </div>
         </ModalDialog>

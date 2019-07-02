@@ -7,7 +7,7 @@ import Sidebar from '../components/request/sidebar';
 
 const mapStateToProps = state => ({
   user: get(state, 'app.auth.user', {}),
-  isApproving: state.outputChecker.viewState.isApprovingRequest,
+  isApprovingRequest: state.outputChecker.viewState.isApprovingRequest,
 });
 
 export default connect(mapStateToProps, {
