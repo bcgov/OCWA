@@ -106,7 +106,9 @@ gitops.approve = function(request) {
 
 gitops.getTransition = function(request) {
     const len = request['chronology'].length;
-    if (len < 2) {
+    if (len == 0) {
+        return "";
+    } else if (len < 2) {
         return "-" + request['chronology'][len-1].enteredState
     }
     return "" + request['chronology'][len-2].enteredState + "-" + request['chronology'][len-1].enteredState
@@ -154,18 +156,22 @@ gitops.callGitops = function(request, action) {
 
 gitops.updateRequest = function(request, link, code, message) {
     let id = request._id;
-    db.Request.findById(id, (err, requestForUpdate) => {
-        requestForUpdate.mergeRequestLink = link;
-        requestForUpdate.mergeRequestStatus = {
-            code: code,
-            message: message
-        };
-        db.Request.updateOne({_id: id}, requestForUpdate, (err) => {
-            if (err){
-                logger.error("Errors updating request", err);
-            } else {
-                logger.info("[gitops] Update request with link ", link);
-            }
+    return new Promise(function(resolve, reject) {    
+        db.Request.findById(id, (err, requestForUpdate) => {
+            requestForUpdate.mergeRequestLink = link;
+            requestForUpdate.mergeRequestStatus = {
+                code: code,
+                message: message
+            };
+            db.Request.updateOne({_id: id}, requestForUpdate, (err) => {
+                if (err){
+                    logger.error("Errors updating request", err);
+                    reject(err);
+                } else {
+                    logger.info("[gitops] Update request with link ", link);
+                    resolve('');
+                }
+            });
         });
     });
 }
