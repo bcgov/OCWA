@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
 import ExportTypeIcon from '@src/components/export-type-icon';
 import get from 'lodash/get';
+import inRange from 'lodash/inRange';
 import startCase from 'lodash/startCase';
 import { withRouter } from 'react-router-dom';
 import { uid } from 'react-uid';
@@ -62,6 +63,15 @@ function RequestSidebar({
     let isInvalid = isEditing || isSaving || data.state < 1;
     if (data.exportType === 'data') {
       isInvalid = data.files.length <= 0;
+    } else if (data.exportType === 'code') {
+      const invalidCode = 100;
+      const failedCode = 400;
+      const mergeRequestStatusCode = get(
+        data,
+        'mergeRequestStatus.code',
+        invalidCode
+      );
+      isInvalid = !inRange(mergeRequestStatusCode, invalidCode, failedCode);
     }
 
     return isInvalid;

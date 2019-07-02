@@ -35,7 +35,7 @@ function RequestDetails({
     }));
   const uploadData = merge({}, data, duplicateFiles);
 
-  if (isLoading) {
+  if (isLoading && !data._id) {
     return (
       <React.Fragment>
         <Code />
