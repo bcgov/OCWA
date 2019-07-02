@@ -366,7 +366,7 @@ router.put('/submit/:requestId', function(req, res, next){
     var project = projectConfig.deriveProjectFromUser(req.user);
 
     db.Request.getAll({_id: requestId}, 1, 1, req.user, function (reqErr, reqRes) {
-        if (reqErr || !reqRes || reqRes.length<0) {
+        if (reqErr || !reqRes || reqRes.length == 0) {
             res.status(400);
             res.json({error: reqErr.message});
             return;
@@ -389,7 +389,7 @@ router.put('/submit/:requestId', function(req, res, next){
                 return;
             }
 
-            if (reqRes.exportType !== 'code' && reqRes.files.length <= 0){
+            if (reqRes.exportType !== 'code' && reqRes.files.length == 0){
                 res.status(403);
                 res.json({error: "Can't submit a request without files. Nothing to export."});
                 return;
