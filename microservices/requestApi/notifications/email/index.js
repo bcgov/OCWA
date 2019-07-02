@@ -1,6 +1,7 @@
 var notifications = {};
 
 var fs = require('fs');
+var db = require('../../db/db');
 
 var path = require('path');
 var template = fs.readFileSync(path.resolve(__dirname, 'emailTemplate.html'), 'utf8');
@@ -42,7 +43,6 @@ notifications.notify = function(request, user){
     }
 
     var nodemailer = require("nodemailer");
-    var db = require('../../db/db');
 
     var notifyWho = request.reviewers.slice(0);
     notifyWho.push(request.author);
