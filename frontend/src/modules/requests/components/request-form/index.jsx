@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import LoadingDialog from '@src/components/loading-dialog';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import SectionMessage from '@atlaskit/section-message';
 import Select from '@atlaskit/select';
@@ -22,11 +23,9 @@ function NewRequestForm({
     { label: 'Data Export', value: 'data' },
     { label: 'Code Export', value: 'code' },
   ];
-  console.log(data);
   const defaultState = data.exportType
     ? exportTypeOptions.find(d => d.value === data.exportType)
     : exportTypeOptions[0];
-  console.log(defaultState);
   const [exportType, setExportType] = React.useState(defaultState);
   const onSubmit = (formData, files) =>
     sendAction(
@@ -43,6 +42,7 @@ function NewRequestForm({
 
   return (
     <Page>
+      <LoadingDialog open={isCreating} title="Creating Request" />
       <div id="request-form-container" className={styles.container}>
         <Grid>
           <GridColumn medium={12}>
@@ -80,6 +80,7 @@ function NewRequestForm({
 }
 
 NewRequestForm.propTypes = {
+  codeExportEnabled: PropTypes.bool,
   history: PropTypes.object.isRequired,
   isCreating: PropTypes.bool.isRequired,
   location: PropTypes.shape({
