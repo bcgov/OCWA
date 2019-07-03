@@ -1,9 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import SectionMessage from '@atlaskit/section-message';
+import ExportTypeIcon from '@src/components/export-type-icon';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Date from '@src/components/date';
 import get from 'lodash/get';
-import isEmpty from 'lodash/isEmpty';
 import { NavLink, Route, Switch } from 'react-router-dom';
 import merge from 'lodash/merge';
 import Lozenge from '@atlaskit/lozenge';
@@ -55,16 +56,19 @@ class Request extends React.Component {
       data,
       duplicateFiles,
       isLoaded,
+      isLoading,
       isOutputChecker,
       updatedAt,
       match,
     } = this.props;
     const { isEditing } = this.state;
     const title = data.name || 'Loading...';
-
-    if (!isLoaded && isEmpty(data)) {
-      return null;
-    }
+    const isCodeExport = data.exportType === 'code';
+    const mergeRequestStatusCode = get(data, 'mergeRequestStatus.code');
+    const showMergeRequestError =
+      isCodeExport && mergeRequestStatusCode === 400;
+    const showMergeRequestLoading =
+      isCodeExport && mergeRequestStatusCode < 200;
 
     return (
       <div id="requests-page">
@@ -74,14 +78,15 @@ class Request extends React.Component {
             <Grid>
               <GridColumn medium={9}>
                 <h1 id="request-title">
-                  <span>{data.name}</span>
-                  {isEditing && (
-                    <Lozenge appearance="inprogress">Editing</Lozenge>
-                  )}
+                  <ExportTypeIcon large exportType={data.exportType} />
+                  <span>{title}</span>
                 </h1>
                 <p id="request-header-details">
                   {'Updated at '}
                   <Date value={updatedAt} format="HH:MMa on MMMM Do, YYYY" />
+                  {isEditing && (
+                    <Lozenge appearance="inprogress">Editing</Lozenge>
+                  )}
                 </p>
               </GridColumn>
               <GridColumn medium={3}>
@@ -121,6 +126,26 @@ class Request extends React.Component {
           <div id="request-details" className={styles.main}>
             <Grid>
               <GridColumn medium={9}>
+                {(showMergeRequestLoading || showMergeRequestError) &&
+                  !isEditing && (
+                    <div className={styles.mergeRequestStatus}>
+                      {showMergeRequestLoading && (
+                        <SectionMessage icon={Spinner}>
+                          <strong>Merge Request</strong> is in progress, please
+                          wait before submitting.
+                        </SectionMessage>
+                      )}
+                      {showMergeRequestError && (
+                        <SectionMessage appearance="error">
+                          {get(
+                            data,
+                            'mergeRequestStatus.message',
+                            'There was an error.'
+                          )}
+                        </SectionMessage>
+                      )}
+                    </div>
+                  )}
                 <Switch>
                   <Route
                     exact
@@ -130,6 +155,8 @@ class Request extends React.Component {
                         data={data}
                         duplicateFiles={duplicateFiles}
                         isEditing={isEditing}
+                        isLoaded={isLoaded}
+                        isLoading={isLoading}
                         onSave={this.onSave}
                       />
                     )}
@@ -169,8 +196,11 @@ Request.propTypes = {
     files: PropTypes.arrayOf(PropTypes.string),
     supportingFiles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+  fetchStatus: PropTypes.oneOf(['loading', 'loaded', 'failed', 'idle'])
+    .isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   location: PropTypes.shape({
     state: PropTypes.shape({
       isEditing: PropTypes.bool,

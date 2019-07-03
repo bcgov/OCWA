@@ -12,6 +12,9 @@ const CANCELLED_STATE = 6;
 const INPUT_TYPE = "import";
 const EXPORT_TYPE = "export";
 
+const DATA_EXPORT_TYPE = 'data';
+const CODE_EXPORT_TYPE = 'code';
+
 var chronologySchema = new Schema({
     timestamp: {type: Date, default: Date.now(), required: true},
     enteredState: {type: Number, required: true, default: DRAFT_STATE},
@@ -19,6 +22,13 @@ var chronologySchema = new Schema({
     changes: {type: Map, of: Schema.Types.Mixed, required: false}
 },{_id: false});
 
+function codeTypeValidator() {
+    return this.exportType === CODE_EXPORT_TYPE;
+}
+
+function dataTypeValidator() {
+    return this.exportType === DATA_EXPORT_TYPE;
+}
 
 var requestSchema = new Schema({
     state: {type: Number, required: true, default: DRAFT_STATE, index: true},
@@ -26,8 +36,14 @@ var requestSchema = new Schema({
     phoneNumber: {type: String, required: true},
     supportingFiles: {type: [String], required: false},
     purpose: {type: String, required: false},
-    variableDescriptions: {type: String, required: true},
-    subPopulation: {type: String, required: true},
+    variableDescriptions: {
+        type: String,
+        required: dataTypeValidator
+    },
+    subPopulation: {
+        type: String,
+        required: dataTypeValidator
+    },
     selectionCriteria: {type: String, required: false},
     steps: {type: String, required: false},
     freq: {type: String, required: false},
@@ -38,6 +54,37 @@ var requestSchema = new Schema({
     name: {type: String, required: true, index: true},
     files: {type: [String], required: true},
     author: {type: String, required: true},
+    // Code Attributes
+    branch: {
+        type: String,
+        required: codeTypeValidator
+    },
+    codeDescription: {
+        type: String,
+        required: codeTypeValidator
+    },
+    externalRepository: {
+        type: String,
+        required: codeTypeValidator
+    },
+    repository: {
+        type: String,
+        required: codeTypeValidator
+    },
+    mergeRequestLink: {
+        type: String,
+        required: false
+    },
+    mergeRequestStatus: {
+        code: {type: Number, required: codeTypeValidator},
+        message: { type: String, required: false }
+    },
+    exportType: {
+        type: String,
+        required: false,
+        enum: [DATA_EXPORT_TYPE, CODE_EXPORT_TYPE],
+        default: DATA_EXPORT_TYPE
+    },
     type: {
         type: String,
         required: false,
@@ -243,6 +290,13 @@ model.getAll = function(query, limit, page, user, callback){
                     topic: 1,
                     reviewers: 1,
                     chronology: 1,
+                    exportType: 1,
+                    branch: 1,
+                    externalRepository: 1,
+                    repository: 1,
+                    mergeRequestLink: 1,
+                    mergeRequestStatus: 1,
+                    codeDescription: 1,
                     name: 1,
                     files: 1,
                     author: 1

@@ -4,18 +4,20 @@ var chai = require('chai');
 var chaiHttp = require('chai-http');
 var server = require('../../app');
 var should = chai.should();
+var expect = chai.expect;
 
 var config = require('config');
 var jwt = config.get('testJWT');
 
 var db = require('../../routes/v1/db/db');
 
+var logger = require('npmlog');
 
 chai.use(chaiHttp);
 
 describe("Requests", function() {
     var activeRequestId = '';
-    var fileId = 'test.jpeg';
+    var fileId = 'test_' + Math.random().toString(36) + '.jpeg';
     after(function(done){
         db.Request.deleteMany({}, function(err){
             var minio = require('minio');
@@ -38,6 +40,7 @@ describe("Requests", function() {
                 done();
             })
         });
+        
     });
 
     before(function(done){
@@ -177,6 +180,7 @@ describe("Requests", function() {
                     done();
                 });
         });
+
     });
 
     describe('/GET  v1 & v1/requestId', function () {
@@ -259,7 +263,7 @@ describe("Requests", function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
-                    done();
+                    setTimeout(done, 2000);
                 });
         });
     });
@@ -392,7 +396,7 @@ describe("Requests", function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
-                    done();
+                    setTimeout(done, 2000);
                 });
         });
 
@@ -438,4 +442,62 @@ describe("Requests", function() {
 
 
     });
+
+
+    describe('CODE Requests', function() {
+        it('it should create a CODE request', function (done) {
+            chai.request(server)
+                .post('/v1/')
+                .set("Authorization", "Bearer " + jwt)
+                .send({
+                    name: "testName6",
+                    tags: ["test"],
+                    phoneNumber: "555-555-5555",
+                    exportType: "code",
+                    codeDescription: "Whats the code about",
+                    repository: "http://somewhere.com",
+                    externalRepository: "http://somewhere.external.com",
+                    branch: "develop"
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('result');
+                    res.body.result.should.have.property('_id');
+                    res.body.result.should.have.property('mergeRequestStatus');
+                    activeRequestId = res.body.result._id;
+                    done();
+                });
+        });
+
+        it('it should save a request', function (done) {
+            chai.request(server)
+                .put('/v1/save/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    setTimeout(done, 1000);
+                });
+        });
+
+        it('it should fail submit', function (done) {
+            chai.request(server)
+                .put('/v1/submit/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    expect(res.body.error).to.equal("");
+                    done();
+                });
+        });
+    });
+
 });

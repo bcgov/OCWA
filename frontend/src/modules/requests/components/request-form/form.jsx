@@ -9,7 +9,6 @@ import Form, {
   ErrorMessage,
   Field,
   FormFooter,
-  FormHeader,
   FormSection,
   HelperMessage,
 } from '@atlaskit/form';
@@ -19,22 +18,18 @@ import { uid } from 'react-uid';
 import { withRouter } from 'react-router-dom';
 
 import FormField from './field';
-import { requestFields } from '../../utils';
+import { formText, requestFields } from '../../utils';
 import { RequestSchema } from '../../types';
 
-function NewRequestForm({ data, history, isCreating, onSubmit }) {
+function NewRequestForm({ data, exportType, history, isCreating, onSubmit }) {
   // Grab the files if there is a duplicate getting passed through
   const duplicateFiles = pick(data, ['files', 'supportingFiles']);
 
   return (
-    <div id="request-form">
+    <div id="request-form" className={`${exportType}-form`}>
       <Form onSubmit={formData => onSubmit(formData, duplicateFiles)}>
         {({ formProps }) => (
           <form {...formProps}>
-            <FormHeader
-              title="Initiate a New Request"
-              description="Please ensure that you also have the following elements, as appropriate, with your output submission: descriptive labeling (ideally alongside each component), information for specific output types, and, log files or annotated steps of analysis."
-            />
             <Field
               isRequired
               name="name"
@@ -59,26 +54,30 @@ function NewRequestForm({ data, history, isCreating, onSubmit }) {
               )}
             </Field>
             <FormSection
-              title="Output Package and/or Output Groups Description "
-              description="Describe the context for this output package. If appropriate, you may choose to create Output Groups, which are a collection of output components that are batched for the purposes of description."
+              title={get(formText, [exportType, 'title'])}
+              description={get(formText, [exportType, 'description'])}
             >
-              {requestFields.map(d => (
-                <Field
-                  key={uid(d)}
-                  name={d.value}
-                  defaultValue={get(data, d.value, '')}
-                  label={d.name}
-                  isDisabled={isCreating}
-                  isRequired={d.isRequired}
-                >
-                  {({ fieldProps }) => (
-                    <React.Fragment>
-                      <FormField type={d.type} fieldProps={fieldProps} />
-                      <HelperMessage>{d.helperText}</HelperMessage>
-                    </React.Fragment>
-                  )}
-                </Field>
-              ))}
+              {requestFields
+                .filter(
+                  d => d.exportType === 'all' || d.exportType === exportType
+                )
+                .map(d => (
+                  <Field
+                    key={uid(d)}
+                    name={d.value}
+                    defaultValue={get(data, d.value, '')}
+                    label={d.name}
+                    isDisabled={isCreating}
+                    isRequired={d.isRequired}
+                  >
+                    {({ fieldProps }) => (
+                      <React.Fragment>
+                        <FormField type={d.type} fieldProps={fieldProps} />
+                        <HelperMessage>{d.helperText}</HelperMessage>
+                      </React.Fragment>
+                    )}
+                  </Field>
+                ))}
             </FormSection>
             <FormSection>
               <SectionMessage
@@ -126,6 +125,7 @@ function NewRequestForm({ data, history, isCreating, onSubmit }) {
 
 NewRequestForm.propTypes = {
   data: RequestSchema,
+  exportType: PropTypes.oneOf(['code', 'data']),
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,

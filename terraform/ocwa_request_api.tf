@@ -51,7 +51,9 @@ resource "docker_container" "ocwa_request_api" {
       "EMAIL_PORT=25",
       "EMAIL_USER=user",
       "EMAIL_PASSWORD=password",
-      "EMAIL_FROM=no-reply@gmail.com"
-      
+      "EMAIL_FROM=no-reply@gmail.com",
+      "GITOPS_ENABLED=true",
+      "GITOPS_URL=http://gitops_simulator:2000",
+      "GITOPS_SECRET=s3cr3t"
   ]
 }

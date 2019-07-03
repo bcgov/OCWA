@@ -7,6 +7,7 @@ const initialViewState = {
   navSearch: '',
   state: 2, // Between 2 - 6
   filter: 'mine', // Enum: 'all', 'mine', 'unassigned'
+  isApprovingRequest: false, // Only used to show long
 };
 
 function viewState(state = initialViewState, action = {}) {
@@ -51,6 +52,19 @@ function viewState(state = initialViewState, action = {}) {
       return {
         ...state,
         navSearch: action.payload,
+      };
+
+    case 'request/put/requested':
+      return {
+        ...state,
+        isApprovingRequest: true,
+      };
+
+    case 'request/put/failed':
+    case 'request/put/success':
+      return {
+        ...state,
+        isApprovingRequest: false,
       };
 
     default:

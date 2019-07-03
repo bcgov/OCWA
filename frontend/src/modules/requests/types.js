@@ -10,6 +10,9 @@ export const RequestSchema = PropTypes.shape({
       change_by: PropTypes.string,
     })
   ),
+  exportType: PropTypes.oneOf(['code', 'data']),
+  mergeRequestLink: PropTypes.string,
+  type: PropTypes.oneOf(['import', 'export']),
   files: PropTypes.array,
   reviewers: PropTypes.array,
   state: PropTypes.number,

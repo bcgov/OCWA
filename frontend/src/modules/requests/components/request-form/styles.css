@@ -1,3 +1,17 @@
 .container {
   margin: 40px 0;
 }
+
+.exportTypeSelect {
+  margin: 20px 0;
+  background-color:#fafbfc;
+}
+
+.exportTypeSelect section > div:last-child {
+  width: 100%;
+}
+
+
+.exportTypeSelect section h1 {
+  margin-bottom: 20px;
+}
