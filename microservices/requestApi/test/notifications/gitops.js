@@ -61,7 +61,6 @@ describe("Gitlab Integration", function() {
                         expect(res.body.mergeRequestLink).to.equal('http://gitlab.link');
                         done();
                     });
-                    done();
                 });
 
         });        
