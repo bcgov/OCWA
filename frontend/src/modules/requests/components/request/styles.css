@@ -80,6 +80,10 @@
   justify-content: center;
 }
 
+.mergeRequestStatus {
+  margin-bottom: 20px;
+}
+
 .sectionContent > div > div {
   margin-bottom: 0;
 }

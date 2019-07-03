@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import SectionMessage from '@atlaskit/section-message';
 import ExportTypeIcon from '@src/components/export-type-icon';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import Date from '@src/components/date';
@@ -62,6 +63,12 @@ class Request extends React.Component {
     } = this.props;
     const { isEditing } = this.state;
     const title = data.name || 'Loading...';
+    const isCodeExport = data.exportType === 'code';
+    const mergeRequestStatusCode = get(data, 'mergeRequestStatus.code');
+    const showMergeRequestError =
+      isCodeExport && mergeRequestStatusCode === 400;
+    const showMergeRequestLoading =
+      isCodeExport && mergeRequestStatusCode < 200;
 
     return (
       <div id="requests-page">
@@ -119,6 +126,26 @@ class Request extends React.Component {
           <div id="request-details" className={styles.main}>
             <Grid>
               <GridColumn medium={9}>
+                {(showMergeRequestLoading || showMergeRequestError) &&
+                  !isEditing && (
+                    <div className={styles.mergeRequestStatus}>
+                      {showMergeRequestLoading && (
+                        <SectionMessage icon={Spinner}>
+                          <strong>Merge Request</strong> is in progress, please
+                          wait before submitting.
+                        </SectionMessage>
+                      )}
+                      {showMergeRequestError && (
+                        <SectionMessage appearance="error">
+                          {get(
+                            data,
+                            'mergeRequestStatus.message',
+                            'There was an error.'
+                          )}
+                        </SectionMessage>
+                      )}
+                    </div>
+                  )}
                 <Switch>
                   <Route
                     exact
@@ -173,6 +200,7 @@ Request.propTypes = {
     .isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   location: PropTypes.shape({
     state: PropTypes.shape({
       isEditing: PropTypes.bool,
