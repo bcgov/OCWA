@@ -136,6 +136,15 @@ spec:
                   key: emailPassword
             - name: EMAIL_FROM
               value: "{{ .Values.emailFrom }}"
+            - name: GITOPS_ENABLED
+              value: "{{ .Values.gitopsEnabled }}"
+            - name: GITOPS_URL
+              value: "{{ .Values.gitopsUrl }}"
+            - name: GITOPS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaRequestApi.fullname" . }}-secrets
+                  key: gitopsSecret
 
           ports:
             - name: http

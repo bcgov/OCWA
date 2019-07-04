@@ -11,6 +11,7 @@ const defaultData = {
   reviewers: [],
   state: 0,
   files: [],
+  exportType: 'data',
 };
 const defaultProps = {
   data: defaultData,

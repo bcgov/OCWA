@@ -12,6 +12,7 @@ import PersonIcon from '@atlaskit/icon/glyph/person';
 import PresenceUnavailableIcon from '@atlaskit/icon/glyph/presence-unavailable';
 import RequestIcon from '@src/modules/requests/components/request-icon';
 import { RequestSchema } from '@src/modules/requests/types';
+import SourceCode16Icon from '@atlaskit/icon-file-type/glyph/source-code/16';
 
 import * as styles from './styles.css';
 
@@ -43,12 +44,17 @@ function RequestCard({ activeId, data, draggable }) {
           <PersonIcon size="small" />
           {data.author}
         </small>
-        <small>
-          <EditorFileIcon />
-          <span className="request-list-card-files-text">
-            {`${data.files.length} ${data.files.length > 1 ? 'Files' : 'File'}`}
-          </span>
-        </small>
+        {data.exportType !== 'code' && (
+          <small>
+            <EditorFileIcon />
+            <span className="request-list-card-files-text">
+              {`${data.files.length} ${
+                data.files.length > 1 ? 'Files' : 'File'
+              }`}
+            </span>
+          </small>
+        )}
+        {data.exportType === 'code' && <SourceCode16Icon />}
       </div>
       <div className={styles.detailsRow}>
         <small className="request-list-card-assignee-text">

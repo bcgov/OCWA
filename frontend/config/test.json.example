@@ -11,6 +11,7 @@
   "exporterGroup": "/exporter",
   "ocGroup": "/oc",
   "exporterMode": "export",
+  "codeExportEnabled": true,
   "auth": {
     "authorizationEndpoint": "URL_REQUIRED",
     "callbackURL": "http://localhost:8000/auth",

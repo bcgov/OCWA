@@ -28,6 +28,7 @@ docker run -e CREATE_ROLE="exporter" -e OC_GROUP="oc" -e ALLOW_DENY=true -e EMAI
            -e VALIDATION_API=docker:3003 -e VALIDATION_API_KEY=myApiKey -e DB_USERNAME=mongoUser -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e USER_ID_FIELD=email \
            -e DB_HOST=docker -e STORAGE_URI=storageURI -e STORAGE_PORT=9000 -e STORAGE_KEY=myKey -e STORAGE_SECRET=mySecret -e STORAGE_USESSL=false \
            -e PROJECT_API=http://docker:3005 -e PROJECT_API_KEY=ApiKeySecret \
+           -e GITOPS_ENABLED=false -e GITOPS_URL=https://projectsc.com -e GITOPS_SECRET=s3cr3t \
            -e OCWA_URL=http://localhost:8000 -e EMAIL_ENABLED=false -e EMAIL_USER=me@ocwa.com -e EMAIL_PASSWORD=MYPASS -e EMAIL_FROM=donotreply@ocwa.com \
            -e IGNORE_GROUPS="\"group1\", \"group2\"" \
            -e EMAIL_SERVICE=smtp.gmail.com -e EMAIL_PORT=465 =e EMAIL_SECURE=true \

@@ -49,6 +49,7 @@ requestApiHost: "ocwa-requests-api.ocwa"
 filesApiHost: "ocwa-storage-api-mongo.ocwa"
 exporterGroup: "/exporter"
 ocGroup: "/oc"
+codeExportEnabled: false
 auth:
   authorizationEndpoint: "openid.auth.endpoint"
   callbackURL: "chart-example.local/auth"

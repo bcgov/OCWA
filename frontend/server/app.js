@@ -31,6 +31,7 @@ const idField = config.get('user.idField');
 const exporterGroup = config.get('exporterGroup');
 const ocGroup = config.get('ocGroup');
 const exporterMode = config.get('exporterMode');
+const codeExportEnabled = config.get('codeExportEnabled');
 
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
@@ -98,6 +99,7 @@ app.get('*', checkAuth, storeUrl, (req, res) => {
     filesApiHost: parseApiHost(filesApiHost),
     socketHost: parseWsHost(forumSocket),
     commit: get(process, 'env.GITHASH', ''),
+    codeExportEnabled,
     idField,
     exporterGroup,
     ocGroup,
