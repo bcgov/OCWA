@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.13.3
+version: v1.13.5
 ignore: {}
 # patches apply the minimum changes required to fix a vulnerability
 patch:
@@ -11,3 +11,62 @@ patch:
         patched: '2019-05-06T06:19:33.576Z'
     - '@atlaskit/renderer > @atlaskit/media-filmstrip > @atlaskit/media-card > axios':
         patched: '2019-05-06T06:19:33.576Z'
+  SNYK-JS-LODASH-450202:
+    - snyk > @snyk/dep-graph > graphlib > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - minio > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - http-proxy-middleware > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - snyk > @snyk/dep-graph > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - snyk > snyk-mvn-plugin > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - snyk > snyk-config > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - snyk > snyk-nuget-plugin > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - snyk > snyk-php-plugin > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - snyk > inquirer > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - snyk > snyk-nodejs-lockfile-parser > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/editor-core > @atlaskit/media-picker > redux > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
+    - snyk > snyk-nodejs-lockfile-parser > graphlib > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - snyk > snyk-go-plugin > graphlib > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - snyk > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - pug > pug-code-gen > constantinople > babel-types > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - pug > pug-filters > constantinople > babel-types > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - pug > pug-code-gen > pug-attrs > constantinople > babel-types > lodash:
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/modal-dialog > @atlaskit/textfield > emotion > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/editor-core > @atlaskit/modal-dialog > @emotion/styled > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/editor-core > @atlaskit/media-picker > @atlaskit/modal-dialog > @emotion/styled > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/editor-core > @atlaskit/select > react-select > emotion > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/editor-core > @atlaskit/modal-dialog > @atlaskit/textfield > @emotion/core > @emotion/css > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/editor-core > @atlaskit/media-picker > @atlaskit/media-editor > @atlaskit/button > @emotion/core > @emotion/css > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/editor-core > @atlaskit/media-editor > @atlaskit/media-card > @atlaskit/media-viewer > @atlaskit/button > @emotion/core > @emotion/css > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/editor-core > @atlaskit/media-picker > @atlaskit/media-card > @atlaskit/media-viewer > @atlaskit/media-ui > @atlaskit/button > @emotion/core > @emotion/css > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/editor-core > @atlaskit/editor-common > @atlaskit/media-card > @atlaskit/media-ui > @atlaskit/avatar-group > @atlaskit/dropdown-menu > @atlaskit/button > @emotion/core > @emotion/css > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/editor-core > @atlaskit/editor-markdown-transformer > @atlaskit/editor-common > @atlaskit/media-card > @atlaskit/media-ui > @atlaskit/avatar-group > @atlaskit/dropdown-menu > @atlaskit/button > @emotion/core > @emotion/css > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
+    - '@atlaskit/editor-core > @atlaskit/media-picker > @atlaskit/media-editor > @atlaskit/media-card > @atlaskit/media-viewer > @atlaskit/media-ui > @atlaskit/avatar-group > @atlaskit/dropdown-menu > @atlaskit/button > @emotion/core > @emotion/css > babel-plugin-emotion > @babel/helper-module-imports > @babel/types > lodash':
+        patched: '2019-07-04T06:13:09.202Z'
