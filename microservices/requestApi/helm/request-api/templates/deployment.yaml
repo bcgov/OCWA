@@ -116,7 +116,7 @@ spec:
             - name: AUTO_APPROVE
               value: "{{ .Values.autoApprove }}"
             - name: IGNORE_GROUPS
-              value: {{ .Values.ignoreGroups }}
+              value: "{{ .Values.ignoreGroups }}"
             - name: OCWA_URL
               value: "{{ .Values.ocwaUrl }}"
             - name: EMAIL_ENABLED

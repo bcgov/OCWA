@@ -59,7 +59,7 @@ spec:
             - name: REQUIRED_CREATE_ROLE
               value: {{ .Values.requiredRoleToCreateTopic }}
             - name: IGNORE_GROUPS
-              value: {{ .Values.ignoreGroups }}
+              value: "{{ .Values.ignoreGroups }}"
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
