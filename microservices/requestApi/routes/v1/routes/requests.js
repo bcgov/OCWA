@@ -384,7 +384,7 @@ router.put('/submit/:requestId', function(req, res, next){
 
             if (req.user.id !== reqRes.author){
                 res.status(403);
-                logger.error("User " + res.user.id + " tried to submit a request they don't own");
+                logger.error("User " + req.user.id + " tried to submit a request they don't own");
                 res.json({error: "Can't submit a request that isn't yours"});
                 return;
             }
