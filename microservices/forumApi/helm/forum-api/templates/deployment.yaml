@@ -58,6 +58,8 @@ spec:
               value: "{{ .Values.defaultAccessIsGroup }}"
             - name: REQUIRED_CREATE_ROLE
               value: {{ .Values.requiredRoleToCreateTopic }}
+            - name: IGNORE_GROUPS
+              value: {{ .Values.ignoreGroups }}
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -73,8 +75,6 @@ spec:
               value: {{ .Values.user.surNameField }}
             - name: GROUP_FIELD
               value: {{ .Values.user.groupField }}
-            - name: IGNORE_GROUPS
-              value: {{ .Values.user.ignoreGroups }}
             - name: EMAIL_ENABLED
               value: "{{ .Values.emailEnabled }}"
             - name: EMAIL_SERVICE

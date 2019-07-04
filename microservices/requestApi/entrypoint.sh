@@ -45,6 +45,7 @@ printf "\"autoAccept\": ${AUTO_APPROVE},\n" >> ./config/default.json
 printf "\"requiredRoleToCreateRequest\": \"${CREATE_ROLE}\",\n" >> ./config/default.json
 printf "\"outputCheckerGroup\": \"${OC_GROUP}\",\n" >> ./config/default.json
 printf "\"allowDenyRequest\": ${ALLOW_DENY},\n" >> ./config/default.json
+printf "\"ignoreGroupsFromConsideration\": [${IGNORE_GROUPS}],\n" >> ./config/default.json
 
 printf "\"projectApi\": \"${PROJECT_API}\",\n" >> ./config/default.json
 printf "\"projectApiSecret\": \"${PROJECT_API_KEY}\",\n" >> ./config/default.json

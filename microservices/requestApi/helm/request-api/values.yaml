@@ -37,6 +37,7 @@ database:
 createRole: "exporter"
 ocGroup: "oc"
 allowDeny: false
+ignoreGroups: "\"/oc\""
 
 user:
   idField: Email
