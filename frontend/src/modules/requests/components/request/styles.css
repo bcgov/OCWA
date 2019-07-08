@@ -8,12 +8,22 @@
   background-color: #f5f5f5;
 }
 
+.header h1 {
+  display: flex;
+  align-items: center;
+}
+
 .header h1 > span:first-child {
+  display: inline-flex;
   margin-right: 15px;
 }
 
 .headerWithDiscussion {
   padding-bottom: 0;
+}
+
+.header p > span {
+  margin-left: 15px;
 }
 
 .tabs {
@@ -74,10 +84,18 @@
   justify-content: center;
 }
 
+.mergeRequestStatus {
+  margin-bottom: 20px;
+}
+
 .sectionContent > div > div {
   margin-bottom: 0;
 }
 
 .sectionContent > div > div tbody {
   border-bottom: none !important;
+}
+
+.exportTypeText {
+  margin-left: 10px;
 }

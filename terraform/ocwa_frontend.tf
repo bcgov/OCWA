@@ -101,7 +101,8 @@ resource "docker_container" "ocwa_frontend" {
       "NODE_TLS_REJECT_UNAUTHORIZED=0",
       "EXPORTER_GROUP=/exporter",
       "OC_GROUP=/oc",
-      "EXPORTER_MODE=export"
+      "EXPORTER_MODE=export",
+      "CODE_EXPORT_ENABLED=true"
   ]
 
 }

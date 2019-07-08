@@ -7,13 +7,19 @@ import Sidebar from '../components/request/sidebar';
 
 const mapStateToProps = state => ({
   user: get(state, 'app.auth.user', {}),
+  isApprovingRequest: state.outputChecker.viewState.isApprovingRequest,
 });
 
 export default connect(mapStateToProps, {
   onApproveRequest: id =>
     pickupRequest(
       null,
-      { id, dataType: 'requests', schema: { result: requestSchema } },
+      {
+        id,
+        dataType: 'requests',
+        schema: { result: requestSchema },
+        isApproval: true,
+      },
       {
         url: `/api/v1/requests/approve/${id}`,
       }

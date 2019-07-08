@@ -133,7 +133,27 @@ router.post("/", function(req, res, next){
     if (typeof(req.body.freq) !== "undefined") {
         request.freq = req.body.freq;
     }
-
+    
+    if (typeof(req.body.branch) !== "undefined") {
+        request.branch = req.body.branch;
+    }
+    
+    if (typeof(req.body.codeDescription) !== "undefined") {
+        request.codeDescription = req.body.codeDescription;
+    }
+    
+    if (typeof(req.body.externalRepository) !== "undefined") {
+        request.externalRepository = req.body.externalRepository;
+    }
+    
+    if (typeof(req.body.repository) !== "undefined") {
+        request.repository = req.body.repository;
+    }
+    
+    if (typeof(req.body.exportType) !== "undefined") {
+        request.exportType = req.body.exportType;
+    }
+    
     if (typeof(req.body.confidentiality) !== "undefined") {
         request.confidentiality = req.body.confidentiality;
     }
@@ -147,8 +167,14 @@ router.post("/", function(req, res, next){
     request.state = db.Request.DRAFT_STATE;
     request.topic = null;
 
-    db.Request.setChrono(request, req.user.id);
+    if (request.exportType === "code") {
+        request.mergeRequestStatus = {
+            code: 0,
+            message: ''
+        }
+    }
 
+    db.Request.setChrono(request, req.user.id);
 
     request.save(function(saveErr, result){
         if (saveErr || !result) {
@@ -173,6 +199,8 @@ router.post("/", function(req, res, next){
                 result.save(function(e, r){
                     if (!e){
                         res.json({message: "Successfully written", result: result});
+                        var notify = require('../notifications/notifications');
+                        notify.notify(request, req.user);
                         return;
                     }
                     //note not returning if an error as it'll force a delete below
@@ -282,6 +310,10 @@ router.put("/save/:requestId", function(req, res, next){
         findRes.confidentiality = (typeof(req.body.confidentiality) !== "undefined") ? req.body.confidentiality : findRes.confidentiality;
         findRes.files = (typeof(req.body.files) !== "undefined") ? req.body.files : findRes.files;
         findRes.supportingFiles = (typeof(req.body.supportingFiles) !== "undefined") ? req.body.supportingFiles : findRes.supportingFiles;
+        findRes.branch = (typeof(req.body.branch) !== "undefined") ? req.body.branch : findRes.branch;
+        findRes.externalRepository = (typeof(req.body.externalRepository) !== "undefined") ? req.body.externalRepository : findRes.externalRepository;
+        findRes.repository = (typeof(req.body.repository) !== "undefined") ? req.body.repository : findRes.repository;
+        findRes.codeDescription = (typeof(req.body.codeDescription) !== "undefined") ? req.body.codeDescription : findRes.codeDescription;
 
         var setChrono = (findRes.state!==db.Request.WIP_STATE) || (Object.keys(objectDelta).length > 0 );
         findRes.state = db.Request.WIP_STATE;
@@ -313,6 +345,8 @@ router.put("/save/:requestId", function(req, res, next){
                 });
             }
 
+            var notify = require('../notifications/notifications');
+            notify.process(findRes, req.user);
 
             res.json({message: "Successfully updated", result: findRes});
         });
@@ -332,7 +366,7 @@ router.put('/submit/:requestId', function(req, res, next){
     var project = projectConfig.deriveProjectFromUser(req.user);
 
     db.Request.getAll({_id: requestId}, 1, 1, req.user, function (reqErr, reqRes) {
-        if (reqErr || !reqRes || reqRes.length<0) {
+        if (reqErr || !reqRes || reqRes.length == 0) {
             res.status(400);
             res.json({error: reqErr.message});
             return;
@@ -350,13 +384,20 @@ router.put('/submit/:requestId', function(req, res, next){
 
             if (req.user.id !== reqRes.author){
                 res.status(403);
-                logger.error("User " + res.user.id + " tried to submit a request they don't own");
+                logger.error("User " + req.user.id + " tried to submit a request they don't own");
                 res.json({error: "Can't submit a request that isn't yours"});
                 return;
             }
 
-            if (reqRes.files.length <= 0){
+            if (reqRes.exportType !== 'code' && reqRes.files.length == 0){
+                res.status(403);
                 res.json({error: "Can't submit a request without files. Nothing to export."});
+                return;
+            }
+
+            if (reqRes.exportType === 'code' && reqRes.mergeRequestStatus.code != 200) {
+                res.status(400);
+                res.json({error: reqRes.mergeRequestStatus.message});
                 return;
             }
 
@@ -657,12 +698,24 @@ router.put('/approve/:requestId', function(req, res){
 
             db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                 if (!updateErr) {
-                    //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
-                    reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
                     var notify = require('../notifications/notifications');
-                    notify.notify(reqRes, req.user);
-                    logRequestFinalState(reqRes, req.user);
-                    res.json({message: "Request approved successfully", result: reqRes});
+                    notify.gitops().approve(reqRes).then((arg) => {
+                        //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
+                        reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
+                        notify.notify(reqRes, req.user);
+                        logRequestFinalState(reqRes, req.user);
+                        res.json({message: "Request approved successfully", result: reqRes});
+                    }).catch(err => {
+                        reqRes.state = db.Request.IN_REVIEW_STATE;
+                        reqRes.chronology.splice(-1,1);
+                        db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
+                            if (uerr) {
+                                logger.error("Unable to revert changes after failed code merge.", uerr);
+                            }
+                        });
+                        res.status(400)
+                        res.json({error: "Error - " + err});
+                    });
                     return;
                 }
                 res.status(500);

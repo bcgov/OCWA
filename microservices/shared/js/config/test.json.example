@@ -4,5 +4,6 @@
   "autoAccept": false,
 
   "requiredRoleToCreateRequest": "/exporter",
-  "outputCheckerGroup": "/oc"
+  "outputCheckerGroup": "/oc",
+  "ignoreGroupsFromConsideration": ["/sre-users"]
 }

@@ -1,6 +1,10 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
+import ExportTypeIcon from '@src/components/export-type-icon';
+import get from 'lodash/get';
+import inRange from 'lodash/inRange';
+import startCase from 'lodash/startCase';
 import { withRouter } from 'react-router-dom';
 import { uid } from 'react-uid';
 // Icons
@@ -13,6 +17,7 @@ import TrashIcon from '@atlaskit/icon/glyph/trash';
 
 import { duplicateRequest } from '../../utils';
 import { RequestSchema } from '../../types';
+import * as styles from './styles.css';
 
 const omitProps = [
   '_id',
@@ -54,12 +59,36 @@ function RequestSidebar({
       onWithdraw(data._id);
     }
   };
+  const validate = () => {
+    let isInvalid = isEditing || isSaving || data.state < 1;
+    if (data.exportType === 'data') {
+      isInvalid = data.files.length <= 0;
+    } else if (data.exportType === 'code') {
+      const invalidCode = 100;
+      const failedCode = 400;
+      const mergeRequestStatusCode = get(
+        data,
+        'mergeRequestStatus.code',
+        invalidCode
+      );
+      isInvalid = !inRange(mergeRequestStatusCode, invalidCode, failedCode);
+    }
+
+    return isInvalid;
+  };
   /* eslint-enable no-alerts, no-restricted-globals */
 
   return (
     <aside id="request-sidebar">
       <h6>Requester</h6>
       <div id="request-author">{data.author}</div>
+      <h6>Export Type</h6>
+      <div id="request-exportType">
+        <ExportTypeIcon exportType={data.exportType} />
+        <span id="request-exportTypeText" className={styles.exportTypeText}>
+          {startCase(get(data, 'exportType', 'data'))}
+        </span>
+      </div>
       <h6>Output Checker</h6>
       <div id="request-reviewers">
         {data.reviewers.map(d => <p key={uid(d)}>{d}</p>)}
@@ -101,12 +130,7 @@ function RequestSidebar({
             <Button
               appearance="link"
               id="request-sidebar-submit-button"
-              isDisabled={
-                isEditing ||
-                isSaving ||
-                data.state < 1 ||
-                data.files.length <= 0
-              }
+              isDisabled={validate()}
               iconBefore={<SignInIcon />}
               onClick={() => onSubmit(data._id)}
             >
