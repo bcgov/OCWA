@@ -57,7 +57,6 @@ const validateFileRequest = async (req, requestId) => {
 
     // For downloading a file
     if (has(req, 'params.fileId')) {
-      console.log(json);
       if (json.state === 4 && json.files.includes(req.params.fileId)) {
         return true;
       }

@@ -13,6 +13,7 @@ function RequestFiles({ data, title }) {
         <h4>Export Files</h4>
         <Files
           showDownloadButton
+          id={data._id}
           ids={data.files}
           fileStatus={data.fileStatus}
         />
@@ -20,7 +21,7 @@ function RequestFiles({ data, title }) {
       {data.supportingFiles.length > 0 && (
         <div id="request-supporting-files">
           <h4>Supporting Files</h4>
-          <Files showDownloadButton ids={data.supportingFiles} />
+          <Files showDownloadButton id={data._id} ids={data.supportingFiles} />
         </div>
       )}
     </div>
