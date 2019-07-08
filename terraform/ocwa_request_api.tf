@@ -30,6 +30,7 @@ resource "docker_container" "ocwa_request_api" {
       "OC_GROUP=/oc",
       "ALLOW_DENY=true",
       "AUTO_APPROVE=false",
+      "IGNORE_GROUPS=\"/researchers\"",
       "VALIDATION_API=http://ocwa_validate_api:3003",
       "VALIDATION_API_KEY=${random_string.apiSecret.result}",
       "FORUM_API=http://ocwa_forum_api:3000",
