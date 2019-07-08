@@ -5,6 +5,8 @@ const ExtractJWT = passJwt.ExtractJwt;
 var config = require('config');
 var logger = require('npmlog');
 
+const isOutputChecker = (user => user.groups.includes(config.get('outputCheckerGroup')))
+
 passport.use(new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
         secretOrKey: config.get("jwtSecret"),
@@ -22,9 +24,11 @@ passport.use(new JWTStrategy({
             groups: jwtPayload[userConf.groupField],
             id: jwtPayload[userConf.idField],
             zone: (jwtPayload.zone) ? jwtPayload.zone : "external",
-            IMPORT_ZONE: 'external',
-            EXPORT_ZONE: 'internal',
+            EXTERNAL_ZONE: 'external',
+            INTERNAL_ZONE: 'internal',
         };
+        user.outputchecker = isOutputChecker(user);
+
         logger.verbose('user ' + user.id + ' authenticated successfully');
 
         var db = require('../db/db');

@@ -159,7 +159,7 @@ router.post("/", function(req, res, next){
     }
 
     request.type = db.Request.INPUT_TYPE;
-    if (req.user.zone && req.user.zone == req.user.EXPORT_ZONE){
+    if (req.user.zone && req.user.zone == req.user.INTERNAL_ZONE){
         request.type = db.Request.EXPORT_TYPE;
     }
 
