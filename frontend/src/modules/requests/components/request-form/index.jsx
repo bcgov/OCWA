@@ -53,10 +53,7 @@ function NewRequestForm({
             </p>
             {codeExportEnabled && (
               <div className={styles.exportTypeSelect}>
-                <SectionMessage
-                  appearance="info"
-                  title="Select Data Export Type"
-                >
+                <SectionMessage appearance="info" title="Select Export Type">
                   <Select
                     options={exportTypeOptions}
                     placeholder="Choose an Export Type"
@@ -68,8 +65,9 @@ function NewRequestForm({
               </div>
             )}
             {exportType.value === 'data' && <Form {...formProps} />}
-            {exportType.value === 'code' &&
-              codeExportEnabled && <Form {...formProps} />}
+            {exportType.value === 'code' && codeExportEnabled && (
+              <Form {...formProps} />
+            )}
           </GridColumn>
         </Grid>
       </div>
