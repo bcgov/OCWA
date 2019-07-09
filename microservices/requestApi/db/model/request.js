@@ -150,7 +150,7 @@ model.stateCodeLookup = function(){
     return rv;
 };
 
-var getAllTopics = function(user, callback, page, existingTopics){
+var getAllTopics = function(user, callback, page){
     var config = require('config');
     var httpReq = require('request');
     var logger = require('npmlog');
@@ -159,12 +159,9 @@ var getAllTopics = function(user, callback, page, existingTopics){
         page = 1;
     }
 
-    if (typeof(existingTopics) === "undefined"){
-        existingTopics = [];
-    }
-
     var limit = 100;
     var topics = [];
+    var projects = [];
     var url = config.get('forumApi') + '/v1?limit='+limit+'&page='+page+'&parent_id=-1';
 
     httpReq.get({
@@ -175,7 +172,7 @@ var getAllTopics = function(user, callback, page, existingTopics){
     }, function (apiErr, apiRes, body) {
         if (apiErr || !apiRes) {
             logger.error("Permission error", apiErr);
-            callback(apiErr, []);
+            callback(apiErr, [], []);
             return;
 
         }
@@ -184,43 +181,62 @@ var getAllTopics = function(user, callback, page, existingTopics){
             var topicResults = JSON.parse(body);
         }catch (ex){
             logger.error("Error getting topics, non json returned", body);
-            callback("Unknown error", topics);
+            callback("Unknown error", topics, projects);
             return;
         }
 
         if (typeof(topicResults) === "undefined"){
             logger.error("Error getting topics", topicResults);
-            callback("API error", topics);
+            callback("API error", topics, projects);
             return;
         }
 
         try {
+            var projectResults = topicResults.map((x) => {
+                var groups = x.author_groups;
+                var oci = groups.indexOf(config.get('outputCheckerGroup'));
+                var expi = groups.indexOf(config.get('requiredRoleToCreateRequest'));
+
+                if (oci !== -1){
+                    groups.splice(oci, 1);
+                }
+
+                if (expi !== -1){
+                    groups.splice(expi, 1);
+                }
+
+                return groups;
+            });
+
             topicResults = topicResults.map(x => x._id);
+            
             topics = topics.concat(topicResults);
+            projects = projects.concat(projectResults);
 
             if (topicResults.length >= limit) {
-                getAllTopics(user, function (err, topicR) {
+                getAllTopics(user, function (err, topicR, projectR) {
 
                     for (var i=0; i<topicR.length; i++){
                         topics.push(topicR[i]);
+                        projects.push(projectR[i]);
                     }
 
                     logger.verbose("Got all topics for a page", page, topicR, topics);
                     if (err) {
-                        callback(err, topics);
+                        callback(err, topics, projects);
                         return;
                     }
-                    callback(null, topics);
+                    callback(null, topics, projects);
 
-                }, (page + 1), topics);
+                }, (page + 1));
                 return;
             }
 
             logger.verbose("get all topics Terminal callback", page, topics);
-            callback(null, topics);
+            callback(null, topics, projects);
         }catch(ex){
             logger.error("Error handling topic results", ex);
-            callback(ex, []);
+            callback(ex, [], []);
         }
     });
 };
@@ -262,7 +278,7 @@ model.getAll = function(query, limit, page, user, callback){
     }
 
 
-    getAllTopics(user, function(err, topicR){
+    getAllTopics(user, function(err, topicR, projectR){
         logger.verbose("get all topics model get all", topicR);
 
         db.Request.aggregate([
@@ -312,7 +328,15 @@ model.getAll = function(query, limit, page, user, callback){
             {
                 $limit: limit
             }
-        ]).exec(callback);
+        ]).exec(function(err, results){
+            if (results){
+                for (var i=0; i<results.length; i++){
+                    results[i].projects = projectR[i];
+                }
+            }
+            callback(err, results);
+        });
+
     });
 };
 

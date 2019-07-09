@@ -69,6 +69,52 @@ router.get('/', function(req, res, next) {
         q['type'] = req.query.type;
     }
 
+    var chronoQuery = {};
+
+    if (typeof(req.query.start_date) !== "undefined"){
+        var split = req.query.start_date.split(/[-\/]/);
+        console.log(split);
+        var year = split[0] ? split[0] : 0;
+        var month = split[1] ? split[1]-1 : 0;
+        var day = split[2] ? split[2] : 0;
+        var hour = split[3] ? split[3] : 0;
+        var minute = split[4] ? split[4] : 0;
+        var second = split[5] ? split[5] : 0;
+        var d = new Date(year, month, day, hour, minute, second);
+        console.log(d);
+        q.chronology = {
+            $elemMatch: {
+                timestamp: { $gte: new Date(d.toISOString()) },
+                enteredState: db.Request.AWAITING_REVIEW_STATE
+            }
+        };
+    }
+
+    if (typeof(req.query.end_date) !== "undefined"){
+        var split = req.query.end_date.split(/[-\/]/);
+        console.log(split);
+        var year = split[0] ? split[0] : 0;
+        var month = split[1] ? (split[1]-1) : 0;
+        var day = split[2] ? split[2] : 0;
+        var hour = split[3] ? split[3] : 0;
+        var minute = split[4] ? split[4] : 0;
+        var second = split[5] ? split[5] : 0;
+        var d = new Date(year, month, day, hour, minute, second);
+        console.log(d);
+        if (typeof(q.chronology) === "undefined"){
+            q.chronology = {
+                $elemMatch: {
+                    timestamp: { $lte: new Date(d.toISOString()) },
+                    enteredState: db.Request.AWAITING_REVIEW_STATE
+                }
+            };
+        }else{
+            q.chronology.$elemMatch.timestamp.lte = req.query.end_date;
+        }
+    }
+
+    console.log("CHRONOQ", q.chronology, q);
+
     db.Request.getAll(q, limit, page, req.user, function(err, requestRes){
         if (err || !requestRes){
             res.status(500);
