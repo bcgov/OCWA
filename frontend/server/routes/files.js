@@ -50,14 +50,15 @@ const validateFileRequest = async (req, requestId) => {
 
     // For when there are requests for a list of files
     if (has(req, 'query.ids')) {
-      if (req.query.ids.split(',').every(id => json.files.includes(id))) {
+      if (req.query.ids.split(',').every(id => json.files.includes(id) || json.supportingFiles.includes(id))) {
         return true;
       }
     }
 
     // For downloading a file
     if (has(req, 'params.fileId')) {
-      if (json.state === 4 && json.files.includes(req.params.fileId)) {
+      if (json.state === 4 && (
+        json.files.includes(req.params.fileId) || json.supportingFiles.includes(req.params.fileId))) {
         return true;
       }
     }
