@@ -949,6 +949,9 @@ router.delete('/:requestId', function(req, res){
                     }
                 });
 
+                var notify = require('../notifications/notifications');
+                notify.gitops().delete(reqRes);
+
                 res.json({message: "Record successfully deleted"});
             });
 
