@@ -44,6 +44,8 @@ spec:
               value: "export"
             - name: CODE_EXPORT_ENABLED
               value: "{{ .Values.codeExportEnabled }}"
+            - name: REPOSITORY_HOST
+              value: "{{ .Values.repositoryHost }}"
             - name: COOKIE_SECRET
               valueFrom:
                 secretKeyRef:

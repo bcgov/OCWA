@@ -50,6 +50,7 @@ filesApiHost: "ocwa-storage-api-mongo.ocwa"
 exporterGroup: "/exporter"
 ocGroup: "/oc"
 codeExportEnabled: false
+repositoryHost: "repository-url"
 auth:
   authorizationEndpoint: "openid.auth.endpoint"
   callbackURL: "chart-example.local/auth"

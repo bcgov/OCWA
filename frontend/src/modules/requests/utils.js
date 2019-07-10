@@ -1,8 +1,10 @@
 import { colors } from '@atlaskit/theme';
 import flow from 'lodash/flow';
 import isNil from 'lodash/isNil';
+import isNumber from 'lodash/isNumber';
 import pick from 'lodash/pick';
 import mapValues from 'lodash/mapValues';
+import { repositoryHost } from '@src/services/config';
 
 // Form content
 export const formText = {
@@ -73,7 +75,7 @@ export const requestFields = [
   {
     name: 'Repository of code to export',
     value: 'repository',
-    type: 'url',
+    type: 'repositoryHost',
     exportType: 'code',
     isRequired: true,
     helperText: 'Write out the full URL of the repository',
@@ -90,7 +92,7 @@ export const requestFields = [
   {
     name: 'External repository to send approved results',
     value: 'externalRepository',
-    type: 'url',
+    type: 'git',
     exportType: 'code',
     isRequired: true,
     helperText: 'Write out the full URL of the external repository',
@@ -99,11 +101,16 @@ export const requestFields = [
 
 // Stored as a string here for native input[type="tel"] elements, so make into
 // a RegExp if using anywhere else
-export const phoneNumberRegex = '[0-9]{3}-[0-9]{3}-[0-9]{4}$';
-export const urlRegex =
-  '^(?:(?:https?|ftp)://)?(?:(?!(?:10|127)(?:.d{1,3}){3})(?!(?:169.254|192.168)(?:.d{1,3}){2})(?!172.(?:1[6-9]|2d|3[0-1])(?:.d{1,3}){2})(?:[1-9]d?|1dd|2[01]d|22[0-3])(?:.(?:1?d{1,2}|2[0-4]d|25[0-5])){2}(?:.(?:[1-9]d?|1dd|2[0-4]d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:.(?:[a-z\u00a1-\uffff]{2,})))(?::d{2,5})?(?:/S*)?$';
+export const phoneNumberRegex = '[0-9]{3}-?[0-9]{3}-?[0-9]{4}$';
+export const gitUrlRegex =
+  '((git|ssh|http(s)?)|(git@[w.]+))(:(//)?)([w.@:/-~]+)(.git)(/)?';
+export const repositoryRegex = repositoryHost
+  ? `${repositoryHost}([w.@:/-~]+)(.git)(/)?`
+  : gitUrlRegex;
 
 export const getRequestStateColor = (value = 0) => {
+  if (!isNumber(value)) return colors.N200;
+
   switch (value) {
     case 0:
     case 1:
@@ -116,9 +123,8 @@ export const getRequestStateColor = (value = 0) => {
       return colors.G500;
     case 5:
     case 6:
-      return colors.R500;
     default:
-      return null;
+      return colors.R500;
   }
 };
 
@@ -154,4 +160,6 @@ export default {
   getRequestStateColor,
   requestFields,
   phoneNumberRegex,
+  repositoryRegex,
+  gitUrlRegex,
 };

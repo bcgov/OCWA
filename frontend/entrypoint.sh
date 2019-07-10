@@ -12,6 +12,7 @@ printf "\"exporterGroup\": \"${EXPORTER_GROUP}\",\n" >> ./config/default.json
 printf "\"ocGroup\": \"${OC_GROUP}\",\n" >> ./config/default.json
 printf "\"exporterMode\": \"${EXPORTER_MODE}\",\n" >> ./config/default.json
 printf "\"codeExportEnabled\": \"${CODE_EXPORT_ENABLED}\",\n" >> ./config/default.json
+printf "\"repositoryHost\": \"${REPOSITORY_HOST}\",\n" >> ./config/default.json
 printf "\"cookieSecret\": \"${COOKIE_SECRET}\",\n" >> ./config/default.json
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 printf "\"auth\": {\n" >> ./config/default.json
