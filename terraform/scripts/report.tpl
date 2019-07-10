@@ -2,7 +2,6 @@
 <body>
 
 <h1>Output Checker Workflow Application</h1>
-<h2>PopDataBC Test Environment</h2>
 
 <table>
  <tr>
@@ -16,6 +15,10 @@
  <tr>
     <td>Policy API</td>
     <td>${policyApiDigest}</td>
+</tr>
+<tr>
+    <td>Project API</td>
+    <td>${projectApiDigest}</td>
 </tr>
 <tr>
     <td>Forum API</td>
