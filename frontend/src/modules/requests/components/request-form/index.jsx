@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import SectionMessage from '@atlaskit/section-message';
 import Select from '@atlaskit/select';
+import { _e } from '@src/utils';
 
 import Form from './form';
 import * as styles from './styles.css';
@@ -19,8 +20,8 @@ function NewRequestForm({
 }) {
   const data = location.state || {};
   const exportTypeOptions = [
-    { label: 'Data Export', value: 'data' },
-    { label: 'Code Export', value: 'code' },
+    { label: _e('Data {Request}'), value: 'data' },
+    { label: _e('Code {Request}'), value: 'code' },
   ];
   const defaultState = data.exportType
     ? exportTypeOptions.find(d => d.value === data.exportType)
@@ -55,11 +56,11 @@ function NewRequestForm({
               <div className={styles.exportTypeSelect}>
                 <SectionMessage
                   appearance="info"
-                  title="Select Data Export Type"
+                  title={_e('Select Data {Request} Type')}
                 >
                   <Select
                     options={exportTypeOptions}
-                    placeholder="Choose an Export Type"
+                    placeholder={_e('Choose an {Request} Type')}
                     id="request-form-exportTypeSelect"
                     defaultValue={exportType}
                     onChange={value => setExportType(value)}
@@ -68,8 +69,9 @@ function NewRequestForm({
               </div>
             )}
             {exportType.value === 'data' && <Form {...formProps} />}
-            {exportType.value === 'code' &&
-              codeExportEnabled && <Form {...formProps} />}
+            {exportType.value === 'code' && codeExportEnabled && (
+              <Form {...formProps} />
+            )}
           </GridColumn>
         </Grid>
       </div>

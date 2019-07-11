@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import SectionMessage from '@atlaskit/section-message';
 import ExportTypeIcon from '@src/components/export-type-icon';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
+import CalendarIcon from '@atlaskit/icon/glyph/calendar';
 import Date from '@src/components/date';
 import get from 'lodash/get';
 import { NavLink, Route, Switch } from 'react-router-dom';
@@ -11,11 +12,13 @@ import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import Spinner from '@atlaskit/spinner';
 import Title from '@src/components/title';
+import { colors } from '@atlaskit/theme';
 
 import InfoIcon from '@atlaskit/icon/glyph/info';
 import CommentIcon from '@atlaskit/icon/glyph/comment';
 
 import Details from './details';
+import RequestType from './request-type';
 import StateLabel from '../state-label';
 import Sidebar from '../../containers/sidebar';
 import { RequestSchema } from '../../types';
@@ -82,6 +85,10 @@ class Request extends React.Component {
                   <span>{title}</span>
                 </h1>
                 <p id="request-header-details">
+                  <RequestType />
+                  <span>
+                    <CalendarIcon size="small" primaryColor={colors.DN300} />
+                  </span>
                   {'Updated at '}
                   <Date value={updatedAt} format="HH:MMa on MMMM Do, YYYY" />
                   {isEditing && (
