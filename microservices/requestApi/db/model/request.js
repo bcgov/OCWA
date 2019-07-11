@@ -315,7 +315,24 @@ model.getAll = function(query, limit, page, user, callback){
                     codeDescription: 1,
                     name: 1,
                     files: 1,
-                    author: 1
+                    author: 1,
+                    submittedDate: {
+                        $arrayElemAt: [
+                            { 
+                                $map: { 
+                                    input: {
+                                        $filter: {
+                                            input: "$chronology",
+                                            as: "chrono",
+                                            cond: { $eq: [ "$$chrono.enteredState", AWAITING_REVIEW_STATE] }
+                                        }
+                                    },
+                                    as: "ele",
+                                    in: "$$ele.timestamp"
+                                }
+                            }, 0
+                        ]
+                    }
                 }
             },
             zoneRestrict,
