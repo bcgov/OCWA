@@ -90,7 +90,6 @@ model.getAll = function(query, limit, page, user, callback){
         {
             $project: {
                 "permissions": 0,
-                "author_groups": 0
             }
         },
         {

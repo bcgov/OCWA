@@ -5,6 +5,7 @@ import isNumber from 'lodash/isNumber';
 import pick from 'lodash/pick';
 import mapValues from 'lodash/mapValues';
 import { repositoryHost } from '@src/services/config';
+import { _e, getZoneString } from '@src/utils';
 
 // Form content
 export const formText = {
@@ -70,10 +71,15 @@ export const requestFields = [
     type: 'textarea',
     exportType: 'code',
     isRequired: true,
-    helperText: 'Describe any details about the code you wish to export here',
+    helperText: _e(
+      'Describe any details about the code you wish to {request} here'
+    ),
   },
   {
-    name: 'Repository of code to export',
+    name: getZoneString({
+      internal: 'Repository of code to export',
+      external: 'Internal repository to send approved results',
+    }),
     value: 'repository',
     type: 'repositoryHost',
     exportType: 'code',
@@ -81,7 +87,7 @@ export const requestFields = [
     helperText: 'Write out the full URL of the repository',
   },
   {
-    name: 'Branch of code to export',
+    name: _e('Branch of code to {request}'),
     value: 'branch',
     type: 'text',
     exportType: 'code',
@@ -90,7 +96,10 @@ export const requestFields = [
       'Write out the branch name in the repository the Output Checker should review',
   },
   {
-    name: 'External repository to send approved results',
+    name: getZoneString({
+      internal: 'Repository of code to import',
+      external: 'External repository to send approved results',
+    }),
     value: 'externalRepository',
     type: 'git',
     exportType: 'code',

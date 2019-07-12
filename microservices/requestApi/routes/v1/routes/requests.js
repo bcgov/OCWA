@@ -69,6 +69,35 @@ router.get('/', function(req, res, next) {
         q['type'] = req.query.type;
     }
 
+    if (typeof(req.query.start_date) !== "undefined"){
+        var split = req.query.start_date.split(/[-\/]/);
+        var year = split[0] ? split[0] : 0;
+        var month = split[1] ? split[1]-1 : 0;
+        var day = split[2] ? split[2] : 0;
+        var hour = split[3] ? split[3] : 0;
+        var minute = split[4] ? split[4] : 0;
+        var second = split[5] ? split[5] : 0;
+        q.submittedDate = {$gte:  new Date(year, month, day, hour, minute, second)};
+    }
+
+    if (typeof(req.query.end_date) !== "undefined"){
+        var split = req.query.end_date.split(/[-\/]/);
+        var year = split[0] ? split[0] : 0;
+        var month = split[1] ? (split[1]-1) : 0;
+        var day = split[2] ? split[2] : 0;
+        var hour = split[3] ? split[3] : 0;
+        var minute = split[4] ? split[4] : 0;
+        var second = split[5] ? split[5] : 0;
+        var d = new Date(year, month, day, hour, minute, second);
+        if (typeof(q.submittedDate) === "undefined"){
+            q.submittedDate = {$lte:  new Date(year, month, day, hour, minute, second)};
+        }else{
+            q.submittedDate.$lte = new Date(year, month, day, hour, minute, second);
+        }
+    }
+
+    console.log("CHRONOQ", q.chronology, q);
+
     db.Request.getAll(q, limit, page, req.user, function(err, requestRes){
         if (err || !requestRes){
             res.status(500);

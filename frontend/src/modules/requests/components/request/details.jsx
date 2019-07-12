@@ -8,6 +8,7 @@ import get from 'lodash/get';
 import merge from 'lodash/merge';
 import { Prompt } from 'react-router-dom';
 import { uid } from 'react-uid';
+import { _e } from '@src/utils';
 
 import EditField from './edit-field';
 import { RequestSchema } from '../../types';
@@ -67,7 +68,7 @@ function RequestDetails({
         <React.Fragment>
           <div id="request-export-files" className={styles.section}>
             <div className={styles.sectionHeader}>
-              Output Files
+              {_e('{Files} Files')}
               {isEditing && ' (Drop files here to upload)'}
             </div>
             <div className={styles.sectionContent}>
