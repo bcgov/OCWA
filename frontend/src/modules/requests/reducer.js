@@ -37,7 +37,7 @@ const initialViewState = {
   filesToDelete: [],
   filesToDuplicate,
   showMyRequestsOnly: false,
-  sortKey: 'state',
+  sortKey: 'updatedOn',
   sortOrder: 'DESC',
   search: '',
   page: 1,

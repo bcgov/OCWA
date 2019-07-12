@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import TextField from '@atlaskit/textfield';
 import TextArea from '@atlaskit/textarea';
 
-import { phoneNumberRegex } from '../../utils';
+import { phoneNumberRegex, urlRegex } from '../../utils';
 
 function Field({ type, fieldProps }) {
   switch (type) {
@@ -16,6 +16,9 @@ function Field({ type, fieldProps }) {
         <TextField {...fieldProps} type="tel" pattern={phoneNumberRegex} />
       );
 
+    case 'url':
+      return <TextField {...fieldProps} pattern={urlRegex} />;
+
     case 'text':
     default:
       return <TextField {...fieldProps} />;
@@ -23,7 +26,7 @@ function Field({ type, fieldProps }) {
 }
 
 Field.propTypes = {
-  type: PropTypes.oneOf(['text', 'tel', 'textarea']).isRequired,
+  type: PropTypes.oneOf(['text', 'tel', 'textarea', 'url']).isRequired,
   fieldProps: PropTypes.object.isRequired,
 };
 

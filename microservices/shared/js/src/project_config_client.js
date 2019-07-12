@@ -37,7 +37,13 @@ function getProjectConfig (project, key) {
 projectConfig.deriveProjectFromUser = function (user) {
     var groups = user.groups.slice();
 
-    var ignoreGroups = config.has('ignoreGroupsFromConsideration') ? config.get('ignoreGroupsFromConsideration') : [];
+    var ignoreGroups = [];
+
+    if (config.has('ignoreGroupsFromConsideration')) {
+        // this config value is an immutable array
+        config.get('ignoreGroupsFromConsideration').map(g => ignoreGroups.push(g));
+    }
+
     if (config.has('requiredRoleToCreateRequest')) {
         ignoreGroups.push(config.get('requiredRoleToCreateRequest'));
     }

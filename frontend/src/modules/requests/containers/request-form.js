@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import withRequest from '@src/modules/data/components/data-request';
 import { helpURL } from '@src/services/config';
+import { codeExportEnabled } from '@src/services/config';
 
 import NewRequest from '../components/request-form';
 import { createRequest, fetchRequest } from '../actions';
@@ -9,6 +10,7 @@ import { requestSchema } from '../schemas';
 
 const mapStateToProps = state => ({
   helpURL,
+  codeExportEnabled,
   newRequestId: state.requests.newRequestId,
   fetchStatus: get(state, 'data.fetchStatus.postRequests.requests', 'idle'),
 });

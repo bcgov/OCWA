@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import CommentIcon from '@atlaskit/icon/glyph/comment';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import DocumentsIcon from '@atlaskit/icon/glyph/documents';
+import ExportTypeIcon from '@src/components/export-type-icon';
 import InfoIcon from '@atlaskit/icon/glyph/info';
 import isEmpty from 'lodash/isEmpty';
 import { Link, Route, Switch } from 'react-router-dom';
@@ -33,17 +34,22 @@ function Request({ data, isSaving, match }) {
           <hgroup className={styles.hgroup}>
             <div>
               <Link to="/">&laquo; Back to Dashboard</Link>
-              <h2 id="request-name-text">{data.name || 'Loading...'}</h2>
+              <h2 id="request-name-text">
+                <ExportTypeIcon large exportType={data.exportType} />
+                {data.name || 'Loading...'}
+              </h2>
             </div>
             <StateLabel value={data.state} />
           </hgroup>
           <Tabs>
             <Tab icon={<InfoIcon />} text="Details" url={match.url} />
-            <Tab
-              icon={<DocumentsIcon />}
-              text="Files"
-              url={`${match.url}/files`}
-            />
+            {data.exportType !== 'code' && (
+              <Tab
+                icon={<DocumentsIcon />}
+                text="Files"
+                url={`${match.url}/files`}
+              />
+            )}
             <Tab
               icon={<CommentIcon />}
               text="Discussion"
