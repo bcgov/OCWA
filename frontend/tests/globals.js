@@ -8,6 +8,7 @@ global.EXPORTER_GROUP = '/exporter';
 global.OC_GROUP = '/oc';
 global.EXPORTER_MODE = 'export';
 global.CODE_EXPORT_ENABLED = true;
+global.REPORTS_GROUP = '/reports';
 global.REPOSITORY_HOST = 'https://example.com/shares/';
 global.ZONE = 'internal';
 global.VERSION = '1.1.1';

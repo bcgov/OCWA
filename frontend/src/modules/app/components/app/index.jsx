@@ -71,7 +71,7 @@ class App extends React.Component {
       }
 
       // Load bundle for output checker if that's the only role, otherwise always send exporter
-      if (true) {
+      if (hasReports) {
         el = <Reports />;
       } else if (hasOcRole && !hasExporterRole) {
         el = <OutputChecker {...props} />;
