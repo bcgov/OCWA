@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
+import forIn from 'lodash/forIn';
+import format from 'date-fns/format';
 import get from 'lodash/get';
 import isAfter from 'date-fns/is_after';
 import isBefore from 'date-fns/is_before';
-import keys from 'lodash/keys';
 import withRequest from '@src/modules/data/components/data-request';
 import { fetchRequests } from '@src/modules/requests/actions';
 import { requestsListSchema } from '@src/modules/requests/schemas';
-import { getRequestStateColor } from '@src/modules/requests/utils';
 
 import {
   setDateRange,
@@ -24,14 +24,14 @@ const mapStateToProps = state => {
     endDate,
     project,
     requester,
+    requestIds,
     requestState,
     sortKey,
     sortOrder,
     startDate,
   } = state.reports.filters;
   const entities = get(state, 'data.entities.requests', {});
-  const ids = keys(entities);
-  const data = ids
+  const data = requestIds
     .map(id => get(entities, id, {}))
     .map(makeRequest) // TODO: Consider moving this back down after this step, the project value is stubbed in right now
     .filter(d => {
@@ -39,7 +39,7 @@ const mapStateToProps = state => {
         return false;
       }
 
-      if (project && project !== d.project) {
+      if (project && !d.projects.includes(project)) {
         return false;
       }
 
@@ -53,19 +53,34 @@ const mapStateToProps = state => {
         isAfter(d.firstSubmittedDate, startDate) &&
         isBefore(d.lastEditDate, endDate)
     );
+  // Reduce all the request projects to a key/value store before converting to an array
+  const projectsData = data.reduce((prev, d) => {
+    d.projects.forEach(p => {
+      if (prev[p]) {
+        prev[p].totalRequests += 1;
+      } else {
+        prev[p] = {
+          id: p,
+          name: p,
+          totalRequests: 1,
+        };
+      }
+    });
 
-  const chartData = data.map((d, index) => ({
-    x: new Date(d.firstSubmittedDate).getTime(),
-    x0:
-      new Date(d.approvedDate).getTime() || new Date(d.lastEditDate).getTime(),
-    y: index,
-    y0: index + 1,
-    color: getRequestStateColor(d.state),
-  }));
+    return prev;
+  }, {});
+  const projects = [];
+  forIn(projectsData, value => {
+    projects.push(value);
+  });
 
   return {
-    chartData,
     data,
+    params: {
+      startDate: format(startDate, 'YYYY-M-D'),
+      endDate: format(endDate, 'YYYY-M-D'),
+    },
+    projects,
     endDate,
     fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests', 'idle'),
     project,
@@ -78,27 +93,39 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {
-  initialRequest: () =>
-    fetchRequests(
-      { page: 1 },
-      {
-        url: '/api/v1/requests?page=1',
-        schema: requestsListSchema,
-      }
-    ),
-  fetchRequests: page =>
-    fetchRequests(
-      { page },
-      {
-        url: `/api/v1/requests?page=${page}`,
-        schema: requestsListSchema,
-      }
-    ),
-  onSelectProject: setProject,
-  onSort: sortReports,
-  onSelectRequester: setRequester,
-  onDateChange: setDateFilter,
-  onDateRangeChange: setDateRange,
-  onRequestStateChange: setRequestFilter,
-})(withRequest(Reports));
+const makeQuery = (startDate, endDate) =>
+  `/api/v1/requests?page=1&start_date=${format(
+    startDate,
+    'YYYY-M-D'
+  )}&end_date=${format(endDate, 'YYYY-M-D')}&limit=500`;
+
+export default connect(
+  mapStateToProps,
+  {
+    initialRequest: params =>
+      fetchRequests(
+        {},
+        {
+          url: makeQuery(params.startDate, params.endDate),
+          schema: requestsListSchema,
+        }
+      ),
+    fetchRequests: ({ startDate, endDate }) =>
+      fetchRequests(
+        {
+          startDate,
+          endDate,
+        },
+        {
+          url: makeQuery(startDate, endDate),
+          schema: requestsListSchema,
+        }
+      ),
+    onSelectProject: setProject,
+    onSort: sortReports,
+    onSelectRequester: setRequester,
+    onDateChange: setDateFilter,
+    onDateRangeChange: setDateRange,
+    onRequestStateChange: setRequestFilter,
+  }
+)(withRequest(Reports));

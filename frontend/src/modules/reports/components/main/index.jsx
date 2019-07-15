@@ -1,10 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
+import format from 'date-fns/format';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
-import Pagination from '@src/components/pagination';
 import { RequestSchema } from '@src/modules/requests/types';
-import { limit } from '@src/services/config';
 
 import head from './head';
 import makeRows from './rows';
@@ -19,12 +18,11 @@ function ReportsMain({
   fetchRequests,
   fetchStatus,
   onSort,
-  onDateChange,
   onRequestStateChange,
   onSelectRequester,
   onSelectProject,
-  page,
   project,
+  projects,
   requester,
   requestState,
   sortOrder,
@@ -36,7 +34,7 @@ function ReportsMain({
     onSelectProject,
     onSelectRequester,
   });
-  const isPaginationVisible = data.length > 0;
+  const titleDateFormat = 'MMM Do, YYYY';
 
   return (
     <div className={styles.container}>
@@ -44,22 +42,17 @@ function ReportsMain({
         <Grid layout="fluid">
           <GridColumn medium={12}>
             <header className={styles.header}>
-              <h2>Projects</h2>
-            </header>
-            <div className={styles.projectsTable}>
-              <Projects />
-              <footer>
-                <small>
-                  Select a project above to filter the requests below.
-                </small>
-              </footer>
-            </div>
-            <header className={styles.header}>
-              <h2>Requests</h2>
+              <h2>
+                Dashboard
+                <small>{`Filtering from ${format(
+                  startDate,
+                  titleDateFormat
+                )} to ${format(endDate, titleDateFormat)}`}</small>
+              </h2>
             </header>
             <Filters
               endDate={endDate}
-              onDateChange={onDateChange}
+              onDateChange={fetchRequests}
               onRequestStateChange={onRequestStateChange}
               onSelectProject={onSelectProject}
               onSelectRequester={onSelectRequester}
@@ -68,6 +61,24 @@ function ReportsMain({
               requestState={requestState}
               startDate={startDate}
             />
+            <div className={styles.projectsTable}>
+              <header className={styles.header}>
+                <h2>
+                  Projects <small>{`${projects.length} Available`}</small>
+                </h2>
+              </header>
+              <Projects data={projects} />
+              <footer>
+                <small>
+                  Select a project above to filter the requests below.
+                </small>
+              </footer>
+            </div>
+            <header className={styles.header}>
+              <h2>
+                Requests <small>{`${data.length} Available`}</small>
+              </h2>
+            </header>
           </GridColumn>
         </Grid>
         <Grid layout="fluid">
@@ -83,13 +94,6 @@ function ReportsMain({
                 sortOrder={sortOrder}
                 onSort={sortProps => onSort(sortProps)}
               />
-              {isPaginationVisible && (
-                <Pagination
-                  onClick={fetchRequests}
-                  isLastPage={data.length < limit * page}
-                  page={page}
-                />
-              )}
             </div>
             <footer>
               <small>
@@ -111,9 +115,14 @@ ReportsMain.propTypes = {
   fetchRequests: PropTypes.func.isRequired,
   fetchStatus: PropTypes.oneOf(['loading', 'loaded', 'failed', 'idle'])
     .isRequired,
-  page: PropTypes.number.isRequired,
   project: PropTypes.string,
-  onDateChange: PropTypes.func.isRequired,
+  projects: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      totalRequests: PropTypes.number,
+    })
+  ).isRequired,
   onRequestStateChange: PropTypes.func.isRequired,
   onSort: PropTypes.func.isRequired,
   onSelectProject: PropTypes.func.isRequired,

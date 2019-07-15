@@ -6,6 +6,7 @@ const initialState = {
   startDate: addMonths(new Date(), -4),
   endDate: new Date(),
   requestState: 'all',
+  requestIds: [],
   requester: null,
   project: null,
 };
@@ -18,10 +19,16 @@ function filters(state = initialState, action = {}) {
         ...action.payload,
       };
 
-    case 'reports/filter-date':
+    case 'requests/get':
       return {
         ...state,
-        [action.payload.key]: action.payload.value,
+        ...action.payload,
+      };
+
+    case 'requests/get/success':
+      return {
+        ...state,
+        requestIds: action.payload.result,
       };
 
     case 'reports/filter-date-range':

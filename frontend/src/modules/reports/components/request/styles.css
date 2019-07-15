@@ -5,11 +5,17 @@
 .title {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin: 0;
 }
 
-.title > div {
-  margin-right: 6px;
+.titleText {
+  display: inline-flex;
+  align-items: center;
+}
+
+.titleText > span:first-child {
+  margin-right: 32px;
 }
 
 .header small,

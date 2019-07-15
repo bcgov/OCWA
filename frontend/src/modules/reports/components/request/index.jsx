@@ -1,11 +1,15 @@
 import * as React from 'react';
 import DateTime from '@src/components/date';
+import ExportTypeIcon from '@src/components/export-type-icon';
 import Files from '@src/modules/files/containers/files';
 import { Link } from 'react-router-dom';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import RequestIcon from '@src/modules/requests/components/request-icon';
+import StateLabel from '@src/modules/requests/components/state-label';
 import { uid } from 'react-uid';
 import { getRequestStateColor } from '@src/modules/requests/utils';
+import { _e } from '@src/utils';
+import { RequestSchema } from '@src/modules/requests/types';
 
 import * as styles from './styles.css';
 
@@ -41,13 +45,18 @@ function Request({ data }) {
         <GridColumn medium={12}>
           <header className={styles.header}>
             <small>
-              <Link to="/">&laquo; Back to Reports</Link>
+              <Link to="/">&laquo; Back to Dashboard</Link>
             </small>
             <h2 className={styles.title}>
-              <RequestIcon value={data.state} size="xlarge" /> {data.name}
+              <span className={styles.titleText}>
+                <ExportTypeIcon large exportType={data.exportType} />
+                {data.name}
+              </span>
+              <StateLabel value={data.state} />
             </h2>
             <p>
-              Export request by <strong>{data.author}</strong>
+              {_e('{Request} request by ')}
+              <strong>{data.author}</strong>
             </p>
           </header>
         </GridColumn>
@@ -90,20 +99,38 @@ function Request({ data }) {
           <header className={styles.chronologyHeader}>
             <h4>Request Details</h4>
           </header>
-          <div className={styles.details}>
-            <dl>
-              <dt>Variable Descriptions</dt>
-              <dd>{data.variableDescriptions}</dd>
-              <dt>Relationship to previous or future (planned) outputs</dt>
-              <dd>{data.selectionCriteria}</dd>
-            </dl>
-          </div>
-          <header className={styles.chronologyHeader}>
-            <h4>Request Files</h4>
-          </header>
-          <div className={styles.details}>
-            <Files ids={data.files} fileStatus={data.fileStatus} />
-          </div>
+          {data.exportType === 'code' && (
+            <div className={styles.details}>
+              <dl>
+                <dt>External Repository</dt>
+                <dd>{data.externalRepository}</dd>
+                <dt>Branch Name</dt>
+                <dd>{data.branch}</dd>
+                <dt>Repository</dt>
+                <dd>{data.repository}</dd>
+              </dl>
+            </div>
+          )}
+          {data.exportType !== 'code' && (
+            <div className={styles.details}>
+              <dl>
+                <dt>Variable Descriptions</dt>
+                <dd>{data.variableDescriptions}</dd>
+                <dt>Relationship to previous or future (planned) outputs</dt>
+                <dd>{data.selectionCriteria}</dd>
+              </dl>
+            </div>
+          )}
+          {data.exportType !== 'code' && (
+            <React.Fragment>
+              <header className={styles.chronologyHeader}>
+                <h4>Request Files</h4>
+              </header>
+              <div className={styles.details}>
+                <Files ids={data.files} fileStatus={data.fileStatus} />
+              </div>
+            </React.Fragment>
+          )}
           <header className={styles.chronologyHeader}>
             <h4>Request Timeline</h4>
           </header>
@@ -116,7 +143,7 @@ function Request({ data }) {
                     borderColor: getBorderColor(d.enteredState),
                   }}
                 >
-                  <RequestIcon value={d.enteredState} size="lg" />
+                  <RequestIcon value={d.enteredState} size="medium" />
                 </div>
                 <div
                   className={styles.content}
@@ -171,5 +198,9 @@ function Request({ data }) {
     </Page>
   );
 }
+
+Request.propTypes = {
+  data: RequestSchema,
+};
 
 export default Request;

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import addMonths from 'date-fns/add_months';
 import Button, { ButtonGroup } from '@atlaskit/button';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
 import { DatePicker } from '@atlaskit/datetime-picker';
@@ -24,14 +25,28 @@ function Filters({
 }) {
   const onChange = key => date => {
     const value = parse(date);
+    let adjustedValue = {}; // if the selected date passes the other date, adjust them both
 
     if (key === 'endDate') {
-      if (isBefore(value, startDate)) return;
+      if (isBefore(value, startDate)) {
+        adjustedValue = {
+          startDate: addMonths(value, -1),
+        };
+      }
     } else if (key === 'startDate') {
-      if (isAfter(value, endDate)) return;
+      if (isAfter(value, endDate)) {
+        adjustedValue = {
+          endDate: addMonths(value, 1),
+        };
+      }
     }
 
-    onDateChange(key, value);
+    onDateChange({
+      startDate,
+      endDate,
+      ...adjustedValue,
+      [key]: value,
+    });
   };
 
   return (

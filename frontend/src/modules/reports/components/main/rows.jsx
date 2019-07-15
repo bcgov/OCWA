@@ -4,6 +4,7 @@ import DateTime from '@src/components/date';
 import { Link } from 'react-router-dom';
 import RequestIcon from '@src/modules/requests/components/request-icon';
 import { getRequestStateText } from '@src/modules/requests/utils';
+import { uid } from 'react-uid';
 
 export default ({ data, onSelectProject, onSelectRequester }) =>
   data.map(d => {
@@ -46,14 +47,15 @@ export default ({ data, onSelectProject, onSelectRequester }) =>
         },
         {
           key: d.project,
-          content: (
+          content: d.projects.map(p => (
             <Button
+              key={uid(p)}
               appearance="link"
-              onClick={() => onSelectProject(d.project)}
+              onClick={() => onSelectProject(p)}
             >
-              {d.project}
+              {p}
             </Button>
-          ),
+          )),
         },
         {
           key: d.author,
@@ -72,7 +74,7 @@ export default ({ data, onSelectProject, onSelectRequester }) =>
         },
         {
           key: d.files.length,
-          content: d.files.length,
+          content: d.exportType === 'code' ? '-' : d.files.length,
         },
       ],
     };

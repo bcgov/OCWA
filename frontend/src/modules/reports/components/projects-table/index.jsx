@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
 
+import Empty from './empty';
 import head from './head';
 import makeRows from './rows';
 
@@ -12,7 +13,7 @@ function ProjectsTable({ data, onSelectProject, onSort, sortKey, sortOrder }) {
   });
   return (
     <DynamicTableStateless
-      emptyView={<div>No Projects</div>}
+      emptyView={<Empty />}
       head={head}
       rows={rows}
       loadingSpinnerSize="large"

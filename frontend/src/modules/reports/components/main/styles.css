@@ -6,6 +6,20 @@
 
 .header {
   margin-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #DFE1E6;
+}
+
+.header > * {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header small {
+  font-weight: 500;
+  font-size: 0.75em;
+  margin: 0;
 }
 
 .projectsTable {
@@ -14,11 +28,10 @@
 
 .filters {
   padding: 10px 0;
-  margin: 10px 0;
+  margin: 0 0 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 2px solid #DFE1E6;
   border-bottom: 2px solid #DFE1E6;
 }
 

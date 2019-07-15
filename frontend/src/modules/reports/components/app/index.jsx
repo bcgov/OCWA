@@ -2,10 +2,11 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@src/components/app-bar';
 import AppBarMenu from '@src/components/app-bar/menu';
-import Changes24Icon from '@atlaskit/icon-object/glyph/changes/24';
+import GraphBarIcon from '@atlaskit/icon/glyph/graph-bar';
 import { Switch, Route } from 'react-router-dom';
 import NotFound from '@src/components/not-found';
 import Title from '@src/components/title';
+import { colors } from '@atlaskit/theme';
 
 import Reports from '../../containers/main';
 import Request from '../../containers/request';
@@ -15,7 +16,10 @@ function ReportsApp({ user }) {
   return (
     <React.Fragment>
       <Title>Reports</Title>
-      <AppBar icon={<Changes24Icon />} title="OCWA Reports">
+      <AppBar
+        icon={<GraphBarIcon size="large" primaryColor={colors.Y500} />}
+        title="OCWA Reports"
+      >
         <AppBarMenu user={user} />
       </AppBar>
       <div id="app-content" className={styles.container}>

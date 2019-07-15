@@ -1,5 +1,5 @@
 const initialState = {
-  sortKey: 'lastOutputDate',
+  sortKey: 'name',
   sortOrder: 'DESC',
 };
 
