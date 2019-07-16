@@ -7,6 +7,7 @@ import inRange from 'lodash/inRange';
 import startCase from 'lodash/startCase';
 import { withRouter } from 'react-router-dom';
 import { uid } from 'react-uid';
+import { _e } from '@src/utils';
 // Icons
 import CopyIcon from '@atlaskit/icon/glyph/copy';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
@@ -82,7 +83,7 @@ function RequestSidebar({
     <aside id="request-sidebar">
       <h6>Requester</h6>
       <div id="request-author">{data.author}</div>
-      <h6>Export Type</h6>
+      <h6>{_e('{Request} Type')}</h6>
       <div id="request-exportType">
         <ExportTypeIcon exportType={data.exportType} />
         <span id="request-exportTypeText" className={styles.exportTypeText}>
@@ -91,39 +92,40 @@ function RequestSidebar({
       </div>
       <h6>Output Checker</h6>
       <div id="request-reviewers">
-        {data.reviewers.map(d => <p key={uid(d)}>{d}</p>)}
+        {data.reviewers.map(d => (
+          <p key={uid(d)}>{d}</p>
+        ))}
       </div>
       {data.reviewers.length <= 0 && (
         <p id="request-reviewers-empty">No reviewer has been assigned</p>
       )}
       <h6>Actions</h6>
-      {data.state >= 2 &&
-        data.state < 4 && (
-          <React.Fragment>
-            <div>
-              <Button
-                appearance="link"
-                id="request-sidebar-withdraw-button"
-                isDisabled={isSaving}
-                iconBefore={<SignOutIcon />}
-                onClick={withdrawHandler}
-              >
-                Edit Request
-              </Button>
-            </div>
-            <div>
-              <Button
-                appearance="link"
-                id="request-sidebar-cancel-button"
-                iconBefore={<CrossIcon />}
-                isDisabled={isSaving}
-                onClick={() => onCancel(data._id)}
-              >
-                Cancel Request
-              </Button>
-            </div>
-          </React.Fragment>
-        )}
+      {data.state >= 2 && data.state < 4 && (
+        <React.Fragment>
+          <div>
+            <Button
+              appearance="link"
+              id="request-sidebar-withdraw-button"
+              isDisabled={isSaving}
+              iconBefore={<SignOutIcon />}
+              onClick={withdrawHandler}
+            >
+              Edit Request
+            </Button>
+          </div>
+          <div>
+            <Button
+              appearance="link"
+              id="request-sidebar-cancel-button"
+              iconBefore={<CrossIcon />}
+              isDisabled={isSaving}
+              onClick={() => onCancel(data._id)}
+            >
+              Cancel Request
+            </Button>
+          </div>
+        </React.Fragment>
+      )}
       {data.state < 2 && (
         <React.Fragment>
           <div>

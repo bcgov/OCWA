@@ -9,6 +9,7 @@ import Page, { Grid, GridColumn } from '@atlaskit/page';
 import { RequestSchema } from '@src/modules/requests/types';
 import startCase from 'lodash/startCase';
 import { zone } from '@src/services/config';
+import { _e } from '@src/utils';
 
 import Downloads from '../../containers/downloads';
 import renderEmpty from './empty';
@@ -30,7 +31,6 @@ const header = {
 };
 
 function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
-  const zoneString = zone === 'internal' ? 'import' : 'export';
   const rows = data.map(d => {
     const format = 'MMM Do, YYYY';
     const submittedOn = head(d.chronology).timestamp;
@@ -77,7 +77,9 @@ function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
             </div>
             <h1>{`Approved ${startCase(zoneString)} Requests`}</h1>
             <p>
-              {`The ${zoneString} requests listed below are available for download.`}
+              {_e(
+                'The {download} requests listed below are available for download.'
+              )}
             </p>
           </header>
         </GridColumn>

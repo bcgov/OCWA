@@ -9,6 +9,7 @@ export const ocGroup = OC_GROUP;
 export const exporterMode = EXPORTER_MODE; // Can be (undefined || 'export') or 'download'
 export const codeExportEnabled = CODE_EXPORT_ENABLED; // Can be (undefined || 'export') or 'download'
 export const zone = ZONE;
+export const getZone = () => ZONE;
 
 export default {
   codeExportEnabled,
@@ -21,4 +22,5 @@ export default {
   exporterMode,
   socketHost,
   zone,
+  getZone,
 };
