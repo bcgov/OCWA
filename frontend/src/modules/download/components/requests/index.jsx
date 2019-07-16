@@ -75,7 +75,7 @@ function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
             <div className={styles.backButton}>
               <Link to="/">&laquo; Back to Requests</Link>
             </div>
-            <h1>{`Approved ${startCase(zoneString)} Requests`}</h1>
+            <h1>{`Approved ${startCase(zone)} Requests`}</h1>
             <p>
               {_e(
                 'The {download} requests listed below are available for download.'
@@ -85,7 +85,7 @@ function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
         </GridColumn>
         <GridColumn medium={12}>
           <DynamicTableStateless
-            emptyView={renderEmpty(zoneString)}
+            emptyView={renderEmpty(zone)}
             head={header}
             rows={rows}
             loadingSpinnerSize="large"
