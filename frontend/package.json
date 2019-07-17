@@ -10,6 +10,8 @@
     "lint": "eslint src/index.js",
     "test": "jest --coverage",
     "test:watch": "jest --watch"
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "devDependencies": {
     "@babel/cli": "^7.4.3",
@@ -132,7 +134,7 @@
     "redux-saga": "^0.16.2",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "snyk": "^1.151.0",
+    "snyk": "^1.161.1",
     "styled-components": "^3.4.6",
     "tus-js-client": "^1.7.1"
   },
