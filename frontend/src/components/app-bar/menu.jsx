@@ -11,7 +11,7 @@ const AboutDropdownItem = props => (
 );
 const AboutButton = aboutButton(AboutDropdownItem);
 
-function AppBarMenu({ children, user }) {
+function AppBarMenu({ children, helpURL, user }) {
   const possibleDisplayNameValues = at(user, [
     'displayName',
     'username',
@@ -29,6 +29,11 @@ function AppBarMenu({ children, user }) {
           Signed in as <strong>{displayName}</strong>
         </DropdownItem>
       )}
+      {helpURL && (
+        <DropdownItem href={helpURL} target="_blank">
+          View Help Documentation
+        </DropdownItem>
+      )}
       {children}
       <AboutButton />
       <DropdownItem href="/auth/logout">Logout</DropdownItem>
@@ -38,6 +43,7 @@ function AppBarMenu({ children, user }) {
 
 AppBarMenu.propTypes = {
   children: PropTypes.arrayOf(PropTypes.instanceOf(DropdownItem)),
+  helpURL: PropTypes.string,
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,
   }).isRequired,
@@ -45,6 +51,7 @@ AppBarMenu.propTypes = {
 
 AppBarMenu.defaultProps = {
   children: null,
+  helpURL: null,
 };
 
 export default AppBarMenu;

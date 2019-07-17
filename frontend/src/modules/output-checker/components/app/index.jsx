@@ -10,11 +10,11 @@ import Dashboard from '../../containers/dashboard';
 import Request from '../../containers/request';
 import * as styles from './styles.css';
 
-function App({ user }) {
+function App({ helpURL, user }) {
   return (
     <React.Fragment>
       <AppBar icon={<Issue24Icon />} title="OCWA Output Checker">
-        <AppBarMenu user={user} />
+        <AppBarMenu helpURL={helpURL} user={user} />
       </AppBar>
       <div id="app-content" className={styles.container}>
         <Switch>
@@ -28,9 +28,14 @@ function App({ user }) {
 }
 
 App.propTypes = {
+  helpURL: PropTypes.string,
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,
   }).isRequired,
+};
+
+App.defaultProps = {
+  helpURL: null,
 };
 
 export default App;

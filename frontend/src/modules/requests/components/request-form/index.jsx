@@ -13,6 +13,7 @@ import * as styles from './styles.css';
 // not change if the `exportType` variable changes
 function NewRequestForm({
   codeExportEnabled,
+  helpURL,
   history,
   isCreating,
   location,
@@ -36,10 +37,11 @@ function NewRequestForm({
   const formProps = {
     data,
     isCreating,
+    helpURL,
     exportType: exportType.value,
     onSubmit,
   };
-
+  
   return (
     <Page>
       <div id="request-form-container" className={styles.container}>
@@ -81,12 +83,17 @@ function NewRequestForm({
 
 NewRequestForm.propTypes = {
   codeExportEnabled: PropTypes.bool.isRequired,
+  helpURL: PropTypes.string,
   history: PropTypes.object.isRequired,
   isCreating: PropTypes.bool.isRequired,
   location: PropTypes.shape({
     state: PropTypes.object,
   }).isRequired,
   sendAction: PropTypes.func.isRequired,
+};
+
+NewRequestForm.defaultProps = {
+  helpURL: null,
 };
 
 export default NewRequestForm;

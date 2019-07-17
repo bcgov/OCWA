@@ -10,6 +10,7 @@ export const exporterMode = EXPORTER_MODE; // Can be (undefined || 'export') or 
 export const codeExportEnabled = CODE_EXPORT_ENABLED; // Can be (undefined || 'export') or 'download'
 export const repositoryHost = REPOSITORY_HOST; // Can be (undefined || 'export') or 'download'
 export const zone = ZONE;
+export const helpURL = HELP_URL;
 export const getZone = () => ZONE;
 
 export default {
@@ -17,6 +18,7 @@ export default {
   commit,
   limit,
   version,
+  helpURL,
   idField,
   exporterGroup,
   ocGroup,

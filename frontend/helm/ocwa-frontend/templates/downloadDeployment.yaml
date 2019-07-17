@@ -28,6 +28,8 @@ spec:
               value: "{{ .Values.port }}"
             - name: HOST
               value: {{ .Values.downloadHost }}
+            - name: HELP_URL
+              value: "{{ .Values.helpURL }}"
             - name: FORUM_API_HOST
               {{ if .Values.tls.enabled }}
               value: "https://none"
