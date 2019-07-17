@@ -30,6 +30,7 @@ resource "docker_container" "ocwa_forum_api" {
       "GROUP_FIELD=groups",
       "DEFAULT_ACCESS_IS_GROUP=true",
       "REQUIRED_CREATE_ROLE=/exporter",
+      "IGNORE_GROUPS=\"/researchers\"",
       "EMAIL_SUBJECT=forumApi",
       "EMAIL_ENABLED=false",
       "EMAIL_USER=forum@ocwa.com",

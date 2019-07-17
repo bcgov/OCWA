@@ -75,6 +75,7 @@ function RequestDetails({
               {!isEditing && (
                 <Files
                   showDownloadButton
+                  id={data._id}
                   ids={files}
                   fileStatus={data.fileStatus}
                 />
@@ -94,7 +95,7 @@ function RequestDetails({
               {isEditing && ' (Drop files here to upload)'}
             </div>
             <div className={styles.sectionContent}>
-              {!isEditing && <Files showDownloadButton ids={supportingFiles} />}
+              {!isEditing && <Files showDownloadButton id={data._id} ids={supportingFiles} />}
               {isEditing && (
                 <FileUploader
                   data={uploadData}

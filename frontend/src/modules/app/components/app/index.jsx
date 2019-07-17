@@ -38,7 +38,7 @@ class App extends React.Component {
   }
 
   renderMain = () => {
-    const { authFetchStatus, helpURL, isAuthenticated, user } = this.props;
+    const { authFetchStatus, helpURL, isAuthenticated, user, zone } = this.props;
     // TODO: These values should be in config.json
     const validGroups = [exporterGroup, ocGroup];
     let el = null;
@@ -53,6 +53,7 @@ class App extends React.Component {
       const props = {
         user,
         helpURL,
+        zone
       };
 
       if (!hasValidGroupAccess) {
@@ -101,6 +102,7 @@ App.propTypes = {
   user: PropTypes.shape({
     displayName: PropTypes.string,
   }).isRequired,
+  zone: PropTypes.string.isRequired,
 };
 
 App.defaultProps = {

@@ -13,10 +13,6 @@ resource "docker_container" "ocwa_download_frontend" {
   name = "ocwa_download_frontend"
   restart = "on-failure"
   networks_advanced = { name = "${docker_network.private_network.name}" }
-  ports = { 
-    internal = 8000
-    external = 8001
-  }
 
   host = [
     {
@@ -31,14 +27,15 @@ resource "docker_container" "ocwa_download_frontend" {
       "AUTH_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/auth",
       "TOKEN_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/token",
       "USER_INFO_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/userinfo",
+      "AUTH_LOGOUT_URL=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/logout?redirect_uri=${var.ocwaDLHost}",
       "AUTH_ISSUER=${var.authHost}/auth/realms/ocwa",
       "AUTH_CLIENT=outputchecker",
       "AUTH_SCOPES=openid offline_access",
       "AUTH_CALLBACK_URL=${var.ocwaDLHost}/auth",
       "CLIENT_SECRET=${random_uuid.outputcheckerClientSecret.result}",
       "FILES_API_HOST=${var.ocwaDLHost}",
-      "REQUEST_API_HOST=ocwa_request_api:3002",
-      "FORUM_API_HOST=ocwa_forum_api:3000",
+      "REQUEST_API_HOST=http://ocwa_request_api:3002",
+      "FORUM_API_HOST=http://ocwa_forum_api:3000",
       "FORUM_SOCKET_HOST=${var.ocwaWebSocketHost}",
       "HOST=0.0.0.0",
       "PORT=8000",
@@ -52,7 +49,8 @@ resource "docker_container" "ocwa_download_frontend" {
       "NODE_TLS_REJECT_UNAUTHORIZED=0",
       "EXPORTER_GROUP=/exporter",
       "OC_GROUP=/oc",
-      "EXPORTER_MODE=download"
+      "EXPORTER_MODE=download",
+      "CODE_EXPORT_ENABLED=true"
   ]
 
 }
@@ -62,10 +60,6 @@ resource "docker_container" "ocwa_frontend" {
   name = "ocwa_frontend"
   restart = "on-failure"
   networks_advanced = { name = "${docker_network.private_network.name}" }
-  ports = { 
-    internal = 8000
-    external = 8000
-  }
 
   host = [
     {
@@ -80,14 +74,15 @@ resource "docker_container" "ocwa_frontend" {
       "AUTH_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/auth",
       "TOKEN_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/token",
       "USER_INFO_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/userinfo",
+      "AUTH_LOGOUT_URL=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/logout?redirect_uri=${var.ocwaHost}",
       "AUTH_ISSUER=${var.authHost}/auth/realms/ocwa",
       "AUTH_CLIENT=outputchecker",
       "AUTH_SCOPES=openid offline_access",
       "AUTH_CALLBACK_URL=${var.ocwaHost}/auth",
       "CLIENT_SECRET=${random_uuid.outputcheckerClientSecret.result}",
       "FILES_API_HOST=${var.ocwaHost}",
-      "REQUEST_API_HOST=ocwa_request_api:3002",
-      "FORUM_API_HOST=ocwa_forum_api:3000",
+      "REQUEST_API_HOST=http://ocwa_request_api:3002",
+      "FORUM_API_HOST=http://ocwa_forum_api:3000",
       "FORUM_SOCKET_HOST=${var.ocwaWebSocketHost}",
       "HOST=0.0.0.0",
       "PORT=8000",

@@ -57,16 +57,17 @@ const renderEmpty = (isFailed, isLoaded) => {
 
 class FilesTable extends React.Component {
   componentDidUpdate(prevProps) {
-    const { ids, sendAction } = this.props;
+    const { id, ids, sendAction } = this.props;
 
     if (!isEqual(prevProps.ids, ids) && !isEmpty(ids)) {
-      sendAction('initialRequest', { ids });
+      sendAction('initialRequest', { id, ids });
     }
   }
 
   render() {
     const {
       data,
+      id,
       isLoading,
       isLoaded,
       isFailed,
@@ -162,7 +163,7 @@ class FilesTable extends React.Component {
                 download
                 appearance="subtle"
                 spacing="none"
-                href={`/api/v1/files/${file.id}`}
+                href={`/api/v1/files/${file.id}?request_id=${id}`}
                 iconBefore={<DownloadIcon />}
               />
             </div>
@@ -223,10 +224,12 @@ FilesTable.propTypes = {
     })
   ).isRequired,
   fileStatus: PropTypes.objectOf(PropTypes.arrayOf(FileStatusSchema)),
+  id: PropTypes.string.isRequired,
   ids: PropTypes.arrayOf(PropTypes.string).isRequired,
   isLoading: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   isFailed: PropTypes.bool.isRequired,
+  requestId: PropTypes.string.isRequired,
   sendAction: PropTypes.func.isRequired,
   showDownloadButton: PropTypes.bool,
   showRemoveButton: PropTypes.bool,

@@ -1,12 +1,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
 import SectionMessage from '@atlaskit/section-message';
 import ExportTypeIcon from '@src/components/export-type-icon';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import CalendarIcon from '@atlaskit/icon/glyph/calendar';
 import Date from '@src/components/date';
 import get from 'lodash/get';
-import { NavLink, Route, Switch } from 'react-router-dom';
+import isEmpty from 'lodash/isEmpty';
+import { NavLink, Redirect, Route, Switch } from 'react-router-dom';
 import merge from 'lodash/merge';
 import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
@@ -63,9 +65,18 @@ class Request extends React.Component {
       isOutputChecker,
       updatedAt,
       match,
+      zone,
     } = this.props;
     const { isEditing } = this.state;
     const title = data.name || 'Loading...';
+    const isDiscussionEnabled =
+      (data.type === 'export' && zone === 'internal') ||
+      (data.type === 'import' && zone === 'external');
+
+    if (!isLoaded && isEmpty(data)) {
+      return null;
+    }
+
     const isCodeExport = data.exportType === 'code';
     const mergeRequestStatusCode = get(data, 'mergeRequestStatus.code');
     const showMergeRequestError =
@@ -77,7 +88,11 @@ class Request extends React.Component {
       <div id="requests-page">
         <Title>{title}</Title>
         <Page>
-          <header className={styles.header}>
+          <header
+            className={cx(styles.header, {
+              [styles.headerWithDiscussion]: isDiscussionEnabled,
+            })}
+          >
             <Grid>
               <GridColumn medium={9}>
                 <h1 id="request-title">
@@ -102,33 +117,35 @@ class Request extends React.Component {
                 </div>
               </GridColumn>
             </Grid>
-            <Grid>
-              <GridColumn>
-                <nav className={styles.tabs}>
-                  <NavLink
-                    exact
-                    activeClassName={styles.tabActive}
-                    className={styles.tab}
-                    id="request-details-tab"
-                    to={match.url}
-                  >
-                    <InfoIcon size="small" />
-                    {' Details'}
-                  </NavLink>
-                  <NavLink
-                    exact
-                    disabled={isEditing}
-                    activeClassName={styles.tabActive}
-                    className={styles.tab}
-                    id="request-discussion-tab"
-                    to={`${match.url}/discussion`}
-                  >
-                    <CommentIcon size="small" />
-                    {' Discussion'}
-                  </NavLink>
-                </nav>
-              </GridColumn>
-            </Grid>
+            {isDiscussionEnabled && (
+              <Grid>
+                <GridColumn>
+                  <nav className={styles.tabs}>
+                    <NavLink
+                      exact
+                      activeClassName={styles.tabActive}
+                      className={styles.tab}
+                      id="request-details-tab"
+                      to={match.url}
+                    >
+                      <InfoIcon size="small" />
+                      {' Details'}
+                    </NavLink>
+                    <NavLink
+                      exact
+                      disabled={isEditing}
+                      activeClassName={styles.tabActive}
+                      className={styles.tab}
+                      id="request-discussion-tab"
+                      to={`${match.url}/discussion`}
+                    >
+                      <CommentIcon size="small" />
+                      {' Discussion'}
+                    </NavLink>
+                  </nav>
+                </GridColumn>
+              </Grid>
+            )}
           </header>
           <div id="request-details" className={styles.main}>
             <Grid>
@@ -168,17 +185,22 @@ class Request extends React.Component {
                       />
                     )}
                   />
-                  <Route
-                    exact
-                    path={`${match.url}/discussion`}
-                    render={() =>
-                      data.topic ? (
-                        <Discussion id={data.topic} title={title} />
-                      ) : (
-                        <Spinner />
-                      )
-                    }
-                  />
+                  {!isDiscussionEnabled && (
+                    <Redirect from={`${match.url}/discussion`} to={match.url} />
+                  )}
+                  {isDiscussionEnabled && (
+                    <Route
+                      exact
+                      path={`${match.url}/discussion`}
+                      render={() =>
+                        data.topic ? (
+                          <Discussion id={data.topic} title={title} />
+                        ) : (
+                          <Spinner />
+                        )
+                      }
+                    />
+                  )}
                 </Switch>
               </GridColumn>
               <GridColumn medium={3}>
@@ -220,6 +242,7 @@ Request.propTypes = {
   onFinishEditing: PropTypes.func.isRequired,
   onReset: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
+  zone: PropTypes.string.isRequired,
 };
 
 export default Request;

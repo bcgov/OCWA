@@ -248,35 +248,58 @@ model.getAll = function(query, limit, page, user, callback){
     var skip = limit * (page - 1);
     logger.verbose("request get all, skip, limit", skip, limit);
 
+    var zoneRestrict;
 
-    var zoneRestrict = {
-        $match: {
-            $or: [
-                {type: INPUT_TYPE},
-                {$and: [
-                        {type: EXPORT_TYPE},
-                        {state: APPROVED_STATE}
+    if (user.outputchecker) {
+        if (user.zone === user.INTERNAL_ZONE){
+            zoneRestrict = {
+                $match: {
+                    $or: [
+                        {type: INPUT_TYPE},
+                        {type: EXPORT_TYPE}
                     ]
                 }
-            ]
-        }
-    };
-
-    if (user.zone === user.EXPORT_ZONE){
-        zoneRestrict = {
-            $match: {
-                $or: [
-                    {type: EXPORT_TYPE},
-                    {$and: [
-                            {type: INPUT_TYPE},
-                            {state: APPROVED_STATE}
-                        ]
-                    }
-                ]
             }
-        };
+        } else {
+            // Return no records - Outputchecker should not be using external zone
+            zoneRestrict = {
+                $match: {
+                    $and: [
+                        {type: INPUT_TYPE},
+                        {type: EXPORT_TYPE}
+                    ]
+                }
+            }
+        }
+    } else {
+        if (user.zone === user.INTERNAL_ZONE){
+            zoneRestrict = {
+                $match: {
+                    $or: [
+                        {type: EXPORT_TYPE},
+                        {$and: [
+                                {type: INPUT_TYPE},
+                                {state: APPROVED_STATE}
+                            ]
+                        }
+                    ]
+                }
+            };
+        } else {
+            zoneRestrict = {
+                $match: {
+                    $or: [
+                        {type: INPUT_TYPE},
+                        {$and: [
+                                {type: EXPORT_TYPE},
+                                {state: APPROVED_STATE}
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
     }
-
 
     getAllTopics(user, function(err, topicR, projectR){
         logger.verbose("get all topics model get all", topicR);

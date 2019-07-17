@@ -84,9 +84,31 @@ gitops.process = function(request, user){
     logger.verbose("[gitops] triggered");
 };
 
+gitops.delete = function(request) {
+    if (!config.has('gitops')){
+        logger.debug("Delete[gitops] - Triggered but not configured");
+        return;
+    }
+
+    logger.info("Delete[gitops]", "exportType=", request.exportType, ",State=", db.Request.stateToText(request.state), ",Type=", request.type);
+
+    var gitopsConfig = config.get('gitops');
+    if (!gitopsConfig.enabled){
+        return;
+    }
+
+    if (request.exportType != "code") {
+        return;
+    }
+
+    this.callGitops(request, 'delete').catch (err => {
+        logger.error("Delete[gitops] Error from Gitops", err);
+    });
+};
+
 gitops.approve = function(request) {
     if (!config.has('gitops')){
-        logger.debug("Notifications[gitops] - Triggered but not configured");
+        logger.debug("Approve[gitops] - Triggered but not configured");
         return gitops.noop();
     }
 

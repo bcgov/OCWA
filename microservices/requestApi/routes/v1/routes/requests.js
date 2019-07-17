@@ -188,7 +188,7 @@ router.post("/", function(req, res, next){
     }
 
     request.type = db.Request.INPUT_TYPE;
-    if (req.user.zone && req.user.zone == req.user.EXPORT_ZONE){
+    if (req.user.zone && req.user.zone == req.user.INTERNAL_ZONE){
         request.type = db.Request.EXPORT_TYPE;
     }
 
@@ -977,6 +977,9 @@ router.delete('/:requestId', function(req, res){
                         logger.error("Error deleting topic: ", apiErr, body);
                     }
                 });
+
+                var notify = require('../notifications/notifications');
+                notify.gitops().delete(reqRes);
 
                 res.json({message: "Record successfully deleted"});
             });
