@@ -15,7 +15,8 @@
     "EXPORTER_GROUP": true,
     "OC_GROUP": true,
     "EXPORTER_MODE": true,
-    "ZONE": true
+    "ZONE": true,
+    "HELP_URL": true
   },
   "parser": "babel-eslint",
   "rules": {

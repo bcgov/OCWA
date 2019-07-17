@@ -16,7 +16,7 @@ import Title from '@src/components/title';
 import DownloadsLink from './downloads-link';
 import * as styles from './styles.css';
 
-function App({ user }) {
+function App({ helpURL, user }) {
   return (
     <React.Fragment>
       <Title>Exporter</Title>
@@ -25,7 +25,7 @@ function App({ user }) {
           <DownloadsLink />
           <NewRequest />
         </ButtonGroup>
-        <AppBarMenu user={user} />
+        <AppBarMenu helpURL={helpURL} user={user} />
       </AppBar>
       <div id="app-content" className={styles.container}>
         <Switch>
@@ -48,9 +48,14 @@ function App({ user }) {
 }
 
 App.propTypes = {
+  helpURL: PropTypes.string,
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,
   }).isRequired,
+};
+
+App.defaultProps = {
+  helpURL: null,
 };
 
 export default App;
