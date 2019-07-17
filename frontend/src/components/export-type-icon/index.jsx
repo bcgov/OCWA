@@ -14,11 +14,12 @@ function ExportTypeIcon({ exportType, large }) {
 }
 
 ExportTypeIcon.propTypes = {
-  exportType: PropTypes.string.isRequired,
+  exportType: PropTypes.string,
   large: PropTypes.bool,
 };
 
 ExportTypeIcon.defaultProps = {
+  exportType: '',
   large: false,
 };
 

@@ -21,7 +21,7 @@ import FormField from './field';
 import { formText, requestFields } from '../../utils';
 import { RequestSchema } from '../../types';
 
-function NewRequestForm({ data, exportType, history, isCreating, onSubmit }) {
+function NewRequestForm({ data, exportType, helpURL, history, isCreating, onSubmit }) {
   // Grab the files if there is a duplicate getting passed through
   const duplicateFiles = pick(data, ['files', 'supportingFiles']);
 
@@ -79,6 +79,14 @@ function NewRequestForm({ data, exportType, history, isCreating, onSubmit }) {
                   </Field>
                 ))}
             </FormSection>
+            {helpURL && (
+              <FormSection title="Additional help">
+                For guidance, please review the{' '}
+                <a href={helpURL} target="_blank">
+                  available documentation
+                </a>.
+              </FormSection>
+            )}
             <FormSection>
               <SectionMessage
                 appearance="warning"
@@ -125,6 +133,7 @@ function NewRequestForm({ data, exportType, history, isCreating, onSubmit }) {
 
 NewRequestForm.propTypes = {
   data: RequestSchema,
+  helpURL: PropTypes.string,
   exportType: PropTypes.oneOf(['code', 'data']),
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
@@ -135,6 +144,7 @@ NewRequestForm.propTypes = {
 
 NewRequestForm.defaultProps = {
   data: {},
+  helpURL: null,
 };
 
 export default withRouter(NewRequestForm);

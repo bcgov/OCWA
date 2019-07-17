@@ -24,6 +24,7 @@ const webpackConfig = require('../webpack.dev');
 // Main constants and setup
 const app = express();
 const cookieSecret = config.get('cookieSecret');
+const helpURL = config.has('helpURL') ? config.get('helpURL') : null;
 const isDevelopment = process.env.NODE_ENV === 'development';
 const filesApiHost = config.get('filesApiHost');
 const forumSocket = config.get('forumSocket');
@@ -32,6 +33,7 @@ const exporterGroup = config.get('exporterGroup');
 const ocGroup = config.get('ocGroup');
 const exporterMode = config.get('exporterMode');
 const codeExportEnabled = config.get('codeExportEnabled');
+const repositoryHost = config.get('repositoryHost');
 
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
@@ -99,11 +101,13 @@ app.get('*', checkAuth, storeUrl, (req, res) => {
     filesApiHost: parseApiHost(filesApiHost),
     socketHost: parseWsHost(forumSocket),
     commit: get(process, 'env.GITHASH', ''),
+    helpURL,
     codeExportEnabled,
     idField,
     exporterGroup,
     ocGroup,
     exporterMode,
+    repositoryHost,
     zone: getZone(),
   });
 });

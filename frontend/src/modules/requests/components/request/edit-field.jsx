@@ -102,8 +102,14 @@ EditField.propTypes = {
   data: PropTypes.shape({
     key: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['text', 'textarea', 'tel', 'email', 'url'])
-      .isRequired,
+    type: PropTypes.oneOf([
+      'text',
+      'tel',
+      'textarea',
+      'url',
+      'git',
+      'repositoryHost',
+    ]).isRequired,
     isRequired: PropTypes.bool,
     value: PropTypes.string.isRequired,
   }).isRequired,

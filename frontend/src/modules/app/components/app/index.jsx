@@ -38,7 +38,7 @@ class App extends React.Component {
   }
 
   renderMain = () => {
-    const { authFetchStatus, isAuthenticated, user, zone } = this.props;
+    const { authFetchStatus, helpURL, isAuthenticated, user, zone } = this.props;
     // TODO: These values should be in config.json
     const validGroups = [exporterGroup, ocGroup];
     let el = null;
@@ -50,6 +50,11 @@ class App extends React.Component {
       const hasValidGroupAccess = some(user.groups, g =>
         validGroups.includes(g)
       );
+      const props = {
+        user,
+        helpURL,
+        zone
+      };
 
       if (!hasValidGroupAccess) {
         return <Unauthorized />;
@@ -57,9 +62,9 @@ class App extends React.Component {
 
       // Load bundle for output checker if that's the only role, otherwise always send exporter
       if (hasOcRole && !hasExporterRole) {
-        el = <OutputChecker user={user} zone={zone} />;
+        el = <OutputChecker {...props} />;
       } else {
-        el = <Exporter user={user} zone={zone} />;
+        el = <Exporter {...props} />;
       }
     } else if (authFetchStatus === 'loaded') {
       el = <Unauthorized />;
@@ -91,12 +96,17 @@ class App extends React.Component {
 App.propTypes = {
   authFetchStatus: PropTypes.string.isRequired,
   fetchToken: PropTypes.func.isRequired,
+  helpURL: PropTypes.string,
   initSocket: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.shape({
     displayName: PropTypes.string,
   }).isRequired,
   zone: PropTypes.string.isRequired,
+};
+
+App.defaultProps = {
+  helpURL: null,
 };
 
 export default App;
