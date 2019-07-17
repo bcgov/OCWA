@@ -33,6 +33,7 @@ const exporterGroup = config.get('exporterGroup');
 const ocGroup = config.get('ocGroup');
 const exporterMode = config.get('exporterMode');
 const codeExportEnabled = config.get('codeExportEnabled');
+const repositoryHost = config.get('repositoryHost');
 
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
@@ -106,6 +107,7 @@ app.get('*', checkAuth, storeUrl, (req, res) => {
     exporterGroup,
     ocGroup,
     exporterMode,
+    repositoryHost,
     zone: getZone(),
   });
 });

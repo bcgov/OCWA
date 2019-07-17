@@ -51,6 +51,7 @@ ocwa-frontend:
   exporterGroup: "/exporter"
   ocGroup: "/oc"
   codeExportEnabled: false
+  repositoryHost: "repository-host"
   auth:
     authorizationEndpoint: "openid.auth.endpoint"
     callbackURL: "chart-example.local/auth"
