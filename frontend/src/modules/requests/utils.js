@@ -29,7 +29,7 @@ export const requestFields = [
     isRequired: true,
     exportType: 'all',
     helperText:
-      'Provide a phone number formatted xxx-xxx-xxxx to allow for quicker and more efficient contact if needed',
+      'Provide a phone number formatted xxx-xxx-xxxx to allow for quicker and more efficient contact if needed.',
   },
   {
     name: 'Variable Descriptions',
@@ -47,7 +47,7 @@ export const requestFields = [
     type: 'textarea',
     exportType: 'data',
     helperText:
-      ' In the case of sub-samples and sub-populations, the selection criteria and size of the sub-samples',
+      ' In the case of sub-samples and sub-populations, the selection criteria and size of the sub-samples.',
   },
   {
     name: 'Relationship to previous or future (planned) outputs',
@@ -63,7 +63,7 @@ export const requestFields = [
     type: 'textarea',
     exportType: 'data',
     helperText:
-      "Confidentiality disclosure to describe how it's upheld when criteria isn't met --> If you are submitting outputs which do not meet the rules of thumb, provide an explanation why the output entails no disclosure",
+      "Confidentiality disclosure to describe how it's upheld when criteria isn't met --> If you are submitting outputs which do not meet the rules of thumb, provide an explanation why the output entails no disclosure.",
   },
   {
     name: 'General comments about the code',
@@ -72,19 +72,19 @@ export const requestFields = [
     exportType: 'code',
     isRequired: true,
     helperText: _e(
-      'Describe any details about the code you wish to {request} here'
+      'Describe any details about the code you wish to {request} here.'
     ),
   },
   {
     name: getZoneString({
-      internal: 'Repository of code to export',
+      internal: 'Internal repository of code to export',
       external: 'Internal repository to send approved results',
     }),
     value: 'repository',
     type: 'repositoryHost',
     exportType: 'code',
     isRequired: true,
-    helperText: 'Write out the full URL of the repository',
+    helperText: 'Full URL of the repository.',
   },
   {
     name: _e('Branch of code to {request}'),
@@ -92,19 +92,18 @@ export const requestFields = [
     type: 'text',
     exportType: 'code',
     isRequired: true,
-    helperText:
-      'Write out the branch name in the repository the Output Checker should review',
+    helperText: 'Branch name of the external repository.',
   },
   {
     name: getZoneString({
-      internal: 'Repository of code to import',
-      external: 'External repository to send approved results',
+      internal: 'External repository to send approved results',
+      external: 'External repository of code to import',
     }),
     value: 'externalRepository',
     type: 'git',
     exportType: 'code',
     isRequired: true,
-    helperText: 'Write out the full URL of the external repository',
+    helperText: 'Full URL of the external repository.',
   },
 ];
 

@@ -42,12 +42,12 @@ function NewRequestForm({ data, exportType, helpURL, history, isCreating, onSubm
                   <TextField autoFocus autoComplete="off" {...fieldProps} />
                   {!error && (
                     <HelperMessage>
-                      Must be a unique request name.
+                      It recommended that you use a memorable title for this request.
                     </HelperMessage>
                   )}
                   {error && (
                     <ErrorMessage>
-                      This user name is already in use, try another one.
+                      Invalid request name, please try a different one
                     </ErrorMessage>
                   )}
                 </React.Fragment>
