@@ -16,6 +16,7 @@ import pick from 'lodash/pick';
 import SectionMessage from '@atlaskit/section-message';
 import { uid } from 'react-uid';
 import { withRouter } from 'react-router-dom';
+import { zone } from '@src/services/config'
 
 import FormField from './field';
 import { formText, requestFields } from '../../utils';
@@ -59,7 +60,8 @@ function NewRequestForm({ data, exportType, helpURL, history, isCreating, onSubm
             >
               {requestFields
                 .filter(
-                  d => d.exportType === 'all' || d.exportType === exportType
+                  d => (d.exportType === 'all' || d.exportType === exportType) &&
+                     (d.zone === 'all' || d.zone === zone)
                 )
                 .map(d => (
                   <Field

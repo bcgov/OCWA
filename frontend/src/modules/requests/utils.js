@@ -28,17 +28,25 @@ export const requestFields = [
     type: 'tel',
     isRequired: true,
     exportType: 'all',
+    zone: 'all',
     helperText:
       'Provide a phone number formatted xxx-xxx-xxxx to allow for quicker and more efficient contact if needed.',
   },
   {
-    name: 'Variable Descriptions',
+    name: getZoneString({
+      internal: 'Variable Descriptions',
+      external: 'General comments about the import',
+    }),
     value: 'variableDescriptions',
     isRequired: true,
     type: 'textarea',
     exportType: 'data',
-    helperText:
-      'Provide the variable/field names of the original and self-constructed variables. For original variables please use the name from the metadata.',
+    zone: 'all',
+    helperText: getZoneString({
+      internal:
+        'Provide the variable/field names of the original and self-constructed variables. For original variables please use the name from the metadata.',
+      external: 'Describe any details about the import you wish.',
+    }),
   },
   {
     name: 'Sub-Population',
@@ -46,6 +54,7 @@ export const requestFields = [
     isRequired: true,
     type: 'textarea',
     exportType: 'data',
+    zone: 'internal',
     helperText:
       ' In the case of sub-samples and sub-populations, the selection criteria and size of the sub-samples.',
   },
@@ -54,6 +63,7 @@ export const requestFields = [
     value: 'selectionCriteria',
     type: 'textarea',
     exportType: 'data',
+    zone: 'internal',
     helperText:
       'Describe any relationship to previous outputs. For example, a small adaptation of a previous output, pulled from the same or similar data, poses a risk of disclosure by differencing. This is especially for previously submitted tables within the same project, but could be, for example, other similar studies or projects based on the same sample of the population.',
   },
@@ -62,6 +72,7 @@ export const requestFields = [
     value: 'confidentiality',
     type: 'textarea',
     exportType: 'data',
+    zone: 'internal',
     helperText:
       "Confidentiality disclosure to describe how it's upheld when criteria isn't met --> If you are submitting outputs which do not meet the rules of thumb, provide an explanation why the output entails no disclosure.",
   },
@@ -70,6 +81,7 @@ export const requestFields = [
     value: 'codeDescription',
     type: 'textarea',
     exportType: 'code',
+    zone: 'all',
     isRequired: true,
     helperText: _e(
       'Describe any details about the code you wish to {request} here.'
@@ -83,14 +95,17 @@ export const requestFields = [
     value: 'repository',
     type: 'repositoryHost',
     exportType: 'code',
+    zone: 'all',
     isRequired: true,
-    helperText: 'Full URL of the repository.',
+    helperText: `Full URL of the repository${repositoryHost &&
+      ` Must contain ${repositoryHost}`}.`,
   },
   {
     name: _e('Branch of code to {request}'),
     value: 'branch',
     type: 'text',
     exportType: 'code',
+    zone: 'all',
     isRequired: true,
     helperText: 'Branch name of the external repository.',
   },
@@ -102,6 +117,7 @@ export const requestFields = [
     value: 'externalRepository',
     type: 'git',
     exportType: 'code',
+    zone: 'all',
     isRequired: true,
     helperText: 'Full URL of the external repository.',
   },
@@ -111,9 +127,9 @@ export const requestFields = [
 // a RegExp if using anywhere else
 export const phoneNumberRegex = '[0-9]{3}-?[0-9]{3}-?[0-9]{4}$';
 export const gitUrlRegex =
-  '((git|ssh|http(s)?)|(git@[w.]+))(:(//)?)([w.@:/-~]+)(.git)(/)?';
+  '((git|ssh|http(s)?)|(git@[w.]+))(:(//)?)([a-z-.@:/-~]+)(.git)?';
 export const repositoryRegex = repositoryHost
-  ? `${repositoryHost}([w.@:/-~]+)(.git)(/)?`
+  ? `${repositoryHost}([a-z-.@:/-~]+)(.git)?`
   : gitUrlRegex;
 
 export const getRequestStateColor = (value = 0) => {

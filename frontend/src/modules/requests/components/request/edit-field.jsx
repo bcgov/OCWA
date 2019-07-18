@@ -5,10 +5,11 @@ import InlineEdit from '@atlaskit/inline-edit';
 import isEmpty from 'lodash/isEmpty';
 import Field from '../request-form/field';
 
-import { phoneNumberRegex, urlRegex } from '../../utils';
+import { gitUrlRegex, phoneNumberRegex, repositoryRegex } from '../../utils';
 
 const phoneNumberValidation = new RegExp(phoneNumberRegex, 'g');
-const urlValidation = new RegExp(urlRegex, 'g');
+const gitUrlValidation = new RegExp(gitUrlRegex, 'g');
+const repositoryUrlValidation = new RegExp(repositoryRegex, 'g');
 
 class EditField extends React.PureComponent {
   state = {
@@ -49,8 +50,10 @@ class EditField extends React.PureComponent {
 
     if (data.type === 'tel' && !isInvalid) {
       isInvalid = !phoneNumberValidation.test(value);
-    } else if (data.type === 'url' && !isInvalid) {
-      isInvalid = !urlValidation.test(value);
+    } else if (data.type === 'repositoryHost' && !isInvalid) {
+      isInvalid = !repositoryUrlValidation.test(value);
+    } else if (data.type === 'git' && !isInvalid) {
+      isInvalid = !gitUrlValidation.test(value);
     }
 
     return isInvalid;
