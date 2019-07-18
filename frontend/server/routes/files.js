@@ -48,6 +48,8 @@ const validateFileRequest = async (req, requestId) => {
     });
     const json = JSON.parse(r);
 
+    // NOTE: The request will only be returned if the user is in the right zone and the request is in the right status
+
     // For when there are requests for a list of files
     if (has(req, 'query.ids')) {
       if (req.query.ids.split(',').every(id => json.files.includes(id) || json.supportingFiles.includes(id))) {
@@ -57,8 +59,7 @@ const validateFileRequest = async (req, requestId) => {
 
     // For downloading a file
     if (has(req, 'params.fileId')) {
-      if (json.state === 4 && (
-        json.files.includes(req.params.fileId) || json.supportingFiles.includes(req.params.fileId))) {
+      if (json.files.includes(req.params.fileId) || json.supportingFiles.includes(req.params.fileId)) {
         return true;
       }
     }
