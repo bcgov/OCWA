@@ -33,20 +33,23 @@ export const requestFields = [
       'Provide a phone number formatted xxx-xxx-xxxx to allow for quicker and more efficient contact if needed.',
   },
   {
-    name: getZoneString({
-      internal: 'Variable Descriptions',
-      external: 'General comments about the import',
-    }),
+    name: 'General comments about the import',
+    value: 'purpose',
+    isRequired: true,
+    type: 'textarea',
+    exportType: 'data',
+    zone: 'external',
+    helperText: 'Describe any details about the import you wish',
+  },
+  {
+    name: 'Variable Descriptions',
     value: 'variableDescriptions',
     isRequired: true,
     type: 'textarea',
     exportType: 'data',
-    zone: 'all',
-    helperText: getZoneString({
-      internal:
-        'Provide the variable/field names of the original and self-constructed variables. For original variables please use the name from the metadata.',
-      external: 'Describe any details about the import you wish.',
-    }),
+    zone: 'internal',
+    helperText:
+      'Provide the variable/field names of the original and self-constructed variables. For original variables please use the name from the metadata.',
   },
   {
     name: 'Sub-Population',
@@ -98,7 +101,7 @@ export const requestFields = [
     zone: 'all',
     isRequired: true,
     helperText: `Full URL of the repository${repositoryHost &&
-      ` Must contain ${repositoryHost}`}.`,
+      `. Must contain ${repositoryHost}`}`,
   },
   {
     name: _e('Branch of code to {request}'),

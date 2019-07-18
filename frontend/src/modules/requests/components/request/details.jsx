@@ -8,6 +8,7 @@ import get from 'lodash/get';
 import merge from 'lodash/merge';
 import { Prompt } from 'react-router-dom';
 import { uid } from 'react-uid';
+import { zone } from '@src/services/config';
 import { _e } from '@src/utils';
 
 import EditField from './edit-field';
@@ -26,7 +27,11 @@ function RequestDetails({
   const exportType = get(data, 'exportType', 'data');
   const supportingFiles = get(data, 'supportingFiles', []);
   const requestDetails = requestFields
-    .filter(d => d.exportType === 'all' || d.exportType === exportType)
+    .filter(
+      d =>
+        (d.exportType === 'all' || d.exportType === exportType) &&
+        (d.zone === 'all' || d.zone === zone)
+    )
     .map(d => ({
       name: d.name,
       type: d.type,
@@ -95,7 +100,9 @@ function RequestDetails({
               {isEditing && ' (Drop files here to upload)'}
             </div>
             <div className={styles.sectionContent}>
-              {!isEditing && <Files showDownloadButton id={data._id} ids={supportingFiles} />}
+              {!isEditing && (
+                <Files showDownloadButton id={data._id} ids={supportingFiles} />
+              )}
               {isEditing && (
                 <FileUploader
                   data={uploadData}

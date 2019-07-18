@@ -27,7 +27,7 @@ function codeTypeValidator() {
 }
 
 function dataTypeValidator() {
-    return this.exportType === DATA_EXPORT_TYPE;
+    return this.exportType === DATA_EXPORT_TYPE && this.type !== INPUT_TYPE;
 }
 
 var requestSchema = new Schema({
