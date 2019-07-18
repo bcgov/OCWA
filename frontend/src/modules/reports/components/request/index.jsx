@@ -127,7 +127,11 @@ function Request({ data }) {
                 <h4>Request Files</h4>
               </header>
               <div className={styles.details}>
-                <Files ids={data.files} fileStatus={data.fileStatus} />
+                <Files
+                  id={data._id}
+                  ids={data.files}
+                  fileStatus={data.fileStatus}
+                />
               </div>
             </React.Fragment>
           )}
@@ -170,6 +174,7 @@ function Request({ data }) {
                             <h6>Export Files</h6>
                           </header>
                           <Files
+                            id={data._id}
                             ids={d.changes.files}
                             fileStatus={data.fileStatus}
                           />
@@ -183,6 +188,7 @@ function Request({ data }) {
                             <h6>Supporting Files</h6>
                           </header>
                           <Files
+                            id={data._id}
                             ids={d.changes.supportingFiles}
                             fileStatus={data.fileStatus}
                           />
@@ -200,7 +206,7 @@ function Request({ data }) {
 }
 
 Request.propTypes = {
-  data: RequestSchema,
+  data: RequestSchema.isRequired,
 };
 
 export default Request;

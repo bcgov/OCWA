@@ -54,7 +54,6 @@ ocwa-frontend:
   repositoryHost: ""
   reportsGroup: "/reports"
 
->>>>>>> Add `REPORTS_GROUP` to the config.
   auth:
     authorizationEndpoint: "openid.auth.endpoint"
     callbackURL: "chart-example.local/auth"
