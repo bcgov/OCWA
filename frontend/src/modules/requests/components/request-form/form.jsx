@@ -43,7 +43,7 @@ function NewRequestForm({ data, exportType, helpURL, history, isCreating, onSubm
                   <TextField autoFocus autoComplete="off" {...fieldProps} />
                   {!error && (
                     <HelperMessage>
-                      It recommended that you use a memorable title for this request.
+                      It is recommended that you use a memorable title for this request.
                     </HelperMessage>
                   )}
                   {error && (
