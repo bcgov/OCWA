@@ -48,7 +48,8 @@ const validateFileRequest = async (req, requestId) => {
     });
     const json = JSON.parse(r);
 
-    // NOTE: The request will only be returned if the user is in the right zone and the request is in the right status
+    // NOTE: The request will only be returned if the user has the 
+    // right role, is in the right zone and the request is in the right status
 
     // For when there are requests for a list of files
     if (has(req, 'query.ids')) {
