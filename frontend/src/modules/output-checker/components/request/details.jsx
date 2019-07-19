@@ -1,24 +1,19 @@
 import * as React from 'react';
-import forIn from 'lodash/forIn';
 import get from 'lodash/get';
 import { RequestSchema } from '@src/modules/requests/types';
 import { requestFields } from '@src/modules/requests/utils';
 import { uid } from 'react-uid';
+import { zone } from '@src/services/config';
 
 import * as styles from './styles.css';
 
 function Details({ data }) {
-  const fields = requestFields.filter(d => {
-    if (d.exportType === 'all') {
-      return true;
-    }
-
-    if (!data.exportType) {
-      return d.exportType !== 'code';
-    }
-
-    return d.exportType === data.exportType;
-  });
+  const exportType = get(data, 'exportType', 'data');
+  const fields = requestFields.filter(
+    d =>
+      (d.exportType === 'all' || d.exportType === exportType) &&
+      (d.zone === 'all' || d.zone === zone)
+  );
   const items = fields.map(d => (
     <div key={uid(d)} className={styles.detailsRow}>
       <h6>{d.name}</h6>

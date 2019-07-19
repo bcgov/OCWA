@@ -14,9 +14,11 @@ const strings = {
     Files: 'Output',
     request: 'export',
     Request: 'Export',
-    Data: 'Aggregated data export (including notes/documentation)',
+    Data: 'Aggregated Data Export (including notes/documentation)',
     download: 'import',
     Download: 'Import',
+    Direction: 'Output',
+    direction: 'direction',
   },
   external: {
     Files: 'Input',
@@ -25,6 +27,8 @@ const strings = {
     Data: 'Other Import (e.g., documentation, code lists)',
     download: 'export',
     Download: 'Export',
+    Direction: 'Input',
+    direction: 'input',
   },
 };
 

@@ -10,13 +10,14 @@ import { _e, getZoneString } from '@src/utils';
 // Form content
 export const formText = {
   data: {
-    title: 'Output Package and/or Output Groups Description',
-    description:
-      'Describe the context for this output package. If appropriate, you may choose to create Output Groups, which are a collection of output components that are batched for the purposes of description.',
+    title: _e('{Direction} Package and/or {Direction} Groups Description'),
+    description: _e(
+      'Describe the context for this {direction} package. If appropriate, you may choose to create {Direction} Groups, which are a collection of {direction} components that are batched for the purposes of description.'
+    ),
   },
   code: {
-    title: 'Output Code Description',
-    description: 'Describe the code for this output.',
+    title: _e('{Direction} Code Description'),
+    description: _e('Describe the code for this {direction}.'),
   },
 };
 

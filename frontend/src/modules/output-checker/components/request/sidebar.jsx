@@ -12,6 +12,7 @@ import LoadingDialog from '@src/components/loading-dialog';
 import startCase from 'lodash/startCase';
 import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
 import { RequestSchema } from '@src/modules/requests/types';
+import { _e } from '@src/utils';
 
 import * as styles from './styles.css';
 
@@ -35,12 +36,9 @@ function Sidebar({
   const [hasViewedMR, setViewed] = React.useState(false);
   const isDisabledActionButton = isCodeExport ? !hasViewedMR : false;
 
-  React.useEffect(
-    () => {
-      setViewed(false);
-    },
-    [data]
-  );
+  React.useEffect(() => {
+    setViewed(false);
+  }, [data]);
 
   return (
     <React.Fragment>
@@ -54,7 +52,7 @@ function Sidebar({
       <aside className={styles.sidebar}>
         <h6>Requester</h6>
         <p id="request-author-text">{data.author}</p>
-        <h6>Export Type</h6>
+        <h6>{_e('{Request} Type')}</h6>
         <div id="request-exportType">
           <ExportTypeIcon exportType={data.exportType} />
           <span id="request-exportTypeText" className={styles.exportTypeText}>
@@ -65,72 +63,70 @@ function Sidebar({
         {data.reviewers.length > 0 && (
           <p id="request-assigned-oc">{assignedUser}</p>
         )}
-        {data.reviewers.length <= 0 &&
-          data.state < 3 && (
+        {data.reviewers.length <= 0 && data.state < 3 && (
+          <Button
+            appearance="link"
+            id="request-sidebar-pickup-button"
+            iconBefore={<AddCircleIcon primaryColor="green" />}
+            isDisabled={isSaving}
+            onClick={() => onPickupRequest(id)}
+          >
+            Assign to Me
+          </Button>
+        )}
+        {data.reviewers.includes(user.id) && data.state === 3 && (
+          <React.Fragment>
+            <h6>Actions</h6>
+            {isCodeExport && (
+              <React.Fragment>
+                <Button
+                  appearance="link"
+                  id="request-sidebar-mergeRequestButton"
+                  iconBefore={<MergeRequestsIcon primaryColor="green" />}
+                  href={isCodeExport && data.mergeRequestLink}
+                  target="_blank"
+                >
+                  {mergeButtonText}
+                </Button>
+                <div className={styles.checkbox}>
+                  <Checkbox
+                    value="viewed"
+                    label="I have viewed the merge request"
+                    onChange={event => setViewed(event.currentTarget.checked)}
+                    name="viewed-mr"
+                  />
+                </div>
+              </React.Fragment>
+            )}
             <Button
               appearance="link"
-              id="request-sidebar-pickup-button"
-              iconBefore={<AddCircleIcon primaryColor="green" />}
-              isDisabled={isSaving}
-              onClick={() => onPickupRequest(id)}
+              id="request-sidebar-approve-button"
+              iconBefore={<CheckCircleIcon primaryColor="green" />}
+              isDisabled={isSaving || isDisabledActionButton}
+              onClick={() => onApproveRequest(id)}
             >
-              Assign to Me
+              Approve Request
             </Button>
-          )}
-        {data.reviewers.includes(user.id) &&
-          data.state === 3 && (
-            <React.Fragment>
-              <h6>Actions</h6>
-              {isCodeExport && (
-                <React.Fragment>
-                  <Button
-                    appearance="link"
-                    id="request-sidebar-mergeRequestButton"
-                    iconBefore={<MergeRequestsIcon primaryColor="green" />}
-                    href={isCodeExport && data.mergeRequestLink}
-                    target="_blank"
-                  >
-                    {mergeButtonText}
-                  </Button>
-                  <div className={styles.checkbox}>
-                    <Checkbox
-                      value="viewed"
-                      label="I have viewed the merge request"
-                      onChange={event => setViewed(event.currentTarget.checked)}
-                      name="viewed-mr"
-                    />
-                  </div>
-                </React.Fragment>
-              )}
-              <Button
-                appearance="link"
-                id="request-sidebar-approve-button"
-                iconBefore={<CheckCircleIcon primaryColor="green" />}
-                isDisabled={isSaving || isDisabledActionButton}
-                onClick={() => onApproveRequest(id)}
-              >
-                Approve Request
-              </Button>
-              <Button
-                appearance="link"
-                id="request-sidebar-approve-button"
-                iconBefore={<SelectClearIcon primaryColor="red" />}
-                isDisabled={isSaving || isDisabledActionButton}
-                onClick={() => onDenyRequest(id)}
-              >
-                Deny Request
-              </Button>
-              <Button
-                appearance="link"
-                id="request-sidebar-request-revisions-button"
-                iconBefore={<FlagFilledIcon primaryColor="orange" />}
-                isDisabled={isSaving}
-                onClick={() => onRequestRevisions(id)}
-              >
-                Request Revisions
-              </Button>
-            </React.Fragment>
-          )}
+            <Button
+              appearance="link"
+              id="request-sidebar-approve-button"
+              iconBefore={<SelectClearIcon primaryColor="red" />}
+              isDisabled={isSaving || isDisabledActionButton}
+              onClick={() => onDenyRequest(id)}
+            >
+              Deny Request
+            </Button>
+            <Button
+              appearance="link"
+              id="request-sidebar-request-revisions-button"
+              iconBefore={<FlagFilledIcon primaryColor="orange" />}
+              isDisabled={isSaving}
+              onClick={() => onRequestRevisions(id)}
+            >
+              Request Revisions
+            </Button>
+          </React.Fragment>
+        )}
       </aside>
     </React.Fragment>
   );

@@ -21,7 +21,7 @@ function NewRequestForm({
 }) {
   const data = location.state || {};
   const exportTypeOptions = [
-    { label: _e('{Data} {Request}'), value: 'data' },
+    { label: _e('{Data}'), value: 'data' },
     { label: _e('Code {Request}'), value: 'code' },
   ];
   const defaultState = data.exportType
