@@ -6,6 +6,7 @@ import { ButtonGroup } from '@atlaskit/button';
 import Changes24Icon from '@atlaskit/icon-object/glyph/changes/24';
 import Downloads from '@src/modules/download/containers/requests';
 import NewRequest from '@src/modules/requests/containers/new-request';
+import NotFound from '@src/components/not-found';
 import RequestForm from '@src/modules/requests/containers/request-form';
 import Requests from '@src/modules/requests/containers/requests-list';
 import RequestTypes from '@src/modules/download/containers/request-types';
@@ -40,7 +41,7 @@ function App({ helpURL, user, zone }) {
               </RequestTypes>
             )}
           />
-          <Route render={() => '404'} />
+          <Route component={NotFound} />
         </Switch>
       </div>
     </React.Fragment>

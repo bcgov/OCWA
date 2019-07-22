@@ -1,0 +1,21 @@
+.container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container > div {
+  max-width: 500px;
+  text-align: center;
+}
+
+.container h2 {
+  margin-top: 10px;
+}
+
+.container p {
+
+}

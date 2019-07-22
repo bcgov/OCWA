@@ -1,0 +1,60 @@
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #DFE1E6;
+}
+
+.header > * {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header small {
+  font-weight: 500;
+  font-size: 0.75em;
+  margin: 0;
+}
+
+.projectsTable {
+  margin: 20px 0 50px;
+}
+
+.filters {
+  padding: 10px 0;
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #DFE1E6;
+}
+
+.dateRange {
+  width: 35%;
+  display: flex;
+  align-items: center;
+}
+
+.dateRange div[role="presentation"] {
+  width: calc(50% - 15px);
+}
+
+.dateRangeDivider {
+  width: 30px;
+  text-align: center;
+}
+
+.empty {
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}

@@ -50,6 +50,8 @@ spec:
               value: "{{ .Values.exporterGroup }}"
             - name: OC_GROUP
               value: "{{ .Values.ocGroup }}"
+            - name: REPORTS_GROUP
+              value: "{{ .Values.reportsGroup }}"
             - name: EXPORTER_MODE
               value: "download"
             - name: CODE_EXPORT_ENABLED

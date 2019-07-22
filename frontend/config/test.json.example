@@ -11,9 +11,11 @@
   "filesApiHost": "localhost:1080",
   "exporterGroup": "/exporter",
   "ocGroup": "/oc",
+  "reportsGroup": "reports",
   "exporterMode": "download",
   "codeExportEnabled": false,
   "repositoryHost": "any code repository regex",
+  "exporterMode": "export",
   "auth": {
     "authorizationEndpoint": "URL_REQUIRED",
     "callbackURL": "http://localhost:8000/auth",

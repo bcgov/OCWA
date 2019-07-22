@@ -4,6 +4,7 @@
   align-items: center;
   border-radius: 3px;
   color: white;
+  font-size: 16px;
 }
 
 .container > div:first-child {
