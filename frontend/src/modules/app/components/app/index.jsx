@@ -49,7 +49,7 @@ class App extends React.Component {
   renderMain = () => {
     const { authFetchStatus, helpURL, isAuthenticated, user, zone } = this.props;
     // TODO: These values should be in config.json
-    const validGroups = [exporterGroup, ocGroup];
+    const validGroups = [exporterGroup, ocGroup, reportsGroup];
     let el = null;
 
     if (isAuthenticated) {
