@@ -28,6 +28,8 @@ spec:
               value: "{{ .Values.port }}"
             - name: HOST
               value: {{ .Values.host }}
+            - name: HELP_URL
+              value: "{{ .Values.helpURL }}"
             - name: FORUM_API_HOST
               value: "{{ .Values.forumApiHost }}"
             - name: FORUM_SOCKET_HOST
@@ -40,8 +42,14 @@ spec:
               value: "{{ .Values.exporterGroup }}"
             - name: OC_GROUP
               value: "{{ .Values.ocGroup }}"
+            - name: REPORTS_GROUP
+              value: "{{ .Values.reportsGroup }}"
             - name: EXPORTER_MODE
               value: "export"
+            - name: CODE_EXPORT_ENABLED
+              value: "{{ .Values.codeExportEnabled }}"
+            - name: REPOSITORY_HOST
+              value: "{{ .Values.repositoryHost }}"
             - name: COOKIE_SECRET
               valueFrom:
                 secretKeyRef:
@@ -65,6 +73,8 @@ spec:
                   key: jwtSecret
             - name: AUTH_ISSUER
               value: {{ .Values.auth.issuer }}
+            - name: AUTH_LOGOUT_URL
+              value: {{ .Values.auth.logoutURL }}
             - name: AUTH_SCOPES
               value: {{ .Values.auth.scope }}
             - name: TOKEN_ENDPOINT

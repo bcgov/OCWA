@@ -1,20 +1,26 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import cx from 'classnames';
+import SectionMessage from '@atlaskit/section-message';
+import ExportTypeIcon from '@src/components/export-type-icon';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
+import CalendarIcon from '@atlaskit/icon/glyph/calendar';
 import Date from '@src/components/date';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { NavLink, Route, Switch } from 'react-router-dom';
+import { NavLink, Redirect, Route, Switch } from 'react-router-dom';
 import merge from 'lodash/merge';
 import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import Spinner from '@atlaskit/spinner';
 import Title from '@src/components/title';
+import { colors } from '@atlaskit/theme';
 
 import InfoIcon from '@atlaskit/icon/glyph/info';
 import CommentIcon from '@atlaskit/icon/glyph/comment';
 
 import Details from './details';
+import RequestType from './request-type';
 import StateLabel from '../state-label';
 import Sidebar from '../../containers/sidebar';
 import { RequestSchema } from '../../types';
@@ -55,33 +61,54 @@ class Request extends React.Component {
       data,
       duplicateFiles,
       isLoaded,
+      isLoading,
       isOutputChecker,
       updatedAt,
       match,
+      zone,
     } = this.props;
     const { isEditing } = this.state;
     const title = data.name || 'Loading...';
+    const isDiscussionEnabled =
+      (data.type === 'export' && zone === 'internal') ||
+      (data.type === 'import' && zone === 'external');
 
     if (!isLoaded && isEmpty(data)) {
       return null;
     }
 
+    const isCodeExport = data.exportType === 'code';
+    const mergeRequestStatusCode = get(data, 'mergeRequestStatus.code');
+    const showMergeRequestError =
+      isCodeExport && mergeRequestStatusCode === 400;
+    const showMergeRequestLoading =
+      isCodeExport && mergeRequestStatusCode < 200;
+
     return (
       <div id="requests-page">
         <Title>{title}</Title>
         <Page>
-          <header className={styles.header}>
+          <header
+            className={cx(styles.header, {
+              [styles.headerWithDiscussion]: isDiscussionEnabled,
+            })}
+          >
             <Grid>
               <GridColumn medium={9}>
                 <h1 id="request-title">
-                  <span>{data.name}</span>
+                  <ExportTypeIcon large exportType={data.exportType} />
+                  <span>{title}</span>
+                </h1>
+                <p id="request-header-details">
+                  <RequestType />
+                  <span>
+                    <CalendarIcon size="small" primaryColor={colors.DN300} />
+                  </span>
+                  {'Updated at '}
+                  <Date value={updatedAt} format="HH:MMa on MMMM Do, YYYY" />
                   {isEditing && (
                     <Lozenge appearance="inprogress">Editing</Lozenge>
                   )}
-                </h1>
-                <p id="request-header-details">
-                  {'Updated at '}
-                  <Date value={updatedAt} format="HH:MMa on MMMM Do, YYYY" />
                 </p>
               </GridColumn>
               <GridColumn medium={3}>
@@ -90,37 +117,59 @@ class Request extends React.Component {
                 </div>
               </GridColumn>
             </Grid>
-            <Grid>
-              <GridColumn>
-                <nav className={styles.tabs}>
-                  <NavLink
-                    exact
-                    activeClassName={styles.tabActive}
-                    className={styles.tab}
-                    id="request-details-tab"
-                    to={match.url}
-                  >
-                    <InfoIcon size="small" />
-                    {' Details'}
-                  </NavLink>
-                  <NavLink
-                    exact
-                    disabled={isEditing}
-                    activeClassName={styles.tabActive}
-                    className={styles.tab}
-                    id="request-discussion-tab"
-                    to={`${match.url}/discussion`}
-                  >
-                    <CommentIcon size="small" />
-                    {' Discussion'}
-                  </NavLink>
-                </nav>
-              </GridColumn>
-            </Grid>
+            {isDiscussionEnabled && (
+              <Grid>
+                <GridColumn>
+                  <nav className={styles.tabs}>
+                    <NavLink
+                      exact
+                      activeClassName={styles.tabActive}
+                      className={styles.tab}
+                      id="request-details-tab"
+                      to={match.url}
+                    >
+                      <InfoIcon size="small" />
+                      {' Details'}
+                    </NavLink>
+                    <NavLink
+                      exact
+                      disabled={isEditing}
+                      activeClassName={styles.tabActive}
+                      className={styles.tab}
+                      id="request-discussion-tab"
+                      to={`${match.url}/discussion`}
+                    >
+                      <CommentIcon size="small" />
+                      {' Discussion'}
+                    </NavLink>
+                  </nav>
+                </GridColumn>
+              </Grid>
+            )}
           </header>
           <div id="request-details" className={styles.main}>
             <Grid>
               <GridColumn medium={9}>
+                {(showMergeRequestLoading || showMergeRequestError) &&
+                  !isEditing && (
+                    <div className={styles.mergeRequestStatus}>
+                      {showMergeRequestLoading && (
+                        <SectionMessage icon={Spinner}>
+                          <strong>Merge Request</strong> is in progress, please
+                          wait before submitting.
+                        </SectionMessage>
+                      )}
+                      {showMergeRequestError && (
+                        <SectionMessage appearance="error">
+                          {get(
+                            data,
+                            'mergeRequestStatus.message',
+                            'There was an error.'
+                          )}
+                        </SectionMessage>
+                      )}
+                    </div>
+                  )}
                 <Switch>
                   <Route
                     exact
@@ -130,21 +179,28 @@ class Request extends React.Component {
                         data={data}
                         duplicateFiles={duplicateFiles}
                         isEditing={isEditing}
+                        isLoaded={isLoaded}
+                        isLoading={isLoading}
                         onSave={this.onSave}
                       />
                     )}
                   />
-                  <Route
-                    exact
-                    path={`${match.url}/discussion`}
-                    render={() =>
-                      data.topic ? (
-                        <Discussion id={data.topic} title={title} />
-                      ) : (
-                        <Spinner />
-                      )
-                    }
-                  />
+                  {!isDiscussionEnabled && (
+                    <Redirect from={`${match.url}/discussion`} to={match.url} />
+                  )}
+                  {isDiscussionEnabled && (
+                    <Route
+                      exact
+                      path={`${match.url}/discussion`}
+                      render={() =>
+                        data.topic ? (
+                          <Discussion id={data.topic} title={title} />
+                        ) : (
+                          <Spinner />
+                        )
+                      }
+                    />
+                  )}
                 </Switch>
               </GridColumn>
               <GridColumn medium={3}>
@@ -169,8 +225,11 @@ Request.propTypes = {
     files: PropTypes.arrayOf(PropTypes.string),
     supportingFiles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+  fetchStatus: PropTypes.oneOf(['loading', 'loaded', 'failed', 'idle'])
+    .isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired,
   location: PropTypes.shape({
     state: PropTypes.shape({
       isEditing: PropTypes.bool,
@@ -183,6 +242,7 @@ Request.propTypes = {
   onFinishEditing: PropTypes.func.isRequired,
   onReset: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
+  zone: PropTypes.string.isRequired,
 };
 
 export default Request;

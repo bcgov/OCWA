@@ -30,8 +30,13 @@ printf "},\n" >> ./config/default.json
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 
 printf "\"ocwaUrl\": \"${OCWA_URL}\",\n" >> ./config/default.json
+printf "\"gitops\": {\n" >> ./config/default.json
+printf "\"enabled\": ${GITOPS_ENABLED},\n" >> ./config/default.json
+printf "\"url\": \"${GITOPS_URL}\",\n" >> ./config/default.json
+printf "\"secret\": \"${GITOPS_SECRET}\"\n" >> ./config/default.json
+printf "},\n" >> ./config/default.json
 printf "\"email\": {\n" >> ./config/default.json
-printf "\"enabled\": \"${EMAIL_ENABLED}\",\n" >> ./config/default.json
+printf "\"enabled\": ${EMAIL_ENABLED},\n" >> ./config/default.json
 printf "\"service\": \"${EMAIL_SERVICE}\",\n" >> ./config/default.json
 printf "\"secure\": ${EMAIL_SECURE},\n" >> ./config/default.json
 printf "\"port\": \"${EMAIL_PORT}\",\n" >> ./config/default.json
@@ -45,6 +50,7 @@ printf "\"autoAccept\": ${AUTO_APPROVE},\n" >> ./config/default.json
 printf "\"requiredRoleToCreateRequest\": \"${CREATE_ROLE}\",\n" >> ./config/default.json
 printf "\"outputCheckerGroup\": \"${OC_GROUP}\",\n" >> ./config/default.json
 printf "\"allowDenyRequest\": ${ALLOW_DENY},\n" >> ./config/default.json
+printf "\"ignoreGroupsFromConsideration\": [${IGNORE_GROUPS}],\n" >> ./config/default.json
 
 printf "\"projectApi\": \"${PROJECT_API}\",\n" >> ./config/default.json
 printf "\"projectApiSecret\": \"${PROJECT_API_KEY}\",\n" >> ./config/default.json

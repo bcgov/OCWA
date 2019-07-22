@@ -22,9 +22,9 @@ const mapStateToProps = (state, props) => {
 export default connect(mapStateToProps, {
   onOpenDownloads: openDownloads,
   onCloseDownloads: closeDownloads,
-  fetchFiles: ({ ids = [] }) =>
+  fetchFiles: ({ id, ids = [] }) =>
     fetchFiles({
-      url: `/api/v1/files?ids=${ids.join(',')}`,
+      url: `/api/v1/files?request_id=${id}&ids=${ids.join(',')}`,
       schema: filesListSchema,
     }),
 })(withRequest(Downloads));

@@ -70,11 +70,6 @@ public class LoginStep extends Step {
 		WebUI.navigateToUrl(url)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 
-		TestObject loginButton = Utils.getTestObjectById(Constant.Login.LOGIN_BTN_ID)
-		WebUI.waitForElementClickable(loginButton, Constant.DEFAULT_TIMEOUT)
-		WebUI.click(loginButton)
-		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
-
 		TestObject kcLoginButton = Utils.getTestObjectById('kc-login')
 		WebUI.setText(Utils.getTestObjectById('username'), username)
 		WebUI.setText(Utils.getTestObjectById('password'), password)
@@ -82,7 +77,7 @@ public class LoginStep extends Step {
 		WebUI.click(kcLoginButton)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 	}
-	
+
 	/**
 	 * Logs a user out of the system with the specified parameters
 	 * @param url String of login page endpoint. Defaults to OCWA_URL global variable.

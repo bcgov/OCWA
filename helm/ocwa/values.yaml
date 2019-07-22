@@ -43,18 +43,24 @@ ocwa-frontend:
   host: "serverHostedOnHere"
 
   cookieSecret: "COOKIE_SECRET_HERE"
+  helpURL: "ocwaHelpURL"
   forumApiHost: "ocwa-forum-api.ocwa"
   forumSocket: "ocwa-forum-api.ocwa:3001"
   requestApiHost: "ocwa-request-api.ocwa"
   filesApiHost: "ocwa-storage-api.ocwa"
   exporterGroup: "/exporter"
   ocGroup: "/oc"
+  codeExportEnabled: false
+  repositoryHost: ""
+  reportsGroup: "/reports"
+
   auth:
     authorizationEndpoint: "openid.auth.endpoint"
     callbackURL: "chart-example.local/auth"
     clientID: "outputchecker"
     clientSecret: "CLIENT_SECRET_HERE"
     issuer: "openid.auth.issuer"
+    logoutURL: "openid.auth.logoutURL"
     scope: "openid offline_access"
     tokenEndpoint: "openid.auth.tokenEndpoint"
     userInfoURL: "openid.userinfo.url"

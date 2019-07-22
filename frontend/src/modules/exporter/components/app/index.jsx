@@ -2,30 +2,46 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@src/components/app-bar';
 import AppBarMenu from '@src/components/app-bar/menu';
+import { ButtonGroup } from '@atlaskit/button';
 import Changes24Icon from '@atlaskit/icon-object/glyph/changes/24';
+import Downloads from '@src/modules/download/containers/requests';
 import NewRequest from '@src/modules/requests/containers/new-request';
+import NotFound from '@src/components/not-found';
 import RequestForm from '@src/modules/requests/containers/request-form';
 import Requests from '@src/modules/requests/containers/requests-list';
+import RequestTypes from '@src/modules/download/containers/request-types';
 import Request from '@src/modules/requests/containers/request';
 import { Switch, Route } from 'react-router-dom';
 import Title from '@src/components/title';
 
+import DownloadsLink from './downloads-link';
 import * as styles from './styles.css';
 
-function App({ user }) {
+function App({ helpURL, user, zone }) {
   return (
     <React.Fragment>
       <Title>Exporter</Title>
-      <AppBar icon={<Changes24Icon />} title="OCWA Exporter Tool">
-        <NewRequest />
-        <AppBarMenu user={user} />
+      <AppBar icon={<Changes24Icon />} title="OCWA">
+        <ButtonGroup>
+          <DownloadsLink zone={zone} />
+          <NewRequest />
+        </ButtonGroup>
+        <AppBarMenu helpURL={helpURL} user={user} />
       </AppBar>
       <div id="app-content" className={styles.container}>
         <Switch>
           <Route exact path="/" component={Requests} />
           <Route path="/requests/:requestId" component={Request} />
           <Route path="/new" component={RequestForm} />
-          <Route render={() => '404'} />
+          <Route
+            path="/downloads"
+            render={props => (
+              <RequestTypes>
+                <Downloads {...props} />
+              </RequestTypes>
+            )}
+          />
+          <Route component={NotFound} />
         </Switch>
       </div>
     </React.Fragment>
@@ -33,9 +49,15 @@ function App({ user }) {
 }
 
 App.propTypes = {
+  helpURL: PropTypes.string,
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,
   }).isRequired,
+  zone: PropTypes.string.isRequired,
+};
+
+App.defaultProps = {
+  helpURL: null,
 };
 
 export default App;

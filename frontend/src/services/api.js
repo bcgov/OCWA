@@ -16,7 +16,8 @@ export const get = async (url, options) => {
 
     return json;
   } catch (err) {
-    throw new Error(err);
+    const { message } = await err.response.json();
+    throw new Error(message);
   }
 };
 
@@ -26,6 +27,7 @@ export const post = async (url, options) => {
     const json = await ky
       .post(url, {
         ...options,
+        timeout: 60000,
         json: options.payload,
         headers: {
           Authorization: `Bearer ${token}`,
@@ -46,6 +48,7 @@ export const put = async (url, options) => {
     const json = await ky
       .put(url, {
         ...options,
+        timeout: 120000,
         json: options.payload,
         headers: {
           Authorization: `Bearer ${token}`,

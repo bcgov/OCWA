@@ -26,12 +26,21 @@ Make sure instead of `Roles` you assign `Groups`, e.g.
 }
 ```
 ### Groups and Modes
-There are 2 default groups a user can belong to; Exporter(/exporter by default)
-or Output Checker (/oc by default). In addition the app has 2 modes it can run in,
-export or download. Note that the `export` value works for both the OC or Exporter
-and can be really any value or nil, but if it is set to `download` it'll open an
-exporter-only download interface.
+There are 3 groups a user can belong to;
 
+##### Exporter (/exporter by default)
+This interface allows a user to create new data or code export requests or download
+files from the SRE, depending on which environment OCWA is running in. In the SRE
+you can download approved import requests and outside of SRE you can download
+approved export requests
+
+##### Output Checker (/oc by default)
+Output Checkers can review requests and approve them or flag the request and
+discuss the reasons why the request has been flagged with the exporter
+
+##### Reports (/reports by default)
+Reports is a simple analytics tool that gathers all _submitted_ requests for purposes
+of analyzing trends like approval time, and can be filtered by project or exporter.
 
 ## Installation
 
@@ -54,11 +63,11 @@ yarn start
 ```
 $ hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
 $ port=8000
-$ docker run -e TOKEN_ENDPOINT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_SCOPES="openid offline_access" -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e EXPORTER_GROUP="/exporter" -e OC_GROUP="/oc" -e EXPORTER_MODE="export" -e FORUM_SOCKET_HOST=$hostip:3001 -e REQUEST_API_HOST=$hostip:3002 -e FILES_API_HOST=$hostip:1080 -e USER_ID_FIELD=email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
+$ docker run -e TOKEN_ENDPOINT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_LOGOUT_URL=<oidc logout url> -e AUTH_SCOPES="openid offline_access" -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e HOST=docker -e HELP_URL=http://help-url.com -e FORUM_API_HOST=$hostip:3000 -e EXPORTER_GROUP="/exporter" -e OC_GROUP="/oc" -e REPORTS_GROUP="/reports" -e EXPORTER_MODE="export" -e FORUM_SOCKET_HOST=$hostip:3001 -e REQUEST_API_HOST=$hostip:3002 -e FILES_API_HOST=$hostip:1080 -e USER_ID_FIELD=email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
 
 Note that if you want to use a test user, ensure the `default.json` config has the following fields:
 
-- `testGroup`: set to either `/exporter` or `/oc`
+- `testGroup`: set to either `/exporter`, `/reports` or `/oc`
 - `testJWT:exporter`: A JWT that matches the above format (make sure the group array includes '/exporter')
 - `testJWT:oc`: A JWT that matches the above format (make sure the group array includes '/oc**)
 
@@ -71,7 +80,7 @@ You will need to `$ docker build .` to build the docker container and the follow
 ``` sh
 hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
 port=8000
-docker run -e TOKEN_ENDPOINT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_SCOPES="openid offline_access" -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e FORUM_SOCKET_HOST=$hostip:3001 -e REQUEST_API_HOST=$hostip:3002 -e FILES_API_HOST=$hostip:1080 -e USER_ID_FIELD=email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
+docker run -e TOKEN_ENDPOINT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_LOGOUT_URL=<oidc logout url> -e AUTH_SCOPES="openid offline_access" -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e EXPORTER_GROUP="/exporter" -e OC_GROUP="/oc" -e REPORTS_GROUP="/reports" -e EXPORTER_MODE="export" -e FORUM_SOCKET_HOST=$hostip:3001 -e REQUEST_API_HOST=$hostip:3002 -e FILES_API_HOST=$hostip:1080 -e USER_ID_FIELD=email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
 ```
 
 ## Testing

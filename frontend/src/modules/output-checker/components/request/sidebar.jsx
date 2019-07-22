@@ -1,18 +1,25 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import AddCircleIcon from '@atlaskit/icon/glyph/add-circle';
+import { Checkbox } from '@atlaskit/checkbox';
+import MergeRequestsIcon from '@atlaskit/icon/glyph/bitbucket/pullrequests';
 import Button from '@atlaskit/button';
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
+import ExportTypeIcon from '@src/components/export-type-icon';
 import FlagFilledIcon from '@atlaskit/icon/glyph/flag-filled';
 import get from 'lodash/get';
+import LoadingDialog from '@src/components/loading-dialog';
+import startCase from 'lodash/startCase';
 import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
 import { RequestSchema } from '@src/modules/requests/types';
+import { _e } from '@src/utils';
 
 import * as styles from './styles.css';
 
 function Sidebar({
   data,
   id,
+  isApprovingRequest,
   isSaving,
   onApproveRequest,
   onDenyRequest,
@@ -21,17 +28,42 @@ function Sidebar({
   user,
 }) {
   const assignedUser = get(data, 'reviewers[0]', '-');
+  const isCodeExport = data.exportType === 'code';
+  const isPreparing = isCodeExport && !data.mergeRequestLink;
+  const mergeButtonText = isPreparing
+    ? 'Preparing Merge Request'
+    : 'View Merge Request';
+  const [hasViewedMR, setViewed] = React.useState(false);
+  const isDisabledActionButton = isCodeExport ? !hasViewedMR : false;
+
+  React.useEffect(() => {
+    setViewed(false);
+  }, [data]);
 
   return (
-    <aside className={styles.sidebar}>
-      <h6>Requester</h6>
-      <p id="request-author-text">{data.author}</p>
-      <h6>Reviewers</h6>
-      {data.reviewers.length > 0 && (
-        <p id="request-assigned-oc">{assignedUser}</p>
+    <React.Fragment>
+      {isCodeExport && (
+        <LoadingDialog
+          open={isSaving && isApprovingRequest}
+          title="Approving Request"
+          text="This can take some time, please wait for the merge request to complete"
+        />
       )}
-      {data.reviewers.length <= 0 &&
-        data.state < 3 && (
+      <aside className={styles.sidebar}>
+        <h6>Requester</h6>
+        <p id="request-author-text">{data.author}</p>
+        <h6>{_e('{Request} Type')}</h6>
+        <div id="request-exportType">
+          <ExportTypeIcon exportType={data.exportType} />
+          <span id="request-exportTypeText" className={styles.exportTypeText}>
+            {startCase(get(data, 'exportType', 'data'))}
+          </span>
+        </div>
+        <h6>Reviewers</h6>
+        {data.reviewers.length > 0 && (
+          <p id="request-assigned-oc">{assignedUser}</p>
+        )}
+        {data.reviewers.length <= 0 && data.state < 3 && (
           <Button
             appearance="link"
             id="request-sidebar-pickup-button"
@@ -42,15 +74,35 @@ function Sidebar({
             Assign to Me
           </Button>
         )}
-      {data.reviewers.includes(user.id) &&
-        data.state === 3 && (
+        {data.reviewers.includes(user.id) && data.state === 3 && (
           <React.Fragment>
             <h6>Actions</h6>
+            {isCodeExport && (
+              <React.Fragment>
+                <Button
+                  appearance="link"
+                  id="request-sidebar-mergeRequestButton"
+                  iconBefore={<MergeRequestsIcon primaryColor="green" />}
+                  href={isCodeExport && data.mergeRequestLink}
+                  target="_blank"
+                >
+                  {mergeButtonText}
+                </Button>
+                <div className={styles.checkbox}>
+                  <Checkbox
+                    value="viewed"
+                    label="I have viewed the merge request"
+                    onChange={event => setViewed(event.currentTarget.checked)}
+                    name="viewed-mr"
+                  />
+                </div>
+              </React.Fragment>
+            )}
             <Button
               appearance="link"
               id="request-sidebar-approve-button"
               iconBefore={<CheckCircleIcon primaryColor="green" />}
-              isDisabled={isSaving}
+              isDisabled={isSaving || isDisabledActionButton}
               onClick={() => onApproveRequest(id)}
             >
               Approve Request
@@ -59,7 +111,7 @@ function Sidebar({
               appearance="link"
               id="request-sidebar-approve-button"
               iconBefore={<SelectClearIcon primaryColor="red" />}
-              isDisabled={isSaving}
+              isDisabled={isSaving || isDisabledActionButton}
               onClick={() => onDenyRequest(id)}
             >
               Deny Request
@@ -75,7 +127,8 @@ function Sidebar({
             </Button>
           </React.Fragment>
         )}
-    </aside>
+      </aside>
+    </React.Fragment>
   );
 }
 
@@ -83,6 +136,7 @@ Sidebar.propTypes = {
   data: RequestSchema.isRequired,
   id: PropTypes.string.isRequired,
   isSaving: PropTypes.bool.isRequired,
+  isApprovingRequest: PropTypes.bool.isRequired,
   onApproveRequest: PropTypes.func.isRequired,
   onDenyRequest: PropTypes.func.isRequired,
   onRequestRevisions: PropTypes.func.isRequired,

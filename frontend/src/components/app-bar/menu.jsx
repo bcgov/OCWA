@@ -1,7 +1,9 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import at from 'lodash/at';
 import Avatar from '@atlaskit/avatar';
 import Dropdown, { DropdownItem } from '@atlaskit/dropdown-menu';
+import isEmpty from 'lodash/isEmpty';
 import aboutButton from '@src/modules/app/containers/about-button';
 
 const AboutDropdownItem = props => (
@@ -9,13 +11,29 @@ const AboutDropdownItem = props => (
 );
 const AboutButton = aboutButton(AboutDropdownItem);
 
-function AppBarMenu({ children, user }) {
+function AppBarMenu({ children, helpURL, user }) {
+  const possibleDisplayNameValues = at(user, [
+    'displayName',
+    'username',
+    'email',
+  ]);
+  const displayName = possibleDisplayNameValues.find(d => !isEmpty(d));
+
   return (
     <Dropdown
       position="bottom right"
-      trigger={<Avatar borderColor="#0052CC" name={user.displayName} />}
+      trigger={<Avatar borderColor="#0052CC" name={displayName || ''} />}
     >
-      <DropdownItem>{`Signed in as ${user.displayName}`}</DropdownItem>
+      {displayName && (
+        <DropdownItem>
+          Signed in as <strong>{displayName}</strong>
+        </DropdownItem>
+      )}
+      {helpURL && (
+        <DropdownItem href={helpURL} target="_blank">
+          View Help Documentation
+        </DropdownItem>
+      )}
       {children}
       <AboutButton />
       <DropdownItem href="/auth/logout">Logout</DropdownItem>
@@ -25,6 +43,7 @@ function AppBarMenu({ children, user }) {
 
 AppBarMenu.propTypes = {
   children: PropTypes.arrayOf(PropTypes.instanceOf(DropdownItem)),
+  helpURL: PropTypes.string,
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,
   }).isRequired,
@@ -32,6 +51,7 @@ AppBarMenu.propTypes = {
 
 AppBarMenu.defaultProps = {
   children: null,
+  helpURL: null,
 };
 
 export default AppBarMenu;

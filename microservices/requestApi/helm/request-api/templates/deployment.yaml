@@ -115,6 +115,8 @@ spec:
               value: {{ .Values.storageBucket }}
             - name: AUTO_APPROVE
               value: "{{ .Values.autoApprove }}"
+            - name: IGNORE_GROUPS
+              value: '{{ .Values.ignoreGroups }}'
             - name: OCWA_URL
               value: "{{ .Values.ocwaUrl }}"
             - name: EMAIL_ENABLED
@@ -134,6 +136,15 @@ spec:
                   key: emailPassword
             - name: EMAIL_FROM
               value: "{{ .Values.emailFrom }}"
+            - name: GITOPS_ENABLED
+              value: "{{ .Values.gitopsEnabled }}"
+            - name: GITOPS_URL
+              value: "{{ .Values.gitopsUrl }}"
+            - name: GITOPS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaRequestApi.fullname" . }}-secrets
+                  key: gitopsSecret
 
           ports:
             - name: http

@@ -1,9 +1,9 @@
-import { put, select, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 import union from 'lodash/union';
 
-import { saveRequest } from './actions';
+import { fetchRequest, saveRequest } from './actions';
 import { requestSchema } from './schemas';
 
 function* onSaveRequest(action) {
@@ -17,8 +17,21 @@ function* onSaveRequest(action) {
   }
 }
 
+function isPendingMergeRequest(request) {
+  const isCodeExport = request.exportType === 'code';
+
+  if (isCodeExport) {
+    const code = get(request, 'mergeRequestStatus.code', 0);
+    const isCurrentRequest = window.location.pathname.includes(request._id);
+    return code < 200 && isCurrentRequest;
+  }
+
+  return isCodeExport;
+}
+
 function* onCreateRequest(action) {
   const id = get(action, 'payload.result.result');
+  const request = get(action.payload, `entities.requests.${id}`, {});
   const duplicateFiles = get(action, 'meta.files', {});
 
   if (id) {
@@ -30,6 +43,33 @@ function* onCreateRequest(action) {
       type: 'request/duplicate/files',
       payload: duplicateFiles,
     });
+
+    if (isPendingMergeRequest(request)) {
+      yield call(delay, 30000);
+      yield put(
+        fetchRequest({
+          url: `/api/v1/requests/${id}`,
+          schema: requestSchema,
+          id,
+        })
+      );
+    }
+  }
+}
+
+function* checkMergeRequestStatus(action) {
+  const { id } = action.meta;
+  const request = get(action.payload, `entities.requests.${id}`, {});
+
+  if (isPendingMergeRequest(request)) {
+    yield call(delay, 30000);
+    yield put(
+      fetchRequest({
+        url: `/api/v1/requests/${id}`,
+        schema: requestSchema,
+        id,
+      })
+    );
   }
 }
 
@@ -60,18 +100,17 @@ function* onFinishEditing(action) {
   };
   const meta = { id };
 
-  if (!isEqual(request, payload)) {
-    yield put(
-      saveRequest(payload, meta, {
-        url: `/api/v1/requests/save/${id}`,
-        schema: { result: requestSchema },
-      })
-    );
-  }
+  yield put(
+    saveRequest(payload, meta, {
+      url: `/api/v1/requests/save/${id}`,
+      schema: { result: requestSchema },
+    })
+  );
 }
 
 export default function* root() {
   yield takeLatest('request/post/success', onCreateRequest);
   yield takeLatest('request/put/success', onSaveRequest);
   yield takeLatest('request/finish-editing', onFinishEditing);
+  yield takeLatest('request/get/success', checkMergeRequestStatus);
 }

@@ -9,7 +9,6 @@ import Form, {
   ErrorMessage,
   Field,
   FormFooter,
-  FormHeader,
   FormSection,
   HelperMessage,
 } from '@atlaskit/form';
@@ -17,24 +16,22 @@ import pick from 'lodash/pick';
 import SectionMessage from '@atlaskit/section-message';
 import { uid } from 'react-uid';
 import { withRouter } from 'react-router-dom';
+import { zone } from '@src/services/config'
+import { getZoneString } from '@src/utils';
 
 import FormField from './field';
-import { requestFields } from '../../utils';
+import { formText, requestFields } from '../../utils';
 import { RequestSchema } from '../../types';
 
-function NewRequestForm({ data, history, isCreating, onSubmit }) {
+function NewRequestForm({ data, exportType, helpURL, history, isCreating, onSubmit }) {
   // Grab the files if there is a duplicate getting passed through
   const duplicateFiles = pick(data, ['files', 'supportingFiles']);
 
   return (
-    <div id="request-form">
+    <div id="request-form" className={`${exportType}-form`}>
       <Form onSubmit={formData => onSubmit(formData, duplicateFiles)}>
         {({ formProps }) => (
           <form {...formProps}>
-            <FormHeader
-              title="Initiate a New Request"
-              description="Please ensure that you also have the following elements, as appropriate, with your output submission: descriptive labeling (ideally alongside each component), information for specific output types, and, log files or annotated steps of analysis."
-            />
             <Field
               isRequired
               name="name"
@@ -47,49 +44,62 @@ function NewRequestForm({ data, history, isCreating, onSubmit }) {
                   <TextField autoFocus autoComplete="off" {...fieldProps} />
                   {!error && (
                     <HelperMessage>
-                      Must be a unique request name.
+                      It is recommended that you use a memorable title for this request.
                     </HelperMessage>
                   )}
                   {error && (
-                    <ErrorMessage>
-                      This user name is already in use, try another one.
-                    </ErrorMessage>
+                     <ErrorMessage>
+                       Invalid request name, please try a different one
+                     </ErrorMessage>
                   )}
                 </React.Fragment>
               )}
             </Field>
             <FormSection
-              title="Output Package and/or Output Groups Description "
-              description="Describe the context for this output package. If appropriate, you may choose to create Output Groups, which are a collection of output components that are batched for the purposes of description."
+              title={get(formText, [exportType, 'title'])}
+              description={get(formText, [exportType, 'description'])}
             >
-              {requestFields.map(d => (
-                <Field
-                  key={uid(d)}
-                  name={d.value}
-                  defaultValue={get(data, d.value, '')}
-                  label={d.name}
-                  isDisabled={isCreating}
-                  isRequired={d.isRequired}
-                >
-                  {({ fieldProps }) => (
-                    <React.Fragment>
-                      <FormField type={d.type} fieldProps={fieldProps} />
-                      <HelperMessage>{d.helperText}</HelperMessage>
-                    </React.Fragment>
-                  )}
-                </Field>
-              ))}
+              {requestFields
+                .filter(
+                  d => (d.exportType === 'all' || d.exportType === exportType) &&
+                     (d.zone === 'all' || d.zone === zone)
+                )
+                .map(d => (
+                  <Field
+                    key={uid(d)}
+                    name={d.value}
+                    defaultValue={get(data, d.value, '')}
+                    label={d.name}
+                    isDisabled={isCreating}
+                    isRequired={d.isRequired}
+                    >
+                    {({ fieldProps }) => (
+                      <React.Fragment>
+                        <FormField type={d.type} fieldProps={fieldProps} />
+                        <HelperMessage>{d.helperText}</HelperMessage>
+                      </React.Fragment>
+                    )}
+                  </Field>
+                ))}
             </FormSection>
+            {helpURL && (
+               <FormSection title="Additional help">
+                 For guidance, please review the{' '}
+                 <a href={helpURL} target="_blank">
+                   available documentation
+                 </a>.
+               </FormSection>
+            )}
             <FormSection>
               <SectionMessage
                 appearance="warning"
                 title="Affirmation of Confidentiality"
               >
                 <p>
-                  By completing this form and submitting the output package for
-                  review, I affirm that the requested outputs are safe for
-                  release and protect the confidentiality of data, to the best
-                  of my knowledge.
+                  {getZoneString({
+                     internal: 'By completing this form and submitting the output package for review, I affirm that the requested outputs have been aggregated such that they are anonymous and do not relate, or cannot be related, to an identifiable individual, business or organization and therefore are safe for release.',
+                     external: 'By completing this form and submitting this information for import, I affirm that the import does not contain any data which could be used to identify an individual person or other Protected Data. I also affirm that there are no legal, contractual or policy restrictions which would limit the use of the information for the Approved Project.'
+                  })}
                 </p>
               </SectionMessage>
             </FormSection>
@@ -126,6 +136,8 @@ function NewRequestForm({ data, history, isCreating, onSubmit }) {
 
 NewRequestForm.propTypes = {
   data: RequestSchema,
+  helpURL: PropTypes.string,
+  exportType: PropTypes.oneOf(['code', 'data']),
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
@@ -135,6 +147,7 @@ NewRequestForm.propTypes = {
 
 NewRequestForm.defaultProps = {
   data: {},
+  helpURL: null,
 };
 
 export default withRouter(NewRequestForm);

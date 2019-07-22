@@ -20,9 +20,9 @@ const mapStateToProps = (state, props) => {
 };
 
 export default connect(mapStateToProps, {
-  initialRequest: ({ ids = [] }) =>
+  initialRequest: ({ ids = [], id }) =>
     fetchFiles({
-      url: `/api/v1/files?ids=${ids.join(',')}`,
+      url: `/api/v1/files?request_id=${id}&ids=${ids.join(',')}`,
       schema: filesListSchema,
     }),
   onRemove: removeFile,

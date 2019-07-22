@@ -5,9 +5,11 @@ import InlineEdit from '@atlaskit/inline-edit';
 import isEmpty from 'lodash/isEmpty';
 import Field from '../request-form/field';
 
-import { phoneNumberRegex } from '../../utils';
+import { gitUrlRegex, phoneNumberRegex, repositoryRegex } from '../../utils';
 
 const phoneNumberValidation = new RegExp(phoneNumberRegex, 'g');
+const gitUrlValidation = new RegExp(gitUrlRegex, 'g');
+const repositoryUrlValidation = new RegExp(repositoryRegex, 'g');
 
 class EditField extends React.PureComponent {
   state = {
@@ -48,6 +50,10 @@ class EditField extends React.PureComponent {
 
     if (data.type === 'tel' && !isInvalid) {
       isInvalid = !phoneNumberValidation.test(value);
+    } else if (data.type === 'repositoryHost' && !isInvalid) {
+      isInvalid = !repositoryUrlValidation.test(value);
+    } else if (data.type === 'git' && !isInvalid) {
+      isInvalid = !gitUrlValidation.test(value);
     }
 
     return isInvalid;
@@ -58,7 +64,9 @@ class EditField extends React.PureComponent {
     const { isInvalid, value } = this.state;
     const readViewElement = (
       <p id={`request-${data.key}-text`}>
-        {value || 'Nothing added. Click to edit'}
+        {data.type === 'url' && <a href={value}>{value}</a>}
+        {data.type !== 'url' && value}
+        {!value && 'Nothing added. Click to edit'}
       </p>
     );
 
@@ -97,7 +105,14 @@ EditField.propTypes = {
   data: PropTypes.shape({
     key: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    type: PropTypes.oneOf(['text', 'textarea', 'tel', 'email']).isRequired,
+    type: PropTypes.oneOf([
+      'text',
+      'tel',
+      'textarea',
+      'url',
+      'git',
+      'repositoryHost',
+    ]).isRequired,
     isRequired: PropTypes.bool,
     value: PropTypes.string.isRequired,
   }).isRequired,

@@ -5,7 +5,12 @@ import Loadable from 'react-loadable';
 import includes from 'lodash/includes';
 import Messages from '@src/modules/data/containers/messages';
 import some from 'lodash/some';
-import { exporterGroup, ocGroup, exporterMode } from '@src/services/config';
+import {
+  exporterGroup,
+  ocGroup,
+  reportsGroup,
+  exporterMode,
+} from '@src/services/config';
 import '@atlaskit/css-reset';
 
 import About from '../../containers/about';
@@ -22,9 +27,9 @@ const OutputChecker = Loadable({
   loader: () => import('../../../output-checker/components/app'),
   loading: () => <Loading text="Initializing Output Checker interface" />,
 });
-const Download = Loadable({
-  loader: () => import('../../../download/components/app'),
-  loading: () => <Loading text="Initializing Exporter Download interface" />,
+const Reports = Loadable({
+  loader: () => import('../../../reports/containers/app'),
+  loading: () => <Loading text="Initializing Reports interface" />,
 });
 
 class App extends React.Component {
@@ -42,30 +47,36 @@ class App extends React.Component {
   }
 
   renderMain = () => {
-    const { authFetchStatus, isAuthenticated, user } = this.props;
+    const { authFetchStatus, helpURL, isAuthenticated, user, zone } = this.props;
     // TODO: These values should be in config.json
-    const validGroups = [exporterGroup, ocGroup];
+    const validGroups = [exporterGroup, ocGroup, reportsGroup];
     let el = null;
 
     if (isAuthenticated) {
       // Using `includes` here incase groups isn't an array depending on the auth env
       const hasExporterRole = includes(user.groups, exporterGroup);
       const hasOcRole = includes(user.groups, ocGroup);
+      const hasReports = includes(user.groups, reportsGroup);
       const hasValidGroupAccess = some(user.groups, g =>
         validGroups.includes(g)
       );
+      const props = {
+        user,
+        helpURL,
+        zone
+      };
 
       if (!hasValidGroupAccess) {
         return <Unauthorized />;
       }
 
       // Load bundle for output checker if that's the only role, otherwise always send exporter
-      if (hasOcRole && !hasExporterRole) {
-        el = <OutputChecker user={user} />;
-      } else if (exporterMode === 'download') {
-        el = <Download user={user} />;
+      if (hasReports) {
+        el = <Reports />;
+      } else if (hasOcRole && !hasExporterRole) {
+        el = <OutputChecker {...props} />;
       } else {
-        el = <Exporter user={user} />;
+        el = <Exporter {...props} />;
       }
     } else if (authFetchStatus === 'loaded') {
       el = <Unauthorized />;
@@ -97,11 +108,17 @@ class App extends React.Component {
 App.propTypes = {
   authFetchStatus: PropTypes.string.isRequired,
   fetchToken: PropTypes.func.isRequired,
+  helpURL: PropTypes.string,
   initSocket: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.shape({
     displayName: PropTypes.string,
   }).isRequired,
+  zone: PropTypes.string.isRequired,
+};
+
+App.defaultProps = {
+  helpURL: null,
 };
 
 export default App;

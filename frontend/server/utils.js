@@ -1,3 +1,4 @@
+const config = require('config');
 const path = require('path');
 
 const pathRewrite = path => path.replace(/\/api\/v1\/\w+/, '');
@@ -33,7 +34,15 @@ const storeUrl = (req, res, done) => {
   done();
 };
 
+const getZone = () => {
+  const exporterMode = config.get('exporterMode');
+  const zone = exporterMode === 'download' ? 'external' : 'internal';
+
+  return zone;
+};
+
 module.exports = {
+  getZone,
   pathRewrite,
   parseApiHost,
   parseWsHost,

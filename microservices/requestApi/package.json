@@ -1,7 +1,7 @@
 {
   "name": "requestApi",
   "author": "Brandon Sharratt",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
@@ -14,7 +14,8 @@
     "express": "^4.16.4",
     "jsonwebtoken": "^8.3.0",
     "minio": "^7.0.1",
-    "mongoose": "^5.3.8",
+    "moment": "^2.24.0",
+    "mongoose": "^5.6.4",
     "morgan": "^1.9.1",
     "ms": "^2.1.1",
     "nodemailer": "^4.7.0",

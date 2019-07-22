@@ -36,7 +36,6 @@ public class Constant {
 	}
 
 	final class Login {
-		static final def LOGIN_BTN_ID = 'app-auth-login-button'
 		static final def LOGOUT_URL = '/auth/logout'
 	}
 

@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import last from 'lodash/last';
 import withRequest from '@src/modules/data/components/data-request';
+import { zone } from '@src/services/config';
 
 import { fetchRequest, finishEditing, reset, saveRequest } from '../actions';
 import Request from '../components/request';
@@ -33,7 +34,12 @@ const mapStateToProps = (state, props) => {
     duplicateFiles: get(state, 'requests.viewState.filesToDuplicate'),
     isOutputChecker: state.app.auth.user.groups.includes('/oc'),
     updatedAt,
-    fetchStatus: get(state, `data.fetchStatus.entities.requests.${requestId}`),
+    fetchStatus: get(
+      state,
+      `data.fetchStatus.entities.requests.${requestId}`,
+      'idle'
+    ),
+    zone
   };
 };
 
