@@ -16,6 +16,8 @@ import pick from 'lodash/pick';
 import SectionMessage from '@atlaskit/section-message';
 import { uid } from 'react-uid';
 import { withRouter } from 'react-router-dom';
+import { zone } from '@src/services/config'
+import { getZoneString } from '@src/utils';
 
 import FormField from './field';
 import { formText, requestFields } from '../../utils';
@@ -42,13 +44,13 @@ function NewRequestForm({ data, exportType, helpURL, history, isCreating, onSubm
                   <TextField autoFocus autoComplete="off" {...fieldProps} />
                   {!error && (
                     <HelperMessage>
-                      Must be a unique request name.
+                      It is recommended that you use a memorable title for this request.
                     </HelperMessage>
                   )}
                   {error && (
-                    <ErrorMessage>
-                      This user name is already in use, try another one.
-                    </ErrorMessage>
+                     <ErrorMessage>
+                       Invalid request name, please try a different one
+                     </ErrorMessage>
                   )}
                 </React.Fragment>
               )}
@@ -59,7 +61,8 @@ function NewRequestForm({ data, exportType, helpURL, history, isCreating, onSubm
             >
               {requestFields
                 .filter(
-                  d => d.exportType === 'all' || d.exportType === exportType
+                  d => (d.exportType === 'all' || d.exportType === exportType) &&
+                     (d.zone === 'all' || d.zone === zone)
                 )
                 .map(d => (
                   <Field
@@ -69,7 +72,7 @@ function NewRequestForm({ data, exportType, helpURL, history, isCreating, onSubm
                     label={d.name}
                     isDisabled={isCreating}
                     isRequired={d.isRequired}
-                  >
+                    >
                     {({ fieldProps }) => (
                       <React.Fragment>
                         <FormField type={d.type} fieldProps={fieldProps} />
@@ -80,12 +83,12 @@ function NewRequestForm({ data, exportType, helpURL, history, isCreating, onSubm
                 ))}
             </FormSection>
             {helpURL && (
-              <FormSection title="Additional help">
-                For guidance, please review the{' '}
-                <a href={helpURL} target="_blank">
-                  available documentation
-                </a>.
-              </FormSection>
+               <FormSection title="Additional help">
+                 For guidance, please review the{' '}
+                 <a href={helpURL} target="_blank">
+                   available documentation
+                 </a>.
+               </FormSection>
             )}
             <FormSection>
               <SectionMessage
@@ -93,10 +96,10 @@ function NewRequestForm({ data, exportType, helpURL, history, isCreating, onSubm
                 title="Affirmation of Confidentiality"
               >
                 <p>
-                  By completing this form and submitting the output package for
-                  review, I affirm that the requested outputs are safe for
-                  release and protect the confidentiality of data, to the best
-                  of my knowledge.
+                  {getZoneString({
+                     internal: 'By completing this form and submitting the output package for review, I affirm that the requested outputs have been aggregated such that they are anonymous and do not relate, or cannot be related, to an identifiable individual, business or organization and therefore are safe for release.',
+                     external: 'By completing this form and submitting this information for import, I affirm that the import does not contain any data which could be used to identify an individual person or other Protected Data. I also affirm that there are no legal, contractual or policy restrictions which would limit the use of the information for the Approved Project.'
+                  })}
                 </p>
               </SectionMessage>
             </FormSection>

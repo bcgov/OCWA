@@ -10,13 +10,14 @@ import { _e, getZoneString } from '@src/utils';
 // Form content
 export const formText = {
   data: {
-    title: 'Output Package and/or Output Groups Description',
-    description:
-      'Describe the context for this output package. If appropriate, you may choose to create Output Groups, which are a collection of output components that are batched for the purposes of description.',
+    title: _e('{Direction} Package and/or {Direction} Groups Description'),
+    description: _e(
+      'Describe the context for this {direction} package. If appropriate, you may choose to create {Direction} Groups, which are a collection of {direction} components that are batched for the purposes of description.'
+    ),
   },
   code: {
-    title: 'Output Code Description',
-    description: 'Describe the code for this output.',
+    title: _e('{Direction} Code Description'),
+    description: _e('Describe the code for this {direction}.'),
   },
 };
 
@@ -28,8 +29,18 @@ export const requestFields = [
     type: 'tel',
     isRequired: true,
     exportType: 'all',
+    zone: 'all',
     helperText:
-      'Provide a phone number formatted xxx-xxx-xxxx to allow for quicker and more efficient contact if needed',
+      'Provide a phone number formatted xxx-xxx-xxxx to allow for quicker and more efficient contact if needed.',
+  },
+  {
+    name: 'General comments about the import',
+    value: 'purpose',
+    isRequired: true,
+    type: 'textarea',
+    exportType: 'data',
+    zone: 'external',
+    helperText: 'Describe any details about the import you wish',
   },
   {
     name: 'Variable Descriptions',
@@ -37,6 +48,7 @@ export const requestFields = [
     isRequired: true,
     type: 'textarea',
     exportType: 'data',
+    zone: 'internal',
     helperText:
       'Provide the variable/field names of the original and self-constructed variables. For original variables please use the name from the metadata.',
   },
@@ -46,14 +58,16 @@ export const requestFields = [
     isRequired: true,
     type: 'textarea',
     exportType: 'data',
+    zone: 'internal',
     helperText:
-      ' In the case of sub-samples and sub-populations, the selection criteria and size of the sub-samples',
+      ' In the case of sub-samples and sub-populations, the selection criteria and size of the sub-samples.',
   },
   {
     name: 'Relationship to previous or future (planned) outputs',
     value: 'selectionCriteria',
     type: 'textarea',
     exportType: 'data',
+    zone: 'internal',
     helperText:
       'Describe any relationship to previous outputs. For example, a small adaptation of a previous output, pulled from the same or similar data, poses a risk of disclosure by differencing. This is especially for previously submitted tables within the same project, but could be, for example, other similar studies or projects based on the same sample of the population.',
   },
@@ -62,49 +76,54 @@ export const requestFields = [
     value: 'confidentiality',
     type: 'textarea',
     exportType: 'data',
+    zone: 'internal',
     helperText:
-      "Confidentiality disclosure to describe how it's upheld when criteria isn't met --> If you are submitting outputs which do not meet the rules of thumb, provide an explanation why the output entails no disclosure",
+      "Confidentiality disclosure to describe how it's upheld when criteria isn't met --> If you are submitting outputs which do not meet the rules of thumb, provide an explanation why the output entails no disclosure.",
   },
   {
     name: 'General comments about the code',
     value: 'codeDescription',
     type: 'textarea',
     exportType: 'code',
+    zone: 'all',
     isRequired: true,
     helperText: _e(
-      'Describe any details about the code you wish to {request} here'
+      'Describe any details about the code you wish to {request} here.'
     ),
   },
   {
     name: getZoneString({
-      internal: 'Repository of code to export',
+      internal: 'Internal repository of code to export',
       external: 'Internal repository to send approved results',
     }),
     value: 'repository',
     type: 'repositoryHost',
     exportType: 'code',
+    zone: 'all',
     isRequired: true,
-    helperText: 'Write out the full URL of the repository',
+    helperText: `Full URL of the repository${repositoryHost &&
+      `. Must contain ${repositoryHost}`}`,
   },
   {
     name: _e('Branch of code to {request}'),
     value: 'branch',
     type: 'text',
     exportType: 'code',
+    zone: 'all',
     isRequired: true,
-    helperText:
-      'Write out the branch name in the repository the Output Checker should review',
+    helperText: 'Branch name of the external repository.',
   },
   {
     name: getZoneString({
-      internal: 'Repository of code to import',
-      external: 'External repository to send approved results',
+      internal: 'External repository to send approved results',
+      external: 'External repository of code to import',
     }),
     value: 'externalRepository',
     type: 'git',
     exportType: 'code',
+    zone: 'all',
     isRequired: true,
-    helperText: 'Write out the full URL of the external repository',
+    helperText: 'Full URL of the external repository.',
   },
 ];
 
@@ -112,9 +131,9 @@ export const requestFields = [
 // a RegExp if using anywhere else
 export const phoneNumberRegex = '[0-9]{3}-?[0-9]{3}-?[0-9]{4}$';
 export const gitUrlRegex =
-  '((git|ssh|http(s)?)|(git@[w.]+))(:(//)?)([w.@:/-~]+)(.git)(/)?';
+  '((git|ssh|http(s)?)|(git@[w.]+))(:(//)?)([a-z-.@:/-~]+)(.git)?';
 export const repositoryRegex = repositoryHost
-  ? `${repositoryHost}([w.@:/-~]+)(.git)(/)?`
+  ? `${repositoryHost}([a-z-.@:/-~]+)(.git)?`
   : gitUrlRegex;
 
 export const getRequestStateColor = (value = 0) => {
