@@ -31,6 +31,7 @@ const forumSocket = config.get('forumSocket');
 const idField = config.get('user.idField');
 const exporterGroup = config.get('exporterGroup');
 const ocGroup = config.get('ocGroup');
+const reportsGroup = config.get('reportsGroup');
 const exporterMode = config.get('exporterMode');
 const codeExportEnabled = config.get('codeExportEnabled');
 const repositoryHost = config.get('repositoryHost');
@@ -106,6 +107,7 @@ app.get('*', checkAuth, storeUrl, (req, res) => {
     idField,
     exporterGroup,
     ocGroup,
+    reportsGroup,
     exporterMode,
     repositoryHost,
     zone: getZone(),

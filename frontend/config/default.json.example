@@ -11,6 +11,7 @@
   "filesApiHost": "localhost:1080",
   "exporterGroup": "/exporter",
   "ocGroup": "/oc",
+  "reportsGroup": "/reports",
   "exporterMode": "download",
   "codeExportEnabled": false,
   "repositoryHost": "any code repository regex",

@@ -182,10 +182,42 @@ export const duplicateRequest = data => {
   return cleaner({ ...data, name: `${data.name} Duplicate` });
 };
 
+export const getRequestStateText = (value = 0) => {
+  let name = '';
+  switch (value) {
+    case 0:
+      name = 'Draft';
+      break;
+    case 1:
+      name = 'Work in Progress';
+      break;
+    case 2:
+      name = 'Awaiting Review';
+      break;
+    case 3:
+      name = 'In Review';
+      break;
+    case 4:
+      name = 'Approved';
+      break;
+    case 5:
+      name = 'Errors, needs revision';
+      break;
+    case 6:
+      name = 'Cancelled';
+      break;
+    default:
+      name = 'No state';
+      break;
+  }
+  return name;
+};
+
 export default {
   duplicateRequest,
   formText,
   getRequestStateColor,
+  getRequestStateText,
   requestFields,
   phoneNumberRegex,
   repositoryRegex,

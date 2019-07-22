@@ -11,6 +11,7 @@ printf "\"requestApiHost\": \"${REQUEST_API_HOST}\",\n" >> ./config/default.json
 printf "\"filesApiHost\": \"${FILES_API_HOST}\",\n" >> ./config/default.json
 printf "\"exporterGroup\": \"${EXPORTER_GROUP}\",\n" >> ./config/default.json
 printf "\"ocGroup\": \"${OC_GROUP}\",\n" >> ./config/default.json
+printf "\"reportsGroup\": \"${REPORTS_GROUP}\",\n" >> ./config/default.json
 printf "\"exporterMode\": \"${EXPORTER_MODE}\",\n" >> ./config/default.json
 printf "\"codeExportEnabled\": \"${CODE_EXPORT_ENABLED}\",\n" >> ./config/default.json
 printf "\"repositoryHost\": \"${REPOSITORY_HOST}\",\n" >> ./config/default.json
