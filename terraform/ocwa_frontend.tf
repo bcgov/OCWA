@@ -49,7 +49,7 @@ resource "docker_container" "ocwa_download_frontend" {
       "NODE_TLS_REJECT_UNAUTHORIZED=0",
       "EXPORTER_GROUP=/exporter",
       "OC_GROUP=/oc",
-      "REPORTS_GROUP=/reporter",
+      "REPORTS_GROUP=/reports",
       "EXPORTER_MODE=download",
       "CODE_EXPORT_ENABLED=true"
   ]
@@ -97,7 +97,7 @@ resource "docker_container" "ocwa_frontend" {
       "NODE_TLS_REJECT_UNAUTHORIZED=0",
       "EXPORTER_GROUP=/exporter",
       "OC_GROUP=/oc",
-      "REPORTS_GROUP=/reporter",
+      "REPORTS_GROUP=/reports",
       "EXPORTER_MODE=export",
       "CODE_EXPORT_ENABLED=true"
   ]
