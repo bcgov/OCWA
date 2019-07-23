@@ -52,7 +52,7 @@ function Sidebar({
       <aside className={styles.sidebar}>
         <h6>Requester</h6>
         <p id="request-author-text">{data.author}</p>
-        <h6>{_e('{Request} Type')}</h6>
+        <h6>{_e('{Request} Type', data.type)}</h6>
         <div id="request-exportType">
           <ExportTypeIcon exportType={data.exportType} />
           <span id="request-exportTypeText" className={styles.exportTypeText}>
@@ -142,6 +142,7 @@ Sidebar.propTypes = {
   onRequestRevisions: PropTypes.func.isRequired,
   onPickupRequest: PropTypes.func.isRequired,
   user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
   }).isRequired,
 };

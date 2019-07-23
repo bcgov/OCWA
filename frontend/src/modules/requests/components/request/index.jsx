@@ -41,7 +41,8 @@ class Request extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.onReset();
+    const { onReset } = this.props;
+    onReset();
   }
 
   onEdit = () => {
@@ -100,7 +101,7 @@ class Request extends React.Component {
                   <span>{title}</span>
                 </h1>
                 <p id="request-header-details">
-                  <RequestType />
+                  <RequestType type={data.type} />
                   <span>
                     <CalendarIcon size="small" primaryColor={colors.DN300} />
                   </span>
@@ -164,7 +165,7 @@ class Request extends React.Component {
                           {get(
                             data,
                             'mergeRequestStatus.message',
-                            'There was an error.'
+                            'There was an error.',
                           )}
                         </SectionMessage>
                       )}
@@ -225,8 +226,6 @@ Request.propTypes = {
     files: PropTypes.arrayOf(PropTypes.string),
     supportingFiles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
-  fetchStatus: PropTypes.oneOf(['loading', 'loaded', 'failed', 'idle'])
-    .isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
