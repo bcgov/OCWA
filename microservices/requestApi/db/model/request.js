@@ -250,7 +250,7 @@ model.getAll = function(query, limit, page, user, callback){
 
     var zoneRestrict;
 
-    if (user.outputchecker) {
+    if (user.outputchecker || user.supervisor) {
         if (user.zone === user.INTERNAL_ZONE){
             zoneRestrict = {
                 $match: {
@@ -261,7 +261,7 @@ model.getAll = function(query, limit, page, user, callback){
                 }
             }
         } else {
-            // Return no records - Outputchecker should not be using external zone
+            // Return no records - Outputchecker or Supervisor should not be using external zone
             zoneRestrict = {
                 $match: {
                     $and: [

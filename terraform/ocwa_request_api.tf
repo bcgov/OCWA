@@ -28,6 +28,7 @@ resource "docker_container" "ocwa_request_api" {
       "GROUP_FIELD=groups",
       "CREATE_ROLE=/exporter",
       "OC_GROUP=/oc",
+      "REPORTS_GROUP=/reports",
       "ALLOW_DENY=true",
       "AUTO_APPROVE=false",
       "IGNORE_GROUPS=\"/researchers\"",
