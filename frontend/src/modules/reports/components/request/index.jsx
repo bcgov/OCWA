@@ -1,4 +1,5 @@
 import * as React from 'react';
+import CalendarIcon from '@atlaskit/icon/glyph/calendar';
 import DateTime from '@src/components/date';
 import ExportTypeIcon from '@src/components/export-type-icon';
 import Files from '@src/modules/files/containers/files';
@@ -8,8 +9,10 @@ import RequestIcon from '@src/modules/requests/components/request-icon';
 import StateLabel from '@src/modules/requests/components/state-label';
 import { uid } from 'react-uid';
 import { getRequestStateColor } from '@src/modules/requests/utils';
+import RequestType from '@src/modules/requests/components/request/request-type';
 import { _e } from '@src/utils';
 import { RequestSchema } from '@src/modules/requests/types';
+import { colors } from '@atlaskit/theme';
 
 import * as styles from './styles.css';
 
@@ -54,8 +57,9 @@ function Request({ data }) {
               </span>
               <StateLabel value={data.state} />
             </h2>
-            <p>
-              {_e('{Request} request by ')}
+            <p id="request-header-details" className={styles.headerDetailsText}>
+              <RequestType type={data.type} />
+              <span>by</span>
               <strong>{data.author}</strong>
             </p>
           </header>

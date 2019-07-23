@@ -55,6 +55,9 @@ class Request extends React.Component {
     const { data, onSave } = this.props;
 
     onSave(merge({}, data, updatedData), { id: data._id });
+    this.setState({
+      isEditing: false,
+    });
   };
 
   render() {

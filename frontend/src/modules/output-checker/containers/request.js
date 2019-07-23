@@ -11,7 +11,7 @@ const mapStateToProps = (state, props) => {
   const { requestId } = props.match.params;
   const data = get(state, `data.entities.requests.${requestId}`, {});
   const chronology = get(data, 'chronology', []);
-  const lastSubmission = findLast(chronology, d => d.enteredState === 3);
+  const lastSubmission = findLast(chronology, d => d.enteredState === 2);
   const submittedAt = lastSubmission && lastSubmission.timestamp;
 
   return {

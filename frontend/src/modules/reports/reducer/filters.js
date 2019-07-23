@@ -1,10 +1,11 @@
+import addDays from 'date-fns/add_days';
 import addMonths from 'date-fns/add_months';
 
 const initialState = {
   sortKey: 'lastEditDate',
   sortOrder: 'DESC',
   startDate: addMonths(new Date(), -4),
-  endDate: new Date(),
+  endDate: addDays(new Date(), 1),
   requestState: 'all',
   requestIds: [],
   requester: null,
