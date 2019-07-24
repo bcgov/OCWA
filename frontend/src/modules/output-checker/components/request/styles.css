@@ -8,6 +8,10 @@
   padding: 20px;
 }
 
+.requestDetailsText > span {
+  margin: 10px;
+}
+
 .nav {
   width: 370px;
   display: flex;
@@ -101,7 +105,7 @@
   width: 300px;
   padding: 20px;
   position: fixed;
-  top: 198px;
+  top: 230px;
   right: 0;
   box-sizing: border-box;
 }

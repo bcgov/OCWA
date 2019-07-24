@@ -9,17 +9,21 @@ import * as styles from './styles.css';
 
 function Details({ data }) {
   const exportType = get(data, 'exportType', 'data');
-  const fields = requestFields.filter(
+  const fields = requestFields(data.type).filter(
     d =>
       (d.exportType === 'all' || d.exportType === exportType) &&
-      (d.zone === 'all' || d.zone === zone)
+      (d.zone === 'all' || d.zone === zone),
   );
   const items = fields.map(d => (
     <div key={uid(d)} className={styles.detailsRow}>
       <h6>{d.name}</h6>
       <p id={`request-details-${d.value}-text`}>
         {d.type === 'url' && (
-          <a href={get(data, d.value)} target="_blank">
+          <a
+            href={get(data, d.value)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {get(data, d.value)}
           </a>
         )}

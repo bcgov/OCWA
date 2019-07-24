@@ -12,7 +12,7 @@ export const formText = {
   data: {
     title: _e('{Direction} Package and/or {Direction} Groups Description'),
     description: _e(
-      'Describe the context for this {direction} package. If appropriate, you may choose to create {Direction} Groups, which are a collection of {direction} components that are batched for the purposes of description.'
+      'Describe the context for this {direction} package. If appropriate, you may choose to create {Direction} Groups, which are a collection of {direction} components that are batched for the purposes of description.',
     ),
   },
   code: {
@@ -22,7 +22,7 @@ export const formText = {
 };
 
 // Request fields. Useful for forms/edit
-export const requestFields = [
+export const requestFields = type => [
   {
     name: 'Contact Phone Number',
     value: 'phoneNumber',
@@ -88,14 +88,18 @@ export const requestFields = [
     zone: 'all',
     isRequired: true,
     helperText: _e(
-      'Describe any details about the code you wish to {request} here.'
+      'Describe any details about the code you wish to {request} here.',
+      type,
     ),
   },
   {
-    name: getZoneString({
-      internal: 'Internal repository of code to export',
-      external: 'Internal repository to send approved results',
-    }),
+    name: getZoneString(
+      {
+        internal: 'Internal repository of code to export',
+        external: 'Internal repository to send approved results',
+      },
+      type,
+    ),
     value: 'repository',
     type: 'repositoryHost',
     exportType: 'code',
@@ -105,7 +109,7 @@ export const requestFields = [
       `. Must contain ${repositoryHost}`}`,
   },
   {
-    name: _e('Branch of code to {request}'),
+    name: _e('Branch of code to {request}', type),
     value: 'branch',
     type: 'text',
     exportType: 'code',
@@ -114,10 +118,13 @@ export const requestFields = [
     helperText: 'Branch name of the external repository.',
   },
   {
-    name: getZoneString({
-      internal: 'External repository to send approved results',
-      external: 'External repository of code to import',
-    }),
+    name: getZoneString(
+      {
+        internal: 'External repository to send approved results',
+        external: 'External repository of code to import',
+      },
+      type,
+    ),
     value: 'externalRepository',
     type: 'git',
     exportType: 'code',
@@ -158,7 +165,7 @@ export const getRequestStateColor = (value = 0) => {
 
 // Tidy up a request for duplication
 export const duplicateRequest = data => {
-  const formConfigKeys = requestFields
+  const formConfigKeys = requestFields()
     .filter(d => {
       if (d.exportType === 'all') {
         return true;

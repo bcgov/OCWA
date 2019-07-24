@@ -59,7 +59,7 @@ function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
         {
           content: (
             <div className={styles.actionsColumn}>
-              <Downloads request={d} />
+              {d.exportType !== 'code' && <Downloads request={d} />}
             </div>
           ),
         },
@@ -78,7 +78,7 @@ function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
             <h1>{`Approved ${startCase(zone)} Requests`}</h1>
             <p>
               {_e(
-                'The {download} requests listed below are available for download.'
+                'The {download} requests listed below are available for download.',
               )}
             </p>
           </header>

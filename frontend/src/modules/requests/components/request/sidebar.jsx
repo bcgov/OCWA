@@ -20,16 +20,6 @@ import { duplicateRequest } from '../../utils';
 import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
-const omitProps = [
-  '_id',
-  'state',
-  'reviewers',
-  'author',
-  'chronology',
-  'fileStatus',
-  'topic',
-];
-
 function RequestSidebar({
   data,
   isEditing,
@@ -53,7 +43,7 @@ function RequestSidebar({
   // };
   const withdrawHandler = () => {
     const c = confirm(
-      'Editing a submitted request automatically withdraws it. Do you still wish to proceed?'
+      'Editing a submitted request automatically withdraws it. Do you still wish to proceed?',
     );
 
     if (c) {
@@ -70,7 +60,7 @@ function RequestSidebar({
       const mergeRequestStatusCode = get(
         data,
         'mergeRequestStatus.code',
-        invalidCode
+        invalidCode,
       );
       isInvalid = !inRange(mergeRequestStatusCode, invalidCode, failedCode);
     }
@@ -83,7 +73,7 @@ function RequestSidebar({
     <aside id="request-sidebar">
       <h6>Requester</h6>
       <div id="request-author">{data.author}</div>
-      <h6>{_e('{Request} Type')}</h6>
+      <h6>{_e('{Request} Type', data.type)}</h6>
       <div id="request-exportType">
         <ExportTypeIcon exportType={data.exportType} />
         <span id="request-exportTypeText" className={styles.exportTypeText}>

@@ -26,11 +26,11 @@ function RequestDetails({
   const files = get(data, 'files', []);
   const exportType = get(data, 'exportType', 'data');
   const supportingFiles = get(data, 'supportingFiles', []);
-  const requestDetails = requestFields
+  const requestDetails = requestFields(data.type)
     .filter(
       d =>
         (d.exportType === 'all' || d.exportType === exportType) &&
-        (d.zone === 'all' || d.zone === zone)
+        (d.zone === 'all' || d.zone === zone),
     )
     .map(d => ({
       name: d.name,
@@ -73,7 +73,7 @@ function RequestDetails({
         <React.Fragment>
           <div id="request-export-files" className={styles.section}>
             <div className={styles.sectionHeader}>
-              {_e('{Files} Files')}
+              {_e('{Files} Files', data.type)}
               {isEditing && ' (Drop files here to upload)'}
             </div>
             <div className={styles.sectionContent}>

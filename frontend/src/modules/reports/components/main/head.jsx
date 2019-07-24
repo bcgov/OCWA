@@ -8,6 +8,11 @@ export default {
       isSortable: true,
     },
     {
+      key: 'type',
+      content: 'Type',
+      isSortable: true,
+    },
+    {
       key: 'firstSubmittedDate',
       content: 'First Submission Date',
       isSortable: true,
