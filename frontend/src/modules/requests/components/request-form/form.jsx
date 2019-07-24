@@ -91,15 +91,12 @@ function NewRequestForm({
                   </Field>
                 ))}
             </FormSection>
-            {helpURL && (
-              <FormSection title="Additional help">
-                For guidance, please review the{' '}
-                <a href={helpURL} target="_blank" rel="noopener noreferrer">
-                  available documentation
-                </a>
-                .
-              </FormSection>
-            )}
+            <FormSection title="Additional help">
+              <p>
+                For guidance, please review the documentation in your project
+                folder.
+              </p>
+            </FormSection>
             <FormSection>
               <SectionMessage
                 appearance="warning"

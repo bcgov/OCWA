@@ -16,7 +16,12 @@ import SignInIcon from '@atlaskit/icon/glyph/sign-in';
 import SignOutIcon from '@atlaskit/icon/glyph/sign-out';
 import TrashIcon from '@atlaskit/icon/glyph/trash';
 
-import { duplicateRequest } from '../../utils';
+import {
+  duplicateRequest,
+  validCode,
+  invalidCode,
+  failedCode,
+} from '../../utils';
 import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
@@ -50,18 +55,27 @@ function RequestSidebar({
       onWithdraw(data._id);
     }
   };
+  const mergeRequestStatusCode = get(
+    data,
+    'mergeRequestStatus.code',
+    invalidCode,
+  );
+  const validateEditButton = () => {
+    if (
+      !isEditing &&
+      (data.exportType === 'code' && mergeRequestStatusCode < validCode)
+    ) {
+      return true;
+    }
+
+    return isSaving;
+  };
+
   const validate = () => {
     let isInvalid = isEditing || isSaving || data.state < 1;
     if (data.exportType === 'data') {
       isInvalid = data.files.length <= 0;
     } else if (data.exportType === 'code') {
-      const invalidCode = 100;
-      const failedCode = 400;
-      const mergeRequestStatusCode = get(
-        data,
-        'mergeRequestStatus.code',
-        invalidCode,
-      );
       isInvalid = !inRange(mergeRequestStatusCode, invalidCode, failedCode);
     }
 
@@ -134,7 +148,7 @@ function RequestSidebar({
               appearance="link"
               id="request-sidebar-edit-button"
               iconBefore={<EditFilledIcon />}
-              isDisabled={isSaving}
+              isDisabled={validateEditButton()}
               onClick={() => onEdit(data._id)}
             >
               {isEditing ? 'Done Editing' : 'Edit Request'}

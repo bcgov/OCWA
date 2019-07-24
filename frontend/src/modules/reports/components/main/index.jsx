@@ -46,7 +46,7 @@ function ReportsMain({
                 Dashboard
                 <small>{`Filtering from ${format(
                   startDate,
-                  titleDateFormat
+                  titleDateFormat,
                 )} to ${format(endDate, titleDateFormat)}`}</small>
               </h2>
             </header>
@@ -83,7 +83,7 @@ function ReportsMain({
         </Grid>
         <Grid layout="fluid">
           <GridColumn medium={12}>
-            <div id="reports-list-table">
+            <div id="reports-list-table" className={styles.table}>
               <DynamicTableStateless
                 emptyView={<Empty />}
                 head={head}
@@ -95,12 +95,6 @@ function ReportsMain({
                 onSort={sortProps => onSort(sortProps)}
               />
             </div>
-            <footer>
-              <small>
-                * Date an output checker either approved or requested revisions
-                for a request.
-              </small>
-            </footer>
           </GridColumn>
         </Grid>
       </Page>
@@ -121,7 +115,7 @@ ReportsMain.propTypes = {
       id: PropTypes.string,
       name: PropTypes.string,
       totalRequests: PropTypes.number,
-    })
+    }),
   ).isRequired,
   onRequestStateChange: PropTypes.func.isRequired,
   onSort: PropTypes.func.isRequired,

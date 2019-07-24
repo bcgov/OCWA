@@ -2,6 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import AttachmentIcon from '@atlaskit/icon/glyph/attachment';
 import Button, { ButtonGroup } from '@atlaskit/button';
+import CodeIcon from '@atlaskit/icon/glyph/code';
 import { Link } from 'react-router-dom';
 import Date from '@src/components/date';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
@@ -116,10 +117,13 @@ function RequestsList({
         {
           content: (
             <div className={styles.actionsColumn}>
-              <div>
-                <AttachmentIcon size="small" />
-                {` ${get(d, 'files.length', 0)}`}
-              </div>
+              {d.exportType === 'code' && <CodeIcon />}
+              {d.exportType !== 'code' && (
+                <div>
+                  <AttachmentIcon size="small" />
+                  {` ${get(d, 'files.length', 0)}`}
+                </div>
+              )}
               <RequestMenu data={d} />
             </div>
           ),
@@ -207,7 +211,7 @@ function RequestsList({
       </header>
       <Grid>
         <GridColumn medium={12}>
-          <div id="requests-list-table">
+          <div id="requests-list-table" className={styles.table}>
             <DynamicTableStateless
               emptyView={renderEmpty()}
               head={header}
@@ -219,7 +223,7 @@ function RequestsList({
             />
             {isPaginationVisible && (
               <Pagination
-                fetch={fetchRequests}
+                onClick={fetchRequests}
                 isLastPage={data.length < limit * page}
                 page={page}
               />
@@ -237,7 +241,7 @@ RequestsList.propTypes = {
       _id: PropTypes.string,
       name: PropTypes.string,
       state: PropTypes.number,
-    })
+    }),
   ),
   fetchRequests: PropTypes.func.isRequired,
   filter: PropTypes.oneOfType([

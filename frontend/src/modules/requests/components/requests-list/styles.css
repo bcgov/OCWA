@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 0 15px;
-  border-bottom: 2px solid #DFE1E6;
+  border-bottom: 2px solid #dfe1e6;
 }
 
 .filters > div:last-child {
@@ -24,6 +24,10 @@
 
 .searchText {
   text-decoration: underline;
+}
+
+.table th {
+  font-size: 13px !important;
 }
 
 .actionsColumn {
