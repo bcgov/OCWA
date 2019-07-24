@@ -18,12 +18,16 @@ GID2=$(kcadm.sh create groups -r ocwa -s name=project_1 -i)
 GID3=$(kcadm.sh create groups -r ocwa -s name=oc -i)
 GID4=$(kcadm.sh create groups -r ocwa -s name=project_override_1 -i)
 GID5=$(kcadm.sh create groups -r ocwa -s name=researchers -i)
+GID6=$(kcadm.sh create groups -r ocwa -s name=reports -i)
+GID7=$(kcadm.sh create groups -r ocwa -s name=project_2 -i)
 
 echo "Group = $GID1"
 echo "Group = $GID2"
 echo "Group = $GID3"
 echo "Group = $GID4"
 echo "Group = $GID5"
+echo "Group = $GID6"
+echo "Group = $GID7"
 
 TUID=$(kcadm.sh create users -r ocwa -s username=testuser -s enabled=true -s email=testuser@nowhere.com -s firstName=TestF -s lastName=TestL -i)
 
@@ -56,6 +60,15 @@ kcadm.sh update users/$TUID/groups/$GID2 -r ocwa -s realm=ocwa -s userId=$TUID -
 kcadm.sh update users/$TUID/groups/$GID5 -r ocwa -s realm=ocwa -s userId=$TUID -s groupId=$GID5 -n
 kcadm.sh set-password -r ocwa --username researcher_3 --new-password researcher_3_password
 
+TUID=$(kcadm.sh create users -r ocwa -s username=researcher_4 -s enabled=true -s email=researcher_4@nowhere.com -s firstName=ResF -s lastName=ResL -i)
+kcadm.sh update users/$TUID/groups/$GID1 -r ocwa -s realm=ocwa -s userId=$TUID -s groupId=$GID1 -n
+kcadm.sh update users/$TUID/groups/$GID7 -r ocwa -s realm=ocwa -s userId=$TUID -s groupId=$GID7 -n
+kcadm.sh update users/$TUID/groups/$GID5 -r ocwa -s realm=ocwa -s userId=$TUID -s groupId=$GID5 -n
+kcadm.sh set-password -r ocwa --username researcher_4 --new-password researcher_4_password
+
+TUID=$(kcadm.sh create users -r ocwa -s username=supervisor_1 -s enabled=true -s email=supervisor_1@nowhere.com -s firstName=SupF -s lastName=SupL -i)
+kcadm.sh update users/$TUID/groups/$GID6 -r ocwa -s realm=ocwa -s userId=$TUID -s groupId=$GID6 -n
+kcadm.sh set-password -r ocwa --username supervisor_1 --new-password supervisor_1_password
 
 OCUID=$(kcadm.sh create users -r ocwa -s username=ocuser_1 -s enabled=true -s email=ocuser@nowhere.com -s firstName=OutCheckF -s lastName=OutCheckL -i)
 echo "User = $OCUID"

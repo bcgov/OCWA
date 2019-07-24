@@ -6,6 +6,7 @@ var config = require('config');
 var logger = require('npmlog');
 
 const isOutputChecker = (user => user.groups.includes(config.get('outputCheckerGroup')))
+const isInReportsGroup = (user => user.groups.includes(config.get('reportsGroup')))
 
 passport.use(new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
@@ -28,6 +29,7 @@ passport.use(new JWTStrategy({
             INTERNAL_ZONE: 'internal',
         };
         user.outputchecker = isOutputChecker(user);
+        user.supervisor = isInReportsGroup(user);
 
         logger.verbose('user ' + user.id + ' authenticated successfully');
 
