@@ -1,7 +1,9 @@
 import * as React from 'react';
 import Button from '@atlaskit/button';
 import DateTime from '@src/components/date';
+import ExportTypeIcon from '@src/components/export-type-icon';
 import { Link } from 'react-router-dom';
+import RequestType from '@src/modules/requests/components/request/request-type';
 import RequestIcon from '@src/modules/requests/components/request-icon';
 import { getRequestStateText } from '@src/modules/requests/utils';
 import { uid } from 'react-uid';
@@ -15,11 +17,15 @@ export default ({ data, onSelectProject, onSelectRequester }) =>
       cells: [
         {
           key: d.state,
-          content: <RequestIcon value={d.state} size="medium" />,
+          content: <ExportTypeIcon large exportType={d.exportType} />,
         },
         {
           key: d.name,
           content: <Link to={`/view/${d._id}`}>{d.name}</Link>,
+        },
+        {
+          key: d.type,
+          content: <RequestType hideText type={d.type} />,
         },
         {
           key: d.firstSubmittedDate,
@@ -43,7 +49,7 @@ export default ({ data, onSelectProject, onSelectRequester }) =>
         },
         {
           key: d.state,
-          content: getRequestStateText(d.state),
+          content: <RequestIcon size="medium" value={d.state} />,
         },
         {
           key: d.project,

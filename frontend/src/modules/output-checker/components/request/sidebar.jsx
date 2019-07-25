@@ -13,6 +13,7 @@ import startCase from 'lodash/startCase';
 import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
 import { RequestSchema } from '@src/modules/requests/types';
 import { _e } from '@src/utils';
+import { uid } from 'react-uid';
 
 import * as styles from './styles.css';
 
@@ -52,12 +53,21 @@ function Sidebar({
       <aside className={styles.sidebar}>
         <h6>Requester</h6>
         <p id="request-author-text">{data.author}</p>
-        <h6>{_e('{Request} Type')}</h6>
+        <h6>{_e('{Request} Type', data.type)}</h6>
         <div id="request-exportType">
           <ExportTypeIcon exportType={data.exportType} />
           <span id="request-exportTypeText" className={styles.exportTypeText}>
             {startCase(get(data, 'exportType', 'data'))}
           </span>
+        </div>
+        <h6>Projects</h6>
+        <div id="request-projects">
+          {data.projects &&
+            data.projects.map(p => (
+              <p key={uid(p)} className="request-project-text">
+                {p}
+              </p>
+            ))}
         </div>
         <h6>Reviewers</h6>
         {data.reviewers.length > 0 && (
@@ -142,6 +152,7 @@ Sidebar.propTypes = {
   onRequestRevisions: PropTypes.func.isRequired,
   onPickupRequest: PropTypes.func.isRequired,
   user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
   }).isRequired,
 };

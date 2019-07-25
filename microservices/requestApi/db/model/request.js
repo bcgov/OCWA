@@ -161,7 +161,7 @@ var getAllTopics = function(user, callback, page){
 
     var limit = 100;
     var topics = [];
-    var projects = [];
+    var projects = new Map();
     var url = config.get('forumApi') + '/v1?limit='+limit+'&page='+page+'&parent_id=-1';
 
     httpReq.get({
@@ -192,7 +192,7 @@ var getAllTopics = function(user, callback, page){
         }
 
         try {
-            var projectResults = topicResults.map((x) => {
+            var projectResults = new Map(topicResults.map(x => {
                 var groups = x.author_groups;
                 var oci = groups.indexOf(config.get('outputCheckerGroup'));
                 var expi = groups.indexOf(config.get('requiredRoleToCreateRequest'));
@@ -204,22 +204,22 @@ var getAllTopics = function(user, callback, page){
                 if (expi !== -1){
                     groups.splice(expi, 1);
                 }
-
-                return groups;
-            });
+                return [x._id, groups]
+            }));
 
             topicResults = topicResults.map(x => x._id);
             
             topics = topics.concat(topicResults);
-            projects = projects.concat(projectResults);
+            projects = new Map([...projects, ...projectResults]);
 
             if (topicResults.length >= limit) {
                 getAllTopics(user, function (err, topicR, projectR) {
 
                     for (var i=0; i<topicR.length; i++){
                         topics.push(topicR[i]);
-                        projects.push(projectR[i]);
                     }
+
+                    projects = new Map([...projects, ...projectR]);
 
                     logger.verbose("Got all topics for a page", page, topicR, topics);
                     if (err) {
@@ -250,7 +250,7 @@ model.getAll = function(query, limit, page, user, callback){
 
     var zoneRestrict;
 
-    if (user.outputchecker) {
+    if (user.outputchecker || user.supervisor) {
         if (user.zone === user.INTERNAL_ZONE){
             zoneRestrict = {
                 $match: {
@@ -261,7 +261,7 @@ model.getAll = function(query, limit, page, user, callback){
                 }
             }
         } else {
-            // Return no records - Outputchecker should not be using external zone
+            // Return no records - Outputchecker or Supervisor should not be using external zone
             zoneRestrict = {
                 $match: {
                     $and: [
@@ -371,7 +371,8 @@ model.getAll = function(query, limit, page, user, callback){
         ]).exec(function(err, results){
             if (results){
                 for (var i=0; i<results.length; i++){
-                    results[i].projects = projectR[i];
+                    let topicId = results[i].topic;
+                    results[i].projects = projectR.get(topicId);
                 }
             }
             callback(err, results);

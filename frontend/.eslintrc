@@ -1,5 +1,11 @@
 {
-  "extends": ["airbnb", "prettier", "plugin:jest/recommended", "plugin:import/errors", "plugin:import/warnings"],
+  "extends": [
+    "airbnb",
+    "prettier",
+    "plugin:jest/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
   "plugins": ["import", "jest"],
   "env": {
     "browser": true,
@@ -24,10 +30,11 @@
   "parser": "babel-eslint",
   "rules": {
     "import/no-extraneous-dependencies": 0,
-    "no-underscore-dangle": ["error", { "allow": ["_id"] }]
+    "no-underscore-dangle": ["error", { "allow": ["_id", "_e"] }],
+    "react/jsx-one-expression-per-line": 0
   },
   "settings": {
-   "import/resolver": {
+    "import/resolver": {
       "webpack": {
         "config": "webpack.common.js"
       }

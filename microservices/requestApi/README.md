@@ -23,7 +23,7 @@ Run `docker build . -t ocwa_request_api` to build the docker container and the f
 ``` sh
 hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
 apiport=3002
-docker run -e CREATE_ROLE="exporter" -e OC_GROUP="oc" -e ALLOW_DENY=true -e EMAIL_FIELD=Email -e GIVENNAME_FIELD=GivenName -e SURNAME_FIELD=Surname \
+docker run -e CREATE_ROLE="exporter" -e OC_GROUP="oc" -e REPORTS_GROUP="reports" -e ALLOW_DENY=true -e EMAIL_FIELD=Email -e GIVENNAME_FIELD=GivenName -e SURNAME_FIELD=Surname \
            -e GROUP_FIELD=Groups -e API_PORT=$apiport -e JWT_SECRET=MySecret -e LOG_LEVEL=info -e FORUM_API=docker:3000 -e VALIDATION_API_KEY=myForumApiKey \
            -e VALIDATION_API=docker:3003 -e VALIDATION_API_KEY=myApiKey -e DB_USERNAME=mongoUser -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e USER_ID_FIELD=email \
            -e DB_HOST=docker -e STORAGE_URI=storageURI -e STORAGE_PORT=9000 -e STORAGE_KEY=myKey -e STORAGE_SECRET=mySecret -e STORAGE_USESSL=false \

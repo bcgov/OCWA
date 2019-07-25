@@ -32,7 +32,7 @@ function NewRequestForm({
     sendAction(
       'onCreate',
       { ...formData, exportType: exportType.value },
-      { history, files }
+      { history, files },
     );
   const formProps = {
     data,
@@ -84,7 +84,9 @@ function NewRequestForm({
 NewRequestForm.propTypes = {
   codeExportEnabled: PropTypes.bool.isRequired,
   helpURL: PropTypes.string,
-  history: PropTypes.object.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
   isCreating: PropTypes.bool.isRequired,
   location: PropTypes.shape({
     state: PropTypes.object,

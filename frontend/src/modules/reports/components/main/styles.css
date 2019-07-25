@@ -7,7 +7,7 @@
 .header {
   margin-top: 20px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #DFE1E6;
+  border-bottom: 2px solid #dfe1e6;
 }
 
 .header > * {
@@ -26,13 +26,18 @@
   margin: 20px 0 50px;
 }
 
+.projectsTable th,
+.table th {
+  font-size: 13px !important;
+}
+
 .filters {
   padding: 10px 0;
   margin: 0 0 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 2px solid #DFE1E6;
+  border-bottom: 2px solid #dfe1e6;
 }
 
 .dateRange {
@@ -41,7 +46,7 @@
   align-items: center;
 }
 
-.dateRange div[role="presentation"] {
+.dateRange div[role='presentation'] {
   width: calc(50% - 15px);
 }
 

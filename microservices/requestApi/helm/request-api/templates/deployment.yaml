@@ -82,6 +82,8 @@ spec:
               value: {{ .Values.createRole }}
             - name: OC_GROUP
               value: {{ .Values.ocGroup }}
+            - name: REPORTS_GROUP
+              value: {{ .Values.reportsGroup }}
             - name: ALLOW_DENY
               value: "{{ .Values.allowDeny }}"
             - name: USER_ID_FIELD
