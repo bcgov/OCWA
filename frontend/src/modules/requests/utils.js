@@ -7,6 +7,9 @@ import mapValues from 'lodash/mapValues';
 import { repositoryHost } from '@src/services/config';
 import { _e, getZoneString } from '@src/utils';
 
+export const validCode = 200;
+export const invalidCode = 100;
+export const failedCode = 400;
 // Form content
 export const formText = {
   data: {
