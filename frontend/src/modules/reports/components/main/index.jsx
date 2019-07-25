@@ -44,10 +44,12 @@ function ReportsMain({
             <header className={styles.header}>
               <h2>
                 Dashboard
-                <small>{`Filtering from ${format(
-                  startDate,
-                  titleDateFormat,
-                )} to ${format(endDate, titleDateFormat)}`}</small>
+                <small>
+                  {`Filtering from ${format(
+                    startDate,
+                    titleDateFormat,
+                  )} to ${format(endDate, titleDateFormat)}`}
+                </small>
               </h2>
             </header>
             <Filters

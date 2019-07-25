@@ -13,6 +13,7 @@ import startCase from 'lodash/startCase';
 import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
 import { RequestSchema } from '@src/modules/requests/types';
 import { _e } from '@src/utils';
+import { uid } from 'react-uid';
 
 import * as styles from './styles.css';
 
@@ -58,6 +59,15 @@ function Sidebar({
           <span id="request-exportTypeText" className={styles.exportTypeText}>
             {startCase(get(data, 'exportType', 'data'))}
           </span>
+        </div>
+        <h6>Projects</h6>
+        <div id="request-projects">
+          {data.projects &&
+            data.projects.map(p => (
+              <p key={uid(p)} className="request-project-text">
+                {p}
+              </p>
+            ))}
         </div>
         <h6>Reviewers</h6>
         {data.reviewers.length > 0 && (

@@ -61,11 +61,10 @@ function RequestSidebar({
     invalidCode,
   );
   const validateEditButton = () => {
-    if (
-      !isEditing &&
-      (data.exportType === 'code' && mergeRequestStatusCode < validCode)
-    ) {
-      return true;
+    if (!isEditing && data.exportType === 'code') {
+      if (data.state > 1 || mergeRequestStatusCode <= validCode) {
+        return true;
+      }
     }
 
     return isSaving;
@@ -94,6 +93,15 @@ function RequestSidebar({
           {startCase(get(data, 'exportType', 'data'))}
         </span>
       </div>
+      <h6>Projects</h6>
+      <div id="request-projects">
+        {data.projects &&
+          data.projects.map(p => (
+            <p key={uid(p)} className="request-project-text">
+              {p}
+            </p>
+          ))}
+      </div>
       <h6>Output Checker</h6>
       <div id="request-reviewers">
         {data.reviewers.map(d => (
@@ -106,17 +114,19 @@ function RequestSidebar({
       <h6>Actions</h6>
       {data.state >= 2 && data.state < 4 && (
         <React.Fragment>
-          <div>
-            <Button
-              appearance="link"
-              id="request-sidebar-withdraw-button"
-              isDisabled={isSaving}
-              iconBefore={<SignOutIcon />}
-              onClick={withdrawHandler}
-            >
-              Edit Request
-            </Button>
-          </div>
+          {data.exportType !== 'code' && (
+            <div>
+              <Button
+                appearance="link"
+                id="request-sidebar-withdraw-button"
+                isDisabled={isSaving}
+                iconBefore={<SignOutIcon />}
+                onClick={withdrawHandler}
+              >
+                Edit Request
+              </Button>
+            </div>
+          )}
           <div>
             <Button
               appearance="link"

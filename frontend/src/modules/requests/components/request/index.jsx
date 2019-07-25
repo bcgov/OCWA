@@ -25,7 +25,7 @@ import RequestType from './request-type';
 import StateLabel from '../state-label';
 import Sidebar from '../../containers/sidebar';
 import { RequestSchema } from '../../types';
-import { validCode, invalidCode, failedCode } from '../../utils';
+import { validCode, failedCode } from '../../utils';
 import * as styles from './styles.css';
 
 class Request extends React.Component {
