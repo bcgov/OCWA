@@ -440,16 +440,19 @@ router.put('/submit/:requestId', function(req, res, next){
             } else if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
                 reqRes.state = db.Request.AWAITING_REVIEW_STATE;
                 db.Request.setChrono(reqRes, req.user.id);
+                logger.debug("SET CHRONO", reqRes.chronology);
                 reqRes.state = db.Request.APPROVED_STATE;
             } else if (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) {
                 reqRes.state = db.Request.AWAITING_REVIEW_STATE;
                 db.Request.setChrono(reqRes, req.user.id);
+                logger.debug("SET CHRONOE", reqRes.chronology);
                 reqRes.state = db.Request.APPROVED_STATE;
             } else {
                 reqRes.state = db.Request.AWAITING_REVIEW_STATE;
             }
 
             db.Request.setChrono(reqRes, req.user.id);
+            logger.debug("SET CHRONO2", reqRes.chronology);
 
             var util = require('../util/util');
 
@@ -509,7 +512,7 @@ router.put('/submit/:requestId', function(req, res, next){
                                 if (!updateErr) {
                                     reqRes.fileStatus = status;
                                     var notify = require('../notifications/notifications');
-                                    notify.notify(reqRes, req.user, (reqRes.state===db.Requests.AWAITING_REVIEW_STATE));
+                                    notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
                                     if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
                                         logRequestFinalState(reqRes, req.user);
                                         res.json({message: "Request approved", result: reqRes});
@@ -565,8 +568,11 @@ router.put('/submit/:requestId', function(req, res, next){
                             if (!updateErr) {
                                 reqRes.fileStatus = status;
                                 var notify = require('../notifications/notifications');
-                                notify.notify(reqRes, req.user, (reqRes.state===db.Requests.AWAITING_REVIEW_STATE));
-                                if (autoAccept) {
+                                notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
+                                if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
+                                    logRequestFinalState(reqRes, req.user);
+                                    res.json({message: "Request approved", result: reqRes});
+                                }else if (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) {
                                     logRequestFinalState(reqRes, req.user);
                                     res.json({message: "Request approved", result: reqRes});
                                 }else{

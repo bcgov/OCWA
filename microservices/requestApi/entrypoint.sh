@@ -59,6 +59,8 @@ printf "\"ignoreGroupsFromConsideration\": [${IGNORE_GROUPS}],\n" >> ./config/de
 printf "\"projectApi\": \"${PROJECT_API}\",\n" >> ./config/default.json
 printf "\"projectApiSecret\": \"${PROJECT_API_KEY}\",\n" >> ./config/default.json
 
+printf "\"emailOnInitialSubmit\": \"${EMAIL_ON_SUBMIT}\",\n" >> ./config/default.json
+
 printf "\"user\": {\n" >> ./config/default.json
 printf "\"idField\": \"${USER_ID_FIELD}\",\n" >> ./config/default.json
 printf "\"emailField\": \"${EMAIL_FIELD}\",\n" >> ./config/default.json
