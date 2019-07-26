@@ -34,7 +34,7 @@ router.get('/', function(req, res, next) {
 
     var limit = 100;
     if (typeof(req.query.limit) !== "undefined"){
-        limit = req.query.limit;
+        limit = Number(req.query.limit);
     }
     if (limit > 100){
         limit = 100;

@@ -2,8 +2,7 @@ import * as React from 'react';
 import PropTypes from 'prop-types';
 import AttachmentIcon from '@atlaskit/icon/glyph/attachment';
 import Button, { ButtonGroup } from '@atlaskit/button';
-import ChevronLeftLargeIcon from '@atlaskit/icon/glyph/chevron-left-large';
-import ChevronRightLargeIcon from '@atlaskit/icon/glyph/chevron-right-large';
+import CodeIcon from '@atlaskit/icon/glyph/code';
 import { Link } from 'react-router-dom';
 import Date from '@src/components/date';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
@@ -14,6 +13,7 @@ import head from 'lodash/head';
 import last from 'lodash/last';
 import Loading from '@src/components/loading';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
+import Pagination from '@src/components/pagination';
 import PersonIcon from '@atlaskit/icon/glyph/person';
 import PeopleGroupIcon from '@atlaskit/icon/glyph/people-group';
 import SearchIcon from '@atlaskit/icon/glyph/search';
@@ -117,10 +117,13 @@ function RequestsList({
         {
           content: (
             <div className={styles.actionsColumn}>
-              <div>
-                <AttachmentIcon size="small" />
-                {` ${get(d, 'files.length', 0)}`}
-              </div>
+              {d.exportType === 'code' && <CodeIcon />}
+              {d.exportType !== 'code' && (
+                <div>
+                  <AttachmentIcon size="small" />
+                  {` ${get(d, 'files.length', 0)}`}
+                </div>
+              )}
               <RequestMenu data={d} />
             </div>
           ),
@@ -208,7 +211,7 @@ function RequestsList({
       </header>
       <Grid>
         <GridColumn medium={12}>
-          <div id="requests-list-table">
+          <div id="requests-list-table" className={styles.table}>
             <DynamicTableStateless
               emptyView={renderEmpty()}
               head={header}
@@ -219,24 +222,11 @@ function RequestsList({
               onSort={sortProps => onSort(sortProps)}
             />
             {isPaginationVisible && (
-              <nav className={styles.pagination}>
-                <Button
-                  appearance="subtle"
-                  iconBefore={<ChevronLeftLargeIcon />}
-                  isDisabled={page <= 1}
-                  onClick={() => fetchRequests(page - 1)}
-                >
-                  Previous Page
-                </Button>
-                <Button
-                  appearance="subtle"
-                  iconAfter={<ChevronRightLargeIcon />}
-                  isDisabled={data.length < limit * page}
-                  onClick={() => fetchRequests(page + 1)}
-                >
-                  Next Page
-                </Button>
-              </nav>
+              <Pagination
+                onClick={fetchRequests}
+                isLastPage={data.length < limit * page}
+                page={page}
+              />
             )}
           </div>
         </GridColumn>
@@ -251,7 +241,7 @@ RequestsList.propTypes = {
       _id: PropTypes.string,
       name: PropTypes.string,
       state: PropTypes.number,
-    })
+    }),
   ),
   fetchRequests: PropTypes.func.isRequired,
   filter: PropTypes.oneOfType([

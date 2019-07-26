@@ -36,6 +36,7 @@ database:
 
 createRole: "exporter"
 ocGroup: "oc"
+reportsGroup: "reports"
 allowDeny: false
 ignoreGroups: "\"/oc\""
 

@@ -4,6 +4,7 @@ import AppBar from '@src/components/app-bar';
 import AppBarMenu from '@src/components/app-bar/menu';
 import Issue24Icon from '@atlaskit/icon-object/glyph/issue/24';
 import { Switch, Route } from 'react-router-dom';
+import NotFound from '@src/components/not-found';
 import Title from '@src/components/title';
 
 import Dashboard from '../../containers/dashboard';
@@ -20,7 +21,7 @@ function App({ helpURL, user }) {
         <Switch>
           <Route exact path="/" component={Dashboard} />
           <Route path="/requests/:requestId" component={Request} />
-          <Route render={() => '404'} />
+          <Route component={NotFound} />
         </Switch>
       </div>
     </React.Fragment>

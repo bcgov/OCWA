@@ -1,6 +1,8 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import CalendarIcon from '@atlaskit/icon/glyph/calendar';
 import CommentIcon from '@atlaskit/icon/glyph/comment';
+import Date from '@src/components/date';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import DocumentsIcon from '@atlaskit/icon/glyph/documents';
 import ExportTypeIcon from '@src/components/export-type-icon';
@@ -11,9 +13,11 @@ import { List } from 'react-content-loader';
 import Tab from '@src/components/tabs/tab';
 import Tabs from '@src/components/tabs';
 import { RequestSchema } from '@src/modules/requests/types';
+import RequestType from '@src/modules/requests/components/request/request-type';
 import Spinner from '@atlaskit/spinner';
 import StateLabel from '@src/modules/requests/components/state-label';
 import Title from '@src/components/title';
+import { colors } from '@atlaskit/theme';
 
 import Details from './details';
 import Files from './files';
@@ -21,7 +25,7 @@ import RequestsNav from '../../containers/requests-nav';
 import Sidebar from '../../containers/sidebar';
 import * as styles from './styles.css';
 
-function Request({ data, isSaving, match }) {
+function Request({ data, isSaving, match, submittedAt }) {
   const { requestId } = match.params;
   const title = data.name || 'Loading...';
 
@@ -38,6 +42,17 @@ function Request({ data, isSaving, match }) {
                 <ExportTypeIcon large exportType={data.exportType} />
                 {data.name || 'Loading...'}
               </h2>
+              <p
+                id="request-header-details"
+                className={styles.requestDetailsText}
+              >
+                <RequestType type={data.type} />
+                <span>
+                  <CalendarIcon size="small" primaryColor={colors.DN300} />
+                </span>
+                {'Submitted at '}
+                <Date value={submittedAt} format="HH:MMa on MMMM Do, YYYY" />
+              </p>
             </div>
             <StateLabel value={data.state} />
           </hgroup>
@@ -104,6 +119,7 @@ Request.propTypes = {
       requestId: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
+  submittedAt: PropTypes.string.isRequired,
 };
 
 export default Request;

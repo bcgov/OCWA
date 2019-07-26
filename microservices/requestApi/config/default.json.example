@@ -53,6 +53,7 @@
 
     "requiredRoleToCreateRequest": "exporter",
     "outputCheckerGroup": "oc",
+    "reportsGroup": "reports",
     "allowDenyRequest": true,
 
     "projectApi": "http://localhost:2005/",

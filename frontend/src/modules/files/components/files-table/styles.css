@@ -2,6 +2,10 @@
   border-bottom: none !important;
 }
 
+.container th {
+  font-size: 13px !important;
+}
+
 .startCell {
   padding-left: 10px;
 }
@@ -22,7 +26,6 @@
 .statusRow > span:first-child {
   margin-right: 10px;
 }
-
 
 .removeButton {
   display: flex;

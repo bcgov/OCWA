@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
+import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import SectionMessage from '@atlaskit/section-message';
 import ExportTypeIcon from '@src/components/export-type-icon';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
@@ -24,6 +25,7 @@ import RequestType from './request-type';
 import StateLabel from '../state-label';
 import Sidebar from '../../containers/sidebar';
 import { RequestSchema } from '../../types';
+import { validCode, failedCode } from '../../utils';
 import * as styles from './styles.css';
 
 class Request extends React.Component {
@@ -41,7 +43,8 @@ class Request extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.onReset();
+    const { onReset } = this.props;
+    onReset();
   }
 
   onEdit = () => {
@@ -54,6 +57,9 @@ class Request extends React.Component {
     const { data, onSave } = this.props;
 
     onSave(merge({}, data, updatedData), { id: data._id });
+    this.setState({
+      isEditing: false,
+    });
   };
 
   render() {
@@ -80,9 +86,11 @@ class Request extends React.Component {
     const isCodeExport = data.exportType === 'code';
     const mergeRequestStatusCode = get(data, 'mergeRequestStatus.code');
     const showMergeRequestError =
-      isCodeExport && mergeRequestStatusCode === 400;
+      isCodeExport && mergeRequestStatusCode === failedCode;
     const showMergeRequestLoading =
-      isCodeExport && mergeRequestStatusCode < 200;
+      isCodeExport && mergeRequestStatusCode < validCode;
+    const showMergeRequestComplete =
+      isCodeExport && mergeRequestStatusCode === validCode;
 
     return (
       <div id="requests-page">
@@ -100,7 +108,7 @@ class Request extends React.Component {
                   <span>{title}</span>
                 </h1>
                 <p id="request-header-details">
-                  <RequestType />
+                  <RequestType type={data.type} />
                   <span>
                     <CalendarIcon size="small" primaryColor={colors.DN300} />
                   </span>
@@ -150,7 +158,9 @@ class Request extends React.Component {
           <div id="request-details" className={styles.main}>
             <Grid>
               <GridColumn medium={9}>
-                {(showMergeRequestLoading || showMergeRequestError) &&
+                {(showMergeRequestComplete ||
+                  showMergeRequestLoading ||
+                  showMergeRequestError) &&
                   !isEditing && (
                     <div className={styles.mergeRequestStatus}>
                       {showMergeRequestLoading && (
@@ -159,12 +169,21 @@ class Request extends React.Component {
                           wait before submitting.
                         </SectionMessage>
                       )}
+                      {showMergeRequestComplete && data.state < 2 && (
+                        <SectionMessage
+                          appearance="confirmation"
+                          icon={CheckCircleIcon}
+                        >
+                          <strong>Merge Request Complete</strong>. Please submit
+                          your request.
+                        </SectionMessage>
+                      )}
                       {showMergeRequestError && (
                         <SectionMessage appearance="error">
                           {get(
                             data,
                             'mergeRequestStatus.message',
-                            'There was an error.'
+                            'There was an error.',
                           )}
                         </SectionMessage>
                       )}
@@ -225,8 +244,6 @@ Request.propTypes = {
     files: PropTypes.arrayOf(PropTypes.string),
     supportingFiles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
-  fetchStatus: PropTypes.oneOf(['loading', 'loaded', 'failed', 'idle'])
-    .isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,

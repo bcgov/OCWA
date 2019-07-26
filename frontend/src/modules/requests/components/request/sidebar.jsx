@@ -16,19 +16,14 @@ import SignInIcon from '@atlaskit/icon/glyph/sign-in';
 import SignOutIcon from '@atlaskit/icon/glyph/sign-out';
 import TrashIcon from '@atlaskit/icon/glyph/trash';
 
-import { duplicateRequest } from '../../utils';
+import {
+  duplicateRequest,
+  validCode,
+  invalidCode,
+  failedCode,
+} from '../../utils';
 import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
-
-const omitProps = [
-  '_id',
-  'state',
-  'reviewers',
-  'author',
-  'chronology',
-  'fileStatus',
-  'topic',
-];
 
 function RequestSidebar({
   data,
@@ -53,25 +48,33 @@ function RequestSidebar({
   // };
   const withdrawHandler = () => {
     const c = confirm(
-      'Editing a submitted request automatically withdraws it. Do you still wish to proceed?'
+      'Editing a submitted request automatically withdraws it. Do you still wish to proceed?',
     );
 
     if (c) {
       onWithdraw(data._id);
     }
   };
+  const mergeRequestStatusCode = get(
+    data,
+    'mergeRequestStatus.code',
+    invalidCode,
+  );
+  const validateEditButton = () => {
+    if (!isEditing && data.exportType === 'code') {
+      if (data.state > 1 || mergeRequestStatusCode <= validCode) {
+        return true;
+      }
+    }
+
+    return isSaving;
+  };
+
   const validate = () => {
     let isInvalid = isEditing || isSaving || data.state < 1;
     if (data.exportType === 'data') {
       isInvalid = data.files.length <= 0;
     } else if (data.exportType === 'code') {
-      const invalidCode = 100;
-      const failedCode = 400;
-      const mergeRequestStatusCode = get(
-        data,
-        'mergeRequestStatus.code',
-        invalidCode
-      );
       isInvalid = !inRange(mergeRequestStatusCode, invalidCode, failedCode);
     }
 
@@ -83,12 +86,21 @@ function RequestSidebar({
     <aside id="request-sidebar">
       <h6>Requester</h6>
       <div id="request-author">{data.author}</div>
-      <h6>{_e('{Request} Type')}</h6>
+      <h6>{_e('{Request} Type', data.type)}</h6>
       <div id="request-exportType">
         <ExportTypeIcon exportType={data.exportType} />
         <span id="request-exportTypeText" className={styles.exportTypeText}>
           {startCase(get(data, 'exportType', 'data'))}
         </span>
+      </div>
+      <h6>Projects</h6>
+      <div id="request-projects">
+        {data.projects &&
+          data.projects.map(p => (
+            <p key={uid(p)} className="request-project-text">
+              {p}
+            </p>
+          ))}
       </div>
       <h6>Output Checker</h6>
       <div id="request-reviewers">
@@ -102,17 +114,19 @@ function RequestSidebar({
       <h6>Actions</h6>
       {data.state >= 2 && data.state < 4 && (
         <React.Fragment>
-          <div>
-            <Button
-              appearance="link"
-              id="request-sidebar-withdraw-button"
-              isDisabled={isSaving}
-              iconBefore={<SignOutIcon />}
-              onClick={withdrawHandler}
-            >
-              Edit Request
-            </Button>
-          </div>
+          {data.exportType !== 'code' && (
+            <div>
+              <Button
+                appearance="link"
+                id="request-sidebar-withdraw-button"
+                isDisabled={isSaving}
+                iconBefore={<SignOutIcon />}
+                onClick={withdrawHandler}
+              >
+                Edit Request
+              </Button>
+            </div>
+          )}
           <div>
             <Button
               appearance="link"
@@ -144,7 +158,7 @@ function RequestSidebar({
               appearance="link"
               id="request-sidebar-edit-button"
               iconBefore={<EditFilledIcon />}
-              isDisabled={isSaving}
+              isDisabled={validateEditButton()}
               onClick={() => onEdit(data._id)}
             >
               {isEditing ? 'Done Editing' : 'Edit Request'}

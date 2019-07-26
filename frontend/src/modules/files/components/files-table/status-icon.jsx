@@ -9,6 +9,7 @@ import has from 'lodash/has';
 import InlineDialog from '@atlaskit/inline-dialog';
 import { colors } from '@atlaskit/theme';
 import { uid } from 'react-uid';
+import uniq from 'lodash/uniq';
 
 import { FileStatusSchema } from '../../types';
 import * as styles from './styles.css';
@@ -38,7 +39,7 @@ class StatusIcon extends React.Component {
       return (
         <div key={uid(d)} className={styles.statusRow}>
           {element}
-          {compact([d.message, d.name, d.error]).join(' - ')}
+          {uniq(compact([d.message, d.name, d.error])).join(' - ')}
         </div>
       );
     });

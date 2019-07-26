@@ -21,7 +21,7 @@ function NewRequestForm({
 }) {
   const data = location.state || {};
   const exportTypeOptions = [
-    { label: _e('Data {Request}'), value: 'data' },
+    { label: _e('{Data}'), value: 'data' },
     { label: _e('Code {Request}'), value: 'code' },
   ];
   const defaultState = data.exportType
@@ -32,7 +32,7 @@ function NewRequestForm({
     sendAction(
       'onCreate',
       { ...formData, exportType: exportType.value },
-      { history, files }
+      { history, files },
     );
   const formProps = {
     data,
@@ -41,7 +41,7 @@ function NewRequestForm({
     exportType: exportType.value,
     onSubmit,
   };
-  
+
   return (
     <Page>
       <div id="request-form-container" className={styles.container}>
@@ -58,7 +58,7 @@ function NewRequestForm({
               <div className={styles.exportTypeSelect}>
                 <SectionMessage
                   appearance="info"
-                  title={_e('Select Data {Request} Type')}
+                  title={_e('Select {Request} Type')}
                 >
                   <Select
                     options={exportTypeOptions}
@@ -84,7 +84,9 @@ function NewRequestForm({
 NewRequestForm.propTypes = {
   codeExportEnabled: PropTypes.bool.isRequired,
   helpURL: PropTypes.string,
-  history: PropTypes.object.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
   isCreating: PropTypes.bool.isRequired,
   location: PropTypes.shape({
     state: PropTypes.object,

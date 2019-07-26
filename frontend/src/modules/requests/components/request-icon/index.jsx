@@ -4,12 +4,12 @@ import Tooltip from '@atlaskit/tooltip';
 // Icons
 import CheckCircleIcon from '@atlaskit/icon/glyph/check-circle';
 import CrossIcon from '@atlaskit/icon/glyph/cross';
-import EditIcon from '@atlaskit/icon/glyph/edit';
+import DocumentFilledIcon from '@atlaskit/icon/glyph/document-filled';
 import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled';
-import ErrorIcon from '@atlaskit/icon/glyph/error';
 import RecentIcon from '@atlaskit/icon/glyph/recent';
 import WatchFilledIcon from '@atlaskit/icon/glyph/watch-filled';
 import MoreIcon from '@atlaskit/icon/glyph/more';
+import FlagFilledIcon from '@atlaskit/icon/glyph/flag-filled';
 
 import { getRequestStateColor } from '../../utils';
 
@@ -19,7 +19,7 @@ function RequestIcon({ color, secondaryColor, size, value }) {
 
   switch (value) {
     case 0:
-      Icon = EditIcon;
+      Icon = DocumentFilledIcon;
       name = 'Draft';
       break;
     case 1:
@@ -39,7 +39,7 @@ function RequestIcon({ color, secondaryColor, size, value }) {
       name = 'Approved';
       break;
     case 5:
-      Icon = ErrorIcon;
+      Icon = FlagFilledIcon;
       name = 'Errors, needs revision';
       break;
     case 6:
