@@ -437,7 +437,13 @@ router.put('/submit/:requestId', function(req, res, next){
 
             if (reqRes.reviewers.length > 0) {
                 reqRes.state = db.Request.IN_REVIEW_STATE;
-            } else if (autoAccept) {
+            } else if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
+                reqRes.state = db.Request.AWAITING_REVIEW_STATE;
+                db.Request.setChrono(reqRes, req.user.id);
+                reqRes.state = db.Request.APPROVED_STATE;
+            } else if (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) {
+                reqRes.state = db.Request.AWAITING_REVIEW_STATE;
+                db.Request.setChrono(reqRes, req.user.id);
                 reqRes.state = db.Request.APPROVED_STATE;
             } else {
                 reqRes.state = db.Request.AWAITING_REVIEW_STATE;
@@ -503,8 +509,11 @@ router.put('/submit/:requestId', function(req, res, next){
                                 if (!updateErr) {
                                     reqRes.fileStatus = status;
                                     var notify = require('../notifications/notifications');
-                                    notify.notify(reqRes, req.user);
-                                    if (autoAccept) {
+                                    notify.notify(reqRes, req.user, (reqRes.state===db.Requests.AWAITING_REVIEW_STATE));
+                                    if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
+                                        logRequestFinalState(reqRes, req.user);
+                                        res.json({message: "Request approved", result: reqRes});
+                                    }else if (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) {
                                         logRequestFinalState(reqRes, req.user);
                                         res.json({message: "Request approved", result: reqRes});
                                     }else{
@@ -556,7 +565,7 @@ router.put('/submit/:requestId', function(req, res, next){
                             if (!updateErr) {
                                 reqRes.fileStatus = status;
                                 var notify = require('../notifications/notifications');
-                                notify.notify(reqRes, req.user);
+                                notify.notify(reqRes, req.user, (reqRes.state===db.Requests.AWAITING_REVIEW_STATE));
                                 if (autoAccept) {
                                     logRequestFinalState(reqRes, req.user);
                                     res.json({message: "Request approved", result: reqRes});
@@ -862,7 +871,7 @@ router.put('/requestRevisions/:requestId', function(req, res){
                     return;
                 }
                 res.status(500);
-                res.json({error: updateErr.message})
+                res.json({error: updateErr.message});
 
             });
         }else{
