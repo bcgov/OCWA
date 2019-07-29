@@ -60,8 +60,8 @@
     "projectApiSecret": "apiKeySecret",
 
     "autoAccept": {
-      "export": true,
-      "import": true
+      "export": false,
+      "import": false
     },
 
     "user":{

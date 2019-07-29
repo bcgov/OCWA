@@ -96,8 +96,6 @@ router.get('/', function(req, res, next) {
         }
     }
 
-    console.log("CHRONOQ", q.chronology, q);
-
     db.Request.getAll(q, limit, page, req.user, function(err, requestRes){
         if (err || !requestRes){
             res.status(500);
