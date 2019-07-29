@@ -48,7 +48,7 @@ printf "},\n" >> ./config/default.json
 printf "\"autoAccept\": {\n" >> ./config/default.json
 printf "    \"export\": ${AUTO_APPROVE},\n" >> ./config/default.json
 printf "    \"import\": ${AUTO_APPROVE_IMPORT}\n" >> ./config/default.json
-printf "}\n" >> ./config/default.json
+printf "},\n" >> ./config/default.json
 
 printf "\"requiredRoleToCreateRequest\": \"${CREATE_ROLE}\",\n" >> ./config/default.json
 printf "\"outputCheckerGroup\": \"${OC_GROUP}\",\n" >> ./config/default.json
