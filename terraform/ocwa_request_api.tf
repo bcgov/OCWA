@@ -32,7 +32,7 @@ resource "docker_container" "ocwa_request_api" {
       "ALLOW_DENY=true",
       "AUTO_APPROVE=false",
       "AUTO_APPROVE_IMPORT=false",
-      "EMAIL_ON_SUBMIT=[]",
+      "EMAIL_ON_SUBMIT=\"[]\"",
       "IGNORE_GROUPS=\"/researchers\"",
       "VALIDATION_API=http://ocwa_validate_api:3003",
       "VALIDATION_API_KEY=${random_string.apiSecret.result}",
