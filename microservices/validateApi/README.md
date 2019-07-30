@@ -59,7 +59,8 @@ helm upgrade --name ocwa-validate-api ./helm/validate-api  -f ./helm/validate-ap
 ## Test
 
 ``` sh
-pip install '.[test]'
+cp config/default.json.template config/default.json
+pip install -r requirements.txt
 pytest --verbose
 ```
 

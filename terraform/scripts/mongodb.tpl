@@ -18,4 +18,4 @@ db.rules.insert({name:"Not a blocked file type", source:"print('$${file.Filename
 db.rules.insert({name:"File size is under 3.5Mb", source:"print($${file.size}<3670016)",mandatory:false });
 db.rules.insert({name:"File size is under 5Mb", source:"print($${file.size}<5242880)",mandatory:true });
 /* Checks file content for anything matching exactly 1 alphanumeric followed by 9 digits */
-db.rules.insert({name:"No study ids are present in the content", source:"print(not bool(re.compile(b'[\\w]{1}[\\d]{9}').search($${file.content})))", mandatory: true});
+db.rules.insert({name:"No study ids are present in the content", source:"print(not bool(re.compile(b'[u|s]{1}[\\d]{9}').search($${file.content})))", mandatory: true});
