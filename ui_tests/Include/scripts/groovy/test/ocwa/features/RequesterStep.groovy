@@ -489,7 +489,7 @@ public class RequesterStep extends Step {
 	}
 	@Then("the request should not be accessible")
 	def request_is_not_accessible() {
-		if(!WebUI.verifyTextNotPresent(G_REQUESTNAME)) {
+		if(!WebUI.verifyTextNotPresent(G_REQUESTNAME, false)) {
 			WebUI.comment('Request is accessible when it should not be.')
 		}
 	}
