@@ -161,7 +161,7 @@ public class RequesterStep extends Step {
 	def request_updated_within_last_month() {
 		//stubbed because newly created requests will always have an update date within the last month
 	}
-
+/*
 	@Given("the request has been claimed by an output checker")
 	def request_has_been_claimed_by_a_oc() {
 		//request_is_review_in_progress()
@@ -170,7 +170,8 @@ public class RequesterStep extends Step {
 
 	// TODO: Refactor this into a new "StateStep" class or similar
 	// This new class would extend Step and instantiate CheckerStep and RequesterStep on constructor
-	@Given('requester has a request of status "(.+)"')
+
+	@Given('zrequester has a request of status "(.+)"')
 	def requester_has_a_request_of_status(String status) {
 		requester_starts_new_request()
 		requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
@@ -206,6 +207,7 @@ public class RequesterStep extends Step {
 		}
 	}
 
+
 	@Given("a project team member has created a request")
 	def project_team_member_has_created_request() {
 		requester_has_a_request_of_status(Constant.Status.DRAFT)
@@ -219,7 +221,7 @@ public class RequesterStep extends Step {
 	@Given("requester's project does not allow for editing of team member's requests")
 	def project_does_not_allow_for_team_sharing() {
 	}
-
+*/
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
