@@ -298,7 +298,7 @@ public class RequesterStep extends Step {
 	@When("the requester tries to navigate to the request directly")
 	def navigate_to_request_directly() {
 		WebUI.comment("Request URL:$G_REQUESTURL")
-		WebUI.navigateToUrl($G_REQUESTURL)
+		WebUI.navigateToUrl(G_REQUESTURL)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.comment("Current url is:${WebUI.getUrl()}")
 	}
