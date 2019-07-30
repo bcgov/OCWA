@@ -28,7 +28,6 @@ public class RequesterStep extends Step {
 	def requester_starts_new_request() {
 		G_REQUESTNAME = Utils.generateRequestNameDate()
 
-
 		TestObject newRequestButtonObject = Utils.getTestObjectByText(Constant.Requester.NEW_REQUEST_BTN_TXT)
 
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
@@ -47,6 +46,7 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
+		G_REQUESTURL = WebUI.getUrl()
 	}
 
 	@Given("has not submitted the request")
@@ -294,6 +294,19 @@ public class RequesterStep extends Step {
 		WebUI.click(linkToRequest)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 	}
+	
+	@When("the requester tries to navigate to the request directly")
+	def navigate_to_request_directly() {
+		WebUI.comment("Request URL:$G_REQUESTURL")
+		WebUI.navigateToUrl($G_REQUESTURL)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
+		WebUI.comment("Current url is:${WebUI.getUrl()}")
+	}
+	
+	@When("a requester in another project tries to navigate to the request directly")
+	def navigate_to_other_project_request_directly() {
+		navigate_to_request_directly()
+	}
 
 	@When("the requester cancels the request")
 	def requester_cancels_request() {
@@ -473,5 +486,11 @@ public class RequesterStep extends Step {
 		WebUI.click(submitBtn)
 		WebUI.comment("Clicked the submit link")
 		request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
+	}
+	@Then("the request should not be accessible")
+	def request_is_not_accessible() {
+		if(!WebUI.verifyTextNotPresent(G_REQUESTNAME)) {
+			WebUI.comment('Request is accessible when it should not be.')
+		}
 	}
 }
