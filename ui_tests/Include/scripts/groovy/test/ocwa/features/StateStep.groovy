@@ -55,6 +55,12 @@ public class StateStep extends Step {
 	@Delegate RequesterStep rs
 	@Delegate CheckerStep cs
 	
+	public StateStep() {
+		rs = new RequesterStep()
+		cs = new CheckerStep()
+	}
+	
+	
 	@Given('requester has a request of status "(.+)"')
 	def requester_has_a_request_of_status(String status) {
 		rs.requester_starts_new_request()
