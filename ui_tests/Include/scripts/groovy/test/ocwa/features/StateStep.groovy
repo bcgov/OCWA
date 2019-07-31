@@ -46,18 +46,22 @@ import cucumber.api.java.en.Given
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
 
+import test.ocwa.common.Constant
 
-public class StateStep extends Step {
-	/**
-	 * The step definitions below match with Katalon sample Gherkin steps
-	 */
-	
+/**
+ * OCWA State steps for Katalon
+ * Purpose is abstract request state to assist in writing test cases e.g., Given I have a request in state X (without having to write out all the steps every time to get a request to state X)
+ * @author Paul Ripley
+ */
+public class StateStep extends Step {	
 	@Delegate RequesterStep rs
 	@Delegate CheckerStep cs
+	@Delegate LoginStep ls
 	
 	public StateStep() {
 		rs = new RequesterStep()
 		cs = new CheckerStep()
+		ls = new LoginStep()
 	}
 	
 	
@@ -69,28 +73,37 @@ public class StateStep extends Step {
 		switch (status.toLowerCase()) {
 			case "draft":
 				rs.requester_saves_new_request()
+				WebUI.verifyTextPresent(Constant.Status.DRAFT, false)
 				break
 			case "awaiting review":
 				rs.requester_submits_request()
+				WebUI.verifyTextPresent(Constant.Status.AWAITING_REVIEW, false)
 				break
 			case "review in progress":
 				rs.requester_submits_request()
+				ls.user_login('output checker')
 				cs.checker_tries_to_claim_unclaimed_request()
+				WebUI.verifyTextPresent(Constant.Status.IN_REVIEW, false)
 				break
 			case "work in progress":
 				rs.requester_submits_request()
+				ls.user_login('output checker')
 				cs.checker_tries_to_claim_unclaimed_request()
 				cs.checker_marks_request_as_needs_revisions()
 			//alternative path to WIP we are not doing here is requester has submitted and withdrawn. 
+				WebUI.verifyTextPresent(Constant.Status.WORK_IN_PROGRESS, false)
 				break
 			case "cancelled":
 				rs.requester_submits_request()
 				rs.requester_cancels_request()
+				WebUI.verifyTextPresent(Constant.Status.CANCELLED, false)
 				break
 			case "approved":
 				rs.requester_submits_request()
+				ls.user_login('output checker')
 				cs.checker_tries_to_claim_unclaimed_request()
 				cs.checker_marks_request_as_approved()
+				WebUI.verifyTextPresent(Constant.Status.APPROVED, false)
 				break
 			default:
 				throw new Exception("status $status not found")
