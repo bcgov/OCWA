@@ -73,7 +73,7 @@ public class StateStep extends Step {
 		switch (status.toLowerCase()) {
 			case "draft":
 				rs.requester_saves_new_request()
-				WebUI.verifyTextPresent(Constant.Status.DRAFT, false)
+				WebUI.verifyTextPresent(Constant.Status.WORK_IN_PROGRESS, false) //the draft state has evolved a bit; this is effectively a scenario where a request has not been submitted yet
 				break
 			case "awaiting review":
 				rs.requester_submits_request()
