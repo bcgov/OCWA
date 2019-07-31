@@ -13,7 +13,7 @@
    <testCaseLink>
       <guid>12152ea3-5815-4d9d-90c6-e3a047656e66</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Administrator/NoAccessOutsideProjTest</testCaseId>
    </testCaseLink>
    <testCaseLink>
