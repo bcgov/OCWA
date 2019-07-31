@@ -13,7 +13,13 @@
    <testCaseLink>
       <guid>12152ea3-5815-4d9d-90c6-e3a047656e66</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>true</isRun>
+      <isRun>false</isRun>
       <testCaseId>Test Cases/Administrator/NoAccessOutsideProjTest</testCaseId>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>57b7f07d-27c8-4324-9ea3-d23c8b1617af</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/Administrator/NoAccessToUnapprovedTest</testCaseId>
    </testCaseLink>
 </TestSuiteEntity>
