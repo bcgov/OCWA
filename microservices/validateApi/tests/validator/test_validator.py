@@ -1,5 +1,6 @@
 import unittest
 import re
+import os
 from unittest import mock
 from munch import munchify
 
@@ -77,6 +78,58 @@ class ValidatorTest(unittest.TestCase):
         rule = "print(not bool( re.compile(b'[\\w]{1}[\\d]{9}').search(${file.content}) ))"
 
         content = "has A1236789 ok".encode('utf-8')
+        mock_readfile.return_value = (content, {"size":1000, "content":content})
+        
+        result, message = validator.read_file_and_evaluate(rule, {"file_id":"00000000"})
+        assert result == True
+        assert message == ''
+
+    @mock.patch('validator.validator.read_file')
+    def test_read_file_and_evaluate_md5_scanning(self, mock_readfile):
+
+        rule = "print(hashlib.md5(${file.content}).hexdigest() == 'a35de14e6b6fc05c77159136778aa1dd')"
+
+        content = "has A1236789 ok".encode('utf-8')
+        mock_readfile.return_value = (content, {"size":1000, "content":content})
+        
+        result, message = validator.read_file_and_evaluate(rule, {"file_id":"00000000"})
+        assert result == True
+        assert message == ''
+
+    @mock.patch('validator.validator.read_file')
+    def test_read_file_and_evaluate_md5_scanning_using_good_content(self, mock_readfile):
+
+        rule = "print(not(md5_is_match(hashlib.md5(${file.content}).hexdigest())))"
+
+        content = "has A1236789 ok".encode('utf-8')
+        mock_readfile.return_value = (content, {"size":1000, "content":content})
+        
+        result, message = validator.read_file_and_evaluate(rule, {"file_id":"00000000"})
+        assert result == True
+        assert message == ''
+
+    @mock.patch('validator.validator.read_file')
+    def test_read_file_and_evaluate_md5_scanning_using_bad_file(self, mock_readfile):
+
+        contents = open("%s/%s" % ( os.getcwd(), 'tests/validator/md5_scan/jimbo')).read()
+
+        rule = "print(not(md5_is_match(hashlib.md5(${file.content}).hexdigest())))"
+
+        content = contents.encode('utf-8')
+        mock_readfile.return_value = (content, {"size":1000, "content":content})
+        
+        result, message = validator.read_file_and_evaluate(rule, {"file_id":"00000000"})
+        assert result == False
+        assert message == ''
+
+    @mock.patch('validator.validator.read_file')
+    def test_read_file_and_evaluate_md5_scanning_using_good_file(self, mock_readfile):
+
+        contents = open("%s/%s" % ( os.getcwd(), 'tests/validator/md5_scan/safe_file')).read()
+
+        rule = "print(not(md5_is_match(hashlib.md5(${file.content}).hexdigest())))"
+
+        content = contents.encode('utf-8')
         mock_readfile.return_value = (content, {"size":1000, "content":content})
         
         result, message = validator.read_file_and_evaluate(rule, {"file_id":"00000000"})

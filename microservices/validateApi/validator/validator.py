@@ -11,6 +11,8 @@ from config import Config
 from db.db import Db
 from munch import munchify
 import magic
+import hashlib
+from validator.md5_scan import md5_is_match
 from ValidationQueue.ValidationQueue import ValidationQueue, QueueObject
 
 log = logging.getLogger(__name__)
