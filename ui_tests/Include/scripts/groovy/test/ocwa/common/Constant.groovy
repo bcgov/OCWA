@@ -86,5 +86,6 @@ public class Constant {
 		static final def DRAFT = 'Draft'
 		static final def SUBMITTED = 'Queued/In Review'
 		static final def WORK_IN_PROGRESS = 'Work in Progress'
+		static final def IN_REVIEW = 'In Review'
 	}
 }

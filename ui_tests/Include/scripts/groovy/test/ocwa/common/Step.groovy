@@ -6,7 +6,8 @@ package test.ocwa.common
  */
 public class Step {
 	/**
-	 * Session Request Name - edit this variable ONLY when creating a new request
+	 * Session Request Name - edit these variables ONLY when creating a new request
 	 */
 	protected static def G_REQUESTNAME = ''
+	protected static def G_REQUESTURL = ''
 }

@@ -431,6 +431,9 @@ matrix:
     - |-
       cd /usr/local/bin/Katalon_Studio
       xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+      if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then 
+        xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/AccessSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+      fi
   - name: OCWA Master Helm Chart
     stage: Tests
     language: python
