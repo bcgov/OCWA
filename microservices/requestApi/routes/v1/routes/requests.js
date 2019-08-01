@@ -508,11 +508,11 @@ router.put('/submit/:requestId', function(req, res, next){
                         if (pass) {
                             db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                                 if (!updateErr) {
+                                    var notify = require('../notifications/notifications');
                                     notify.gitops().approve(reqRes).then((arg) => {
                                         //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
                                         reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
                                         reqRes.fileStatus = status;
-                                        var notify = require('../notifications/notifications');
                                         notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
                                         if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
                                             logRequestFinalState(reqRes, req.user);
@@ -581,11 +581,11 @@ router.put('/submit/:requestId', function(req, res, next){
                     if (pass) {
                         db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                             if (!updateErr) {
+                                var notify = require('../notifications/notifications');
                                 notify.gitops().approve(reqRes).then((arg) => {
                                     //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
                                     reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
                                     reqRes.fileStatus = status;
-                                    var notify = require('../notifications/notifications');
                                     notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
                                     if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
                                         logRequestFinalState(reqRes, req.user);
