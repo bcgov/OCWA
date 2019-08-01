@@ -11,6 +11,7 @@ resource "docker_image" "mongodb" {
 resource "docker_container" "ocwa_mongodb" {
   image = "${docker_image.mongodb.latest}"
   name = "ocwa_mongodb"
+  restart = "on-failure"
   volumes = {
     host_path = "${var.hostRootPath}/data/mongodb"
     container_path = "/data/db"

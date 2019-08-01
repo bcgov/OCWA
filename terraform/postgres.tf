@@ -11,6 +11,7 @@ resource "docker_image" "postgres" {
 resource "docker_container" "ocwa_postgres" {
   image = "${docker_image.postgres.latest}"
   name = "ocwa_postgres"
+  restart = "on-failure"
   volumes = { 
     host_path = "${var.hostRootPath}/data/postgres"
     container_path = "/var/lib/postgresql/data"

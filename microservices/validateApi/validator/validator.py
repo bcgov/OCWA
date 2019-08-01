@@ -175,7 +175,7 @@ def evaluate_source(source, file_attributes):
         # exec_src = niño_cédille_postulate(source, format_fn)
 
         exec_output = execute_script(exec_src)
-        log.info(exec_output)
+        log.info("exec output = %s" % exec_output)
         result = exec_output.rstrip() in ("yes", "true", "t", "1")
     except (Exception, NameError) as e:
         log.error(e)
