@@ -8,8 +8,8 @@ db.createUser(
 
 db.permissions.insert({"priority":100,"allow":true, "group_ids":["/oc","/reports"], "topic_id":"*"});
 
-db.projects.insert({name:"project_override_1",permissions:{autoAccept:true}});
-db.projects.insert({name:"project_override_2",permissions:{autoAccept:false}});
+db.projects.insert({name:"project_override_1",permissions:{autoAccept:{export:true,import:false}}});
+db.projects.insert({name:"project_override_2",permissions:{autoAccept:{export:false,import:false}}});
 
 db.rules.remove({});
 db.rules.insert({name:"Not a warning file type", source:"print('$${file.Filename}'['$${file.Filename}'.rfind('.')+1:] not in ['sav','dbf','dat','csv','bin','egp'])",mandatory:false});
