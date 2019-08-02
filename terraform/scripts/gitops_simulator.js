@@ -45,6 +45,8 @@ app.post('/v1/request',function(request,response){
         resbody = {status:'error', message:'SIM Project repository not found'};
     } else if (scenario.id == "s5") {
         resbody = "SIM The 'direction' must be 'import' or 'export'";
+    } else if (scenario.id == "s6") {
+        resbody = {status:'ok', location:'https://www.google.com', title:'Merge Request'};
     }
     delayedResponse (response, resbody, resbody.status == 'ok' ? 200:400, scenario.delay);
 });
