@@ -3,8 +3,8 @@ const gitops = require('./gitops')
 
 var notifications = {};
 
-notifications.notify = function(request, user){
-    email.notify(request, user);
+notifications.notify = function(request, user, submittedUnclaimed){
+    email.notify(request, user, submittedUnclaimed);
     gitops.process(request, user);
 };
 

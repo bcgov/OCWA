@@ -60,6 +60,8 @@ storageMaxSize: 10000000
 storageBucket: data
 
 autoApprove: false
+autoApproveImport: false
+emailOnSubmit: false
 
 validationApi: http://ocwa-validation-api.ocwa
 validationApiSecret: validateApiSecret

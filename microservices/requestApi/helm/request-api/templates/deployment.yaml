@@ -117,6 +117,10 @@ spec:
               value: {{ .Values.storageBucket }}
             - name: AUTO_APPROVE
               value: "{{ .Values.autoApprove }}"
+            - name: AUTO_APPROVE_IMPORT
+              value: "{{ .Values.autoApproveImport }}"
+            - name: EMAIL_ON_SUBMIT
+              value: "{{ .Values.emailOnSubmit }}"
             - name: IGNORE_GROUPS
               value: '{{ .Values.ignoreGroups }}'
             - name: OCWA_URL
