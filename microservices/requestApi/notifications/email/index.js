@@ -5,20 +5,47 @@ var db = require('../../db/db');
 
 var path = require('path');
 var template = fs.readFileSync(path.resolve(__dirname, 'emailTemplate.html'), 'utf8');
+var submitTemplate = fs.readFileSync(path.resolve(__dirname, 'emailSubmitTemplate.html'), 'utf8');
 
-var setTemplate = function(request, user, triggeringUser){
+var setTemplate = function(request, user, triggeringUser, templateName){
+
+    if (typeof(templateName) === "undefined"){
+        templateName = "emailTemplate.html";
+    }
 
     var config = require('config');
-    var email = template;
+    var email = "";
+    if (templateName === "emailSubmitTemplate.html"){
+        email = submitTemplate;
+    }else if (templateName === "emailTemplate.html"){
+        email = template;
+    }else{
+        try{
+            email = fs.readFileSync(path.resolve(__dirname, templateName), 'utf8');
+        }catch(ex){
+            email = "";
+        }
+    }
 
-    console.log("SET TEMPLATE", user);
+    var baseUrl = config.get("ocwaUrl");
+    if (request.type === db.Request.INPUT_TYPE){
+        baseUrl = config.get("ocwaImportUrl");
+    }
+
+    var requestUrl = baseUrl;
+
+    if (requestUrl.substring(requestUrl.length-1) !== "/"){
+        requestUrl += "/";
+    }
+    requestUrl += "requests/" + request._id;
 
     email = email.replace("{{name}}", user['name']);
     email = email.replace("{{updater}}", triggeringUser['name']);
-    email = email.replace("{{url}}", config.get("ocwaUrl")+"requests/"+request._id);
+    email = email.replace("{{baseURL}}", baseUrl);
+    email = email.replace("{{url}}", requestUrl);
     email = email.replace("{{requestId}}", request._id);
 
-    return email
+    return email;
 };
 
 
@@ -54,7 +81,7 @@ notifications.notify = function(request, user, submittedUnclaimed){
     if ( (submittedUnclaimed) && (config.has('emailOnInitialSubmit')) ){
         var emailList = config.get('emailOnInitialSubmit');
         for (var i=0; i<emailList.length; i++){
-            sendEmail(request, {name: emailList[i].name, email: emailList[i].email}, user);
+            sendEmail(request, {name: emailList[i].name, email: emailList[i].email}, user, "emailSubmitTemplate.html");
         }
     }
 
@@ -83,11 +110,11 @@ notifications.notify = function(request, user, submittedUnclaimed){
     }
 };
 
-function sendEmail(request, userInfo, user){
+function sendEmail(request, userInfo, user, templateName){
     var config = require('config');
     var logger = require('npmlog');
     var emailConfig = config.get('email');
-    var emailContent = setTemplate(request, userInfo, user);
+    var emailContent = setTemplate(request, userInfo, user, templateName);
 
     var emailPort = (typeof(emailConfig.port) === "undefined") ? 25 : emailConfig.port;
     var emailSecure = (typeof(emailConfig.secure) === "undefined") ? false : emailConfig.secure;
