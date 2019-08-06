@@ -29,5 +29,8 @@
   "alwaysScanFiles": false,
 
   "workingLimit": 5242880,
-  "failOverWorkingLimit": true
+  "failOverWorkingLimit": true,
+
+  "md5_scan_file_path": "tests/validator/md5_scan/md5_scan_sample_file.txt"
+
 }

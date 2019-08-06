@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>NoAccessToUnapprovedTest</name>
+   <tag></tag>
+   <comment></comment>
+   <testCaseGuid>d6488fc6-401e-45a1-b14b-f30895c754d6</testCaseGuid>
+</TestCaseEntity>

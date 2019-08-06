@@ -48,7 +48,7 @@ printf "},\n" >> ./config/default.json
 printf "\"autoAccept\": {\n" >> ./config/default.json
 printf "    \"export\": ${AUTO_APPROVE},\n" >> ./config/default.json
 printf "    \"import\": ${AUTO_APPROVE_IMPORT}\n" >> ./config/default.json
-printf "}\n" >> ./config/default.json
+printf "},\n" >> ./config/default.json
 
 printf "\"requiredRoleToCreateRequest\": \"${CREATE_ROLE}\",\n" >> ./config/default.json
 printf "\"outputCheckerGroup\": \"${OC_GROUP}\",\n" >> ./config/default.json
@@ -58,6 +58,8 @@ printf "\"ignoreGroupsFromConsideration\": [${IGNORE_GROUPS}],\n" >> ./config/de
 
 printf "\"projectApi\": \"${PROJECT_API}\",\n" >> ./config/default.json
 printf "\"projectApiSecret\": \"${PROJECT_API_KEY}\",\n" >> ./config/default.json
+
+printf "\"emailOnInitialSubmit\": ${EMAIL_ON_SUBMIT},\n" >> ./config/default.json
 
 printf "\"user\": {\n" >> ./config/default.json
 printf "\"idField\": \"${USER_ID_FIELD}\",\n" >> ./config/default.json

@@ -23,10 +23,14 @@ var setTemplate = function(request, user, triggeringUser){
 
 
 //user is the user making the change
-notifications.notify = function(request, user){
+notifications.notify = function(request, user, submittedUnclaimed){
 
     var config = require('config');
     var logger = require('npmlog');
+
+    if (typeof(submittedUnclaimed) === "undefined"){
+        submittedUnclaimed = false;
+    }
 
     if (!config.has('email')){
         logger.debug("Notifications[email] - Triggered but not configured");
@@ -35,17 +39,24 @@ notifications.notify = function(request, user){
 
     var emailConfig = config.get('email');
     if (!emailConfig.enabled){
+        logger.debug("Notifications[email] - Triggered but not enabled");
         return;
     }
 
     if (request.state === db.Request.DRAFT_STATE){
+        logger.debug("Notifications[email] - Triggered but state is draft");
         return;
     }
 
-    var nodemailer = require("nodemailer");
-
     var notifyWho = request.reviewers.slice(0);
     notifyWho.push(request.author);
+
+    if ( (submittedUnclaimed) && (config.has('emailOnInitialSubmit')) ){
+        var emailList = config.get('emailOnInitialSubmit');
+        for (var i=0; i<emailList.length; i++){
+            sendEmail(request, {name: emailList[i].name, email: emailList[i].email}, user);
+        }
+    }
 
     logger.verbose("Notification[email] triggered", user);
 
@@ -66,49 +77,57 @@ notifications.notify = function(request, user){
                     return;
                 }
 
-                var emailContent = setTemplate(request, userInfo, user);
-
-                var emailPort = (typeof(emailConfig.port) === "undefined") ? 25 : emailConfig.port;
-                var emailSecure = (typeof(emailConfig.secure) === "undefined") ? false : emailConfig.secure;
-
-                var transportOpts = {
-                    host: emailConfig.service,
-                    port: emailPort,
-                    secure: emailSecure
-                };
-
-                if (!emailSecure){
-                    transportOpts['tls'] = {
-                        rejectUnauthorized: false
-                    }
-                }
-
-                if ( (emailConfig.user !== "") && (emailConfig.pass !== "") ){
-                    transportOpts['auth'] = {
-                        user: emailConfig.user,
-                        pass: emailConfig.pass
-                    }
-                }
-
-                var transporter = nodemailer.createTransport(transportOpts);
-
-                var mailOptions = {
-                    from: emailConfig.from,
-                    to: userInfo['email'],
-                    subject: "OCWA - Request Update",
-                    html: emailContent
-                };
-
-                transporter.sendMail(mailOptions, function (error, info) {
-                    if (error) {
-                        logger.error("Error sending email to " + mailOptions.to, error);
-                        return;
-                    }
-                    logger.debug("Email sent: " + info.response);
-                });
+                sendEmail(request, userInfo, user);
             });
         }
     }
 };
+
+function sendEmail(request, userInfo, user){
+    var config = require('config');
+    var logger = require('npmlog');
+    var emailConfig = config.get('email');
+    var emailContent = setTemplate(request, userInfo, user);
+
+    var emailPort = (typeof(emailConfig.port) === "undefined") ? 25 : emailConfig.port;
+    var emailSecure = (typeof(emailConfig.secure) === "undefined") ? false : emailConfig.secure;
+
+    var transportOpts = {
+        host: emailConfig.service,
+        port: emailPort,
+        secure: emailSecure
+    };
+
+    if (!emailSecure){
+        transportOpts.tls = {
+            rejectUnauthorized: false
+        }
+    }
+
+    if ( (emailConfig.user !== "") && (emailConfig.pass !== "") ){
+        transportOpts.auth = {
+            user: emailConfig.user,
+            pass: emailConfig.pass
+        }
+    }
+
+    var nodemailer = require("nodemailer");
+    var transporter = nodemailer.createTransport(transportOpts);
+
+    var mailOptions = {
+        from: emailConfig.from,
+        to: userInfo.email,
+        subject: "OCWA - Request Update",
+        html: emailContent
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            logger.error("Error sending email to " + mailOptions.to, error);
+            return;
+        }
+        logger.debug("Email sent: " + info.response);
+    });
+}
 
 module.exports = notifications;
