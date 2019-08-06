@@ -13,6 +13,10 @@ resource "docker_container" "ocwa_validate_api" {
   name = "ocwa_validate_api"
   restart = "on-failure"
   networks_advanced = { name = "${docker_network.private_network.name}" }
+  volumes = {
+    host_path = "${var.hostRootPath}/data/ocwa_validate_api"
+    container_path = "/data"
+  }
   env = [
       "LOG_LEVEL=debug",
       "JWT_SECRET=${random_string.jwtSecret.result}",
@@ -31,6 +35,12 @@ resource "docker_container" "ocwa_validate_api" {
       "POLICY_URL=http://ocwa_policy_api:3004",
       "ALWAYS_SCAN_FILES=false",
       "WORKING_LIMIT=5242880",
-      "FAIL_OVER_WORKING_LIMIT=true"
+      "FAIL_OVER_WORKING_LIMIT=true",
+      "MD5_BLACKLIST=/data/md5_blacklist.txt"
   ]
+}
+
+resource "local_file" "md5_backlist" {
+    content = "${file("${path.module}/scripts/md5_blacklist.txt")}"
+    filename = "${var.hostRootPath}/data/ocwa_validate_api/md5_blacklist.txt"
 }

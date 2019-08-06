@@ -96,8 +96,6 @@ router.get('/', function(req, res, next) {
         }
     }
 
-    console.log("CHRONOQ", q.chronology, q);
-
     db.Request.getAll(q, limit, page, req.user, function(err, requestRes){
         if (err || !requestRes){
             res.status(500);
@@ -437,13 +435,20 @@ router.put('/submit/:requestId', function(req, res, next){
 
             if (reqRes.reviewers.length > 0) {
                 reqRes.state = db.Request.IN_REVIEW_STATE;
-            } else if (autoAccept) {
+            } else if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
+                reqRes.state = db.Request.AWAITING_REVIEW_STATE;
+                db.Request.setChrono(reqRes, req.user.id);
+                reqRes.state = db.Request.APPROVED_STATE;
+            } else if (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) {
+                reqRes.state = db.Request.AWAITING_REVIEW_STATE;
+                db.Request.setChrono(reqRes, req.user.id);
                 reqRes.state = db.Request.APPROVED_STATE;
             } else {
                 reqRes.state = db.Request.AWAITING_REVIEW_STATE;
             }
 
             db.Request.setChrono(reqRes, req.user.id);
+            logger.debug("SET CHRONO2", reqRes.chronology);
 
             var util = require('../util/util');
 
@@ -501,20 +506,40 @@ router.put('/submit/:requestId', function(req, res, next){
                         if (pass) {
                             db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                                 if (!updateErr) {
-                                    reqRes.fileStatus = status;
                                     var notify = require('../notifications/notifications');
-                                    notify.notify(reqRes, req.user);
-                                    if (autoAccept) {
-                                        logRequestFinalState(reqRes, req.user);
-                                        res.json({message: "Request approved", result: reqRes});
-                                    }else{
-                                        res.json({message: "Request submitted", result: reqRes});
-                                    }
+                                    notify.gitops().approve(reqRes).then((arg) => {
+                                        //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
+                                        reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
+                                        reqRes.fileStatus = status;
+                                        notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
+                                        if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
+                                            logRequestFinalState(reqRes, req.user);
+                                            res.json({message: "Request approved", result: reqRes});
+                                        }else if (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) {
+                                            logRequestFinalState(reqRes, req.user);
+                                            res.json({message: "Request approved", result: reqRes});
+                                        }else{
+                                            res.json({message: "Request submitted", result: reqRes});
+                                        }
+                                        return;
+                                    }).catch(err => {
+                                        reqRes.state = db.Request.WIP_STATE;
+                                        reqRes.chronology.splice(-1,1);
+                                        db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
+                                            if (uerr) {
+                                                logger.error("Unable to revert changes after failed code merge.", uerr);
+                                            }
+                                        });
+                                        res.status(400);
+                                        res.json({error: "Error - " + err});
+                                        return;
+                                    });
+                                    
+                                }else{
+                                    res.status(403);
+                                    res.json({error: updateErr.message});
                                     return;
                                 }
-                                res.status(403);
-                                res.json({error: updateErr.message});
-                                return;
                             });
 
                             return;
@@ -554,20 +579,39 @@ router.put('/submit/:requestId', function(req, res, next){
                     if (pass) {
                         db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                             if (!updateErr) {
-                                reqRes.fileStatus = status;
                                 var notify = require('../notifications/notifications');
-                                notify.notify(reqRes, req.user);
-                                if (autoAccept) {
-                                    logRequestFinalState(reqRes, req.user);
-                                    res.json({message: "Request approved", result: reqRes});
-                                }else{
-                                    res.json({message: "Request submitted", result: reqRes});
-                                }
+                                notify.gitops().approve(reqRes).then((arg) => {
+                                    //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
+                                    reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
+                                    reqRes.fileStatus = status;
+                                    notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
+                                    if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
+                                        logRequestFinalState(reqRes, req.user);
+                                        res.json({message: "Request approved", result: reqRes});
+                                    }else if (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) {
+                                        logRequestFinalState(reqRes, req.user);
+                                        res.json({message: "Request approved", result: reqRes});
+                                    }else{
+                                        res.json({message: "Request submitted", result: reqRes});
+                                    }
+                                    return;
+                                }).catch(err => {
+                                    reqRes.state = db.Request.WIP_STATE;
+                                    reqRes.chronology.splice(-1,1);
+                                    db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
+                                        if (uerr) {
+                                            logger.error("Unable to revert changes after failed code merge.", uerr);
+                                        }
+                                    });
+                                    res.status(400);
+                                    res.json({error: "Error - " + err});
+                                    return;
+                                });
+                            }else{
+                                res.status(403);
+                                res.json({error: updateErr.message});
                                 return;
                             }
-                            res.status(403);
-                            res.json({error: updateErr.message});
-                            return;
                         });
 
                         return;
@@ -862,7 +906,7 @@ router.put('/requestRevisions/:requestId', function(req, res){
                     return;
                 }
                 res.status(500);
-                res.json({error: updateErr.message})
+                res.json({error: updateErr.message});
 
             });
         }else{

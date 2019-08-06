@@ -128,7 +128,6 @@ matrix:
       on:
         all_branches: true
         condition: "$TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG"
-
   - name: Request Api
     stage: APIs
     language: node_js
@@ -431,6 +430,9 @@ matrix:
     - |-
       cd /usr/local/bin/Katalon_Studio
       xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+      if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then 
+        xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/AccessSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+      fi
   - name: OCWA Master Helm Chart
     stage: Tests
     language: python
@@ -470,3 +472,4 @@ env:
   - secure: e/Jtl6XJYUKfjM2oQXOkPj8FoavYULu59PgDG2h4hUyhtsMQOIHV8F9VBQ6mdmQE5pLPueUsscMvYGgrGEXk6DzjIeNad/Gadw4ImtPAH0iAMZlhFBDSJLRsjtVF0HaeJFNAyk8cU0PHvPOyegiw2tzJJ3X9od5nB9j0d0XSDd0erMDcmChu0o7lbsPWnLwr+u4aiHXOG2v6m4FbMw8i7GePG5S7Sb1pLh6VHOIPQN9OfgvdIsLM425KzTSCoR86W5K/cVF99jOTSCcD0Vo/eTaSKdmVRZt3RmLq+uu9C2KLbYGMrTWt09o5Tzq6QG7OIsE3fwpr10hPCFeTLaZ2Z2DbPuihpI3Zl+JYWHEYhVws0XeltTpy0mcf1QQypnrBka8Ijj5M/r6n0mJE0kwu9GLMqWNkhmaBDr5ft/6hd6IpGF5b1oYgxM1tYurAQ/+H+DtKKyUr2IR6+jDtZUWX7q8azGx0Mwa6eUuniGHnCYxJ93pjaPSXSI9eOMWWfwd3EpunZuunpQb4Mi+3mhW6VsZ1wpoKGC0RdkuTuKQyDThlSBm82NFtVHtxoAJRdp11Ns92DBk6eqiIu+ZsSmO7Lwg6du3Rh7lqSp0W1uORw0dLLVw3Ctd7rJBeOsrAZ/O6qGYfOV8GlCLpoqlzFWPe7Kj1IfN+/MeF43RWrIHky7A=
   - secure: pOQDnzVMvIWOhqlBPIGAZ9WV7UK5Zsb+1s4ywRrp0a30ijaMhQxMqPxme65woKGgfWKC0zmNRWhOeqMzAC/EzqQKBC3pbzZQzPO+aKVtZMJuhaNApA9wcmUmu6Viuyjte5+ydZxphIWu26hEPq2cKOhq7fQ2QUv0kOmPIt7XFgQXylTUfyzOZJtAO5qWMyM3a8h+dGiWan4UE+/RXEmptyENTY2cXpQocqtyM8zKdSMx4XmDQcLXi82Mhqyf+d0c50bCh/O4iZ95OBiUkdxXTbe+tRzet1sefox7+gCaWw5ii25r/ixcUBVg17FzmwXnGO8PDMU/06lFedGR6fQ7rUdylwYnrjTA7MgurtmpHwHaQDYp6hnL04JkhljT+NHITC379Mfyei53q871oq1/RvdFGXaFHZNojVpMg7LD1XmYOb79Xm1x+4fU1YeppRIgj50vz5Hi3n1fc9zz9jf6odWFKvK9feesdPJnaoQRbMpAoSq+c14qUSclVugcEqu1uSZJ347wE7tSaQ5jh1JqanXFdCprPRS03e/qB4aO6e4UT1ZHg1Q5sd+9PLlkwTa2dJZMBN3QKZUTAVROWkXPqRsUcPtsGguIIxIWT2S3jfUBRbLV2migy62b51F7Xnh3sMQ+a0IW8/V+srAKtZowkE6SL2P4577qqqYoJth04L0=
   - secure: A5Bh725zKWVrBEaUEePIjoA/dR3NsdoHvKmhXGpE06H9RlhUc6gZWQac1Le9W4xtOUkWYLYSPK8v6MLCeNuwRFQBfJ+gEIQCcI7VipEVlU1MkEJwVXkY0/1IPS+ZRKJ5WQuNs2DtjaSA9jz+1+qxfxM/x8K3tZRTStReJ656uLMgZ42Ms+bQmJwF24wMoIod/IUd9zMrIEXY1aD0vU51MTpDp5GsGoV6UQZJfAjwjApgRPT8lSn+IAsg2smGepWgoyMuEDb/wrK8M964eUTjVyu9ThFvHUuRuSHFRR5RULJTSrwWCaymQUi8NQdxefbe4coM8/2SGNRFQs+Y84tladjubAybRoEhGOx2OoyKw5MPg+MBM92b9ZGr+wGBkWvmGIegHPpWrC0gJgBQNVqeBLNb//MD3jJen3AgVPRAA/TpqIy08XKmfwIxxHg2fTupg+mM+qvOl3/2s0oudXHiq5sPyNNAx3mJVif6AlcP3n9GwyYT5jHzpWnFnwObK/cB+4rMLZSP/5WGjwA5xbWJSpyNdcajFAR4QsdEoEzsznZDhu2aX8UkMQKJxNoU6snYq4iHkf6qJXmgjPPHKY17Gfe5vqGpmoc3N4v9dYKKsEevQtpI3B2UMocwTWxAOpASbm6oegQep4MdlmP04kMovpcr+RhodKRSt5nZU4t0h+c=
+  - secure: Xa+4Ulw+q2y4Y/iQuQ0eVUn6mFRVwTaOxodPIsIpErctSg2yxvk3FZ/b9qEuBCu9sNHK9mtu/bAizR+rcz9GFNMS3Q4KOFyOjIiilAi0r5R3ydalrnJOftgsxnXfuAljKA7AkxFjYR1zAz79I0txwKdhbe9p8ClUMDMphGKi2z5sGNv7mQeaxZpZIUBdQ07CmcschyGEEgSp5te+eMTXzFzpFsexI9zGzJ28TkQus3JvAHr0SJql6mkrKg/+ULqA7j9S6CeFr3xyRF/6aAf1XChpzL/Ld7UCYLvBHlPsQwpgy05wFpYAWvldKSGAViVIrtfnjMT3nLa+EBgCEQ+GG+6MiUgId4GKAar9BIzHNwbAHnE+xXfi1pjBuPAn/w42d62wG8e9DVL+1O2Gr1HRbTX0UGiLQSuIAblB2vo/+Ror466V3XKvcIOHdDJAcWT71i/HO/MFBfJ9Gy6CGfqtWeSkNbIRHpjPp60HrJ532atj3BG+LfjbjqDjJeIXs8A4+cT1pqF9AnxbeJOSk9MHTboCsbRDkUiECzYVra2qAG0GsxR1hYoNzd1OizRaGIwQKZ/f9suhYsRQ+piC2u6REg3lnp74jN0/25Q8iNmLfRax3VEucz3A6Ka5i/fxde1TLTaDkPAMANMLZYxJnsOLqeqtsnzDGOCkmllkCgNM3OQ=

@@ -100,20 +100,18 @@ model.setChrono = function(doc, userId, objectDelta){
         doc.chronology = [];
     }
 
-    if ( (typeof(doc._canSetChrono) === "undefined") || (doc._canSetChrono) ) {
-        doc._canSetChrono = false;
-        var chrono = {
-            timestamp: new Date(),
-            enteredState: doc.state,
-            change_by: userId
-        };
 
-        if (typeof(objectDelta !== "undefined")){
-            chrono['changes'] = objectDelta;
-        }
+    var chrono = {
+        timestamp: new Date(),
+        enteredState: doc.state,
+        change_by: userId
+    };
 
-        doc.chronology.push(chrono);
+    if (typeof(objectDelta !== "undefined")){
+        chrono['changes'] = objectDelta;
     }
+
+    doc.chronology.push(chrono);
 };
 
 model.DRAFT_STATE = DRAFT_STATE;

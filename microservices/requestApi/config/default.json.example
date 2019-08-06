@@ -38,6 +38,13 @@
       "from": "ocwa@donotreply.com"
     },
 
+    "emailOnInitialSubmit": [
+      {
+        "name": "Noone",
+        "email": "noone@nowhere"
+      }
+    ],
+
    "gitops": {
       "enabled": false,
       "url": "http://gitops_simulator:2000",
@@ -52,7 +59,10 @@
     "projectApi": "http://localhost:2005/",
     "projectApiSecret": "apiKeySecret",
 
-    "autoAccept": false,
+    "autoAccept": {
+      "export": false,
+      "import": false
+    },
 
     "user":{
         "idField": "Email",
