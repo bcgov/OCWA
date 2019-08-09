@@ -14,6 +14,14 @@ OCWA is written in both node.js and Python 3. Docker is also strongly recommende
 - MongoDB 4.0 or newer
 - Docker 18.09.1 or newer
 - Katalon Studio 5.10 or newer
+- Minio (Storage API)
+- Tusd (Storage API)
+
+
+### Operating System
+
+OCWA was fully developed on Mac using baremetal, developed with a combo of bare metal and docker on windows (docker for the python apis) and has been deployed on Linux using Terraform, and Kubernetes using Helm.
+Windows with Terraform doesn't work, we haven't had enough time to devote to fixing that.
 
 ## Components
 
