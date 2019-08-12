@@ -83,7 +83,6 @@ public class StateStep extends Step {
 				rs.requester_submits_request()
 				ls.user_login('output checker')
 				cs.checker_tries_to_claim_unclaimed_request()
-				WebUI.delay(2)
 				WebUI.verifyTextPresent(Constant.Status.IN_REVIEW, false)
 				break
 			case "work in progress":
