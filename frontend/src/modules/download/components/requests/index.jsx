@@ -7,7 +7,6 @@ import last from 'lodash/last';
 import { Link } from 'react-router-dom';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import { RequestSchema } from '@src/modules/requests/types';
-import startCase from 'lodash/startCase';
 import { zone } from '@src/services/config';
 import { _e } from '@src/utils';
 
@@ -75,7 +74,7 @@ function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
             <div className={styles.backButton}>
               <Link to="/">&laquo; Back to Requests</Link>
             </div>
-            <h1>{`Approved ${startCase(zone)} Requests`}</h1>
+            <h1>{_e('Approved {Download} Requests')}</h1>
             <p>
               {_e(
                 'The {download} requests listed below are available for download.',
