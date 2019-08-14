@@ -39,22 +39,26 @@ const mapStateToProps = (state, props) => {
       `data.fetchStatus.entities.requests.${requestId}`,
       'idle'
     ),
-    zone
+    isSubmitting: state.requests.viewState.isSubmitting,
+    zone,
   };
 };
 
-export default connect(mapStateToProps, {
-  initialRequest: ({ requestId }) =>
-    fetchRequest({
-      url: `/api/v1/requests/${requestId}`,
-      schema: requestSchema,
-      id: requestId,
-    }),
-  onReset: reset,
-  onFinishEditing: finishEditing,
-  onSave: (payload, meta) =>
-    saveRequest(payload, meta, {
-      url: `/api/v1/requests/save/${meta.id}`,
-      schema: { result: requestSchema },
-    }),
-})(withRequest(Request));
+export default connect(
+  mapStateToProps,
+  {
+    initialRequest: ({ requestId }) =>
+      fetchRequest({
+        url: `/api/v1/requests/${requestId}`,
+        schema: requestSchema,
+        id: requestId,
+      }),
+    onReset: reset,
+    onFinishEditing: finishEditing,
+    onSave: (payload, meta) =>
+      saveRequest(payload, meta, {
+        url: `/api/v1/requests/save/${meta.id}`,
+        schema: { result: requestSchema },
+      }),
+  }
+)(withRequest(Request));
