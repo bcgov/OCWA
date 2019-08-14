@@ -126,15 +126,17 @@ function Sidebar({
             >
               Deny Request
             </Button>
-            <Button
-              appearance="link"
-              id="request-sidebar-request-revisions-button"
-              iconBefore={<FlagFilledIcon primaryColor="orange" />}
-              isDisabled={isSaving}
-              onClick={() => onRequestRevisions(id)}
-            >
-              Request Revisions
-            </Button>
+            {!isCodeExport && (
+              <Button
+                appearance="link"
+                id="request-sidebar-request-revisions-button"
+                iconBefore={<FlagFilledIcon primaryColor="orange" />}
+                isDisabled={isSaving}
+                onClick={() => onRequestRevisions(id)}
+              >
+                Request Revisions
+              </Button>
+            )}
           </React.Fragment>
         )}
       </aside>
