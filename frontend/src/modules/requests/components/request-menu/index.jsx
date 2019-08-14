@@ -4,6 +4,7 @@ import DropdownMenu, {
   DropdownItemGroup,
   DropdownItem,
 } from '@atlaskit/dropdown-menu';
+import inRange from 'lodash/inRange';
 
 import { duplicateRequest } from '../../utils';
 import { RequestSchema } from '../../types';
@@ -20,17 +21,16 @@ function RequestMenu({
   return (
     <DropdownMenu trigger={menuText} triggerType="button">
       <DropdownItemGroup>
-        {data.state >= 2 &&
-          data.state < 4 && (
-            <React.Fragment>
-              <DropdownItem onClick={() => onWithdraw(data._id)}>
-                Withdraw
-              </DropdownItem>
-              <DropdownItem onClick={() => onCancel(data._id)}>
-                Cancel
-              </DropdownItem>
-            </React.Fragment>
-          )}
+        {data.state >= 2 && data.state < 4 && (
+          <React.Fragment>
+            <DropdownItem onClick={() => onWithdraw(data._id)}>
+              Withdraw
+            </DropdownItem>
+            <DropdownItem onClick={() => onCancel(data._id)}>
+              Cancel
+            </DropdownItem>
+          </React.Fragment>
+        )}
         {data.state < 2 && (
           <React.Fragment>
             <DropdownItem onClick={() => onSubmit(data._id)}>
@@ -48,7 +48,7 @@ function RequestMenu({
             </DropdownItem>
           </React.Fragment>
         )}
-        {data.state === 4 && (
+        {inRange(data.state, 3, 7) && (
           <DropdownItem
             onClick={() => history.push('/new', duplicateRequest(data))}
           >
