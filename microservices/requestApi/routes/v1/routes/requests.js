@@ -284,10 +284,19 @@ router.get('/:requestId', function(req, res, next) {
         findRes = findRes[0];
         var util = require('../util/util');
 
-        util.getFileStatus(findRes.files, function(status) {
-            findRes.fileStatus = status;
-            res.json(findRes);
+        var project = projectConfig.deriveProjectFromUser(req.user);
+        projectConfig.get(project, 'autoAccept').then((autoAccept) => {
+
+            findRes.autoAccept = 
+                (findRes.type === db.Request.INPUT_TYPE && autoAccept.import) ||
+                (findRes.type === db.Request.EXPORT_TYPE && autoAccept.export);
+
+            util.getFileStatus(findRes.files, function(status) {
+                findRes.fileStatus = status;
+                res.json(findRes);
+            });
         });
+    
 
     });
 
