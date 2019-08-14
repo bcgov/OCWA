@@ -28,6 +28,9 @@ function uploadStatus(state = initialState, action = {}) {
     case 'request/put/success':
       return initialState;
 
+    case 'request/reset':
+      return initialState;
+
     default:
       return state;
   }
