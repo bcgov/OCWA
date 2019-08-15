@@ -284,10 +284,19 @@ router.get('/:requestId', function(req, res, next) {
         findRes = findRes[0];
         var util = require('../util/util');
 
-        util.getFileStatus(findRes.files, function(status) {
-            findRes.fileStatus = status;
-            res.json(findRes);
+        var project = projectConfig.deriveProjectFromUser(req.user);
+        projectConfig.get(project, 'autoAccept').then((autoAccept) => {
+
+            findRes.autoAccept = 
+                (findRes.type === db.Request.INPUT_TYPE && autoAccept.import) ||
+                (findRes.type === db.Request.EXPORT_TYPE && autoAccept.export);
+
+            util.getFileStatus(findRes.files, function(status) {
+                findRes.fileStatus = status;
+                res.json(findRes);
+            });
         });
+    
 
     });
 
@@ -507,33 +516,32 @@ router.put('/submit/:requestId', function(req, res, next){
                             db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                                 if (!updateErr) {
                                     var notify = require('../notifications/notifications');
-                                    notify.gitops().approve(reqRes).then((arg) => {
-                                        //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
-                                        reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
-                                        reqRes.fileStatus = status;
-                                        notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
-                                        if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
+                                    //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
+                                    reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
+                                    reqRes.fileStatus = status;
+                                    notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
+                                    
+                                    if ((reqRes.type === db.Request.INPUT_TYPE && autoAccept.import)
+                                          || (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export)) {
+                                        notify.gitops().approve(reqRes).then((arg) => {
                                             logRequestFinalState(reqRes, req.user);
                                             res.json({message: "Request approved", result: reqRes});
-                                        }else if (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) {
-                                            logRequestFinalState(reqRes, req.user);
-                                            res.json({message: "Request approved", result: reqRes});
-                                        }else{
-                                            res.json({message: "Request submitted", result: reqRes});
-                                        }
-                                        return;
-                                    }).catch(err => {
-                                        reqRes.state = db.Request.WIP_STATE;
-                                        reqRes.chronology.splice(-1,1);
-                                        db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
-                                            if (uerr) {
-                                                logger.error("Unable to revert changes after failed code merge.", uerr);
-                                            }
+                                        }).catch(err => {
+                                            reqRes.state = db.Request.WIP_STATE;
+                                            reqRes.chronology.splice(-1,1);
+                                            db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
+                                                if (uerr) {
+                                                    logger.error("Unable to revert changes after failed code merge.", uerr);
+                                                }
+                                            });
+                                            res.status(400);
+                                            res.json({error: "Error - " + err});
+                                            return;
                                         });
-                                        res.status(400);
-                                        res.json({error: "Error - " + err});
-                                        return;
-                                    });
+                                    } else {
+                                        res.json({message: "Request submitted", result: reqRes});
+                                    }
+                                    return;
                                     
                                 }else{
                                     res.status(403);
@@ -579,34 +587,33 @@ router.put('/submit/:requestId', function(req, res, next){
                     if (pass) {
                         db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                             if (!updateErr) {
-                                var notify = require('../notifications/notifications');
-                                notify.gitops().approve(reqRes).then((arg) => {
-                                    //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
-                                    reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
-                                    reqRes.fileStatus = status;
-                                    notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
-                                    if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
+                                //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
+                                reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
+                                reqRes.fileStatus = status;
+                                notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
+                                if ((reqRes.type === db.Request.INPUT_TYPE && autoAccept.import)
+                                        || (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export)) {
+                                    var notify = require('../notifications/notifications');
+                                    notify.gitops().approve(reqRes).then((arg) => {
                                         logRequestFinalState(reqRes, req.user);
                                         res.json({message: "Request approved", result: reqRes});
-                                    }else if (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) {
-                                        logRequestFinalState(reqRes, req.user);
-                                        res.json({message: "Request approved", result: reqRes});
-                                    }else{
-                                        res.json({message: "Request submitted", result: reqRes});
-                                    }
-                                    return;
-                                }).catch(err => {
-                                    reqRes.state = db.Request.WIP_STATE;
-                                    reqRes.chronology.splice(-1,1);
-                                    db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
-                                        if (uerr) {
-                                            logger.error("Unable to revert changes after failed code merge.", uerr);
-                                        }
+                                    }).catch(err => {
+                                        reqRes.state = db.Request.WIP_STATE;
+                                        reqRes.chronology.splice(-1,1);
+                                        db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
+                                            if (uerr) {
+                                                logger.error("Unable to revert changes after failed code merge.", uerr);
+                                            }
+                                        });
+                                        res.status(400);
+                                        res.json({error: "Error - " + err});
+                                        return;
                                     });
-                                    res.status(400);
-                                    res.json({error: "Error - " + err});
-                                    return;
-                                });
+    
+                                }else{
+                                    res.json({message: "Request submitted", result: reqRes});
+                                }
+                                return;
                             }else{
                                 res.status(403);
                                 res.json({error: updateErr.message});
