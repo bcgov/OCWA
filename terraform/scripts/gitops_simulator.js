@@ -70,19 +70,19 @@ app.put('/v1/request/close',function(request,response){
 app.put('/v1/request/merge',function(request,response){
     const scenario = getScenario(request.body.branch);
 
-    const resbody = scenario.id == 'happy' ? {status:'ok'} : {status:'error',message:'SIM Error processing request'};
+    let resbody = scenario.id == 'happy' ? {status:'ok'} : {status:'error',message:'SIM Error processing request'};
 
     if (scenario.id == "s6") {
         // Merge request scan in 'pending' or 'running' state or has no pipeline
-        return {status:'error', code: 4001, message:'Merge request can not be merged.  Check that the MR has met all required criteria.'};
+        resbody = {status:'error', code: 4001, message:'Merge request can not be merged.  Check that the MR has met all required criteria.'};
     }
     if (scenario.id == "s7") {
         // Merge request scan in 'failed' state
-        return {status:'error', code: 4002, message:'Merge request can not be merged.'};
+        resbody =  {status:'error', code: 4002, message:'Merge request can not be merged.'};
     }
     if (scenario.id == "s8") {
         // Merge request successfully merged
-        return {status:'ok'};
+        resbody = {status:'ok'};
     }
 
     delayedResponse (response, resbody, resbody.status == 'ok' ? 200:400, scenario.delay);
