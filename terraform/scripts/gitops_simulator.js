@@ -45,7 +45,7 @@ app.post('/v1/request',function(request,response){
         resbody = {status:'error', message:'SIM Project repository not found'};
     } else if (scenario.id == "s5") {
         resbody = "SIM The 'direction' must be 'import' or 'export'";
-    } else if (scenario.id == "s6") {
+    } else if (scenario.id == "s6" || scenario.id == "s7" || scenario.id == "s8") {
         resbody = {status:'ok', location:'https://www.google.com', title:'Merge Request'};
     }
     delayedResponse (response, resbody, resbody.status == 'ok' ? 200:400, scenario.delay);
@@ -70,7 +70,20 @@ app.put('/v1/request/close',function(request,response){
 app.put('/v1/request/merge',function(request,response){
     const scenario = getScenario(request.body.branch);
 
-    const resbody = scenario.id == 'happy' ? {status:'ok'} : {status:'error',message:'SIM Error processing request'};
+    let resbody = scenario.id == 'happy' ? {status:'ok'} : {status:'error',message:'SIM Error processing request'};
+
+    if (scenario.id == "s6") {
+        // Merge request scan in 'pending' or 'running' state or has no pipeline
+        resbody = {status:'error', code: 4001, message:'Merge request can not be merged.  Check that the MR has met all required criteria.'};
+    }
+    if (scenario.id == "s7") {
+        // Merge request scan in 'failed' state
+        resbody =  {status:'error', code: 4002, message:'Merge request can not be merged.'};
+    }
+    if (scenario.id == "s8") {
+        // Merge request successfully merged
+        resbody = {status:'ok'};
+    }
 
     delayedResponse (response, resbody, resbody.status == 'ok' ? 200:400, scenario.delay);
 });

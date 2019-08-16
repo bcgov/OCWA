@@ -23,16 +23,10 @@ import FormField from './field';
 import { formText, requestFields } from '../../utils';
 import { RequestSchema } from '../../types';
 
-function NewRequestForm({
-  data,
-  exportType,
-  helpURL,
-  history,
-  isCreating,
-  onSubmit,
-}) {
+function NewRequestForm({ data, exportType, history, isCreating, onSubmit }) {
   // Grab the files if there is a duplicate getting passed through
   const duplicateFiles = pick(data, ['files', 'supportingFiles']);
+  const fields = requestFields();
 
   return (
     <div id="request-form" className={`${exportType}-form`}>
@@ -48,7 +42,7 @@ function NewRequestForm({
             >
               {({ fieldProps, error }) => (
                 <React.Fragment>
-                  <TextField autoFocus autoComplete="off" {...fieldProps} />
+                  <TextField autoComplete="off" {...fieldProps} />
                   {!error && (
                     <HelperMessage>
                       It is recommended that you use a memorable title for this
@@ -67,7 +61,7 @@ function NewRequestForm({
               title={get(formText, [exportType, 'title'])}
               description={get(formText, [exportType, 'description'])}
             >
-              {requestFields()
+              {fields
                 .filter(
                   d =>
                     (d.exportType === 'all' || d.exportType === exportType) &&
@@ -82,7 +76,7 @@ function NewRequestForm({
                     isDisabled={isCreating}
                     isRequired={d.isRequired}
                   >
-                    {({ fieldProps }) => (
+                    {({ fieldProps, error }) => (
                       <React.Fragment>
                         <FormField type={d.type} fieldProps={fieldProps} />
                         <HelperMessage>{d.helperText}</HelperMessage>
@@ -145,7 +139,6 @@ function NewRequestForm({
 
 NewRequestForm.propTypes = {
   data: RequestSchema,
-  helpURL: PropTypes.string,
   exportType: PropTypes.oneOf(['code', 'data']).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
@@ -156,7 +149,6 @@ NewRequestForm.propTypes = {
 
 NewRequestForm.defaultProps = {
   data: {},
-  helpURL: null,
 };
 
 export default withRouter(NewRequestForm);

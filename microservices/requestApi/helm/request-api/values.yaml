@@ -70,8 +70,12 @@ projectApi: http://ocwa-project-api.ocwa
 projectApiSecret: projectApiSecret
 
 ocwaUrl: http://ocwa-ui.ocwa
+ocwaImportUrl: http://ocwadl-ui.ocwa
+
 emailTemplateEnabled: false
 emailTemplate: |-
+emailSubmitTemplateEnabled: false
+emailSubmitTemplate: |-
 emailEnabled: false
 emailService: smtp.gmail.com
 emailSecure: true
