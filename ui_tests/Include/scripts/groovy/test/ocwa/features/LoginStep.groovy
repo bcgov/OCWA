@@ -46,10 +46,6 @@ public class LoginStep extends Step {
 				username = GlobalVariable.OCWA_USER_RESEARCHER_2
 				password = GlobalVariable.OCWA_USER_RESEARCHER_2_PSWD
 				break
-			case 'requester in another project':
-				username = GlobalVariable.OCWA_USER_RESEARCHER_2
-				password = GlobalVariable.OCWA_USER_RESEARCHER_2_PSWD
-				break
 			default:
 				throw new Exception("User ${user} is not defined")
 				break
@@ -62,10 +58,15 @@ public class LoginStep extends Step {
 	def download_interface_login() {
 		login(GlobalVariable.OCWA_USER_RESEARCHER, GlobalVariable.OCWA_USER_RESEARCHER_PSWD, GlobalVariable.OCWA_DL_URL)
 	}
-	
-	@When("the requester logs out")
-	def requester_logs_out() {
-		logout()
+
+	@Given("requester has logged into the import interface")
+	def import_interface_login() {
+		download_interface_login()
+	}
+
+	@When("requester has logged into the import download interface")
+	def import_download_login() {
+		user_login('requester')
 	}
 
 	/**
