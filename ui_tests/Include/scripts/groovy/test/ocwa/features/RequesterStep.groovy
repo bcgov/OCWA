@@ -263,7 +263,7 @@ public class RequesterStep extends Step {
 
 	@When("requester writes and submits a new comment")
 	def requester_creates_a_new_comment() {
-		requester_views_request_they_created()
+		requester_views_request_they_created(" ")
 
 		TestObject discussionTab = Utils.getTestObjectById(Constant.Requester.REQUEST_DISCUSSION_TAB_ID)
 		WebUI.waitForElementPresent(discussionTab, Constant.DEFAULT_TIMEOUT)
@@ -315,7 +315,7 @@ public class RequesterStep extends Step {
 
 	@When("the requester cancels the request")
 	def requester_cancels_request() {
-		requester_views_request_they_created()
+		requester_views_request_they_created(" ")
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_CANCEL_BTN_ID))
 	}
 
@@ -361,7 +361,7 @@ public class RequesterStep extends Step {
 
 	@Then("the requester should see their saved request including (.+) output file (.+) supporting file")
 	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles) {
-		requester_views_request_they_created()
+		requester_views_request_they_created(" ")
 
 		// We need to stall here to give time for the inline ajax to finish
 		WebUI.waitForElementNotPresent(Utils.getTestObjectByText('', 'circle'), Constant.DEFAULT_TIMEOUT)
@@ -400,7 +400,6 @@ public class RequesterStep extends Step {
 
 	@Then('the request status is changed to "(.+)"')
 	def request_should_be_in_given_status(String statusTxt) {
-		//requester_views_request_they_created()
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.delay(2) // wait 2 seconds to ensure page is fully loaded

@@ -11,6 +11,5 @@ Scenario Outline: Importer imports a file that triggers warnings
 		
 		Examples:
 					| warning_rule |
-					| A request that has a file that exceeds the file size warning threshold | 
-					| The summation of all output file sizes exceeds the request file size warning threshold |
-					| An output file has a warning file extension |
+					| an import request that has a input file that exceeds the file size warning threshold | 
+					| an import request input file has a warning file extension |
