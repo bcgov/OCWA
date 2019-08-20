@@ -24,9 +24,10 @@ import test.ocwa.common.Utils
  */
 public class RequesterStep extends Step {
 
-	@Given("requester has started a request")
-	def requester_starts_new_request() {
+	@Given("requester has started (.+) request")
+	def requester_starts_new_request(String requestType) {
 		G_REQUESTNAME = Utils.generateRequestNameDate()
+
 
 		TestObject newRequestButtonObject = Utils.getTestObjectByText(Constant.Requester.NEW_REQUEST_BTN_TXT)
 
@@ -35,18 +36,26 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementVisible(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(newRequestButtonObject)
-
 		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID, 'textarea'), Constant.Requester.CONFIDENTIALITY_TEXT)
 		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_PHONE_TXT_ID), Constant.Requester.REQUEST_PHONE_TEXT)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_VARIABLE_TXT_ID, 'textarea'), Constant.Requester.REQUEST_VARIABLE_TEXT)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_SUBPOP_TXT_ID, 'textarea'), Constant.Requester.REQUEST_SUBPOP_TEXT)
-		
+
+		switch (requestType) {
+			case "a":
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID, 'textarea'), Constant.Requester.CONFIDENTIALITY_TEXT)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_VARIABLE_TXT_ID, 'textarea'), Constant.Requester.REQUEST_VARIABLE_TEXT)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_SUBPOP_TXT_ID, 'textarea'), Constant.Requester.REQUEST_SUBPOP_TEXT)
+				break
+			case "import":
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID, 'textarea'), Constant.Requester.GENERAL_COMMENTS_TEXT)
+				break
+			default:
+				throw new Exception("Request type $requestType is unknown")
+		}
+
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
-		G_REQUESTURL = WebUI.getUrl()
 	}
 
 	@Given("has not submitted the request")
@@ -89,6 +98,14 @@ public class RequesterStep extends Step {
 		requester_uploads_files(files)
 	}
 
+	@Given("requester adds (.+) input file that does not violate any blocking or warning rules")
+	def requester_adds_input_file_that_does_not_violate_blocking_or_warning_rules(String numInputFilesToUpload) {
+		String[] files = [GlobalVariable.ValidImportFileName]
+		if(numInputFilesToUpload == "2") files << GlobalVariable.ValidImportFileName2
+
+		requester_uploads_files(files)
+	}
+
 	@Given("requester adds (.+) supporting files")
 	def requester_adds_supporting_files(String numSupportingFilesToUpload) {
 		String[] files = [
@@ -118,6 +135,22 @@ public class RequesterStep extends Step {
 					GlobalVariable.ValidFileName3
 				] as String[])
 				break
+			case "an import request input file has a warning file extension":
+				requester_uploads_files([
+					GlobalVariable.WarningExtensionFileName] as String[])
+				break
+			case "an import request that has a input file that exceeds the file size warning threshold":
+				requester_uploads_files([
+					GlobalVariable.WarningImportFileName] as String[])
+				break
+			case "the summation of all input file sizes exceeds the import request file size warning threshold":
+			// need to add input files that pass the warning limit individually but together surpass the combined size threshold
+				requester_uploads_files([
+					GlobalVariable.ValidFileName,
+					GlobalVariable.WarningMaxSizeLimitFileName,
+					GlobalVariable.BlockedMaxSizeLimitFileName
+				] as String[])
+				break
 			default:
 				throw new Exception("warning rule $warningRule not found")
 				break
@@ -130,9 +163,17 @@ public class RequesterStep extends Step {
 				requester_uploads_files([
 					GlobalVariable.BlockedExtensionFileName] as String[])
 				break
+			case "an import request input file has a blocked file extension":
+				requester_uploads_files([
+					GlobalVariable.BlockedExtensionFileName] as String[])
+				break
 			case "a request that has a file that is too big":
 				requester_uploads_files([
 					GlobalVariable.BlockedMaxSizeLimitFileName] as String[])
+				break
+			case "an import request input file is too big":
+				requester_uploads_files([
+					GlobalVariable.BlockedMaxImportSizeLimitFileName] as String[])
 				break
 			case "the summation of all output file sizes exceeds the request file size limit":
 			//need to add output files that pass the blocked limit individually but together surpass the combined size threshold
@@ -142,6 +183,14 @@ public class RequesterStep extends Step {
 					GlobalVariable.WarningMaxSizeLimitFileName
 				] as String[])
 				break
+			case "the summation of all input file sizes exceeds the import request file size limit":
+				//need to add input files that pass the blocked limit individually but together surpass the combined size threshold
+					requester_uploads_files([
+						GlobalVariable.WarningImportFileName,
+						GlobalVariable.WarningImportFileName2,
+						GlobalVariable.WarningImportFileName3
+					] as String[])
+					break
 			case "a request has a file with a studyid in it":
 				requester_uploads_files([
 					GlobalVariable.BlockedStudyIDFileName] as String[])
@@ -161,58 +210,12 @@ public class RequesterStep extends Step {
 	def request_updated_within_last_month() {
 		//stubbed because newly created requests will always have an update date within the last month
 	}
-/*
-	@Given("the request has been claimed by an output checker")
-	def request_has_been_claimed_by_a_oc() {
-		//request_is_review_in_progress()
-		requester_has_a_request_of_status("Review in progress")
-	}
 
-	// TODO: Refactor this into a new "StateStep" class or similar
-	// This new class would extend Step and instantiate CheckerStep and RequesterStep on constructor
-
-	@Given('zrequester has a request of status "(.+)"')
-	def requester_has_a_request_of_status(String status) {
-		requester_starts_new_request()
-		requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
-
-		switch (status.toLowerCase()) {
-			case "draft":
-				requester_saves_new_request()
-				break
-			case "awaiting review":
-				requester_submits_request()
-				break
-			case "review in progress":
-				requester_submits_request()
-			//output checker needs to claim
-				break
-			case "work in progress":
-				requester_submits_request()
-			//output checker needs to claim
-			//output checker needs to request revisions OR requester has submitted and withdrawn
-				break
-			case "cancelled":
-				requester_submits_request()
-				requester_cancels_request()
-				break
-			case "approved":
-				requester_submits_request()
-			//output checker needs to claim
-			//output checker needs to approve
-				break
-			default:
-				throw new Exception("status $status not found")
-				break
-		}
-	}
-
-
-	@Given("a project team member has created a request")
-	def project_team_member_has_created_request() {
-		requester_has_a_request_of_status(Constant.Status.DRAFT)
-		WebUI.closeBrowser()
-	}
+//	@Given("a project team member has created a request")
+//	def project_team_member_has_created_request() {
+//		requester_has_a_request_of_status(Constant.Status.DRAFT)
+//		WebUI.closeBrowser()
+//	}
 
 	@Given("requester's project allows for editing of team member's requests")
 	def project_allows_for_team_sharing() {
@@ -221,7 +224,7 @@ public class RequesterStep extends Step {
 	@Given("requester's project does not allow for editing of team member's requests")
 	def project_does_not_allow_for_team_sharing() {
 	}
-*/
+
 	@When("the requester saves their request")
 	def requester_saves_new_request() {
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
@@ -235,7 +238,7 @@ public class RequesterStep extends Step {
 		TestObject requestSubmitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
 		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
 		TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)
-		
+
 		if (WebUI.verifyElementNotClickable(requestSubmitBtn, FailureHandling.OPTIONAL)) {
 			WebUI.comment('Submit button is disabled so try clicking the "Done editing" link')
 			WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
@@ -247,8 +250,8 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.comment('Clicking the submit button')
 		WebUI.click(requestSubmitBtn)
-	
-		//test if an error alert displays when request is submitted. 
+
+		//test if an error alert displays when request is submitted.
 		if (WebUI.waitForElementPresent(errorAlert, Constant.SUBMISSION_TIMEOUT, FailureHandling.OPTIONAL)) {
 			WebUI.takeScreenshot()
 			KeywordUtil.markFailed('An error alert displayed upon submission.')
@@ -277,10 +280,21 @@ public class RequesterStep extends Step {
 		WebUI.click(saveCommentButton)
 	}
 
-	@When("the requester views the request")
-	def requester_views_request_they_created() {
-		if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
-			WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+	@When("the requester views the (.+)request")
+	def requester_views_request_they_created(String requestType) {
+		switch (requestType) {
+			case "": 		
+			if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
+				WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+			}
+			break
+			case "import ":
+			if (WebUI.getUrl() != GlobalVariable.OCWA_DL_URL) {
+				WebUI.navigateToUrl(GlobalVariable.OCWA_DL_URL)
+			}
+			break
+			default:
+				throw new Exception("Request type $requestType is unknown")
 		}
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		TestObject searchBox = Utils.getTestObjectById(Constant.Requester.SEARCH_BOX_ID)
@@ -295,19 +309,6 @@ public class RequesterStep extends Step {
 
 		WebUI.click(linkToRequest)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
-	}
-	
-	@When("the requester tries to navigate to the request directly")
-	def navigate_to_request_directly() {
-		WebUI.comment("Request URL:$G_REQUESTURL")
-		WebUI.navigateToUrl(G_REQUESTURL)
-		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
-		WebUI.comment("Current url is:${WebUI.getUrl()}")
-	}
-	
-	@When("a requester in another project tries to navigate to the request directly")
-	def navigate_to_other_project_request_directly() {
-		navigate_to_request_directly()
 	}
 
 	@When("the requester cancels the request")
@@ -346,6 +347,14 @@ public class RequesterStep extends Step {
 				throw new Exception("status $status not found")
 				break
 		}
+	}
+
+	@When("the requester refreshes page")
+	def requester_refreshes_page() {
+		WebUI.refresh()
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
+		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
+
 	}
 
 	@Then("the requester should see their saved request including (.+) output file (.+) supporting file")
@@ -389,7 +398,7 @@ public class RequesterStep extends Step {
 
 	@Then('the request status is changed to "(.+)"')
 	def request_should_be_in_given_status(String statusTxt) {
-		requester_views_request_they_created()
+		//requester_views_request_they_created()
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.verifyTextPresent(statusTxt, false)
@@ -488,11 +497,5 @@ public class RequesterStep extends Step {
 		WebUI.click(submitBtn)
 		WebUI.comment("Clicked the submit link")
 		request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
-	}
-	@Then("the request should not be accessible")
-	def request_is_not_accessible() {
-		if(!WebUI.verifyTextNotPresent(G_REQUESTNAME, false)) {
-			WebUI.comment('Request is accessible when it should not be.')
-		}
 	}
 }

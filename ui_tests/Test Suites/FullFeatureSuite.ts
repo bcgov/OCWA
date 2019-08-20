@@ -70,4 +70,16 @@
       <isRun>true</isRun>
       <testCaseId>Test Cases/Requester/ProjAutoApproveTest</testCaseId>
    </testCaseLink>
+   <testCaseLink>
+      <guid>b00a6800-0ea9-44a2-b55a-d0fbf1b107dd</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/Requester/SeeImportWarningFileUploadsTest</testCaseId>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>fb8aab2c-83dd-4515-8f51-77382719c7a4</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/Requester/SeeImportBlockedFileUploadsTest</testCaseId>
+   </testCaseLink>
 </TestSuiteEntity>
