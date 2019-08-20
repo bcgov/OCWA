@@ -12,7 +12,7 @@ Scenario Outline: Importer imports a file that triggers blocking
     
     Examples:
  			| blocking_rule |
-			| A request that has a file that is too big | 
-			| The summation of all output file sizes exceeds the request file size limit |
- 			| An output file has a blocked file extension |
+			| an import request input file is too big| 
+			| the summation of all input file sizes exceeds the import request file size limit |
+ 			| an import request input file has a blocked file extension |
  			| A request has a file with a StudyID in it                                  |
