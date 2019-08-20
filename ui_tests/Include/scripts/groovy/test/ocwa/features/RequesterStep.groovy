@@ -100,7 +100,9 @@ public class RequesterStep extends Step {
 
 	@Given("requester adds (.+) input file that does not violate any blocking or warning rules")
 	def requester_adds_input_file_that_does_not_violate_blocking_or_warning_rules(String numInputFilesToUpload) {
-		String[] files = [GlobalVariable.ValidImportFileName]
+		String[] files = [
+			GlobalVariable.ValidImportFileName
+		]
 		if(numInputFilesToUpload == "2") files << GlobalVariable.ValidImportFileName2
 
 		requester_uploads_files(files)
@@ -146,9 +148,9 @@ public class RequesterStep extends Step {
 			case "the summation of all input file sizes exceeds the import request file size warning threshold":
 			// need to add input files that pass the warning limit individually but together surpass the combined size threshold
 				requester_uploads_files([
-					GlobalVariable.ValidFileName,
-					GlobalVariable.WarningMaxSizeLimitFileName,
-					GlobalVariable.BlockedMaxSizeLimitFileName
+					GlobalVariable.ValidImportFileName,
+					GlobalVariable.ValidImportFileName2,
+					GlobalVariable.ValidImportFileName3
 				] as String[])
 				break
 			default:
@@ -184,13 +186,13 @@ public class RequesterStep extends Step {
 				] as String[])
 				break
 			case "the summation of all input file sizes exceeds the import request file size limit":
-				//need to add input files that pass the blocked limit individually but together surpass the combined size threshold
-					requester_uploads_files([
-						GlobalVariable.WarningImportFileName,
-						GlobalVariable.WarningImportFileName2,
-						GlobalVariable.WarningImportFileName3
-					] as String[])
-					break
+			//need to add input files that pass the blocked limit individually but together surpass the combined size threshold
+				requester_uploads_files([
+					GlobalVariable.WarningImportFileName,
+					GlobalVariable.WarningImportFileName2,
+					GlobalVariable.WarningImportFileName3
+				] as String[])
+				break
 			case "a request has a file with a studyid in it":
 				requester_uploads_files([
 					GlobalVariable.BlockedStudyIDFileName] as String[])
@@ -211,11 +213,11 @@ public class RequesterStep extends Step {
 		//stubbed because newly created requests will always have an update date within the last month
 	}
 
-//	@Given("a project team member has created a request")
-//	def project_team_member_has_created_request() {
-//		requester_has_a_request_of_status(Constant.Status.DRAFT)
-//		WebUI.closeBrowser()
-//	}
+	//	@Given("a project team member has created a request")
+	//	def project_team_member_has_created_request() {
+	//		requester_has_a_request_of_status(Constant.Status.DRAFT)
+	//		WebUI.closeBrowser()
+	//	}
 
 	@Given("requester's project allows for editing of team member's requests")
 	def project_allows_for_team_sharing() {
@@ -283,16 +285,16 @@ public class RequesterStep extends Step {
 	@When("the requester views the (.+)request")
 	def requester_views_request_they_created(String requestType) {
 		switch (requestType) {
-			case "": 		
-			if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
-				WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
-			}
-			break
+			case "":
+				if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
+					WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
+				}
+				break
 			case "import ":
-			if (WebUI.getUrl() != GlobalVariable.OCWA_DL_URL) {
-				WebUI.navigateToUrl(GlobalVariable.OCWA_DL_URL)
-			}
-			break
+				if (WebUI.getUrl() != GlobalVariable.OCWA_DL_URL) {
+					WebUI.navigateToUrl(GlobalVariable.OCWA_DL_URL)
+				}
+				break
 			default:
 				throw new Exception("Request type $requestType is unknown")
 		}
