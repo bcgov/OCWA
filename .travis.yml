@@ -230,7 +230,7 @@ matrix:
     install:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-      sudo pip3 install -U pip setuptools
+      sudo pip3 install -U pip3 setuptools
       pip3 --version
     - |-
       wget -q ${HELM_URL}/${HELM_TGZ}
