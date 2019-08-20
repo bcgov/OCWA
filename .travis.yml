@@ -230,7 +230,8 @@ matrix:
     install:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-      sudo pip3 install -U setuptools
+      sudo pip install -U pip setuptools
+      pip --version
     - |-
       wget -q ${HELM_URL}/${HELM_TGZ}
       tar xzfv ${HELM_TGZ}
@@ -247,7 +248,7 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
       cp config/default.json.template config/default.json
-      sudo pip3 install -U -r requirements.txt
+      sudo pip install -U -r requirements.txt
     - sudo coverage run --branch --source=db,v1 -m pytest --cov
     - sudo coverage xml
     - |-
