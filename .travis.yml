@@ -231,8 +231,6 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
       pip3 install --upgrade pip setuptools
-      pip3 --version
-      pip --version
     - |-
       wget -q ${HELM_URL}/${HELM_TGZ}
       tar xzfv ${HELM_TGZ}
@@ -284,8 +282,7 @@ matrix:
     install:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-      sudo pip3 install -U setuptools
-      sudo pip3 install -r requirements.txt
+      pip3 install --upgrade pip setuptools
     before_script:
     - |-
       wget -q ${HELM_URL}/${HELM_TGZ}
@@ -297,22 +294,21 @@ matrix:
       wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
       unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
       PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-    - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+    - pip3 install yamllint=="${YAMLLINT_VERSION}"
     script:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-      sudo pip3 install -U setuptools
-      sudo pip3 install -r requirements.txt
+      pip3 install -r requirements.txt
+      pip3 install -e .
       cp config/default.json.template config/default.json
-      sudo pip3 install -e .
       python3 wsgi.py &
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       cp config/default.json.template config/default.json
-      sudo pip3 install -e .
-      sudo pip3 install -r requirements.txt
-    - sudo coverage run --branch --source=db,v1,validator -m pytest --cov
-    - sudo coverage xml
+      pip3 install -r requirements.txt
+      pip3 install -e .
+    - coverage run --branch --source=db,v1,validator -m pytest --cov
+    - coverage xml
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       helm lint helm/validate-api
