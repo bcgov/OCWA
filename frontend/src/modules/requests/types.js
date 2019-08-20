@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 export const RequestSchema = PropTypes.shape({
   name: PropTypes.string,
   author: PropTypes.string,
+  autoAccept: PropTypes.bool,
   chronology: PropTypes.arrayOf(
     PropTypes.shape({
       timestamp: PropTypes.string,
       enteredState: PropTypes.number,
       change_by: PropTypes.string,
-    })
+    }),
   ),
   exportType: PropTypes.oneOf(['code', 'data']),
   mergeRequestLink: PropTypes.string,

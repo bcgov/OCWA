@@ -33,6 +33,7 @@ const initialViewState = {
   currentRequestId: null,
   currentNewRequestStep: 0,
   duplicateRequest: undefined,
+  isSubmitting: false,
   filter: null,
   filesToDelete: [],
   filesToDuplicate,
@@ -85,6 +86,7 @@ const viewState = (state = initialViewState, action = {}) => {
     case 'request/close/draft':
       return {
         ...state,
+        isSubmitting: false,
         filesToDelete: [],
         filesToDuplicate,
         currentRequestId: null,
@@ -104,9 +106,16 @@ const viewState = (state = initialViewState, action = {}) => {
         currentNewRequestStep: action.payload,
       };
 
+    case 'request/put':
+      return {
+        ...state,
+        isSubmitting: /submit/.test(action.meta.url),
+      };
+
     case 'request/put/success':
       return {
         ...state,
+        isSubmitting: false,
         filesToDelete: [],
         filesToDuplicate,
         currentRequestId: action.meta.quitEditing
@@ -115,6 +124,12 @@ const viewState = (state = initialViewState, action = {}) => {
         currentNewRequestStep: action.meta.nextStep
           ? 1
           : state.currentNewRequestStep,
+      };
+
+    case 'request/put/failed':
+      return {
+        ...state,
+        isSubmitting: false,
       };
 
     case 'request/post/success':

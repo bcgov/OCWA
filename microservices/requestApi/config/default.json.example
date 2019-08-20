@@ -27,6 +27,7 @@
 
     "jwtSecret": "jwtSecret",
     "ocwaUrl": "http://localhost:8000/",
+    "ocwaImportUrl": "http://localhost:8000/",
 
     "email":{
       "enabled": false,

@@ -44,7 +44,7 @@ function viewState(state = initialViewState, action = {}) {
         state: get(
           action,
           ['payload', 'entities', 'requests', action.payload.result, 'state'],
-          2
+          2,
         ),
       };
 
@@ -57,7 +57,7 @@ function viewState(state = initialViewState, action = {}) {
     case 'request/put/requested':
       return {
         ...state,
-        isApprovingRequest: true,
+        isApprovingRequest: /approve/.test(action.meta.url),
       };
 
     case 'request/put/failed':

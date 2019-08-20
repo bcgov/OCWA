@@ -11,6 +11,7 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavLink, Redirect, Route, Switch } from 'react-router-dom';
 import merge from 'lodash/merge';
+import LoadingDialog from '@src/components/loading-dialog';
 import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import Spinner from '@atlaskit/spinner';
@@ -66,6 +67,7 @@ class Request extends React.Component {
     const {
       data,
       duplicateFiles,
+      isSubmitting,
       isLoaded,
       isLoading,
       isOutputChecker,
@@ -95,6 +97,13 @@ class Request extends React.Component {
     return (
       <div id="requests-page">
         <Title>{title}</Title>
+        {isCodeExport && (
+          <LoadingDialog
+            open={data.autoAccept && isSubmitting}
+            title="Approving Request"
+            text="This can take some time, please wait for the merge request to complete"
+          />
+        )}
         <Page>
           <header
             className={cx(styles.header, {
@@ -183,7 +192,7 @@ class Request extends React.Component {
                           {get(
                             data,
                             'mergeRequestStatus.message',
-                            'There was an error.',
+                            'There was an error.'
                           )}
                         </SectionMessage>
                       )}
@@ -247,6 +256,7 @@ Request.propTypes = {
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
   location: PropTypes.shape({
     state: PropTypes.shape({
       isEditing: PropTypes.bool,

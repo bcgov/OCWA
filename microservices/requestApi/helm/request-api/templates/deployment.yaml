@@ -30,7 +30,7 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{ if .Values.emailTemplateEnabled }}
+          {{ if or (.Values.emailTemplateEnabled) (.Values.emailSubmitTemplateEnabled) }}
           volumeMounts:
           - name: emailtemplate
             mountPath: ./notifications
@@ -125,6 +125,8 @@ spec:
               value: '{{ .Values.ignoreGroups }}'
             - name: OCWA_URL
               value: "{{ .Values.ocwaUrl }}"
+            - name: OCWA_IMPORT_URL
+              value: "{{ .Values.ocwaImportUrl }}"
             - name: EMAIL_ENABLED
               value: "{{ .Values.emailEnabled }}"
             - name: EMAIL_SERVICE

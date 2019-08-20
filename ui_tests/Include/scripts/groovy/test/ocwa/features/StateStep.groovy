@@ -53,18 +53,18 @@ import test.ocwa.common.Constant
  * Purpose is abstract request state to assist in writing test cases e.g., Given I have a request in state X (without having to write out all the steps every time to get a request to state X)
  * @author Paul Ripley
  */
-public class StateStep extends Step {	
+public class StateStep extends Step {
 	@Delegate RequesterStep rs
 	@Delegate CheckerStep cs
 	@Delegate LoginStep ls
-	
+
 	public StateStep() {
 		rs = new RequesterStep()
 		cs = new CheckerStep()
 		ls = new LoginStep()
 	}
-	
-	
+
+
 	@Given('requester has a request of status "(.+)"')
 	def requester_has_a_request_of_status(String status) {
 		rs.requester_starts_new_request()
@@ -90,7 +90,7 @@ public class StateStep extends Step {
 				ls.user_login('output checker')
 				cs.checker_tries_to_claim_unclaimed_request()
 				cs.checker_marks_request_as_needs_revisions()
-			//alternative path to WIP we are not doing here is requester has submitted and withdrawn. 
+			//alternative path to WIP we are not doing here is requester has submitted and withdrawn.
 				WebUI.verifyTextPresent(Constant.Status.WORK_IN_PROGRESS, false)
 				break
 			case "cancelled":
@@ -110,5 +110,4 @@ public class StateStep extends Step {
 				break
 		}
 	}
-
 }
