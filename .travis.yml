@@ -230,8 +230,8 @@ matrix:
     install:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-      sudo pip install -U pip setuptools
-      pip --version
+      sudo pip3 install -U pip setuptools
+      pip3 --version
     - |-
       wget -q ${HELM_URL}/${HELM_TGZ}
       tar xzfv ${HELM_TGZ}
@@ -243,12 +243,12 @@ matrix:
       wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
       unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
       PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-      sudo pip install yamllint=="${YAMLLINT_VERSION}"
+      sudo pip3 install yamllint=="${YAMLLINT_VERSION}"
     script:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
       cp config/default.json.template config/default.json
-      sudo pip install -U -r requirements.txt
+      sudo pip3 install -U -r requirements.txt
     - sudo coverage run --branch --source=db,v1 -m pytest --cov
     - sudo coverage xml
     - |-
