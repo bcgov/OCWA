@@ -282,15 +282,15 @@ public class RequesterStep extends Step {
 		WebUI.click(saveCommentButton)
 	}
 
-	@When("the requester views the (.+)request")
+	@When("the requester views the(.+)request")
 	def requester_views_request_they_created(String requestType) {
 		switch (requestType) {
-			case "":
+			case " ":
 				if (WebUI.getUrl() != GlobalVariable.OCWA_URL) {
 					WebUI.navigateToUrl(GlobalVariable.OCWA_URL)
 				}
 				break
-			case "import ":
+			case " import ":
 				if (WebUI.getUrl() != GlobalVariable.OCWA_DL_URL) {
 					WebUI.navigateToUrl(GlobalVariable.OCWA_DL_URL)
 				}
@@ -403,6 +403,7 @@ public class RequesterStep extends Step {
 		//requester_views_request_they_created()
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(2) // wait 2 seconds to ensure page is fully loaded
 		WebUI.verifyTextPresent(statusTxt, false)
 		WebUI.closeBrowser()
 	}
