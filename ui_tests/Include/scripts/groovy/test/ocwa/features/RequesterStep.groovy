@@ -56,6 +56,7 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
+		G_REQUESTURL = WebUI.getUrl()
 	}
 
 	@Given("has not submitted the request")
