@@ -68,6 +68,11 @@ public class LoginStep extends Step {
 	def import_download_login() {
 		user_login('requester')
 	}
+	
+	@When("the requester logs out")
+	def requester_logs_out() {
+		logout()
+	}
 
 	/**
 	 * Logs a user into the system with the specified parameters
