@@ -106,5 +106,6 @@ public class Constant {
 		static final def MERGE_TIMEOUT = 2
 		static final def MERGE_BRANCH_HAPPY_PATH_TEXT = "happy-1-develop"
 		static final def MERGE_BRANCH_CANNOT_MERGE_TEXT = "s7-1-develop"
+		static final def HAVE_REVIEWED_CODE_CB_ID = ""
 	}
 }
