@@ -19,6 +19,7 @@ import * as styles from './styles.css';
 function RequestDetails({
   data,
   duplicateFiles,
+  id,
   isEditing,
   isLoading,
   onSave,
@@ -30,7 +31,7 @@ function RequestDetails({
     .filter(
       d =>
         (d.exportType === 'all' || d.exportType === exportType) &&
-        (d.zone === 'all' || d.zone === zone),
+        (d.zone === 'all' || d.zone === zone)
     )
     .map(d => ({
       name: d.name,
@@ -80,7 +81,7 @@ function RequestDetails({
               {!isEditing && (
                 <Files
                   showDownloadButton
-                  id={data._id}
+                  id={id}
                   ids={files}
                   fileStatus={data.fileStatus}
                 />
@@ -101,7 +102,7 @@ function RequestDetails({
             </div>
             <div className={styles.sectionContent}>
               {!isEditing && (
-                <Files showDownloadButton id={data._id} ids={supportingFiles} />
+                <Files showDownloadButton id={id} ids={supportingFiles} />
               )}
               {isEditing && (
                 <FileUploader
@@ -124,6 +125,7 @@ RequestDetails.propTypes = {
     files: PropTypes.arrayOf(PropTypes.string),
     supportingFiles: PropTypes.arrayOf(PropTypes.string),
   }),
+  id: PropTypes.string.isRequired,
   isEditing: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
   onSave: PropTypes.func.isRequired,
