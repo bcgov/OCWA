@@ -313,6 +313,19 @@ public class RequesterStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 	}
 
+	@When("the requester tries to navigate to the request directly")
+	def navigate_to_request_directly() {
+		WebUI.comment("Request URL:$G_REQUESTURL")
+		WebUI.navigateToUrl(G_REQUESTURL)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
+		WebUI.comment("Current url is:${WebUI.getUrl()}")
+	}
+	
+	@When("a requester in another project tries to navigate to the request directly")
+	def navigate_to_other_project_request_directly() {
+		navigate_to_request_directly()
+	}
+	
 	@When("the requester cancels the request")
 	def requester_cancels_request() {
 		requester_views_request_they_created(" ")
@@ -456,7 +469,7 @@ public class RequesterStep extends Step {
 
 	@Then("requester should be informed that given blocking rule (.+) has been violated")
 	def request_should_be_informed_of_blocking_rule_violation(String rule) {
-		if(!rule.equals("The summation of all output file sizes exceeds the request file size limit")) {
+		if(!rule.contains("summation")) {
 			WebUI.comment("checking that file was successfully blocked")
 			WebUI.waitForElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.ERROR), Constant.DEFAULT_TIMEOUT)
 			WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.ERROR), Constant.DEFAULT_TIMEOUT)
@@ -499,5 +512,11 @@ public class RequesterStep extends Step {
 		WebUI.click(submitBtn)
 		WebUI.comment("Clicked the submit link")
 		request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
+	}
+	@Then("the request should not be accessible")
+	def request_is_not_accessible() {
+		if(!WebUI.verifyTextNotPresent(G_REQUESTNAME, false)) {
+			WebUI.comment('Request is accessible when it should not be.')
+		}
 	}
 }
