@@ -90,4 +90,21 @@ public class Constant {
 		static final def WORK_IN_PROGRESS = 'Work in Progress'
 		static final def IN_REVIEW = 'In Review'
 	}
+
+	final class CodeRequests {
+		static final def REQUEST_LOCAL_REPO_TXT_ID = "repository-uid"
+		static final def REQUEST_REMOTE_REPO_TXT_ID = "externalRepository-uid"
+		static final def REQUEST_BRANCH_TXT_ID = "branch_uid"
+		static final def REQUEST_LOCAL_REPO_TEXT = "https://secureresearch.com/username/internalrepo.git"
+		static final def REQUEST_REMOTE_REPO_TEXT = "https://github.com/username/myrep.git"
+		static final def MERGE_INPROGRESS_TAG = "strong"
+		static final def MERGE_INPROGRESS_TEXT = "Merge Request"
+		static final def MERGE_COMPLETE_TAG = "strong"
+		static final def MERGE_COMPLETE_TEXT = "Merge Request Complete"
+		static final def MERGE_CANNOT_MERGE_TAG = "strong"
+		static final def MERGE_CANNOT_MERGE_TEXT = "rejected"
+		static final def MERGE_TIMEOUT = 2
+		static final def MERGE_BRANCH_HAPPY_PATH_TEXT = "happy-1-develop"
+		static final def MERGE_BRANCH_CANNOT_MERGE_TEXT = "s7-1-develop"
+	}
 }
