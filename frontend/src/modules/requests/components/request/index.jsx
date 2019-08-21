@@ -49,9 +49,20 @@ class Request extends React.Component {
   }
 
   onEdit = () => {
-    this.setState(state => ({
-      isEditing: !state.isEditing,
-    }));
+    const { isEditing } = this.state;
+    const { history, location } = this.props;
+
+    // Always turn off the cached editing value after editing
+    this.setState(
+      state => ({
+        isEditing: !state.isEditing,
+      }),
+      () => {
+        if (isEditing) {
+          history.replace(location.pathname, { isEditing: false });
+        }
+      }
+    );
   };
 
   onSave = updatedData => {
@@ -206,6 +217,7 @@ class Request extends React.Component {
                       <Details
                         data={data}
                         duplicateFiles={duplicateFiles}
+                        id={match.params.requestId}
                         isEditing={isEditing}
                         isLoaded={isLoaded}
                         isLoading={isLoading}
@@ -253,17 +265,24 @@ Request.propTypes = {
     files: PropTypes.arrayOf(PropTypes.string),
     supportingFiles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+  history: PropTypes.shape({
+    replace: PropTypes.func,
+  }).isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
   location: PropTypes.shape({
+    pathname: PropTypes.string,
     state: PropTypes.shape({
       isEditing: PropTypes.bool,
     }),
   }).isRequired,
   updatedAt: PropTypes.string.isRequired,
   match: PropTypes.shape({
+    params: PropTypes.shape({
+      requestId: PropTypes.string,
+    }),
     url: PropTypes.string.isRequired,
   }).isRequired,
   onFinishEditing: PropTypes.func.isRequired,
