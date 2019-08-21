@@ -3,62 +3,65 @@ data "docker_registry_image" "nginx" {
 }
 
 resource "docker_image" "nginx" {
-  name          = "${data.docker_registry_image.nginx.name}"
-  pull_triggers = ["${data.docker_registry_image.nginx.sha256_digest}"]
+  name          = data.docker_registry_image.nginx.name
+  pull_triggers = [data.docker_registry_image.nginx.sha256_digest]
 }
 
 resource "docker_container" "ocwa_nginx" {
-  image = "${docker_image.nginx.latest}"
-  name = "ocwa_nginx"
+  image   = docker_image.nginx.latest
+  name    = "ocwa_nginx"
   restart = "on-failure"
-  ports = [{ 
+  ports {
     internal = 80
     external = 80
-  },{ 
+  }
+  ports {
     internal = 443
     external = 443
-  }]
-  networks_advanced = {
-     name = "${docker_network.private_network.name}"
-#     ipv4_address = "4.4.4.4"
   }
-  volumes = [{ 
-    host_path = "${var.hostRootPath}/ssl"
+  networks_advanced {
+    name = docker_network.private_network.name
+    #     ipv4_address = "4.4.4.4"
+  }
+  volumes {
+    host_path      = "${var.hostRootPath}/ssl"
     container_path = "/ssl"
-  },{ 
-    host_path = "${var.hostRootPath}/config/nginx"
+  }
+  volumes {
+    host_path      = "${var.hostRootPath}/config/nginx"
     container_path = "/etc/nginx/conf.d/"
-  },{ 
-    host_path = "${var.hostRootPath}/config/nginx/www"
+  }
+  volumes {
+    host_path      = "${var.hostRootPath}/config/nginx/www"
     container_path = "/www/"
   }
-  ]
 
   labels = {
-    NGINX_CONFIG_MD5 = "${md5(local_file.proxy.content)}"
+    NGINX_CONFIG_MD5 = md5(local_file.proxy.content)
   }
 
   depends_on = [
-    "local_file.proxy",
-    "null_resource.keycloak_first_time_install",
-    "null_resource.minio_first_install"
+    local_file.proxy,
+    null_resource.keycloak_first_time_install,
+    null_resource.minio_first_install,
   ]
 }
 
 data "template_file" "proxy_config" {
-  template = "${file("${path.module}/scripts/nginx-proxy.tpl")}"
+  template = file("${path.module}/scripts/nginx-proxy.tpl")
   vars = {
-      authHost = "${var.authHost}"
-      authHostname = "${var.authHostname}"
-      ocwaHost = "${var.ocwaHost}"
-      ocwaDLHostname = "${var.ocwaDLHostname}"
-      ocwaHostname = "${var.ocwaHostname}"
-      sslCertificate = "${var.sslCertificate}"
-      sslCertificateKey = "${var.sslCertificateKey}"
+    authHost          = var.authHost
+    authHostname      = var.authHostname
+    ocwaHost          = var.ocwaHost
+    ocwaDLHostname    = var.ocwaDLHostname
+    ocwaHostname      = var.ocwaHostname
+    sslCertificate    = var.sslCertificate
+    sslCertificateKey = var.sslCertificateKey
   }
 }
 
 resource "local_file" "proxy" {
-    content = "${data.template_file.proxy_config.rendered}"
-    filename = "${var.hostRootPath}/config/nginx/proxy.conf"
+  content  = data.template_file.proxy_config.rendered
+  filename = "${var.hostRootPath}/config/nginx/proxy.conf"
 }
+
