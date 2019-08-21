@@ -65,10 +65,12 @@ public class Constant {
 		static final def REQUEST_PHONE_TXT_ID = 'phoneNumber-uid'
 		static final def REQUEST_VARIABLE_TXT_ID = 'variableDescriptions-uid'
 		static final def REQUEST_SUBPOP_TXT_ID = 'subPopulation-uid'
+		static final def REQUEST_GENERAL_COMMENTS_TXT_ID = 'purpose-uid'
 
 		static final def REQUEST_PHONE_TEXT = '555-555-5555'
 		static final def REQUEST_VARIABLE_TEXT = 'My variables are...'
 		static final def REQUEST_SUBPOP_TEXT = 'My sub-population is...'
+		static final def GENERAL_COMMENTS_TEXT = 'My general comments...'
 
 		static final def REQUEST_SAVE_FILES_BTN_ID = 'request-form-save-files-button'
 		// Submit button on the request page
@@ -76,7 +78,7 @@ public class Constant {
 		static final def REQUEST_WITHDRAW_BTN_ID = 'request-sidebar-withdraw-button'
 
 		// Download interface
-		static final def DOWNLOAD_INTERFACE_HEADER = 'Approved Requests'
+		static final def DOWNLOAD_URL = '/downloads'
 	}
 
 	final class Status {

@@ -16,4 +16,10 @@
       <isRun>true</isRun>
       <testCaseId>Test Cases/Requester/ExternallyAccessApprovedFilesTest</testCaseId>
    </testCaseLink>
+   <testCaseLink>
+      <guid>b1c0c174-3f42-4053-9e7e-a4252fd53a64</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/Requester/CreateNewImportRequestTest</testCaseId>
+   </testCaseLink>
 </TestSuiteEntity>
