@@ -229,7 +229,6 @@ FilesTable.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   isFailed: PropTypes.bool.isRequired,
-  requestId: PropTypes.string.isRequired,
   sendAction: PropTypes.func.isRequired,
   showDownloadButton: PropTypes.bool,
   showRemoveButton: PropTypes.bool,
