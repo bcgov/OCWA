@@ -92,11 +92,16 @@ public class Constant {
 	}
 
 	final class CodeRequests {
+		static final def REQUEST_REQUEST_TYPE_DD_ID = "request-form-exportTypeSelect"
+		static final def REQUEST_CODE_DESCRIPTION_TXT_ID = "codeDescription-uid"
+		static final def REQUEST_CODE_DESCRIPTION_TEXT = "Some information about the code..."		
 		static final def REQUEST_LOCAL_REPO_TXT_ID = "repository-uid"
 		static final def REQUEST_REMOTE_REPO_TXT_ID = "externalRepository-uid"
-		static final def REQUEST_BRANCH_TXT_ID = "branch_uid"
+		static final def REQUEST_BRANCH_TXT_ID = "branch-uid"
 		static final def REQUEST_LOCAL_REPO_TEXT = "https://secureresearch.com/username/internalrepo.git"
 		static final def REQUEST_REMOTE_REPO_TEXT = "https://github.com/username/myrep.git"
+		static final def REQUEST_CODE_EXPORT_DD_VALUE = "Code Export"
+		static final def REQUEST_CODE_IMPORT_DD_VALUE = "Code Import"
 		static final def MERGE_INPROGRESS_TAG = "strong"
 		static final def MERGE_INPROGRESS_TEXT = "Merge Request"
 		static final def MERGE_COMPLETE_TAG = "strong"

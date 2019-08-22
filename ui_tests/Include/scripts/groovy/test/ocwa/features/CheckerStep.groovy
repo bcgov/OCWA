@@ -65,7 +65,7 @@ public class CheckerStep extends Step {
 		WebUI.click(revisionsButtonObject)
 		WebUI.comment("found and clicked the needs revisions button")
 	}
-	
+
 	@When("the output checker marks the code request as approved")
 	def output_checker_approves_code_request() {
 		TestObject hasReviewedObject = Utils.getTestObjectByName(Constant.CodeRequests.HAVE_REVIEWED_CODE_CB_ID)
