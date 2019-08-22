@@ -48,6 +48,23 @@ public class RequesterStep extends Step {
 			case "import":
 				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID, 'textarea'), Constant.Requester.GENERAL_COMMENTS_TEXT)
 				break
+			case "import code":
+			case "export code":
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID, 'textarea'), Constant.Requester.GENERAL_COMMENTS_TEXT)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID, 'textarea'), Constant.Requester.GENERAL_COMMENTS_TEXT)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_REMOTE_REPO_TXT_ID), Constant.Requester.REQUEST_REMOTE_REPO_TEXT)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_LOCAL_REPO_TXT_ID), Constant.Requester.REQUEST_LOCAL_REPO_TEXT)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.Requester.REQUEST_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				break
+			case "destined to fail import code":
+			case "destined to fail export code":
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID, 'textarea'), Constant.Requester.GENERAL_COMMENTS_TEXT)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID, 'textarea'), Constant.Requester.GENERAL_COMMENTS_TEXT)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_REMOTE_REPO_TXT_ID), Constant.Requester.REQUEST_REMOTE_REPO_TEXT)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_LOCAL_REPO_TXT_ID), Constant.Requester.REQUEST_LOCAL_REPO_TEXT)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.Requester.MERGE_BRANCH_CANNOT_MERGE_TEXT)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				break
+		
 			default:
 				throw new Exception("Request type $requestType is unknown")
 		}
@@ -321,12 +338,12 @@ public class RequesterStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.comment("Current url is:${WebUI.getUrl()}")
 	}
-	
+
 	@When("a requester in another project tries to navigate to the request directly")
 	def navigate_to_other_project_request_directly() {
 		navigate_to_request_directly()
 	}
-	
+
 	@When("the requester cancels the request")
 	def requester_cancels_request() {
 		requester_views_request_they_created(" ")
@@ -372,6 +389,16 @@ public class RequesterStep extends Step {
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 
 	}
+	
+	@When("the merge request finishes")
+	def wait_for_merge_request_to_finish() {
+		TestObject mergeInProgressMessage = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_INPROGRESS_TEXT, Constant.CodeRequests.MERGE_INPROGRESS_TAG)
+		if (!WebUI.waitForElementNotPresent(mergeInProgressMessage, Constant.CodeRequests.MERGE_TIMEOUT, FailureHandling.OPTIONAL)) {
+			WebUI.takeScreenshot()
+			KeywordUtil.markFailed('Merge request timed out.')
+		}
+	}
+	
 
 	@Then("the requester should see their saved request including (.+) output file (.+) supporting file")
 	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles) {
@@ -518,6 +545,14 @@ public class RequesterStep extends Step {
 	def request_is_not_accessible() {
 		if(!WebUI.verifyTextNotPresent(G_REQUESTNAME, false)) {
 			WebUI.comment('Request is accessible when it should not be.')
+		}
+	}
+	@Then("the requester should be informed that the merge request failed")
+	def requester_informed_of_merge_request_failure() {
+		TestObject failedMergeText = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_CANNOT_MERGE_TEXT, null)
+		if (!WebUI.waitForElementPresent(failedMergeText, Constant.CodeRequests.MERGE_TIMEOUT, FailureHandling.OPTIONAL)) {
+			WebUI.takeScreenshot()
+			KeywordUtil.markFailed('Merge failure message did not display (but it should have displayed).')
 		}
 	}
 }

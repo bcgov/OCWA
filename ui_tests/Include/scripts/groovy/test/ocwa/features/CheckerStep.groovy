@@ -65,6 +65,14 @@ public class CheckerStep extends Step {
 		WebUI.click(revisionsButtonObject)
 		WebUI.comment("found and clicked the needs revisions button")
 	}
+	
+	@When("the output checker marks the code request as approved")
+	def output_checker_approves_code_request() {
+		TestObject hasReviewedObject = Utils.getTestObjectByName(Constant.CodeRequests.HAVE_REVIEWED_CODE_CB_ID)
+		WebUI.waitForElementClickable(hasReviewedObject, 30)
+		WebUI.click(hasReviewedObject)
+		checker_marks_request_as_approved()
+	}
 
 	@Then("the output checker should be able to see that they're now assigned the request")
 	def checker_should_see_they_are_assigned_to_request(){
@@ -86,7 +94,7 @@ public class CheckerStep extends Step {
 		WebUI.navigateToUrl(url)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		TestObject newRequestButtonObject = Utils.getTestObjectByText(Constant.Requester.NEW_REQUEST_BTN_TXT)
-		
+
 		// use the Request button as a proxy for ensuring that the page has loaded
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)

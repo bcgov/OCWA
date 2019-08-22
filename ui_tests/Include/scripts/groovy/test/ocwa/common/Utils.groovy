@@ -38,7 +38,7 @@ public class Utils {
 		if(tag) tObject.addProperty('tag', ConditionType.EQUALS, tag, true)
 		return tObject
 	}
-	
+
 	/**
 	 * Returns the TestObject correlating to the text
 	 * @param text The text string to filter on
@@ -73,6 +73,17 @@ public class Utils {
 	static def getTestObjectByXPath(String path) {
 		TestObject tObject = new TestObject(path)
 		tObject.addProperty('xpath', ConditionType.EQUALS, path, true)
+		return tObject
+	}
+	
+	/**
+	 * Returns the TestObject correlating to the name
+	 * @param nm The name attribute to filter on
+	 * @return TestObject
+	 */
+	static def getTestObjectByName(String nm) {
+		TestObject tObject = new TestObject(nm)
+		tObject.addProperty('name', ConditionType.EQUALS, nm, true)
 		return tObject
 	}
 }
