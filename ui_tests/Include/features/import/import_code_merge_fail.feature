@@ -6,4 +6,5 @@ Given requester has logged into the import interface
 And requester has started destined to fail code import request
 When the requester saves their request
 And the merge request finishes
+And requester submits their request
 Then the requester should be informed that the merge request failed

@@ -88,8 +88,6 @@ public class CheckerStep extends Step {
 	@Then("the output checker should see the status of the request updated to '(.+)'")
 	def checker_should_see_request_is_in_given_status(String status) {
 		WebUI.waitForElementPresent(Utils.getTestObjectByText(status, null), Constant.DEFAULT_TIMEOUT)
-		WebUI.executeJavaScript("document.body.style.zoom='zoom 60%'", null) //this is needed because sometimes the request status gets cut off in the browser window
-		WebUI.verifyTextPresent(status, false)
 		WebUI.closeBrowser()
 	}
 
