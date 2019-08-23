@@ -72,7 +72,7 @@ public class CheckerStep extends Step {
 		WebUI.waitForElementClickable(hasReviewedObject, 30)
 		WebUI.click(hasReviewedObject)
 		checker_marks_request_as_approved()
-		TestObject isApprovingObject = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_REQUEST_APPROVING_TEXT)
+		TestObject isApprovingObject = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_REQUEST_APPROVING_TEXT, null)
 		WebUI.waitForElementPresent(isApprovingObject,Constant.CodeRequests.MERGE_TIMEOUT)
 		WebUI.waitForElementNotPresent(isApprovingObject,Constant.CodeRequests.MERGE_TIMEOUT)
 	}
