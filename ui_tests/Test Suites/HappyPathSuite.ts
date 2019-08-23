@@ -25,7 +25,7 @@
    <testCaseLink>
       <guid>36ba962a-1892-413a-a5ab-7e4c70abbc8a</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Requester/ExportCodeMergeFailTest</testCaseId>
    </testCaseLink>
    <testCaseLink>
@@ -37,7 +37,7 @@
    <testCaseLink>
       <guid>db209f02-2c0a-447d-80f2-50f463e5776a</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Requester/ImportCodeMergeFailTest</testCaseId>
    </testCaseLink>
    <testCaseLink>
