@@ -108,7 +108,7 @@ public class Constant {
 		static final def MERGE_COMPLETE_TEXT = 'Merge Request Complete'
 		static final def MERGE_CANNOT_MERGE_TAG = 'strong'
 		static final def MERGE_CANNOT_MERGE_TEXT = 'rejected'
-		static final def MERGE_TIMEOUT = 20
+		static final def MERGE_TIMEOUT = 40
 		static final def MERGE_BRANCH_HAPPY_PATH_TEXT = 'happy-1-develop'
 		static final def MERGE_BRANCH_CANNOT_MERGE_TEXT = 's7-1-develop'
 		static final def HAVE_REVIEWED_CODE_CB_ID = 'viewed-mr'

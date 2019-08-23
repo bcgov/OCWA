@@ -103,6 +103,7 @@ public class CheckerStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementVisible(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
+		WebUI.maximizeWindow()
 
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.closeBrowser()
