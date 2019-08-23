@@ -67,7 +67,7 @@ public class StateStep extends Step {
 
 	@Given('requester has a request of status "(.+)"')
 	def requester_has_a_request_of_status(String status) {
-		rs.requester_starts_new_request()
+		rs.requester_starts_new_request("a")
 		rs.requester_adds_output_file_that_does_not_violate_blocking_or_warning_rules("1")
 
 		switch (status.toLowerCase()) {

@@ -1,7 +1,7 @@
 {
   "name": "ocwa-clients",
   "author": "Jeremy Ho",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
@@ -11,16 +11,16 @@
     "test": "NODE_ENV=test nyc --reporter=lcov mocha --exit --timeout 10000"
   },
   "dependencies": {
-    "config": "^3.0.1",
+    "config": "^3.2.2",
     "morgan": "^1.9.1",
     "npmlog": "^4.1.2",
     "request": "^2.88.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "chai-http": "^4.2.0",
-    "mocha": "^6.1.2",
-    "nyc": "^13.3.0",
-    "sinon": "^7.3.1"
+    "chai-http": "^4.3.0",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
+    "sinon": "^7.4.1"
   }
 }
