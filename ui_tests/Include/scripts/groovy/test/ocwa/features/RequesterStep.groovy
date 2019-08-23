@@ -61,6 +61,8 @@ public class RequesterStep extends Step {
 			case "destined to fail code import":
 				requestTypeCodeExport = Utils.getTestObjectByText(Constant.CodeRequests.REQUEST_CODE_IMPORT_DD_VALUE, null)
 			case "destined to fail code export":
+				WebUI.click(requestTypeDropDown)
+				WebUI.click(requestTypeCodeExport)
 				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TXT_ID, 'textarea'), Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TEXT)
 				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_REMOTE_REPO_TXT_ID), Constant.CodeRequests.REQUEST_REMOTE_REPO_TEXT)
 				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_LOCAL_REPO_TXT_ID), Constant.CodeRequests.REQUEST_LOCAL_REPO_TEXT)
