@@ -88,6 +88,7 @@ public class CheckerStep extends Step {
 	@Then("the output checker should see the status of the request updated to '(.+)'")
 	def checker_should_see_request_is_in_given_status(String status) {
 		WebUI.waitForElementPresent(Utils.getTestObjectByText(status, null), Constant.DEFAULT_TIMEOUT)
+		WebUI.maximizeWindow()
 		WebUI.verifyTextPresent(status, false)
 		WebUI.closeBrowser()
 	}
@@ -103,7 +104,6 @@ public class CheckerStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementVisible(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
-		WebUI.maximizeWindow()
 
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.closeBrowser()
