@@ -73,8 +73,8 @@ public class CheckerStep extends Step {
 		WebUI.click(hasReviewedObject)
 		checker_marks_request_as_approved()
 		TestObject isApprovingObject = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_REQUEST_APPROVING_TEXT, null)
-		WebUI.waitForElementPresent(isApprovingObject,Constant.CodeRequests.MERGE_TIMEOUT)
-		WebUI.waitForElementNotPresent(isApprovingObject,Constant.CodeRequests.MERGE_TIMEOUT)
+		WebUI.waitForElementPresent(isApprovingObject,Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotPresent(isApprovingObject,Constant.DEFAULT_TIMEOUT)
 	}
 
 	@Then("the output checker should be able to see that they're now assigned the request")
@@ -87,6 +87,7 @@ public class CheckerStep extends Step {
 
 	@Then("the output checker should see the status of the request updated to '(.+)'")
 	def checker_should_see_request_is_in_given_status(String status) {
+		WebUI.waitForElementPresent(Utils.getTestObjectByText(status, null), Constant.DEFAULT_TIMEOUT)
 		WebUI.verifyTextPresent(status, false)
 		WebUI.closeBrowser()
 	}
