@@ -92,8 +92,8 @@ public class Constant {
 	}
 
 	final class CodeRequests {
-		static final def REQUEST_REQUEST_TYPE_DD_ID = "request-form-exportTypeSelect"
-		static final def REQUEST_CODE_DESCRIPTION_TXT_ID = "codeDescription-uid"
+		static final def REQUEST_REQUEST_TYPE_DD_ID = 'request-form-exportTypeSelect'
+		static final def REQUEST_CODE_DESCRIPTION_TXT_ID = 'codeDescription-uid'
 		static final def REQUEST_CODE_DESCRIPTION_TEXT = "Some information about the code..."		
 		static final def REQUEST_LOCAL_REPO_TXT_ID = "repository-uid"
 		static final def REQUEST_REMOTE_REPO_TXT_ID = "externalRepository-uid"
@@ -108,9 +108,10 @@ public class Constant {
 		static final def MERGE_COMPLETE_TEXT = "Merge Request Complete"
 		static final def MERGE_CANNOT_MERGE_TAG = "strong"
 		static final def MERGE_CANNOT_MERGE_TEXT = "rejected"
-		static final def MERGE_TIMEOUT = 2
+		static final def MERGE_TIMEOUT = 10
 		static final def MERGE_BRANCH_HAPPY_PATH_TEXT = "happy-1-develop"
 		static final def MERGE_BRANCH_CANNOT_MERGE_TEXT = "s7-1-develop"
 		static final def HAVE_REVIEWED_CODE_CB_ID = "viewed-mr"
+		static final def MERGE_REQUEST_APPROVING_TEXT = 'Approving Request'
 	}
 }
