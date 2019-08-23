@@ -53,8 +53,8 @@ public class Constant {
 		static final def REQUEST_DISCUSSION_TAB_ID = 'request-discussion-tab'
 		static final def REQUEST_EDIT_BTN_ID = 'request-sidebar-edit-button'
 
-		static final def REQUEST_OUTPUT_FILES_UPLOAD_BTN_XPATH = "//div[@id='request-export-files']/descendant::input[@type='file']"
-		static final def REQUEST_SUPPORT_FILES_UPLOAD_BTN_XPATH = "//div[@id='request-support-files']/descendant::input[@type='file']"
+		static final def REQUEST_OUTPUT_FILES_UPLOAD_BTN_XPATH = '//div[@id='request-export-files']/descendant::input[@type='file']'
+		static final def REQUEST_SUPPORT_FILES_UPLOAD_BTN_XPATH = '//div[@id='request-support-files']/descendant::input[@type='file']'
 
 		static final def REQUEST_NAME_TXT_ID = 'name-uid'
 		static final def REQUEST_PATH = '/requests/'
@@ -94,24 +94,24 @@ public class Constant {
 	final class CodeRequests {
 		static final def REQUEST_REQUEST_TYPE_DD_ID = 'request-form-exportTypeSelect'
 		static final def REQUEST_CODE_DESCRIPTION_TXT_ID = 'codeDescription-uid'
-		static final def REQUEST_CODE_DESCRIPTION_TEXT = "Some information about the code..."		
-		static final def REQUEST_LOCAL_REPO_TXT_ID = "repository-uid"
-		static final def REQUEST_REMOTE_REPO_TXT_ID = "externalRepository-uid"
-		static final def REQUEST_BRANCH_TXT_ID = "branch-uid"
-		static final def REQUEST_LOCAL_REPO_TEXT = "https://secureresearch.com/username/internalrepo.git"
-		static final def REQUEST_REMOTE_REPO_TEXT = "https://github.com/username/myrep.git"
-		static final def REQUEST_CODE_EXPORT_DD_VALUE = "Code Export"
-		static final def REQUEST_CODE_IMPORT_DD_VALUE = "Code Import"
-		static final def MERGE_INPROGRESS_TAG = "strong"
-		static final def MERGE_INPROGRESS_TEXT = "Merge Request"
-		static final def MERGE_COMPLETE_TAG = "strong"
-		static final def MERGE_COMPLETE_TEXT = "Merge Request Complete"
-		static final def MERGE_CANNOT_MERGE_TAG = "strong"
-		static final def MERGE_CANNOT_MERGE_TEXT = "rejected"
+		static final def REQUEST_CODE_DESCRIPTION_TEXT = 'Some information about the code...'		
+		static final def REQUEST_LOCAL_REPO_TXT_ID = 'repository-uid'
+		static final def REQUEST_REMOTE_REPO_TXT_ID = 'externalRepository-uid'
+		static final def REQUEST_BRANCH_TXT_ID = 'branch-uid'
+		static final def REQUEST_LOCAL_REPO_TEXT = 'https://secureresearch.com/username/internalrepo.git'
+		static final def REQUEST_REMOTE_REPO_TEXT = 'https://github.com/username/myrep.git'
+		static final def REQUEST_CODE_EXPORT_DD_VALUE = 'Code Export'
+		static final def REQUEST_CODE_IMPORT_DD_VALUE = 'Code Import'
+		static final def MERGE_INPROGRESS_TAG = 'strong'
+		static final def MERGE_INPROGRESS_TEXT = 'Merge Request'
+		static final def MERGE_COMPLETE_TAG = 'strong'
+		static final def MERGE_COMPLETE_TEXT = 'Merge Request Complete'
+		static final def MERGE_CANNOT_MERGE_TAG = 'strong'
+		static final def MERGE_CANNOT_MERGE_TEXT = 'rejected'
 		static final def MERGE_TIMEOUT = 10
-		static final def MERGE_BRANCH_HAPPY_PATH_TEXT = "happy-1-develop"
-		static final def MERGE_BRANCH_CANNOT_MERGE_TEXT = "s7-1-develop"
-		static final def HAVE_REVIEWED_CODE_CB_ID = "viewed-mr"
+		static final def MERGE_BRANCH_HAPPY_PATH_TEXT = 'happy-1-develop'
+		static final def MERGE_BRANCH_CANNOT_MERGE_TEXT = 's7-1-develop'
+		static final def HAVE_REVIEWED_CODE_CB_ID = 'viewed-mr'
 		static final def MERGE_REQUEST_APPROVING_TEXT = 'Approving Request'
 	}
 }
