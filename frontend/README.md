@@ -231,4 +231,91 @@ helm upgrade --name ocwa-frontend ./helm/ocwa-frontend  -f ./helm/ocwa-frontend/
 
 ### Coding Structure and Style
 
-This project aims to stay up-to-date with latest versions of the modern JavaScript development stack. [Babel](https://babeljs.io/) transpiles modern syntax (e.g. destructoring, generators, etc), React is the view library, Redux for state management, Redux-Saga for side effects and AtlasKit components for UI.
+#### 1) Code Formatting
+
+This project aims to stay up-to-date with latest versions of the modern JavaScript development stack. [Babel](https://babeljs.io/) transpiles modern syntax (e.g. destructoring, generators, etc), [React](https://reactjs.org) is the view library, [ Redux ](https://redux.js.org) for state management, [Redux-Saga](https://redux-saga.js.org) for side effects and [AtlasKit](https://atlaskit.atlassian.com) components for UI.
+
+For quality and consistency [ESLint](https://eslint.org) is used to ensure common mistakes are caught while coding and [Prettier](https://prettier.io/) formats your code into "prettier" and more readable code, but also standardized, which leads to a more consistent code base.
+
+#### 2) Code structure
+
+The UI employs a ducks-like style to structure, which seeks to break up the different domains of a project into separate modules responsible for their own content (e.g. Requests are handled in the `requests` module, discussions in the `discussions` module etc). All public facing code is kept in the `/src` directory.
+
+#### `src/components`
+
+All the global components that can be used across modules.
+
+#### `src/modules`
+
+See more about modules below.
+
+#### `src/services`
+
+All the global components that can be used across modules.
+
+#### `src/utils`
+
+Functions that are useful across the entire project.
+
+#### 2.1) Modules
+
+Each module contains a specific stack of the following:
+
+```
+/ ..
+/ actions.js
+/ components
+/ containers
+/ reducer.js (or (/reducer))
+/ sagas.js
+/ utils.js (if necessary)
+```
+
+This allows each module to have its own reducer data structure, actions and side-effects, but all of these are optional. Reducers and sagas are included during boot by the `src/index.js` entry file.
+
+A quick note on containers/components if you are not familiar with Redux. Containers are file that connects the redux state object with a component and are kept separate to keep components dumb when it comes to where they get their data from. The `/data` module however containers a special connect helper that will help compose a data-fetching container.
+
+To compose a data-aware component, in a module's `actions.js` export the following action:
+
+```javascript
+// anymodule/actions.js
+import { createDataAction } from '@src/modules/data/actions';
+
+export const fetchRequests = createDataAction('requests/get');
+```
+
+Then create a container which is composed like so:
+
+```javascript
+// anymodule/containers/requests.js
+import { connect } from 'react-redux';
+import withRequest from '@src/modules/data/components/data-request';
+
+import Requests from '../components/requests';
+import { requestsListSchema } from '../schemas';
+
+const mapStateToProps = () => ({}); // Decorate the connect method as you normally would
+
+export default connect(
+  mapStateToProps,
+  {
+    // If dispatch props has a `initialRequest` prop, it'll fire that on mount
+    initialRequest: ({ page }) =>
+      fetchRequest(
+        // If there are 2 arguments, the first one is considered a meta object
+        {
+          page: 1,
+        },
+        // The other object is the request object, with details about the request
+        {
+          url: `/api/v1/requests?page=${page}`, // compose the API endpoint you wish to fetch your data from
+          schema: requestsListSchema, // Assign a normalized schema if relevant
+        }
+      ),
+  }
+)(withRequest(Requests)); // Add the higher-order component here to add loading props and kick off the request.
+```
+
+Data is stored in the `data` reducer property, with `entities` being the full data object, `fetchStatus` being the status of the request, which can be `loading`, `loaded` or `failed`.
+
+In some cases you might add a `dataType` to the request container if you are requesting a payload that isn't able to be normalized into an ID based key/value storage object.
