@@ -93,7 +93,19 @@ public class CheckerStep extends Step {
 
 	@Then("the approved files are available for download outside of the secure environment")
 	def requester_should_see_files_available_for_download() {
-		String url = GlobalVariable.OCWA_DL_URL + Constant.Requester.DOWNLOAD_URL
+		verify_approved_files_are_available_for_download(GlobalVariable.OCWA_DL_URL + Constant.Requester.DOWNLOAD_URL)		
+	}
+	@Then("the approved files are available for download inside the secure environment")
+	def requester_should_see_their_approved_import_files() {
+		verify_approved_files_are_available_for_download(GlobalVariable.OCWA_URL + Constant.Requester.DOWNLOAD_URL)
+	}
+	
+	
+	/**
+	 * Verifies that the approved files are available for download
+	 * @param url String of download page (which is different for import vs exports)
+	 */
+	def verify_approved_files_are_available_for_download(String url) {
 		WebUI.navigateToUrl(url)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		TestObject newRequestButtonObject = Utils.getTestObjectByText(Constant.Requester.NEW_REQUEST_BTN_TXT)
@@ -105,9 +117,5 @@ public class CheckerStep extends Step {
 
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.closeBrowser()
-	}
-	@Then("the approved files are available for download inside the secure environment")
-	def requester_should_see_their_approved_import_files() {
-		requester_should_see_files_available_for_download()
 	}
 }

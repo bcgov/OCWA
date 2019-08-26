@@ -19,7 +19,7 @@
    <testCaseLink>
       <guid>b1c0c174-3f42-4053-9e7e-a4252fd53a64</guid>
       <isReuseDriver>false</isReuseDriver>
-      <isRun>false</isRun>
+      <isRun>true</isRun>
       <testCaseId>Test Cases/Requester/CreateNewImportRequestTest</testCaseId>
    </testCaseLink>
    <testCaseLink>

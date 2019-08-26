@@ -82,6 +82,7 @@ public class Constant {
 	}
 
 	final class Status {
+		static final def REQUEST_STATUS_ID = 'request-status'
 		static final def APPROVED = 'Approved'
 		static final def AWAITING_REVIEW = 'Awaiting Review'
 		static final def CANCELLED = 'Cancelled'
@@ -107,10 +108,12 @@ public class Constant {
 		static final def MERGE_COMPLETE_TAG = 'strong'
 		static final def MERGE_COMPLETE_TEXT = 'Merge Request Complete'
 		static final def MERGE_CANNOT_MERGE_TAG = 'strong'
-		static final def MERGE_CANNOT_MERGE_TEXT = 'rejected'
+		static final def MERGE_CANNOT_MERGE_TEXT = 'Merge request can not be merged.  Check that the MR has met all required criteria.'
+		static final def MERGE_CANNOT_MERGE_TEXT_MISSING_PROJECT_REPO = 'Project repository not found'
 		static final def MERGE_TIMEOUT = 40
 		static final def MERGE_BRANCH_HAPPY_PATH_TEXT = 'happy-1-develop'
-		static final def MERGE_BRANCH_CANNOT_MERGE_TEXT = 's7-1-develop'
+		static final def MERGE_BRANCH_FAILED_SCAN = 's6-1-develop'
+		static final def MERGE_BRANCH_MISSING_REPO_TEXT = 's4-1-develop'
 		static final def HAVE_REVIEWED_CODE_CB_ID = 'viewed-mr'
 		static final def MERGE_REQUEST_APPROVING_TEXT = 'Approving Request'
 	}
