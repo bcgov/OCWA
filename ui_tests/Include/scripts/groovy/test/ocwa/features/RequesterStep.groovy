@@ -497,9 +497,9 @@ public class RequesterStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.delay(2) // wait 2 seconds to ensure page is fully loaded
 		TestObject statusObj = Utils.getTestObjectById(Constant.Status.REQUEST_STATUS_ID)
-		String actualStatusTxt = statusObj.findPropertyValue('text')
+		String actualStatusTxt = WebUI.getText(statusObj)
 		if (!actualStatusTxt.equals(statusTxt)) {
-			WebUI.takeScreenshot()
+			WebUI.takeScreenshot()			
 			WebUI.comment("Request status is in unexpected state.  Expected: $statusTxt  Actual: $actualStatusTxt")
 			KeywordUtil.markFailed('Failing scenario because request is unexpected state.')
 		}
