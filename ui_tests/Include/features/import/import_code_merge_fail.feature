@@ -12,7 +12,7 @@ And requester submits their request
 Then the requester should be informed that the merge request failed due to failed scan
 
 Scenario: Requester tries to import code which fails merge request because cannot find repository
-And requester has started missing repository code import code import request
+And requester has started missing repository code import request
 When the requester saves their request
 And the merge request finishes
 Then the requester should be informed that the merge request failed due to project repo not found

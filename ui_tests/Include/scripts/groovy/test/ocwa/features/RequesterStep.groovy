@@ -49,6 +49,8 @@ public class RequesterStep extends Step {
 				break
 			case "code import":
 				fillOutCommonCodeRequestFields(false)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				break
 			case "code export":
 				fillOutCommonCodeRequestFields(true)
 				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
@@ -66,6 +68,7 @@ public class RequesterStep extends Step {
 				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			case 'fails scanning code export':
+				fillOutCommonCodeRequestFields(true)
 				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			default:
