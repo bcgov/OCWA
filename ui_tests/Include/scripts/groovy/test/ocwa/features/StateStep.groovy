@@ -73,37 +73,37 @@ public class StateStep extends Step {
 		switch (status.toLowerCase()) {
 			case "draft":
 				rs.requester_saves_new_request()
-				WebUI.verifyTextPresent(Constant.Status.WORK_IN_PROGRESS, false) //the draft state has evolved a bit; this is effectively a scenario where a request has not been submitted yet
+				rs.request_should_be_in_given_status(Constant.Status.WORK_IN_PROGRESS) //the draft state has evolved a bit; this is effectively a scenario where a request has not been submitted yet
 				break
 			case "awaiting review":
 				rs.requester_submits_request()
-				WebUI.verifyTextPresent(Constant.Status.AWAITING_REVIEW, false)
+				rs.request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
 				break
 			case "review in progress":
 				rs.requester_submits_request()
 				ls.user_login('output checker')
 				cs.checker_tries_to_claim_unclaimed_request()
-				WebUI.verifyTextPresent(Constant.Status.IN_REVIEW, false)
+				cs.checker_should_see_request_is_in_given_status(Constant.Status.IN_REVIEW)
 				break
 			case "work in progress":
 				rs.requester_submits_request()
 				ls.user_login('output checker')
 				cs.checker_tries_to_claim_unclaimed_request()
 				cs.checker_marks_request_as_needs_revisions()
-			//alternative path to WIP we are not doing here is requester has submitted and withdrawn.
-				WebUI.verifyTextPresent(Constant.Status.WORK_IN_PROGRESS, false)
+				//alternative path to WIP we are not doing here is requester has submitted and withdrawn.
+				cs.checker_should_see_request_is_in_given_status(Constant.Status.WORK_IN_PROGRESS)
 				break
 			case "cancelled":
 				rs.requester_submits_request()
 				rs.requester_cancels_request()
-				WebUI.verifyTextPresent(Constant.Status.CANCELLED, false)
+				rs.request_should_be_in_given_status(Constant.Status.CANCELLED)
 				break
 			case "approved":
 				rs.requester_submits_request()
 				ls.user_login('output checker')
 				cs.checker_tries_to_claim_unclaimed_request()
 				cs.checker_marks_request_as_approved()
-				WebUI.verifyTextPresent(Constant.Status.APPROVED, false)
+				cs.checker_should_see_request_is_in_given_status(Constant.Status.APPROVED)
 				break
 			default:
 				throw new Exception("status $status not found")
