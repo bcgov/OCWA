@@ -109,7 +109,7 @@ public class Constant {
 		static final def MERGE_COMPLETE_TEXT = 'Merge Request Complete'
 		static final def MERGE_CANNOT_MERGE_TAG = 'strong'
 		static final def MERGE_CANNOT_MERGE_TEXT = 'Merge request can not be merged.  Check that the MR has met all required criteria.'
-		static final def MERGE_CANNOT_MERGE_TEXT_MISSING_PROJECT_REPO = 'Project repository not found'
+		static final def MERGE_CANNOT_MERGE_TEXT_MISSING_PROJECT_REPO = 'SIM Project repository not found'
 		static final def MERGE_TIMEOUT = 40
 		static final def MERGE_BRANCH_HAPPY_PATH_TEXT = 'happy-1-develop'
 		static final def MERGE_BRANCH_FAILED_SCAN = 's6-1-develop'
