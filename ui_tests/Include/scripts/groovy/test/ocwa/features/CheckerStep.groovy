@@ -88,7 +88,7 @@ public class CheckerStep extends Step {
 
 	@Then("the output checker should see the status of the request updated to '(.+)'")
 	def checker_should_see_request_is_in_given_status(String statusTxt) {
-		TestObject statusObj = Utils.getTestObjectByIdPart(Constant.Status.CHECKER_UI_REQUEST_STATUS_ID_PART)
+		TestObject statusObj = Utils.getTestObjectByIdPart(Constant.Status.CHECKER_UI_REQUEST_STATUS_ID_PART, 'div')
 		WebUI.waitForElementPresent(statusObj, Constant.DEFAULT_TIMEOUT)
 		String actualStatusTxt = WebUI.getText(statusObj)
 		if (!actualStatusTxt.equals(statusTxt)) {
