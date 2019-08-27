@@ -36,8 +36,8 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementVisible(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(newRequestButtonObject)
-		
-		
+
+
 		switch (requestType) {
 			case "a":
 				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID, 'textarea'), Constant.Requester.CONFIDENTIALITY_TEXT)
@@ -83,7 +83,7 @@ public class RequesterStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		G_REQUESTURL = WebUI.getUrl()
 	}
-	
+
 	/**
 	 * Selects code request as the request type and fills out the common import/export code request fields
 	 * @param isExport boolean true if export, false if import
@@ -294,11 +294,11 @@ public class RequesterStep extends Step {
 		WebUI.click(requestSubmitBtn)
 
 		//test if an error alert displays when request is submitted.
-//		if (WebUI.waitForElementPresent(errorAlert, Constant.SUBMISSION_TIMEOUT, FailureHandling.OPTIONAL)) {
-//			WebUI.takeScreenshot()
-//			KeywordUtil.markFailed('An error alert displayed upon submission.')
-//		}
-//		WebUI.comment('No error message displayed so submission looks good.')
+		//		if (WebUI.waitForElementPresent(errorAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
+		//			WebUI.takeScreenshot()
+		//			KeywordUtil.markFailed('An error alert displayed upon submission.')
+		//		}
+		//		WebUI.comment('No error message displayed so submission looks good.')
 	}
 
 	@When("requester writes and submits a new comment")
@@ -411,7 +411,7 @@ public class RequesterStep extends Step {
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
 
 	}
-	
+
 	@When("the merge request finishes")
 	def wait_for_merge_request_to_finish() {
 		TestObject mergeInProgressMessage = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_INPROGRESS_TEXT, Constant.CodeRequests.MERGE_INPROGRESS_TAG)
@@ -420,7 +420,14 @@ public class RequesterStep extends Step {
 			KeywordUtil.markFailed('Merge request timed out.')
 		}
 	}
-	
+
+	@When("requester waits for scan to complete")
+	def requester_waits_for_code_scan_to_complete() {
+		//this is the case for auto approving code requests.  Extra time is needed for the scan of the code to finish before status is updated.
+		TestObject isApprovingObject = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_REQUEST_APPROVING_TEXT, null)
+		WebUI.waitForElementPresent(isApprovingObject,Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotPresent(isApprovingObject,Constant.DEFAULT_TIMEOUT)
+	}
 
 	@Then("the requester should see their saved request including (.+) output file (.+) supporting file")
 	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles) {
@@ -469,7 +476,7 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementPresent(statusObj, Constant.DEFAULT_TIMEOUT)
 		String actualStatusTxt = WebUI.getText(statusObj)
 		if (!actualStatusTxt.equals(statusTxt)) {
-			WebUI.takeScreenshot()			
+			WebUI.takeScreenshot()
 			WebUI.comment("Request status is in unexpected state.  Expected: $statusTxt  Actual: $actualStatusTxt")
 			KeywordUtil.markFailed('Failing scenario because request is unexpected state.')
 		}
@@ -566,7 +573,7 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementVisible(submitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(submitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(submitBtn)
-		WebUI.comment("Clicked the submit link")
+		WebUI.comment('Clicked the submit link')
 		request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
 	}
 	@Then("the request should not be accessible")
@@ -592,9 +599,9 @@ public class RequesterStep extends Step {
 					KeywordUtil.markFailed('Merge failure message did not display (but it should have displayed).')
 				}
 				break
-			default: 
+			default:
 				break
 		}
-		
+
 	}
 }

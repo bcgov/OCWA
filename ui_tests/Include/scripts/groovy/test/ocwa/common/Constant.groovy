@@ -11,7 +11,6 @@ public class Constant {
 
 	static final def DEFAULT_TIMEOUT = 10
 	static final def FILE_UPLOAD_TIMEOUT = 5
-	static final def SUBMISSION_TIMEOUT = 10
 
 	final class Alerts {
 		static final def SUCCESS_UPDATED_TEXT = 'Successfully updated'
@@ -83,6 +82,7 @@ public class Constant {
 
 	final class Status {
 		static final def REQUEST_STATUS_ID = 'request-status'
+		static final def CHECKER_UI_REQUEST_STATUS_ID_PART = 'state-label'
 		static final def APPROVED = 'Approved'
 		static final def AWAITING_REVIEW = 'Awaiting Review'
 		static final def CANCELLED = 'Cancelled'

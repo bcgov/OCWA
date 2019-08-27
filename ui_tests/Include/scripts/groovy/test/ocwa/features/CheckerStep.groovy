@@ -3,6 +3,7 @@ package test.ocwa.features
 import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.TestObject
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
+import com.kms.katalon.core.util.KeywordUtil
 
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
@@ -86,21 +87,28 @@ public class CheckerStep extends Step {
 	}
 
 	@Then("the output checker should see the status of the request updated to '(.+)'")
-	def checker_should_see_request_is_in_given_status(String status) {
-		WebUI.waitForElementPresent(Utils.getTestObjectByText(status, null), Constant.DEFAULT_TIMEOUT)
+	def checker_should_see_request_is_in_given_status(String statusTxt) {
+		TestObject statusObj = Utils.getTestObjectByIdPart(Constant.Status.CHECKER_UI_REQUEST_STATUS_ID_PART)
+		WebUI.waitForElementPresent(statusObj, Constant.DEFAULT_TIMEOUT)
+		String actualStatusTxt = WebUI.getText(statusObj)
+		if (!actualStatusTxt.equals(statusTxt)) {
+			WebUI.takeScreenshot()
+			WebUI.comment("Request status is in unexpected state.  Expected: $statusTxt  Actual: $actualStatusTxt")
+			KeywordUtil.markFailed('Failing scenario because request is unexpected state.')
+		}
 		WebUI.closeBrowser()
 	}
 
 	@Then("the approved files are available for download outside of the secure environment")
 	def requester_should_see_files_available_for_download() {
-		verify_approved_files_are_available_for_download(GlobalVariable.OCWA_DL_URL + Constant.Requester.DOWNLOAD_URL)		
+		verify_approved_files_are_available_for_download(GlobalVariable.OCWA_DL_URL + Constant.Requester.DOWNLOAD_URL)
 	}
 	@Then("the approved files are available for download inside the secure environment")
 	def requester_should_see_their_approved_import_files() {
 		verify_approved_files_are_available_for_download(GlobalVariable.OCWA_URL + Constant.Requester.DOWNLOAD_URL)
 	}
-	
-	
+
+
 	/**
 	 * Verifies that the approved files are available for download
 	 * @param url String of download page (which is different for import vs exports)
