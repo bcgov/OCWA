@@ -259,12 +259,6 @@ public class RequesterStep extends Step {
 		//stubbed because newly created requests will always have an update date within the last month
 	}
 
-	//	@Given("a project team member has created a request")
-	//	def project_team_member_has_created_request() {
-	//		requester_has_a_request_of_status(Constant.Status.DRAFT)
-	//		WebUI.closeBrowser()
-	//	}
-
 	@Given("requester's project allows for editing of team member's requests")
 	def project_allows_for_team_sharing() {
 	}
@@ -300,36 +294,12 @@ public class RequesterStep extends Step {
 		WebUI.click(requestSubmitBtn)
 
 		//test if an error alert displays when request is submitted.
-		if (WebUI.waitForElementPresent(errorAlert, Constant.SUBMISSION_TIMEOUT, FailureHandling.OPTIONAL)) {
-			WebUI.takeScreenshot()
-			KeywordUtil.markFailed('An error alert displayed upon submission.')
-		}
-		WebUI.comment('No error message displayed so submission looks good.')
-	}
-	
-//	@When("requester submits their (.+) code request")
-//	def requester_submits_code_request(String requestType) {
-//		TestObject requestSubmitBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_SUBMIT_BTN_ID)
-//		WebUI.waitForElementNotHasAttribute(requestSubmitBtn, "disabled", Constant.DEFAULT_TIMEOUT)
-//		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
-//		WebUI.comment('Clicking the submit button')
-//		WebUI.click(requestSubmitBtn)
-//		switch(requestType) {
-//			case 'studyID containing':
-//				break
-//			case 'valid':
-//				TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)			
-//				if (WebUI.waitForElementPresent(errorAlert, Constant.SUBMISSION_TIMEOUT, FailureHandling.OPTIONAL)) {
-//					WebUI.takeScreenshot()
-//					KeywordUtil.markFailed('An error alert displayed upon submission.')
-//				}
-//				WebUI.comment('No error message displayed so submission looks good.')
-//				break
-//			default:
-//				throw new Exception("request type $requestType not found")
-//			break
+//		if (WebUI.waitForElementPresent(errorAlert, Constant.SUBMISSION_TIMEOUT, FailureHandling.OPTIONAL)) {
+//			WebUI.takeScreenshot()
+//			KeywordUtil.markFailed('An error alert displayed upon submission.')
 //		}
-//	}
+//		WebUI.comment('No error message displayed so submission looks good.')
+	}
 
 	@When("requester writes and submits a new comment")
 	def requester_creates_a_new_comment() {
@@ -495,8 +465,8 @@ public class RequesterStep extends Step {
 	def request_should_be_in_given_status(String statusTxt) {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
-		WebUI.delay(2) // wait 2 seconds to ensure page is fully loaded
 		TestObject statusObj = Utils.getTestObjectById(Constant.Status.REQUEST_STATUS_ID)
+		WebUI.waitForElementPresent(statusObj, Constant.DEFAULT_TIMEOUT)
 		String actualStatusTxt = WebUI.getText(statusObj)
 		if (!actualStatusTxt.equals(statusTxt)) {
 			WebUI.takeScreenshot()			
