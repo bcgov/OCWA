@@ -474,15 +474,15 @@ public class RequesterStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		TestObject statusObj = Utils.getTestObjectById(Constant.Status.REQUEST_STATUS_ID)
 		WebUI.waitForElementPresent(statusObj, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(1) //wait a second for the status to update
 		String actualStatusTxt = WebUI.getText(statusObj)
 		if (!actualStatusTxt.equals(statusTxt)) {
 			WebUI.takeScreenshot()
 			WebUI.comment("Request status is in unexpected state.  Expected: $statusTxt  Actual: $actualStatusTxt")
 			KeywordUtil.markFailed('Failing scenario because request is unexpected state.')
 		}
-		WebUI.closeBrowser()
 	}
-
+	
 	@Then('requests of status "(.+)" should be displayed')
 	def requests_of_given_status_should_be_displayed(String status) {
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
