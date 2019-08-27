@@ -7,4 +7,5 @@ And requester has started code import request
 When the requester saves their request
 And the merge request finishes
 And requester submits their request
+And requester waits for scan to complete
 Then the request status is changed to "Approved" 
