@@ -82,4 +82,16 @@
       <isRun>true</isRun>
       <testCaseId>Test Cases/Requester/SeeImportBlockedFileUploadsTest</testCaseId>
    </testCaseLink>
+   <testCaseLink>
+      <guid>f4332988-67b6-49f1-9a09-443bc16cac21</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/Requester/ExportCodeMergeFailTest</testCaseId>
+   </testCaseLink>
+   <testCaseLink>
+      <guid>a885d877-b922-45b5-9603-7d820c7b4d83</guid>
+      <isReuseDriver>false</isReuseDriver>
+      <isRun>true</isRun>
+      <testCaseId>Test Cases/Requester/ImportCodeMergeFailTest</testCaseId>
+   </testCaseLink>
 </TestSuiteEntity>
