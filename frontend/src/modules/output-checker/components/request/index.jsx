@@ -54,7 +54,7 @@ function Request({ data, isSaving, match, submittedAt }) {
                 <Date value={submittedAt} format="HH:MMa on MMMM Do, YYYY" />
               </p>
             </div>
-            <StateLabel value={data.state} />
+            <StateLabel id={data._id} value={data.state} />
           </hgroup>
           <Tabs>
             <Tab icon={<InfoIcon />} text="Details" url={match.url} />

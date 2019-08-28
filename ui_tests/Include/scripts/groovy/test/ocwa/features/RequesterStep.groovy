@@ -36,8 +36,7 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementVisible(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(newRequestButtonObject)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_PHONE_TXT_ID), Constant.Requester.REQUEST_PHONE_TEXT)
+
 
 		switch (requestType) {
 			case "a":
@@ -48,15 +47,61 @@ public class RequesterStep extends Step {
 			case "import":
 				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID, 'textarea'), Constant.Requester.GENERAL_COMMENTS_TEXT)
 				break
+			case "code import":
+				fillOutCommonCodeRequestFields(false)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				break
+			case "code export":
+				fillOutCommonCodeRequestFields(true)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				break
+			case "missing repository code import":
+				fillOutCommonCodeRequestFields(false)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_MISSING_REPO_TEXT)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				break
+			case "missing repository code export":
+				fillOutCommonCodeRequestFields(true)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_MISSING_REPO_TEXT)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				break
+			case 'fails scanning code import':
+				fillOutCommonCodeRequestFields(false)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				break
+			case 'fails scanning code export':
+				fillOutCommonCodeRequestFields(true)
+				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				break
 			default:
 				throw new Exception("Request type $requestType is unknown")
 		}
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_PHONE_TXT_ID), Constant.Requester.REQUEST_PHONE_TEXT)
 
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		G_REQUESTURL = WebUI.getUrl()
+	}
+
+	/**
+	 * Selects code request as the request type and fills out the common import/export code request fields
+	 * @param isExport boolean true if export, false if import
+	 */
+	def fillOutCommonCodeRequestFields(boolean isExport) {
+		TestObject requestTypeDropDown = Utils.getTestObjectById(Constant.CodeRequests.REQUEST_REQUEST_TYPE_DD_ID)
+		TestObject requestTypeCode = null
+		if (isExport) {
+			requestTypeCode = Utils.getTestObjectByText(Constant.CodeRequests.REQUEST_CODE_EXPORT_DD_VALUE, null)
+		}
+		else {
+			requestTypeCode = Utils.getTestObjectByText(Constant.CodeRequests.REQUEST_CODE_IMPORT_DD_VALUE, null)
+		}
+		WebUI.click(requestTypeDropDown)
+		WebUI.click(requestTypeCode)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TXT_ID, 'textarea'), Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TEXT)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_REMOTE_REPO_TXT_ID), Constant.CodeRequests.REQUEST_REMOTE_REPO_TEXT)
+		WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_LOCAL_REPO_TXT_ID), Constant.CodeRequests.REQUEST_LOCAL_REPO_TEXT)
 	}
 
 	@Given("has not submitted the request")
@@ -214,12 +259,6 @@ public class RequesterStep extends Step {
 		//stubbed because newly created requests will always have an update date within the last month
 	}
 
-	//	@Given("a project team member has created a request")
-	//	def project_team_member_has_created_request() {
-	//		requester_has_a_request_of_status(Constant.Status.DRAFT)
-	//		WebUI.closeBrowser()
-	//	}
-
 	@Given("requester's project allows for editing of team member's requests")
 	def project_allows_for_team_sharing() {
 	}
@@ -255,11 +294,11 @@ public class RequesterStep extends Step {
 		WebUI.click(requestSubmitBtn)
 
 		//test if an error alert displays when request is submitted.
-		if (WebUI.waitForElementPresent(errorAlert, Constant.SUBMISSION_TIMEOUT, FailureHandling.OPTIONAL)) {
-			WebUI.takeScreenshot()
-			KeywordUtil.markFailed('An error alert displayed upon submission.')
-		}
-		WebUI.comment('No error message displayed so submission looks good.')
+		//		if (WebUI.waitForElementPresent(errorAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
+		//			WebUI.takeScreenshot()
+		//			KeywordUtil.markFailed('An error alert displayed upon submission.')
+		//		}
+		//		WebUI.comment('No error message displayed so submission looks good.')
 	}
 
 	@When("requester writes and submits a new comment")
@@ -321,12 +360,12 @@ public class RequesterStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.comment("Current url is:${WebUI.getUrl()}")
 	}
-	
+
 	@When("a requester in another project tries to navigate to the request directly")
 	def navigate_to_other_project_request_directly() {
 		navigate_to_request_directly()
 	}
-	
+
 	@When("the requester cancels the request")
 	def requester_cancels_request() {
 		requester_views_request_they_created(" ")
@@ -373,6 +412,23 @@ public class RequesterStep extends Step {
 
 	}
 
+	@When("the merge request finishes")
+	def wait_for_merge_request_to_finish() {
+		TestObject mergeInProgressMessage = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_INPROGRESS_TEXT, Constant.CodeRequests.MERGE_INPROGRESS_TAG)
+		if (!WebUI.waitForElementNotPresent(mergeInProgressMessage, Constant.CodeRequests.MERGE_TIMEOUT, FailureHandling.OPTIONAL)) {
+			WebUI.takeScreenshot()
+			KeywordUtil.markFailed('Merge request timed out.')
+		}
+	}
+
+	@When("requester waits for scan to complete")
+	def requester_waits_for_code_scan_to_complete() {
+		//this is the case for auto approving code requests.  Extra time is needed for the scan of the code to finish before status is updated.
+		TestObject isApprovingObject = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_REQUEST_APPROVING_TEXT, null)
+		WebUI.waitForElementPresent(isApprovingObject,Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotPresent(isApprovingObject,Constant.DEFAULT_TIMEOUT)
+	}
+
 	@Then("the requester should see their saved request including (.+) output file (.+) supporting file")
 	def confirm_draft_save_was_successful(String numOutputFiles, String numSupportingFiles) {
 		requester_views_request_they_created(" ")
@@ -416,11 +472,17 @@ public class RequesterStep extends Step {
 	def request_should_be_in_given_status(String statusTxt) {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
-		WebUI.delay(2) // wait 2 seconds to ensure page is fully loaded
-		WebUI.verifyTextPresent(statusTxt, false)
-		WebUI.closeBrowser()
+		TestObject statusObj = Utils.getTestObjectById(Constant.Status.REQUEST_STATUS_ID)
+		WebUI.waitForElementPresent(statusObj, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(1) //wait a second for the status to update
+		String actualStatusTxt = WebUI.getText(statusObj)
+		if (!actualStatusTxt.equals(statusTxt)) {
+			WebUI.takeScreenshot()
+			WebUI.comment("Request status is in unexpected state.  Expected: $statusTxt  Actual: $actualStatusTxt")
+			KeywordUtil.markFailed('Failing scenario because request is unexpected state.')
+		}
 	}
-
+	
 	@Then('requests of status "(.+)" should be displayed')
 	def requests_of_given_status_should_be_displayed(String status) {
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
@@ -511,13 +573,35 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementVisible(submitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(submitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(submitBtn)
-		WebUI.comment("Clicked the submit link")
-		request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
+		WebUI.comment('Clicked the submit link')
+		//request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
 	}
 	@Then("the request should not be accessible")
 	def request_is_not_accessible() {
 		if(!WebUI.verifyTextNotPresent(G_REQUESTNAME, false)) {
 			WebUI.comment('Request is accessible when it should not be.')
 		}
+	}
+	@Then("the requester should be informed that the merge request failed (.+)")
+	def requester_informed_of_merge_request_failure(String failType) {
+		switch(failType) {
+			case 'due to project repo not found':
+				TestObject failedMergeText = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_CANNOT_MERGE_TEXT_MISSING_PROJECT_REPO, null)
+				if (!WebUI.waitForElementPresent(failedMergeText, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
+					WebUI.takeScreenshot()
+					KeywordUtil.markFailed('Merge failure message did not display (but it should have displayed).')
+				}
+				break
+			case 'due to failed scan':
+				TestObject failedMergeText = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN, null)
+				if (!WebUI.waitForElementPresent(failedMergeText, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
+					WebUI.takeScreenshot()
+					KeywordUtil.markFailed('Merge failure message did not display (but it should have displayed).')
+				}
+				break
+			default:
+				break
+		}
+
 	}
 }

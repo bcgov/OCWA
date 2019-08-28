@@ -426,11 +426,12 @@ matrix:
     - docker images --digests
     - docker ps
     script:
+    - cd /usr/local/bin/Katalon_Studio
     - |-
-      cd /usr/local/bin/Katalon_Studio
       if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then 
         xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/HappyPathSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
       fi
+    - |-
       if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then 
         xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/FullFeatureSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
         xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/AccessSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
