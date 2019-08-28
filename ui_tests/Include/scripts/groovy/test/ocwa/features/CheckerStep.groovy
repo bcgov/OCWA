@@ -96,7 +96,7 @@ public class CheckerStep extends Step {
 			WebUI.comment("Request status is in unexpected state.  Expected: $statusTxt  Actual: $actualStatusTxt")
 			KeywordUtil.markFailed('Failing scenario because request is unexpected state.')
 		}
-		WebUI.closeBrowser()
+		//WebUI.closeBrowser()
 	}
 
 	@Then("the approved files are available for download outside of the secure environment")

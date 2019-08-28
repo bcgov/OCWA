@@ -574,7 +574,7 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(submitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(submitBtn)
 		WebUI.comment('Clicked the submit link')
-		request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
+		//request_should_be_in_given_status(Constant.Status.AWAITING_REVIEW)
 	}
 	@Then("the request should not be accessible")
 	def request_is_not_accessible() {

@@ -90,7 +90,7 @@ public class StateStep extends Step {
 				ls.user_login('output checker')
 				cs.checker_tries_to_claim_unclaimed_request()
 				cs.checker_marks_request_as_needs_revisions()
-				//alternative path to WIP we are not doing here is requester has submitted and withdrawn.
+			//alternative path to WIP we are not doing here is requester has submitted and withdrawn.
 				cs.checker_should_see_request_is_in_given_status(Constant.Status.WORK_IN_PROGRESS)
 				break
 			case "cancelled":

@@ -8,6 +8,7 @@ Scenario Outline: Importer imports a file that triggers warnings
 		And the requester views the import request
 		Then requester should be informed that given warning rule <warning_rule> has been violated
     And the request can be successfully submitted
+    And the request status is changed to "Approved"
 		
 		Examples:
 					| warning_rule |
