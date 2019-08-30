@@ -3,6 +3,7 @@ package test.ocwa.features
 import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.TestObject
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
+import com.kms.katalon.core.util.KeywordUtil
 
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
@@ -66,6 +67,17 @@ public class CheckerStep extends Step {
 		WebUI.comment("found and clicked the needs revisions button")
 	}
 
+	@When("the output checker marks the code request as approved")
+	def output_checker_approves_code_request() {
+		TestObject hasReviewedObject = Utils.getTestObjectByName(Constant.CodeRequests.HAVE_REVIEWED_CODE_CB_ID)
+		WebUI.waitForElementClickable(hasReviewedObject, 30)
+		WebUI.click(hasReviewedObject)
+		checker_marks_request_as_approved()
+		TestObject isApprovingObject = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_REQUEST_APPROVING_TEXT, null)
+		WebUI.waitForElementPresent(isApprovingObject,Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotPresent(isApprovingObject,Constant.DEFAULT_TIMEOUT)
+	}
+
 	@Then("the output checker should be able to see that they're now assigned the request")
 	def checker_should_see_they_are_assigned_to_request(){
 		TestObject assigneeTextObject = Utils.getTestObjectById(Constant.Checker.REQUEST_ASSIGNED_TO_ID)
@@ -75,16 +87,42 @@ public class CheckerStep extends Step {
 	}
 
 	@Then("the output checker should see the status of the request updated to '(.+)'")
-	def checker_should_see_request_is_in_given_status(String status) {
-		WebUI.verifyTextPresent(status, false)
-		WebUI.closeBrowser()
+	def checker_should_see_request_is_in_given_status(String statusTxt) {
+		TestObject statusObj = Utils.getTestObjectByIdPart(Constant.Status.CHECKER_UI_REQUEST_STATUS_ID_PART, 'div')
+		WebUI.waitForElementPresent(statusObj, Constant.DEFAULT_TIMEOUT)
+		String actualStatusTxt = WebUI.getText(statusObj)
+		if (!actualStatusTxt.equals(statusTxt)) {
+			WebUI.takeScreenshot()
+			WebUI.comment("Request status is in unexpected state.  Expected: $statusTxt  Actual: $actualStatusTxt")
+			KeywordUtil.markFailed('Failing scenario because request is unexpected state.')
+		}
+		//WebUI.closeBrowser()
 	}
 
 	@Then("the approved files are available for download outside of the secure environment")
 	def requester_should_see_files_available_for_download() {
+		verify_approved_files_are_available_for_download(GlobalVariable.OCWA_DL_URL + Constant.Requester.DOWNLOAD_URL)
+	}
+	@Then("the approved files are available for download inside the secure environment")
+	def requester_should_see_their_approved_import_files() {
+		verify_approved_files_are_available_for_download(GlobalVariable.OCWA_URL + Constant.Requester.DOWNLOAD_URL)
+	}
+
+
+	/**
+	 * Verifies that the approved files are available for download
+	 * @param url String of download page (which is different for import vs exports)
+	 */
+	def verify_approved_files_are_available_for_download(String url) {
+		WebUI.navigateToUrl(url)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
-		//give time for the dl interface to load
-		WebUI.waitForElementPresent(Utils.getTestObjectByText(Constant.Requester.DOWNLOAD_INTERFACE_HEADER, 'h1'), Constant.DEFAULT_TIMEOUT)
+		TestObject newRequestButtonObject = Utils.getTestObjectByText(Constant.Requester.NEW_REQUEST_BTN_TXT)
+
+		// use the Request button as a proxy for ensuring that the page has loaded
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementVisible(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
+
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.closeBrowser()
 	}

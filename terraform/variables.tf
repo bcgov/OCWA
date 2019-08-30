@@ -1,55 +1,56 @@
 variable "mongodb" {
-  type = "map"
+  type = map(string)
 }
 
 variable "postgres" {
-  type = "map"
+  type = map(string)
 }
 
 variable "keycloak" {
-  type = "map"
+  type = map(string)
 }
 
 variable "ocwaHost" {
-  type = "string"
+  type = string
 }
 
 variable "ocwaHostname" {
-  type = "string"
+  type = string
 }
 
 variable "ocwaDLHost" {
-  type = "string"
+  type = string
 }
 
 variable "ocwaDLHostname" {
-  type = "string"
+  type = string
 }
 
 variable "ocwaWebSocketHost" {
-  type = "string"
+  type = string
 }
 
 variable "authHost" {
-  type = "string"
+  type = string
 }
 
 variable "authHostname" {
-  type = "string"
+  type = string
 }
 
 variable "hostRootPath" {
-  type = "string"
+  type = string
 }
 
 variable "sslCertificate" {
-  type = "string"
+  type = string
 }
 
 variable "sslCertificateKey" {
-  type = "string"
+  type = string
 }
 
 variable "images" {
-  type = "map"
+  type = map(string)
 }
+

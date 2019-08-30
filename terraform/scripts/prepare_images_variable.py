@@ -11,8 +11,8 @@ images = {
     validate_api = ":${TAG}"
     forum_api = ":${TAG}"
     frontend = ":${TAG}"
-    minio = ":latest"
-    tusd = ":latest"
+    minio = ":RELEASE.2019-04-23T23-50-36Z"
+    tusd = ":68385adc0cba"
 }
     """
 

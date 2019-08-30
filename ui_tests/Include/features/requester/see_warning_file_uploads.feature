@@ -12,6 +12,7 @@ Feature: see blocked file uploads
     And the requester views the request
     Then requester should be informed that given warning rule <warning_rule> has been violated
     And the request can be successfully submitted
+    And the request status is changed to "Awaiting Review"
 
     Examples:
       | warning_rule                                                           |

@@ -230,8 +230,7 @@ matrix:
     install:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-      sudo pip3 install -U setuptools
-      sudo pip3 install -r requirements.txt
+      pip3 install --upgrade pip setuptools
     - |-
       wget -q ${HELM_URL}/${HELM_TGZ}
       tar xzfv ${HELM_TGZ}
@@ -243,14 +242,15 @@ matrix:
       wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
       unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
       PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-      sudo pip install yamllint=="${YAMLLINT_VERSION}"
+      pip3 install yamllint=="${YAMLLINT_VERSION}"
     script:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
       cp config/default.json.template config/default.json
-      sudo pip3 install -e .
-    - sudo coverage run --branch --source=db,v1 -m pytest
-    - sudo coverage xml
+      pip3 install --upgrade -r requirements.txt
+      pip3 install -e .
+    - coverage run --branch --source=db,v1 -m pytest --cov
+    - coverage xml
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
       helm lint helm/policy-api
@@ -282,8 +282,7 @@ matrix:
     install:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/validateApi
-      sudo pip3 install -U setuptools
-      sudo pip3 install -r requirements.txt
+      pip3 install --upgrade pip setuptools
     before_script:
     - |-
       wget -q ${HELM_URL}/${HELM_TGZ}
@@ -295,21 +294,21 @@ matrix:
       wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
       unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
       PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
-    - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+    - pip3 install yamllint=="${YAMLLINT_VERSION}"
     script:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
-      sudo pip3 install -U setuptools
-      sudo pip3 install -r requirements.txt
+      pip3 install -r requirements.txt
+      pip3 install -e .
       cp config/default.json.template config/default.json
-      sudo pip3 install -e .
       python3 wsgi.py &
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       cp config/default.json.template config/default.json
-      sudo pip3 install -e .
-    - sudo coverage run --branch --source=db,v1,validator -m pytest
-    - sudo coverage xml
+      pip3 install -r requirements.txt
+      pip3 install -e .
+    - coverage run --branch --source=db,v1,validator -m pytest --cov
+    - coverage xml
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       helm lint helm/validate-api
@@ -427,10 +426,14 @@ matrix:
     - docker images --digests
     - docker ps
     script:
+    - cd /usr/local/bin/Katalon_Studio
     - |-
-      cd /usr/local/bin/Katalon_Studio
-      xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/CucumberSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+      if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then 
+        xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/HappyPathSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+      fi
+    - |-
       if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then 
+        xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/FullFeatureSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
         xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/AccessSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
       fi
   - name: OCWA Master Helm Chart
@@ -463,7 +466,7 @@ env:
   - SONAR_URL=https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/
   - SONAR_VERSION=3.2.0.1227-linux
   - TARGET_BR=gh-pages
-  - TERRAFORM_VERSION=0.11.11
+  - TERRAFORM_VERSION=0.12.6
   - TUSD_VERSION=0.11.0
   - YAMLLINT_VERSION=1.8.1
   - secure: TsBkt0h9c9CQ+ZnA4CAVlWxCoTRV4Bn7Z0y8XvR99NlnfrUhSGWzi78wJ6W8oAqOawqDk5jnG3qIKXaaO1ZaiT8n3YFLhtAQzh+gy1B96GOJd6Yjmep7AxiWgW+g0Nm+V0vkGA/dwuUjothmnvLcsqK2+hmrknvTI+oe6xrNrOv4GAx9j3NJVfmhJmhBtnI+p8uqgqtn7aqrZZqW/jhwh10taRaIvvsMZ4FEZy8M9JI6cRfakQT656U9KGbXsC7XdnEf+G/N2qOq/MWucByBo98jCnuL5JvGzgZCSkywlShK8kPUuIREGfLv1RuSOOwlz95AA700Bf/SKGmqu58wAp8XOKWAtMTpf2o7WFXpb/Ghy6ysk5AGO6RSsFOTEh2EAdF42ExRy+N8mqDYdr9Vj+qWeVHXVR9vjtjbCLeHxl16sO0K/BzQ3gjCYLXQEC6mH3xfu6kDvQvdq20fKpXPeLvX+HI0ALokkL7RFaqjcEu8R+9zZAUIqCCTKs0Z3/CmrUd2H7MD7j30gFuR2RynSpGb8l476szAuLv1wk6L+gc4g+uG5pFPsBYaBp9mNJMHrOcBQfSFY9T4n/sY4z+2Bo7qC8g8JuLOtVsVcjZ0Ut0r0xASvEg87jlgdHy/NaAySmuZclheuqsqVqsKQOx38AgOSg9N0gX2i2jnq2ZkS+4=

@@ -11,6 +11,7 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavLink, Redirect, Route, Switch } from 'react-router-dom';
 import merge from 'lodash/merge';
+import LoadingDialog from '@src/components/loading-dialog';
 import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import Spinner from '@atlaskit/spinner';
@@ -48,9 +49,20 @@ class Request extends React.Component {
   }
 
   onEdit = () => {
-    this.setState(state => ({
-      isEditing: !state.isEditing,
-    }));
+    const { isEditing } = this.state;
+    const { history, location } = this.props;
+
+    // Always turn off the cached editing value after editing
+    this.setState(
+      state => ({
+        isEditing: !state.isEditing,
+      }),
+      () => {
+        if (isEditing) {
+          history.replace(location.pathname, { isEditing: false });
+        }
+      }
+    );
   };
 
   onSave = updatedData => {
@@ -66,6 +78,7 @@ class Request extends React.Component {
     const {
       data,
       duplicateFiles,
+      isSubmitting,
       isLoaded,
       isLoading,
       isOutputChecker,
@@ -95,6 +108,13 @@ class Request extends React.Component {
     return (
       <div id="requests-page">
         <Title>{title}</Title>
+        {isCodeExport && (
+          <LoadingDialog
+            open={data.autoAccept && isSubmitting}
+            title="Approving Request"
+            text="This can take some time, please wait for the merge request to complete"
+          />
+        )}
         <Page>
           <header
             className={cx(styles.header, {
@@ -183,7 +203,7 @@ class Request extends React.Component {
                           {get(
                             data,
                             'mergeRequestStatus.message',
-                            'There was an error.',
+                            'There was an error.'
                           )}
                         </SectionMessage>
                       )}
@@ -197,6 +217,7 @@ class Request extends React.Component {
                       <Details
                         data={data}
                         duplicateFiles={duplicateFiles}
+                        id={match.params.requestId}
                         isEditing={isEditing}
                         isLoaded={isLoaded}
                         isLoading={isLoading}
@@ -244,16 +265,24 @@ Request.propTypes = {
     files: PropTypes.arrayOf(PropTypes.string),
     supportingFiles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
+  history: PropTypes.shape({
+    replace: PropTypes.func,
+  }).isRequired,
   isOutputChecker: PropTypes.bool.isRequired,
   isLoaded: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
   location: PropTypes.shape({
+    pathname: PropTypes.string,
     state: PropTypes.shape({
       isEditing: PropTypes.bool,
     }),
   }).isRequired,
   updatedAt: PropTypes.string.isRequired,
   match: PropTypes.shape({
+    params: PropTypes.shape({
+      requestId: PropTypes.string,
+    }),
     url: PropTypes.string.isRequired,
   }).isRequired,
   onFinishEditing: PropTypes.func.isRequired,

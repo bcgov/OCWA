@@ -30,6 +30,7 @@ printf "},\n" >> ./config/default.json
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 
 printf "\"ocwaUrl\": \"${OCWA_URL}\",\n" >> ./config/default.json
+printf "\"ocwaImportUrl\": \"${OCWA_IMPORT_URL}\",\n" >> ./config/default.json
 printf "\"gitops\": {\n" >> ./config/default.json
 printf "\"enabled\": ${GITOPS_ENABLED},\n" >> ./config/default.json
 printf "\"url\": \"${GITOPS_URL}\",\n" >> ./config/default.json

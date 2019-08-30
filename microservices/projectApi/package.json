@@ -1,7 +1,7 @@
 {
   "name": "project-api",
   "author": "Jeremy Ho",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
@@ -14,7 +14,7 @@
   "dependencies": {
     "config": "^3.0.1",
     "express": "^4.16.4",
-    "mongoose": "^5.4.20",
+    "mongoose": "^5.6.9",
     "morgan": "^1.9.1",
     "npmlog": "^4.1.2",
     "passport": "^0.4.0",
@@ -24,10 +24,10 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "chai-http": "^4.2.0",
-    "mocha": "^6.1.4",
+    "chai-http": "^4.3.0",
+    "mocha": "^6.2.0",
     "nodemon": "^1.19.1",
-    "nyc": "^14.0.0",
-    "sinon": "^7.3.1"
+    "nyc": "^14.1.1",
+    "sinon": "^7.4.1"
   }
 }

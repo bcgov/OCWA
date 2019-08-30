@@ -1,6 +1,6 @@
 {
   "name": "ocwa-frontend",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "main": "src/index.js",
   "license": "MIT",
   "scripts": {
@@ -74,7 +74,7 @@
     "@atlaskit/field-text": "^7.0.13",
     "@atlaskit/field-text-area": "^4.0.10",
     "@atlaskit/flag": "^9.1.2",
-    "@atlaskit/form": "^5.2.6",
+    "@atlaskit/form": "^6.1.5",
     "@atlaskit/icon": "^18.0.2",
     "@atlaskit/icon-file-type": "^1.0.4",
     "@atlaskit/icon-object": "^3.0.7",

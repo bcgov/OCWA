@@ -114,4 +114,49 @@
       <initValue>'researcher_2_password'</initValue>
       <name>OCWA_USER_RESEARCHER_2_PSWD</name>
    </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'researcher_2'</initValue>
+      <name>OCWA_USER_RESEARCHER_2</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'researcher_2_password'</initValue>
+      <name>OCWA_USER_RESEARCHER_2_PSWD</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'test_blocked_max_import_file_size_limit.txt'</initValue>
+      <name>BlockedMaxImportSizeLimitFileName</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'test_valid_import_file_upload.txt'</initValue>
+      <name>ValidImportFileName</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'test_valid_import_file_upload2.txt'</initValue>
+      <name>ValidImportFileName2</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'test_valid_import_file_upload3.txt'</initValue>
+      <name>ValidImportFileName3</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'test_warning_import_file_upload.txt'</initValue>
+      <name>WarningImportFileName</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'test_warning_import_file_upload2.txt'</initValue>
+      <name>WarningImportFileName2</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'test_warning_import_file_upload3.txt'</initValue>
+      <name>WarningImportFileName3</name>
+   </GlobalVariableEntity>
 </GlobalVariableEntities>

@@ -339,13 +339,21 @@ request-api:
   storageBucket: data
 
   autoApprove: false
+  autoApproveImport: false
+  emailOnSubmit: false
 
   validationApi: http://ocwa-validation-api.ocwa
   validationApiSecret: validateApiSecret
 
+  projectApi: http://ocwa-project-api.ocwa
+  projectApiSecret: projectApiSecret
+
   ocwaUrl: http://ocwa-ui.ocwa
+  ocwaImportUrl: http://ocwadl-ui.ocwa
   emailTemplateEnabled: false
   emailTemplate: |-
+  emailSubmitTemplateEnabled: false
+  emailSubmitTemplate: |-
   emailEnabled: false
   emailService: smtp.gmail.com
   emailSecure: true
@@ -353,6 +361,10 @@ request-api:
   emailUser: me@ocwa.com
   emailPassword: myPass
   emailFrom: donotreply@ocwa.com
+
+  gitopsEnabled: false
+  gitopsUrl: http://gitops.ocwa
+  gitopsSecret: s3cr3t
 
   createDatabase: false
 
