@@ -166,7 +166,9 @@ OCWA is [Apache 2.0 licensed](/LICENSE).
 
 ### Developer Quick Start Guide
 After cloning this repo follow the below steps to get the program up and running
-    1) Configure the frontend, forum api, policy api, project api, request api and validate api by copying the defualt.json.template folders in the respective configuration folders and modifying the values as appropriate
-    2) For the policy api and validate api create virtual environments named venv (`virtualenv venv`)
-    3) Run the startAll.py script in this directory `python startAll.py`
+
+1. Configure the frontend, forum api, policy api, project api, request api and validate api by copying the defualt.json.template folders in the respective configuration folders and modifying the values as appropriate
+2. For the policy api and validate api create virtual environments named venv (`virtualenv venv`)
+3. Run the startAll.py script in this directory `python startAll.py`
+
 The script will terminate all the pieces upon CTRL+C (SigINT). The node apis and frontend will automatically restart upon any changes, but the python ones will need a manual kick. This script is not expected to work on Windows as it has not been tested on Windows.
