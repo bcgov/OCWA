@@ -2,6 +2,30 @@
 
 OCWA (pronounced "aqua") is a microservice application suite that can store, validate, and enforce file export policies for the purpose of output checking.
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Prerequisites](#prerequisites)
+- [Operating System](#operating-system)
+- [Components](#components)
+  * [Forum API](#forum-api)
+  * [Policy API](#policy-api)
+  * [Project API](#project-api)
+  * [Request API](#request-api)
+  * [Storage API](#storage-api)
+  * [Validation API](#validation-api)
+  * [Front End](#front-end)
+- [Helm](#helm)
+  * [Helm Install (Kubernetes)](#helm-install-kubernetes)
+  * [Helm Update (Kubernetes)](#helm-update-kubernetes)
+  * [Openshift (OCP)](#openshift-ocp)
+- [Contributing](#contributing)
+- [Code of Conduct](#code-of-conduct)
+- [License](#license)
+- [Notes](#notes)
+  * [Default Port List](default-port-list)
+  * [Developer Quick Start Guide](#developer-quick-start-guide)
+
 ## Installation
 
 OCWA is written in both node.js and Python 3. Docker is also strongly recommended for Windows platforms. For each of the OCWA components, refer to their associated README files for specific instructions. If you are looking at the integration tests, you will also require Katalon Studio ( with language support for Groovy and Gherkin).
@@ -139,3 +163,10 @@ OCWA is [Apache 2.0 licensed](/LICENSE).
 | Storage Api (Minio) | 9000 |
 | Storage Api (Tusd) | 1080 |
 | Front End | 8000 |
+
+### Developer Quick Start Guide
+After cloning this repo follow the below steps to get the program up and running
+    1) Configure the frontend, forum api, policy api, project api, request api and validate api by copying the defualt.json.template folders in the respective configuration folders and modifying the values as appropriate
+    2) For the policy api and validate api create virtual environments named venv (`virtualenv venv`)
+    3) Run the startAll.py script in this directory `python startAll.py`
+The script will terminate all the pieces upon CTRL+C (SigINT). The node apis and frontend will automatically restart upon any changes, but the python ones will need a manual kick. This script is not expected to work on Windows as it has not been tested on Windows.
