@@ -259,7 +259,7 @@ model.getAll = function(query, limit, page, user, callback){
                 }
             }
         } else {
-            // Return no records - Outputchecker should not be using external zone
+            // Return no records - Outputchecker or Supervisor should not be using external zone
             zoneRestrict = {
                 $match: {
                     $and: [
