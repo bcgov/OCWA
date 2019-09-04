@@ -12,6 +12,7 @@ Scenario Outline: Access to requests without being logged into OCWA is not allow
 
 	Examples:
 	| status 						|
+	| approved 					|
 	| awaiting review 	|
 	| draft 						|
 	| review in progress|
