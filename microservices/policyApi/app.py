@@ -58,8 +58,6 @@ def create_app(test_config=None):
         })
         return make_response(content, HTTPStatus.INTERNAL_SERVER_ERROR)
 
-        return "From global_exception_handler\n", HTTPStatus.INTERNAL_SERVER_ERROR
-
     @app.errorhandler(HTTPStatus.NOT_FOUND)
     def not_found(param):
         content = jsonify({
