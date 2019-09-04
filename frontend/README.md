@@ -1,14 +1,14 @@
 # OCWA Front End
 
-OCWA's user interface is powered by a modern JavaScript application, employing Babel, React and Redux for view rendering and state management. Development and production builds use Webpack and the server uses Express to interface with authentication, HTTP endpoints and file reading.
+OCWA's user interface is powered by a modern JavaScript application, employing Babel, React and Redux for view rendering and state management. Development and production builds use Webpack and the server uses Express to interface with authentication, HTTP endpoints and file details.
 
-It is recommended that you have a good understanding of modern JavaScript development and the Redux development stack and new features like Generators. See more in [Code Structure and Style](#4-coding-structure-and-style).
+It is recommended that you have a good understanding of modern JavaScript development and the Redux development stack and new features like Generators. See more in [Code Structure and Style](#4-coding-structure-and-style) for more details.
 
-If you are interested in quickly checking out the UI in a production ready, compiled state, view the [installation instructions](#3-installation).
+If you are interested in just viewing the application in a production ready, compiled state, view the [OCWA quick start guide](../README.md#developer-quick-start-guide). To boot up just the front end, skip ahead to the [installation instructions](#3-installation).
 
 ## 1. Configuration
 
-The frontend directory includes a default config file, found in `frontend/config/default.json.example`. There are some default values filled in, as well as placeholder values. Copy and rename the file as `default.json` before starting the application with `$ nmp start`. Details for each property are below.
+The frontend directory includes a default config file, found in `frontend/config/default.json.example`. There are some default values filled in, as well as placeholder values. Copy and rename the file as `default.json` before starting the application with `$ npm start`. Details for each property are below.
 
 #### `port: number` `required`
 
@@ -17,7 +17,7 @@ Defaults to `8000`
 
 #### `wsPort: number` `required`
 
-The assigned websocket port. Must match the same value in the `microservices/forumApi` config.  
+The assigned websocket port. Must match the same value in the [Forum service config](../microservices/forumApi/config/default.json.example) config.  
 Defaults to `3001`
 
 #### `cookieSecret: string` `required`
@@ -38,22 +38,22 @@ Defaults to `localhost`
 
 #### `forumApiHost: url` `required`
 
-See `microservices/forumApi/README` for reference.  
+See [Forum service config](../microservices/forumApi/config/default.json.example) for reference.  
 Defaults to `http://localhost:3000`
 
 #### `forumSocket: url` `required`
 
-See `microservices/forumApi/README` for reference.  
+See [Forum service config](../microservices/forumApi/config/default.json.example) for reference.  
 Defaults to `ws://localhost:3001`
 
 #### `requestApiHost: url` `required`
 
-See `microservices/requestApi/README` for reference.  
+See [Request service config](../microservices/requestApi/config/default.json.example) for reference.  
 Defaults to `http://localhost:3002`
 
 #### `filesApiHost: url` `required`
 
-See `microservices/storageApi/README` for reference.  
+See [Storage service README](../microservices/storageApi/README.md) for reference.  
 Defaults to `http://localhost:1080`
 
 #### `exporterGroup: string` `required`
@@ -73,24 +73,25 @@ Defaults to `/reports`
 
 #### `exporterMode: 'export' | 'download'` `required`
 
-There are 2 different environments that the interface will accommodate. Exporting data/code out of a Secure Research Environment or importing.`
+There are 2 different environments that the interface will accommodate. Exporting data/code out of a Secure Research Environment or importing. See more at [Groups and Modes](#2-groups-and-modes).
 
-`export`: Inside the SRE to export code  
-`download`: Outside the SRE to import data/code
+`export`: Inside the SRE to **export** code  
+`download`: Outside the SRE to **import** data/code
 
 Defaults to `export`
 
 #### `codeExportEnabled: boolean` `required`
 
+If enabled the New Request form will allow users to pick between data and code requests.  
 Defaults to `false`
 
 #### `repositoryHost: ?url`
 
-If `codeExportEnabled` is on then you need to set the host of the repository `https://subdomain.bc.com/shares/`
+If `codeExportEnabled` is on then you need to set the host of the repository so pull requests will work, for example something like `https://subdomain.bc.com/shares/`.
 
 #### `auth: object` `required`
 
-Define an user object based on the Passport authentication. Recommended configuration would look something like this:
+Define an user object based on the [Passport](http://www.passportjs.org/docs/) authentication. Recommended configuration would look something like this:
 
 ```json
 "auth": {
@@ -108,16 +109,16 @@ Define an user object based on the Passport authentication. Recommended configur
 
 ### Storage settings
 
-Storage settings are for connecting to Minio via their JavaScript API. All of these settings are required.
+Storage settings are for connecting to Minio via their JavaScript API. All of these settings are required. See more about Minio's JavaScript Client [here](https://docs.min.io/docs/javascript-client-api-reference.html).
 
 #### `storage.endPoint: string` `required`
 
-See `microservices/storageApi` for this value.  
+See [Storage service README](../microservices/storageApi/README.md) for this value.  
 Defaults to `localhost`
 
 #### `storage.port: number` `required`
 
-See `microservices/storageApi` for this value.  
+See [Storage service README](../microservices/storageApi/README.md) for this value.  
 Defaults to `9000`
 
 #### `storage.useSSL: boolean` `required`
@@ -127,22 +128,24 @@ Defaults to `false`
 
 #### `storage.bucket: string` `required`
 
-Set to the bucket you are storing your files in. See the `microservices/storageApi` for these values.
+Set to the bucket you are storing your files in. See the [Storage service README](../microservices/storageApi/README.md) for these values.
 
 #### `storage.accessKey: string` `required`
 
-See the `microservices/storageApi` for these values.
+See the [Storage service README](../microservices/storageApi/README.md) for these values.
 
 #### `storage.secretKey: string` `required`
 
-See the `microservices/storageApi` for these values.
+See the [Storage service README](../microservices/storageApi/README.md) for these values.
+
+**NOTE:** Minio is only used for file _viewing_. TUSD is used for uploading though there is no configuration required to upload via the frontend.
 
 ### `user` settings
 
 #### `user.idField: string` `required`
 
 Declare which property on a authenticated user object is the ID key.  
-Defaults to `preferred_username`.
+Defaults to `preferred_username` but can be whatever your authentication setup outputs.
 
 ## 2. Groups and Modes
 
@@ -159,6 +162,8 @@ Output Checkers can review requests and approve them or flag the request and dis
 #### 3) Reports (`/reports` by default)
 
 Reports is a simple analytics tool that gathers all _submitted_ requests for purposes of analyzing trends like approval time, and can be filtered by project or exporter.
+
+In addition there are 2 states the Exporter or Output Check interface can be viewed as; `import` into the SRE or `export` out of the SRE. The interface differences betweeen these modes is minimal, mostly string localization, though there can be minor functionality differences with the application as whole.
 
 ## 3. Installation
 
