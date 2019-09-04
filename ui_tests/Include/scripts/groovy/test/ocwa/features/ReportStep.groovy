@@ -68,6 +68,31 @@ class ReportStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		
 		//check that all status changes are present (assume it's an approved request)
-		
+		TestObject statusObj = Utils.getTestObjectByIdPart(Constant.Status.REPORTS_UI_REQUEST_STATUS_ID_PART, 'div')
+		String statusTxt = Constant.Status.APPROVED
+		WebUI.waitForElementPresent(statusObj, Constant.DEFAULT_TIMEOUT)
+		String actualStatusTxt = WebUI.getText(statusObj)
+		if (!actualStatusTxt.equals(statusTxt)) {
+			WebUI.takeScreenshot()
+			WebUI.comment("Request status is in unexpected state.  Expected: $statusTxt  Actual: $actualStatusTxt")
+			KeywordUtil.markFailed('Failing scenario because request is unexpected state.')
+		}
+		//check that the variable description field is populated
+		String varDesc = WebUI.getText(Utils.getTestObjectById(Constant.Reports.REPORTS_VARIABLE_TXT_ID))
+		String expectedVariableDesc = Constant.Requester.REQUEST_VARIABLE_TEXT
+		if (!varDesc.equals(expectedVariableDesc )) {
+			WebUI.takeScreenshot()
+			WebUI.comment("Request variable description is unexpected value.  Expected: $expectedVariableDesc   Actual: $varDesc")
+			KeywordUtil.markFailed('Failing scenario because request has unexpected value.')
+		}
+		//check the status changes
+		//id is on the div
+		//check if each state change is present
+		WebUI.comment('checking the request chronology')
+		WebUI.verifyElementPresent(Utils.getTestObjectById(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_DRAFT_STATE_NUMBER))
+		WebUI.verifyElementPresent(Utils.getTestObjectById(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_WIP_STATE_NUMBER))
+		WebUI.verifyElementPresent(Utils.getTestObjectById(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_AWAITING_REVIEW_STATE_NUMBER))
+		WebUI.verifyElementPresent(Utils.getTestObjectById(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_IN_REVIEW_STATE_NUMBER))
+		WebUI.verifyElementPresent(Utils.getTestObjectById(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_APPROVED_STATE_NUMBER))
 	}
 }
