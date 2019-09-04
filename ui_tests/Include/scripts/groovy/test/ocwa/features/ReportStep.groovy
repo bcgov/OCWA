@@ -57,6 +57,7 @@ class ReportStep extends Step {
 		//find the request in the reporting interface UI
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		TestObject linkToRequest = Utils.getTestObjectByText(G_REQUESTNAME)
+		WebUI.waitForElementPresent(linkToRequest, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementVisible(linkToRequest, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(linkToRequest, Constant.DEFAULT_TIMEOUT)
