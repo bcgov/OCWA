@@ -371,7 +371,7 @@ router.put("/save/:requestId", function(req, res, next){
             for (var i=0; i<findRes.files.length; i++) {
                 var myFile = findRes.files[i];
                 httpReq.put({
-                    url: config.get('validationApi') + '/v1/validate/' + myFile + "/" + policy,
+                    url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
                     headers: {
                         'x-api-key': config.get('validationApiSecret')
                     }
