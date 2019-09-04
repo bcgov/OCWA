@@ -248,7 +248,7 @@ model.getAll = function(query, limit, page, user, callback){
 
     var zoneRestrict;
 
-    if (user.outputchecker) {
+    if (user.outputchecker || user.supervisor) {
         if (user.zone === user.INTERNAL_ZONE){
             zoneRestrict = {
                 $match: {
@@ -267,16 +267,6 @@ model.getAll = function(query, limit, page, user, callback){
                         {type: EXPORT_TYPE}
                     ]
                 }
-            }
-        }
-    } else if (user.supervisor) {
-        // Supervisor has access to the requests regardless of what zone they are in
-        zoneRestrict = {
-            $match: {
-                $or: [
-                    {type: INPUT_TYPE},
-                    {type: EXPORT_TYPE}
-                ]
             }
         }
     } else {
