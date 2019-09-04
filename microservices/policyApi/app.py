@@ -47,6 +47,19 @@ def create_app(test_config=None):
         return response
 
 
+    @app.errorhandler(Exception)
+    def global_exception_handler(error):
+        """ Global exception handler.
+        """
+        log.error("global_exception_handler - %s" % error)
+        content = jsonify({
+            "error": "%s" % error,
+            "code": HTTPStatus.INTERNAL_SERVER_ERROR
+        })
+        return make_response(content, HTTPStatus.INTERNAL_SERVER_ERROR)
+
+        return "From global_exception_handler\n", HTTPStatus.INTERNAL_SERVER_ERROR
+
     @app.errorhandler(HTTPStatus.NOT_FOUND)
     def not_found(param):
         content = jsonify({

@@ -30,17 +30,17 @@ def validate_policy_result(fileId: str) -> object:
     return db.Results.objects(file_id=fileId).to_json()
 
 
-@validate.route('/<string:fileId>',
+@validate.route('/<string:fileId>/<string:policyName>',
            methods=['PUT'], strict_slashes=False)
 @auth
-def validate_policy(fileId: str) -> object:
+def validate_policy(policyName: str, fileId: str) -> object:
     """
     Validates a file
     :param fileId: File Object ID
     :return: JSON of submission state
     """
 
-    policy = get_policies()
+    policy = get_policy(policyName)
 
     db=Db()
 
@@ -120,7 +120,7 @@ def validate_rule(fileId: str, ruleId: str) -> object:
         result.state = 2
         result.save()
 
-        policy = get_policy(None)
+        policy = get_policy('')
 
         if result.rule_id in policy.keys():
             v = Validator()
@@ -134,19 +134,11 @@ def validate_rule(fileId: str, ruleId: str) -> object:
     return jsonify({"error": "Couldn't decide on the rule to replace"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-def get_policies():
+def get_policy(policy):
     conf = Config().data
     policy_api_url = conf['policyApi']
     headers = {'X-API-KEY': conf['apiSecret']}
 
-    response = requests.get(policy_api_url + "/v1/", headers=headers)
-
-    return response.json()
-
-def get_policy(policy_id):
-    conf = Config().data
-    policy_api_url = conf['policyApi']
-
-    response = requests.get(policy_api_url + "v1/" + policy_id)
+    response = requests.get(policy_api_url + "/v1/" + policy, headers=headers)
 
     return response.json()

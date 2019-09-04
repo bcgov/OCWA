@@ -1,28 +1,32 @@
 from flask import Blueprint, jsonify, request, Response
 from v1.db.db import Db
 import hcl
+import logging
 
 from v1.auth.auth import jwt_or_api_key
 from v1.auth.auth import admin_jwt
 
+log = logging.getLogger(__name__)
+
 rules = Blueprint('validate', 'validate')
 
-@rules.route('/',
+@rules.route('/<string:policyName>',
            methods=['GET'], strict_slashes=False)
 @jwt_or_api_key
-def get_policy() -> object:
+def get_policy(policyName: str) -> object:
     """
     Get policy
     :return: JSON of policy (collection of rules)
     """
-
     db = Db()
     resp = Response()
     resp.headers['Content-Type'] = ["application/json"]
-    return db.Rules.objects().to_json()
 
+    policy = db.Policies.objects(name=policyName).first()
 
-@rules.route('/<string:ruleName>',
+    return db.Rules.objects(name__in=policy.rules).to_json()
+
+@rules.route('/rules/<string:ruleName>',
            methods=['GET'], strict_slashes=False)
 @jwt_or_api_key
 def get_rule(ruleName: str) -> object:
@@ -83,7 +87,7 @@ def write_policy() -> object:
     return jsonify({"success": "Written successfully"})
 
 
-@rules.route('/<string:ruleName>',
+@rules.route('/rules/<string:ruleName>',
            methods=['POST'], strict_slashes=False)
 @admin_jwt
 def write_rule(ruleName: str) -> object:

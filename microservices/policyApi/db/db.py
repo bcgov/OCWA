@@ -1,6 +1,7 @@
 from mongoengine import connect
 from config import Config
 from db.models.rules import Rules
+from db.models.policies import Policies
 
 class Db:
     Results = None
@@ -8,6 +9,7 @@ class Db:
         config = Config()
         self.db = {}
         self.Rules = Rules
+        self.Policies = Policies
         self.initConnection(config)
 
     def initConnection(self, config):
