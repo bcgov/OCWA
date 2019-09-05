@@ -47,6 +47,8 @@ resource "docker_container" "ocwa_request_api" {
     "STORAGE_BUCKET=bucket",
     "STORAGE_WARN_SIZE=5242880",
     "STORAGE_MAX_SIZE=10485760",
+    "STORAGE_IMP_WARN_SIZE=10485760",
+    "STORAGE_IMP_MAX_SIZE=52428800",
     "STORAGE_KEY=${random_id.accessKey.hex}",
     "STORAGE_SECRET=${random_string.secretKey.result}",
     "OCWA_URL=${var.ocwaHost}",

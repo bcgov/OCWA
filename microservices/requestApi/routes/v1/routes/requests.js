@@ -465,8 +465,8 @@ router.put('/submit/:requestId', function(req, res, next){
 
             var config = require('config');
             var storageApi = config.get('storageApi');
-            var warnSize =  storageApi.warnRequestBundlesize;
-            var maxSize = storageApi.maxRequestBundlesize;
+            var warnSize =  reqRes.type === db.Request.EXPORT_TYPE ? storageApi.warnRequestBundlesize : storageApi.warnImportRequestBundlesize;
+            var maxSize = reqRes.type === db.Request.EXPORT_TYPE ? storageApi.maxRequestBundlesize : storageApi.maxImportRequestBundlesize;
             if ( (warnSize > 0) || (maxSize > 0)){
                 util.getBundleMeta(reqRes.files, function(metadataRes){
 
