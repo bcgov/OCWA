@@ -113,6 +113,10 @@ spec:
               value: "{{ .Values.storageWarnSize }}"
             - name: STORAGE_MAX_SIZE
               value: "{{ .Values.storageMaxSize }}"
+            - name: STORAGE_IMP_WARN_SIZE
+              value: "{{ .Values.storageImpWarnSize }}"
+            - name: STORAGE_IMP_MAX_SIZE
+              value: "{{ .Values.storageImpMaxSize }}"
             - name: STORAGE_BUCKET
               value: {{ .Values.storageBucket }}
             - name: AUTO_APPROVE
