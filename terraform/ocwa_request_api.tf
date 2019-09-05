@@ -45,7 +45,7 @@ resource "docker_container" "ocwa_request_api" {
     "STORAGE_PORT=9000",
     "STORAGE_USESSL=false",
     "STORAGE_BUCKET=bucket",
-    "STORAGE_WARN_SIZE=5242880",
+    "STORAGE_WARN_SIZE=7340032",
     "STORAGE_MAX_SIZE=10485760",
     "STORAGE_IMP_WARN_SIZE=10485760",
     "STORAGE_IMP_MAX_SIZE=52428800",
