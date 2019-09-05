@@ -135,7 +135,10 @@ def validate(rule, resultObj):
         resultObj.state = 0
     else:
         resultObj.state = 1
-        resultObj.message = "Failed"
+        if resultObj.mandatory:
+            resultObj.message = "Failed"
+        else
+            resultObj.message = "Warning"
 
     resultObj.save()
 
