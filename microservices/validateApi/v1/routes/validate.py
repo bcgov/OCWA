@@ -19,7 +19,7 @@ validate = Blueprint('validate', 'validate')
 @validate.route('/<string:fileId>',
            methods=['GET'], strict_slashes=False)
 @auth
-def validate_policy_result(fileId: str) -> object:
+def get_file_results(fileId: str) -> object:
     """
     Returns the result of file
     :param fileId: File Object ID
@@ -84,10 +84,10 @@ def validate_policy(policyName: str, fileId: str) -> object:
     return jsonify({"message": "Successful"}), HTTPStatus.CREATED
 
 
-@validate.route('/<string:fileId>/<string:ruleId>',
+@validate.route('/<string:fileId>/rules/<string:ruleId>',
            methods=['GET'], strict_slashes=False)
 @auth
-def validate_rule_result(fileId: str, ruleId: str) -> object:
+def get_rule_result(fileId: str, ruleId: str) -> object:
     """
     Returns the result of file with specific rule
     :param fileId: File Object ID
@@ -99,7 +99,7 @@ def validate_rule_result(fileId: str, ruleId: str) -> object:
 
 
 
-@validate.route('/<string:fileId>/<string:ruleId>',
+@validate.route('/<string:fileId>/rules/<string:ruleId>',
            methods=['PUT'], strict_slashes=False)
 @auth
 def validate_rule(fileId: str, ruleId: str) -> object:

@@ -14,7 +14,7 @@ from pytest_mock import mocker
 def test_get_validate_rule_result(client, mocker, mockdb):
 
     config = Config()
-    response = client.get('/v1/validate/file_1/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
+    response = client.get('/v1/validate/file_1/rules/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
 
     resp = json.loads(response.data.decode('utf-8'))
 
@@ -25,13 +25,13 @@ def test_get_validate_rule_result(client, mocker, mockdb):
 
 def test_put_validate_rule_with_invalid_file(client, mocker, mockdb):
     config = Config()
-    response = client.put('/v1/validate/file_XXX/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
+    response = client.put('/v1/validate/file_XXX/rules/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
 
     assert response.data == b'{"error":"Can\'t rerun a rule that hasn\'t been bulk run"}\n'
 
 def test_put_validate_rule_with_unexpected_data(client, mocker, mockdb):
     config = Config()
-    response = client.put('/v1/validate/file_2/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
+    response = client.put('/v1/validate/file_2/rules/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
 
     assert response.data == b'{"error":"Couldn\'t decide on the rule to replace"}\n'
 
@@ -39,7 +39,7 @@ def test_put_validate_rule_with_missing_rule_in_policy(client, mocker, mockdb):
     mock_get_policy = mocker.patch('v1.routes.validate.get_policy')
     mock_get_policy.return_value = {}
     config = Config()
-    response = client.put('/v1/validate/file_1/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
+    response = client.put('/v1/validate/file_1/rules/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
 
     assert response.data == b'{"error":"Rule not found in policy"}\n'
 
@@ -52,7 +52,7 @@ def test_put_validate_rule_new(client, mocker, mockdb):
 
     countBefore = mockdb.Results.objects.count()
     config = Config()
-    response = client.put('/v1/validate/file_1/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
+    response = client.put('/v1/validate/file_1/rules/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
     assert response.data == b'{"message":"Successful"}\n'
 
     countAfter = mockdb.Results.objects.count()
