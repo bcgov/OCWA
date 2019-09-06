@@ -8,6 +8,7 @@ from mongoengine import connect
 
 from db.db import Db
 from db.models.rules import Rules
+from db.models.policies import Policies
 
 def mock_db(self):
     connect('mongoenginetest', host='mongomock://localhost')
@@ -22,8 +23,13 @@ def mockdb(mocker):
     # Tried scoping to module - but mocker is function, so not able.  Is there a bulk delete?
     for r in db.Rules.objects():
         r.delete()
+    for p in db.Policies.objects():
+        p.delete()
     Rules(name="rule1",source="${file.name}!=badFile",mandatory=False).save()
     Rules(name="rule2",source="${file.size}<500",mandatory=True).save()
+
+    Policies(name="export-data",rules=['rule1','rule2']).save()
+    Policies(name="bad-policy",rules=['rule1','rule2','rule3']).save()
 
     return db
 

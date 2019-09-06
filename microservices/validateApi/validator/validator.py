@@ -135,7 +135,10 @@ def validate(rule, resultObj):
         resultObj.state = 0
     else:
         resultObj.state = 1
-        resultObj.message = "Failed"
+        if resultObj.mandatory:
+            resultObj.message = "Failed"
+        else:
+            resultObj.message = "Warning"
 
     resultObj.save()
 
@@ -178,6 +181,7 @@ def evaluate_source(source, file_attributes):
         log.info("exec output = %s" % exec_output)
         result = exec_output.rstrip() in ("yes", "true", "t", "1")
     except (Exception, NameError) as e:
+        log.error("Failed to evaluate source %s" % source)
         log.error(e)
         message = str(e)
 

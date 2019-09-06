@@ -1,28 +1,38 @@
 from flask import Blueprint, jsonify, request, Response
 from v1.db.db import Db
 import hcl
+import logging
 
 from v1.auth.auth import jwt_or_api_key
 from v1.auth.auth import admin_jwt
 
+log = logging.getLogger(__name__)
+
 rules = Blueprint('validate', 'validate')
 
-@rules.route('/',
+@rules.route('/<string:policyName>',
            methods=['GET'], strict_slashes=False)
 @jwt_or_api_key
-def get_policy() -> object:
+def get_policy(policyName: str) -> object:
     """
     Get policy
     :return: JSON of policy (collection of rules)
     """
-
     db = Db()
     resp = Response()
     resp.headers['Content-Type'] = ["application/json"]
-    return db.Rules.objects().to_json()
+
+    policy = db.Policies.objects(name=policyName).first()
+
+    rules = db.Rules.objects(name__in=policy.rules)
+
+    if len(policy.rules) != len(rules):
+        raise Exception("Missing rules from policy")
+
+    return rules.to_json()
 
 
-@rules.route('/<string:ruleName>',
+@rules.route('/rules/<string:ruleName>',
            methods=['GET'], strict_slashes=False)
 @jwt_or_api_key
 def get_rule(ruleName: str) -> object:
@@ -50,40 +60,88 @@ def write_policy() -> object:
 
     body = request.get_json()
 
-    if not('policy' in body):
-        return jsonify({"error": "policy is a required attribute"})
-    pol = body['policy']
+    if not('name' in body):
+        return jsonify({"error": "name is a required attribute"})
 
-    policy = None
+    if not('rules' in body):
+        return jsonify({"error": "'rules' is a required attribute"})
+    name = body['name']
+    rules = body['rules']
 
+    if len(rules) == 0:
+        return jsonify({"error": "policy must have atleast one rule"})
+
+    db.Policies(name=name, rules=rules).save()
+
+    return jsonify({"success": "Written successfully"})
+
+@rules.route('/<string:policyName>',
+           methods=['POST'], strict_slashes=False)
+@admin_jwt
+def update_policy(policyName: str) -> object:
+    """
+    (Over)write policy
+    :return: JSON of success message or error message
+    """
+
+    db=Db()
+
+    body = request.get_json()
+
+    if not('rules' in body):
+        return jsonify({"error": "'rules' is a required attribute"})
+
+    rules = body['rules']
+
+    if len(rules) == 0:
+        return jsonify({"error": "policy must have atleast one rule"})
+
+    p = db.Policies.objects(name=policyName).first()
+    p.rules = rules
+    p.save()
+
+    return jsonify({"success": "Written successfully"})
+
+
+@rules.route('/rules',
+           methods=['POST'], strict_slashes=False)
+@admin_jwt
+def write_rules() -> object:
+    """
+    (Over)write a set of rules
+    :return: JSON of success message or error message
+    """
+
+    db=Db()
+
+    body = request.get_json()
+
+    if not('rule_set' in body):
+        return jsonify({"error": "rule_set is a required attribute"})
+
+    rule_set = body['rule_set']
+
+    rules = None
     try:
-        policy = hcl.loads(pol)
+        rules = hcl.loads(rule_set)
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return jsonify({"error": "%s%s" % (str(e),rule_set)})
 
-    if not('rule' in policy):
-        return jsonify({"error": "Invalid json"})
-
-
-    ##Clear all entries!!!
-    db.Rules.objects().delete()
-
-    for ruleName, ruleDef in policy['rule'].items():
-        rule = db.Rules(
+    for ruleName, ruleDef in rules['rule'].items():
+        dbRule = db.Rules(
             name=ruleName,
             source=ruleDef['source']
         )
 
         if 'mandatory' in ruleDef:
-            rule.mandatory = ruleDef['mandatory']
-
-        rule.save()
-
+            db.Rules.objects(name=ruleName).update_one(source=ruleDef['source'], mandatory=ruleDef['mandatory'], upsert=True, write_concern=None)
+        else:
+            db.Rules.objects(name=ruleName).update_one(source=ruleDef['source'], upsert=True, write_concern=None)
 
     return jsonify({"success": "Written successfully"})
 
 
-@rules.route('/<string:ruleName>',
+@rules.route('/rules/<string:ruleName>',
            methods=['POST'], strict_slashes=False)
 @admin_jwt
 def write_rule(ruleName: str) -> object:
