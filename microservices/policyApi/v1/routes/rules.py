@@ -24,7 +24,13 @@ def get_policy(policyName: str) -> object:
 
     policy = db.Policies.objects(name=policyName).first()
 
-    return db.Rules.objects(name__in=policy.rules).to_json()
+    rules = db.Rules.objects(name__in=policy.rules)
+
+    if len(policy.rules) != len(rules):
+        raise Exception("Missing rules from policy")
+
+    return rules.to_json()
+
 
 @rules.route('/rules/<string:ruleName>',
            methods=['GET'], strict_slashes=False)

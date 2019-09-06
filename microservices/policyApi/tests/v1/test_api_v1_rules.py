@@ -9,6 +9,13 @@ def test_v1_rules_get_policies_happy_path(client, mockdb):
     resp = json.loads(response.data.decode('utf-8'))
     assert len(resp) == 2
 
+def test_v1_rules_get_policy_with_missing_rules(client, mockdb):
+    config = Config()
+    response = client.get('/v1/bad-policy', headers=[('Authorization', 'Bearer '+config.data['testJWT'])])
+    assert response.status_code == 500
+    resp = json.loads(response.data.decode('utf-8'))
+    assert resp['error'] == 'Missing rules from policy'
+
 def test_v1_rules_get_rule_where_name_exists(client, mockdb):
     config = Config()
     response = client.get('/v1/rules/rule1', headers=[('Authorization', 'Bearer '+config.data['testJWT'])])
@@ -81,7 +88,7 @@ def test_v1_rules_add_policy(client, mockdb):
     assert resp['success'] == 'Written successfully'
 
     count = mockdb.Policies.objects.count()
-    assert count == 2
+    assert count == 3
 
 def test_v1_rules_replace_policy(client, mockdb):
     request = {
@@ -98,7 +105,7 @@ def test_v1_rules_replace_policy(client, mockdb):
     assert resp['success'] == 'Written successfully'
 
     count = mockdb.Policies.objects.count()
-    assert count == 1
+    assert count == 2
 
 def test_v1_rules_replace_rules(client, mockdb):
     rule_set = """ 
