@@ -29,6 +29,7 @@ def mockdb(mocker):
     Rules(name="rule2",source="${file.size}<500",mandatory=True).save()
 
     Policies(name="export-data",rules=['rule1','rule2']).save()
+    Policies(name="bad-policy",rules=['rule1','rule2','rule3']).save()
 
     return db
 

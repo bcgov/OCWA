@@ -181,7 +181,7 @@ def evaluate_source(source, file_attributes):
         log.info("exec output = %s" % exec_output)
         result = exec_output.rstrip() in ("yes", "true", "t", "1")
     except (Exception, NameError) as e:
-        log.error("Failed to run %s" % exec_src)
+        log.error("Failed to evaluate source %s" % source)
         log.error(e)
         message = str(e)
 

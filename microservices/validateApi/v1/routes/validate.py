@@ -120,15 +120,15 @@ def validate_rule(fileId: str, ruleId: str) -> object:
         result.state = 2
         result.save()
 
-        policy = get_policy('')
+        rule = get_rule(ruleId)
 
-        if result.rule_id in policy.keys():
+        if len(rule) == 1 and rule[0]['name'] == ruleId:
             v = Validator()
-            v.start_validate(policy[result.rule_id], result)
+            v.start_validate(rule[0], result)
 
             return jsonify({"message": "Successful"}), HTTPStatus.OK
         else:
-            return jsonify({"error": "Rule not found in policy"}), HTTPStatus.INTERNAL_SERVER_ERROR
+            return jsonify({"error": "Rule not found"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
     return jsonify({"error": "Couldn't decide on the rule to replace"}), HTTPStatus.INTERNAL_SERVER_ERROR
@@ -141,4 +141,12 @@ def get_policy(policy):
 
     response = requests.get(policy_api_url + "/v1/" + policy, headers=headers)
 
+    return response.json()
+
+def get_rule(rule):
+    conf = Config().data
+    policy_api_url = conf['policyApi']
+    headers = {'X-API-KEY': conf['apiSecret']}
+
+    response = requests.get(policy_api_url + "/v1/rules/" + rule, headers=headers)
     return response.json()

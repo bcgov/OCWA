@@ -36,16 +36,16 @@ def test_put_validate_rule_with_unexpected_data(client, mocker, mockdb):
     assert response.data == b'{"error":"Couldn\'t decide on the rule to replace"}\n'
 
 def test_put_validate_rule_with_missing_rule_in_policy(client, mocker, mockdb):
-    mock_get_policy = mocker.patch('v1.routes.validate.get_policy')
-    mock_get_policy.return_value = {}
+    mock_get_rule = mocker.patch('v1.routes.validate.get_rule')
+    mock_get_rule.return_value = {}
     config = Config()
     response = client.put('/v1/validate/file_1/rules/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
 
-    assert response.data == b'{"error":"Rule not found in policy"}\n'
+    assert response.data == b'{"error":"Rule not found"}\n'
 
 def test_put_validate_rule_new(client, mocker, mockdb):
-    mock_get_policy = mocker.patch('v1.routes.validate.get_policy')
-    mock_get_policy.return_value = {"rule_1":{"Name":"Great rule 1","Source":"${file.size}<100"}}
+    mock_get_rule = mocker.patch('v1.routes.validate.get_rule')
+    mock_get_rule.return_value = [{"name":"rule_1","source":"${file.size}<100"}]
 
     mock_validator_validate = mocker.patch('v1.validator.validator.Validator.start_validate')
     mock_validator_validate.return_value = True
