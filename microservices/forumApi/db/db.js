@@ -16,9 +16,11 @@ db.init = function(){
     var logger = require('npmlog');
     var connString = "mongodb://" + dbUser + ":" + dbPass + "@" + dbHost + "/" + dbName + "?authSource="+dbName;
 
-
     mongoose.connect(connString, {
-        useNewUrlParser: true
+        useNewUrlParser: true,
+        reconnectTries: Number.MAX_VALUE,
+        reconnectInterval: 1000,
+        bufferMaxEntries: 0
     });
 
     db.db = mongoose.connection;
