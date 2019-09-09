@@ -119,14 +119,26 @@ function Request({ data }) {
           {data.exportType !== 'code' && (
             <div className={styles.details}>
               <dl>
-                <dt>Variable Descriptions</dt>
-                <dd id="request-details-variable-text">
-                  {data.variableDescriptions}
-                </dd>
-                <dt>Relationship to previous or future (planned) outputs</dt>
-                <dd id="request-details-selection-text">
-                  {data.selectionCriteria}
-                </dd>
+                {data.type === 'import' && (
+                  <React.Fragment>
+                    <dt>General Comments</dt>
+                    <dd id="request-details-purpose-text">{data.purpose}</dd>
+                  </React.Fragment>
+                )}
+                {data.type === 'export' && (
+                  <React.Fragment>
+                    <dt>Variable Descriptions</dt>
+                    <dd id="request-details-variable-text">
+                      {data.variableDescriptions}
+                    </dd>
+                    <dt>
+                      Relationship to previous or future (planned) outputs
+                    </dt>
+                    <dd id="request-details-selection-text">
+                      {data.selectionCriteria}
+                    </dd>
+                  </React.Fragment>
+                )}
               </dl>
             </div>
           )}
