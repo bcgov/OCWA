@@ -90,10 +90,10 @@ class ReportStep extends Step {
 		//id is on the div
 		//check if each state change is present
 		WebUI.comment('checking the request chronology')
-		WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_DRAFT_STATE_NUMBER), Constant.DEFAULT_TIMEOUT)
-		WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_WIP_STATE_NUMBER), Constant.DEFAULT_TIMEOUT)
-		WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_AWAITING_REVIEW_STATE_NUMBER), Constant.DEFAULT_TIMEOUT)
-		WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_IN_REVIEW_STATE_NUMBER), Constant.DEFAULT_TIMEOUT)
-		WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_APPROVED_STATE_NUMBER), Constant.DEFAULT_TIMEOUT)
+		WebUI.verifyElementPresent(Utils.getTestObjectByContainsClass(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_DRAFT_STATE_NUMBER), Constant.DEFAULT_TIMEOUT)
+		WebUI.verifyElementPresent(Utils.getTestObjectByContainsClass(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_WIP_STATE_NUMBER), Constant.DEFAULT_TIMEOUT)
+		WebUI.verifyElementPresent(Utils.getTestObjectByContainsClass(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_AWAITING_REVIEW_STATE_NUMBER), Constant.DEFAULT_TIMEOUT)
+		WebUI.verifyElementPresent(Utils.getTestObjectByContainsClass(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_IN_REVIEW_STATE_NUMBER), Constant.DEFAULT_TIMEOUT)
+		WebUI.verifyElementPresent(Utils.getTestObjectByContainsClass(Constant.Reports.REQUEST_CHRONOLOGY_ID_PREFIX + Constant.Reports.REQUEST_CHRONOLOGY_APPROVED_STATE_NUMBER), Constant.DEFAULT_TIMEOUT)
 	}
 }
