@@ -64,6 +64,17 @@ public class Utils {
 		tObject.addProperty('class', ConditionType.EQUALS, cls, true)
 		return tObject
 	}
+	
+	/**
+	 * Returns the TestObject correlating to a web element that has a multiple classes which contains specified class
+	 * @param cls The class of the element to filter on
+	 * @return TestObject
+	 */
+	static def getTestObjectByContainsClass(String cls) {
+		TestObject tObject = new TestObject(cls)
+		tObject.addProperty('class', ConditionType.CONTAINS, cls, true)
+		return tObject
+	}
 
 	/**
 	 * Returns the TestObject correlating to the given xpath

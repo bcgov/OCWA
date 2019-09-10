@@ -73,6 +73,11 @@ public class LoginStep extends Step {
 		user_login('requester in auto approve project')
 	}
 	
+	@When("operations manager logs in")
+	def operational_manager_logs_in() {
+		login(GlobalVariable.OCWA_USER_REPORTS, GlobalVariable.OCWA_USER_REPORTS_PSWD)
+	}
+
 	@When("the requester logs out")
 	def requester_logs_out() {
 		logout()

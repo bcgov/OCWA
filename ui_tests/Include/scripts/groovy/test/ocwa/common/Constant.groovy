@@ -83,6 +83,7 @@ public class Constant {
 	final class Status {
 		static final def REQUEST_STATUS_ID = 'request-status'
 		static final def CHECKER_UI_REQUEST_STATUS_ID_PART = 'state-label'
+		static final def REPORTS_UI_REQUEST_STATUS_ID_PART = 'state-label'
 		static final def APPROVED = 'Approved'
 		static final def AWAITING_REVIEW = 'Awaiting Review'
 		static final def CANCELLED = 'Cancelled'
@@ -116,5 +117,15 @@ public class Constant {
 		static final def MERGE_BRANCH_MISSING_REPO_TEXT = 's4-1-develop'
 		static final def HAVE_REVIEWED_CODE_CB_ID = 'viewed-mr'
 		static final def MERGE_REQUEST_APPROVING_TEXT = 'Approving Request'
+	}
+	
+	final class Reports {
+		static final def REPORTS_VARIABLE_TXT_ID = 'request-details-variable-text'
+		static final def REQUEST_CHRONOLOGY_ID_PREFIX = 'request-chronology-item-state-'
+		static final def REQUEST_CHRONOLOGY_DRAFT_STATE_NUMBER = '0'
+		static final def REQUEST_CHRONOLOGY_WIP_STATE_NUMBER = '1'
+		static final def REQUEST_CHRONOLOGY_AWAITING_REVIEW_STATE_NUMBER = '2'
+		static final def REQUEST_CHRONOLOGY_IN_REVIEW_STATE_NUMBER = '3'
+		static final def REQUEST_CHRONOLOGY_APPROVED_STATE_NUMBER = '4'
 	}
 }
