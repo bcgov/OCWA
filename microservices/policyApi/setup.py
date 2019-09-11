@@ -29,7 +29,7 @@ setup(
     name='policy',
     author='Brandon Sharratt',
     author_email='',
-    version='1.2.3',
+    version='2.0.0',
     description="OCWA Policy API",
     long_description=read('README.md'),
     license='Apache 2.0',
