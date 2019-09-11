@@ -377,7 +377,10 @@ matrix:
     stage: Tests
     language: java
     addons:
-      chrome: stable
+      apt:
+        packages:    
+          - dpkg
+          - google-chrome-stable
       hosts:
       - auth.example.demo
       - ocwa.example.demo
