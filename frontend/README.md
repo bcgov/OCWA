@@ -165,7 +165,7 @@ Reports is a simple analytics tool that gathers all _submitted_ requests for pur
 
 In addition there are 2 states the Exporter or Output Check interface can be viewed as; `import` into the SRE or `export` out of the SRE. The interface differences betweeen these modes is minimal, mostly string localization, though there can be minor functionality differences with the application as whole.
 
-## 3. Installation
+## 3. Installation Options
 
 All installs require an instance of mongodb available.
 
@@ -175,19 +175,13 @@ All installs require an instance of mongodb available.
 - node 10.15.1 LTS or newer
 - Docker 18.09.1 or newer
 
-### Bare Metal Install
+#### 3.1 Bare Metal Install
 
 Copy and rename `config/default.json.example` to `config/default.json` and fill in the values. See [Configuration](#1-configuration) for details.
 
 ```sh
 npm install
 npm start
-```
-
-```sh
-$ hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
-$ port=8000
-$ docker run -e TOKEN_ENDPOINT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_LOGOUT_URL=<oidc logout url> -e AUTH_SCOPES="openid offline_access" -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e HOST=docker -e HELP_URL=http://help-url.com -e FORUM_API_HOST=$hostip:3000 -e EXPORTER_GROUP="/exporter" -e OC_GROUP="/oc" -e REPORTS_GROUP="/reports" -e EXPORTER_MODE="export" -e FORUM_SOCKET_HOST=$hostip:3001 -e REQUEST_API_HOST=$hostip:3002 -e FILES_API_HOST=$hostip:1080 -e USER_ID_FIELD=email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
 ```
 
 Note that if you want to use a test user, ensure the `default.json` config has the following fields:
@@ -198,9 +192,9 @@ Note that if you want to use a test user, ensure the `default.json` config has t
 
 **NOTE: DO NOT INCLUDE THESE VALUES IN PRODUCTION**
 
-### Docker Install
+#### 3.2 Docker Install
 
-You will need to `$ docker build .` to build the docker container and the following commands to run it
+You will need Docker installed. Build the container by running `$ docker build .`, then run the following commands:
 
 ```sh
 hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
@@ -208,24 +202,23 @@ port=8000
 docker run -e TOKEN_ENDPOINT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_LOGOUT_URL=<oidc logout url> -e AUTH_SCOPES="openid offline_access" -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e EXPORTER_GROUP="/exporter" -e OC_GROUP="/oc" -e REPORTS_GROUP="/reports" -e EXPORTER_MODE="export" -e FORUM_SOCKET_HOST=$hostip:3001 -e REQUEST_API_HOST=$hostip:3002 -e FILES_API_HOST=$hostip:1080 -e USER_ID_FIELD=email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
 ```
 
-## Helm
+#### 3.3 Helm
 
-For both below helm commands make a copy of values.yaml within the helm/ocwa-frontend directory
-and modify it to contain the values specific for your deployment.
+For both below helm commands make a copy of `values.yaml` within the helm/ocwa-frontend directory and modify it to contain the values specific for your deployment. Learn more about [Helm here](https://helm.sh).
 
-### Helm Install (Kubernetes)
+**Helm Install (Kubernetes)**
 
 ```sh
 helm install --name ocwa-frontend --namespace ocwa ./helm/ocwa-frontend -f ./helm/ocwa-frontend/config.yaml
 ```
 
-### Helm Update (Kubernetes)
+**Helm Update (Kubernetes)**
 
 ```sh
 helm upgrade --name ocwa-frontend ./helm/ocwa-frontend  -f ./helm/ocwa-frontend/config.yaml
 ```
 
-### 4. Coding Structure and Style
+## 4. Coding Structure and Style
 
 #### 4.1 Code Formatting
 
@@ -325,3 +318,4 @@ To run the tests run
 ```sh
 npm test
 ```
+2) 
