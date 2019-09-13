@@ -195,10 +195,10 @@ describe("Requests", function() {
                 });
         });
 
-        it('it should get supervisor requests for internal', function (done) {
+        it('it should get supervisor requests from internal', function (done) {
             chai.request(server)
                 .get('/v1')
-                .set("Authorization", "Bearer " + config.get('testSupervisorInternalJWT');)
+                .set("Authorization", "Bearer " + config.get('testSupervisorInternalJWT'))
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.length.should.be.eql(0);
@@ -206,10 +206,10 @@ describe("Requests", function() {
                 });
         });
 
-        it('it should get supervisor requests for external', function (done) {
+        it('it should get supervisor requests from external', function (done) {
             chai.request(server)
                 .get('/v1')
-                .set("Authorization", "Bearer " + config.get('testSupervisorExternalJWT');)
+                .set("Authorization", "Bearer " + config.get('testSupervisorExternalJWT'))
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.length.should.be.eql(1);
