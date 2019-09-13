@@ -31,8 +31,8 @@ passport.use(new JWTStrategy({
         };
         user.outputchecker = isOutputChecker(user);
         user.supervisor = isInReportsGroup(user) && !isInGroupToCreateRequest(user);
-        
-        logger.verbose('user ' + user.id + ' authenticated successfully');
+
+        logger.verbose('user ' + user.id + ' authenticated successfully ', user.groups, user.supervisor, user.outputchecker);
 
         var db = require('../db/db');
         db.User.findOneAndUpdate({id: user.id}, user, {upsert: true, setDefaultsOnInsert: true, new: true}, function(err, userDoc){

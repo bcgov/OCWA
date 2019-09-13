@@ -248,6 +248,8 @@ model.getAll = function(query, limit, page, user, callback){
 
     var zoneRestrict;
 
+    logger.verbose("getAll ", user.supervisor, user.outputchecker);
+    
     if (user.outputchecker) {
         if (user.zone === user.INTERNAL_ZONE){
             zoneRestrict = {
