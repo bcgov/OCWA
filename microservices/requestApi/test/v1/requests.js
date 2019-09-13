@@ -201,7 +201,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + config.get('testSupervisorInternalJWT'))
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(0);
+                    res.body.length.should.be.eql(1);
                     done();
                 });
         });
