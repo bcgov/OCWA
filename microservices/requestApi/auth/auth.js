@@ -30,7 +30,7 @@ passport.use(new JWTStrategy({
             INTERNAL_ZONE: 'internal',
         };
         user.outputchecker = isOutputChecker(user);
-        user.supervisor = isInReportsGroup(user) && !isInGroupToCreateRequest(user);
+        user.supervisor = isInReportsGroup(user); // && !isInGroupToCreateRequest(user);
 
         logger.verbose('user ' + user.id + ' authenticated successfully ', user.groups, user.supervisor, user.outputchecker);
 
