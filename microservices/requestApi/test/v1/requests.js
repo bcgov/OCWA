@@ -195,6 +195,28 @@ describe("Requests", function() {
                 });
         });
 
+        it('it should get supervisor requests for internal', function (done) {
+            chai.request(server)
+                .get('/v1')
+                .set("Authorization", "Bearer " + config.get('testSupervisorInternalJWT');)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.length.should.be.eql(0);
+                    done();
+                });
+        });
+
+        it('it should get supervisor requests for external', function (done) {
+            chai.request(server)
+                .get('/v1')
+                .set("Authorization", "Bearer " + config.get('testSupervisorExternalJWT');)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.length.should.be.eql(1);
+                    done();
+                });
+        });
+
         it('it should get a specific request', function (done) {
             chai.request(server)
                 .get('/v1/' + activeRequestId)
