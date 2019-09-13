@@ -4,27 +4,28 @@ OCWA (pronounced "aqua") is a microservice application suite that can store, val
 
 ## Table of Contents
 
-- [Installation](#installation)
-- [Prerequisites](#prerequisites)
-- [Operating System](#operating-system)
-- [Components](#components)
-  * [Forum API](#forum-api)
-  * [Policy API](#policy-api)
-  * [Project API](#project-api)
-  * [Request API](#request-api)
-  * [Storage API](#storage-api)
-  * [Validation API](#validation-api)
-  * [Front End](#front-end)
-- [Helm](#helm)
-  * [Helm Install (Kubernetes)](#helm-install-kubernetes)
-  * [Helm Update (Kubernetes)](#helm-update-kubernetes)
-  * [Openshift (OCP)](#openshift-ocp)
-- [Contributing](#contributing)
-- [Code of Conduct](#code-of-conduct)
-- [License](#license)
-- [Notes](#notes)
-  * [Default Port List](default-port-list)
-  * [Developer Quick Start Guide](#developer-quick-start-guide)
+- [Output Checker Workflow App &middot; ![Build Status](https://travis-ci.org/bcgov/OCWA) ![License](https://opensource.org/licenses/Apache-2.0)](#output-checker-workflow-app-middot-build-statushttpstravis-ciorgbcgovocwa-licensehttpsopensourceorglicensesapache-20)
+  - [Table of Contents](#table-of-contents)
+  - [Installation](#installation)
+    - [Prerequisites](#prerequisites)
+    - [Operating System](#operating-system)
+  - [Components](#components)
+    - [Forum API](#forum-api)
+    - [Policy API](#policy-api)
+    - [Request API](#request-api)
+    - [Storage API](#storage-api)
+    - [Validation API](#validation-api)
+    - [Front End](#front-end)
+  - [Helm](#helm)
+    - [Helm Install (Kubernetes)](#helm-install-kubernetes)
+    - [Helm Update (Kubernetes)](#helm-update-kubernetes)
+    - [Openshift (OCP)](#openshift-ocp)
+  - [Contributing](#contributing)
+  - [Code of Conduct](#code-of-conduct)
+  - [License](#license)
+  - [Notes](#notes)
+    - [Default Port List](#default-port-list)
+    - [Developer Quick Start Guide](#developer-quick-start-guide)
 
 ## Installation
 
@@ -40,7 +41,6 @@ OCWA is written in both node.js and Python 3. Docker is also strongly recommende
 - Katalon Studio 5.10 or newer
 - Minio (Storage API)
 - Tusd (Storage API)
-
 
 ### Operating System
 
@@ -102,14 +102,14 @@ and modify it to contain the values specific for your deployment.
 
 ### Helm Install (Kubernetes)
 
-``` sh
+```sh
 helm dep up ./helm/ocwa
 helm install --name ocwa --namespace ocwa ./helm/ocwa -f ./helm/ocwa/config.yaml
 ```
 
 ### Helm Update (Kubernetes)
 
-``` sh
+```sh
 helm dep up ./helm/ocwa
 helm upgrade ocwa ./helm/ocwa  -f ./helm/ocwa/config.yaml
 ```
@@ -123,16 +123,16 @@ Mongo Image (forum-api: mongoImage: repository: ) registry.access.redhat.com/rhs
 
 Because the mongo image is different, the below must also change
 
-``` yaml
+```yaml
 forum-api:
-    dbPod:
-        persistence: /var/lib/mongodb/data
-        adminEnv: MONGODB_USER
-        passEnv: MONGODB_PASSWORD
-        dbEnv: MONGODB_DATABASE
-        addAdminPassEnv: true
-        adminPassEnv: MONGODB_ADMIN_PASSWORD
-        initDb: false
+  dbPod:
+    persistence: /var/lib/mongodb/data
+    adminEnv: MONGODB_USER
+    passEnv: MONGODB_PASSWORD
+    dbEnv: MONGODB_DATABASE
+    addAdminPassEnv: true
+    adminPassEnv: MONGODB_ADMIN_PASSWORD
+    initDb: false
 ```
 
 ## Contributing
@@ -152,23 +152,24 @@ OCWA is [Apache 2.0 licensed](/LICENSE).
 
 ### Default Port List
 
-| **Endpoint** | **Port** |
-| ------------ | -------- |
-| Forum WS | 2999 |
-| Forum WS (Nginx) | 3001 |
-| Forum Api | 3000 |
-| Request Api | 3002 |
-| Validate Api | 3003 |
-| Policy Api | 3004 |
-| Storage Api (Minio) | 9000 |
-| Storage Api (Tusd) | 1080 |
-| Front End | 8000 |
+| **Endpoint**        | **Port** |
+| ------------------- | -------- |
+| Forum WS            | 2999     |
+| Forum WS (Nginx)    | 3001     |
+| Forum Api           | 3000     |
+| Request Api         | 3002     |
+| Validate Api        | 3003     |
+| Policy Api          | 3004     |
+| Storage Api (Minio) | 9000     |
+| Storage Api (Tusd)  | 1080     |
+| Front End           | 8000     |
 
 ### Developer Quick Start Guide
-After cloning this repo follow the below steps to get the program up and running
 
-1. Configure the frontend, forum api, policy api, project api, request api and validate api by copying the defualt.json.template folders in the respective configuration folders and modifying the values as appropriate
-2. For the policy api and validate api create virtual environments named venv (`virtualenv venv`)
-3. Run the startAll.py script in this directory `python startAll.py`
+After ensuring the [prerequisite libraries](#prerequisites) are installed and cloning this repo follow the below steps to get the program up and running
+
+1. Configure the frontend, forum api, policy api, project api, request api and validate api by copying the `default.json.example` or `default.json.template` file in their respective `/config` folders,  renaming to `default.json` and modifying or adding their values where appropriate. For the storage API you will need sign into Minio's web interface at `http://localhost:9000` and create a new bucket matching the storage config options defined in the frontend and request api's `default.json`.
+2. Create virtual environments for both the policy and validate api's named venv (by running `$ virtualenv venv` in each directory)
+3. Run the `startAll.py` script in this directory `$ python startAll.py`
 
 The script will terminate all the pieces upon CTRL+C (SigINT). The node apis and frontend will automatically restart upon any changes, but the python ones will need a manual kick. This script is not expected to work on Windows as it has not been tested on Windows.
