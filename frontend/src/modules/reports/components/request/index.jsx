@@ -1,5 +1,5 @@
 import * as React from 'react';
-import CalendarIcon from '@atlaskit/icon/glyph/calendar';
+import cx from 'classnames';
 import DateTime from '@src/components/date';
 import ExportTypeIcon from '@src/components/export-type-icon';
 import Files from '@src/modules/files/containers/files';
@@ -10,7 +10,6 @@ import StateLabel from '@src/modules/requests/components/state-label';
 import { uid } from 'react-uid';
 import { getRequestStateColor } from '@src/modules/requests/utils';
 import RequestType from '@src/modules/requests/components/request/request-type';
-import { _e } from '@src/utils';
 import { RequestSchema } from '@src/modules/requests/types';
 import { colors } from '@atlaskit/theme';
 
@@ -55,7 +54,7 @@ function Request({ data }) {
                 <ExportTypeIcon large exportType={data.exportType} />
                 {data.name}
               </span>
-              <StateLabel value={data.state} />
+              <StateLabel id={data._id} value={data.state} />
             </h2>
             <p id="request-header-details" className={styles.headerDetailsText}>
               <RequestType type={data.type} />
@@ -107,21 +106,39 @@ function Request({ data }) {
             <div className={styles.details}>
               <dl>
                 <dt>External Repository</dt>
-                <dd>{data.externalRepository}</dd>
+                <dd id="request-details-external-repo-text">
+                  {data.externalRepository}
+                </dd>
                 <dt>Branch Name</dt>
-                <dd>{data.branch}</dd>
+                <dd id="request-details-branch-text">{data.branch}</dd>
                 <dt>Repository</dt>
-                <dd>{data.repository}</dd>
+                <dd id="request-details-repository-text">{data.repository}</dd>
               </dl>
             </div>
           )}
           {data.exportType !== 'code' && (
             <div className={styles.details}>
               <dl>
-                <dt>Variable Descriptions</dt>
-                <dd>{data.variableDescriptions}</dd>
-                <dt>Relationship to previous or future (planned) outputs</dt>
-                <dd>{data.selectionCriteria}</dd>
+                {data.type === 'import' && (
+                  <React.Fragment>
+                    <dt>General Comments</dt>
+                    <dd id="request-details-purpose-text">{data.purpose}</dd>
+                  </React.Fragment>
+                )}
+                {data.type === 'export' && (
+                  <React.Fragment>
+                    <dt>Variable Descriptions</dt>
+                    <dd id="request-details-variable-text">
+                      {data.variableDescriptions}
+                    </dd>
+                    <dt>
+                      Relationship to previous or future (planned) outputs
+                    </dt>
+                    <dd id="request-details-selection-text">
+                      {data.selectionCriteria}
+                    </dd>
+                  </React.Fragment>
+                )}
               </dl>
             </div>
           )}
@@ -144,7 +161,13 @@ function Request({ data }) {
           </header>
           <ol className={styles.chronologyList}>
             {data.chronology.map(d => (
-              <li key={uid(d)} className={styles.chronologyListItem}>
+              <li
+                key={uid(d)}
+                className={cx(
+                  styles.chronologyListItem,
+                  `request-chronology-item-state-${d.enteredState}`
+                )}
+              >
                 <div
                   className={styles.icon}
                   style={{

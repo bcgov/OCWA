@@ -33,6 +33,7 @@ docker run -e CREATE_ROLE="exporter" -e OC_GROUP="oc" -e REPORTS_GROUP="reports"
            -e IGNORE_GROUPS="\"group1\", \"group2\"" \
            -e EMAIL_SERVICE=smtp.gmail.com -e EMAIL_PORT=465 =e EMAIL_SECURE=true \
            -e OCWA_IMPORT_URL=http://localhost:8000 \
+           -e STORAGE_IMP_WARN_SIZE=1024 -e STORAGE_IMP_MAX_SIZE=0 \
            -e STORAGE_WARN_SIZE=1024 -e STORAGE_MAX_SIZE=0 -e STORAGE_BUCKET=data -e AUTO_APPROVE=false --add-host=docker:$hostip \
            -e EMAIL_ON_SUBMIT="[{\"name\": \"noone\", \"email\": \"noone@nowhere.ca\"}]" -p $apiport:$apiport ocwa_request_api
 ```

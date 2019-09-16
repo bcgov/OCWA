@@ -159,4 +159,14 @@
       <initValue>'test_warning_import_file_upload3.txt'</initValue>
       <name>WarningImportFileName3</name>
    </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'supervisor_1'</initValue>
+      <name>OCWA_USER_REPORTS</name>
+   </GlobalVariableEntity>
+   <GlobalVariableEntity>
+      <description></description>
+      <initValue>'supervisor_1_password'</initValue>
+      <name>OCWA_USER_REPORTS_PSWD</name>
+   </GlobalVariableEntity>
 </GlobalVariableEntities>

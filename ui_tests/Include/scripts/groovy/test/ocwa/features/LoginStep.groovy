@@ -65,14 +65,19 @@ public class LoginStep extends Step {
 
 	@Given("requester has logged into the import interface")
 	def import_interface_login() {
-		download_interface_login()
+		login(GlobalVariable.OCWA_USER_RESEARCHER_2, GlobalVariable.OCWA_USER_RESEARCHER_2_PSWD, GlobalVariable.OCWA_DL_URL)
 	}
 
 	@When("requester has logged into the import download interface")
 	def import_download_login() {
-		user_login('requester')
+		user_login('requester in auto approve project')
 	}
 	
+	@When("operations manager logs in")
+	def operational_manager_logs_in() {
+		login(GlobalVariable.OCWA_USER_REPORTS, GlobalVariable.OCWA_USER_REPORTS_PSWD)
+	}
+
 	@When("the requester logs out")
 	def requester_logs_out() {
 		logout()

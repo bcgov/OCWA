@@ -248,7 +248,9 @@ model.getAll = function(query, limit, page, user, callback){
 
     var zoneRestrict;
 
-    if (user.outputchecker || user.supervisor) {
+    logger.verbose("getAll ", user.supervisor, user.outputchecker);
+    
+    if (user.outputchecker) {
         if (user.zone === user.INTERNAL_ZONE){
             zoneRestrict = {
                 $match: {
@@ -259,7 +261,7 @@ model.getAll = function(query, limit, page, user, callback){
                 }
             }
         } else {
-            // Return no records - Outputchecker or Supervisor should not be using external zone
+            // Return no records - Outputchecker should not be using external zone
             zoneRestrict = {
                 $match: {
                     $and: [
@@ -267,6 +269,16 @@ model.getAll = function(query, limit, page, user, callback){
                         {type: EXPORT_TYPE}
                     ]
                 }
+            }
+        }
+    } else if (user.supervisor) {
+        // Supervisor has access to the requests regardless of what zone they are in
+        zoneRestrict = {
+            $match: {
+                $or: [
+                    {type: INPUT_TYPE},
+                    {type: EXPORT_TYPE}
+                ]
             }
         }
     } else {

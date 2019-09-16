@@ -117,3 +117,26 @@
 .checkbox {
   margin-left: 10px;
 }
+
+@media (max-width: 880px) {
+  .hgroup {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hgroup > div:first-child {
+    margin-bottom: 20px;
+  }
+
+  .main > div {
+    flex: 1;
+    padding-bottom: 0;
+  }
+
+  .sidebar {
+    padding-top: 0;
+    position: relative;
+    top: auto;
+    right: auto;
+  }
+}

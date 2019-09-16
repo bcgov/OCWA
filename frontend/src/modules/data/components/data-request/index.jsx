@@ -98,7 +98,10 @@ function withRequest(Component) {
 const mapStateToProps = () => ({});
 
 const composedWithRequest = compose(
-  connect(mapStateToProps, null),
+  connect(
+    mapStateToProps,
+    null
+  ),
   withRequest
 );
 

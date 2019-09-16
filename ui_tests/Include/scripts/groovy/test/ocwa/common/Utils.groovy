@@ -38,7 +38,7 @@ public class Utils {
 		if(tag) tObject.addProperty('tag', ConditionType.EQUALS, tag, true)
 		return tObject
 	}
-	
+
 	/**
 	 * Returns the TestObject correlating to the text
 	 * @param text The text string to filter on
@@ -64,6 +64,17 @@ public class Utils {
 		tObject.addProperty('class', ConditionType.EQUALS, cls, true)
 		return tObject
 	}
+	
+	/**
+	 * Returns the TestObject correlating to a web element that has a multiple classes which contains specified class
+	 * @param cls The class of the element to filter on
+	 * @return TestObject
+	 */
+	static def getTestObjectByContainsClass(String cls) {
+		TestObject tObject = new TestObject(cls)
+		tObject.addProperty('class', ConditionType.CONTAINS, cls, true)
+		return tObject
+	}
 
 	/**
 	 * Returns the TestObject correlating to the given xpath
@@ -73,6 +84,17 @@ public class Utils {
 	static def getTestObjectByXPath(String path) {
 		TestObject tObject = new TestObject(path)
 		tObject.addProperty('xpath', ConditionType.EQUALS, path, true)
+		return tObject
+	}
+	
+	/**
+	 * Returns the TestObject correlating to the name
+	 * @param nm The name attribute to filter on
+	 * @return TestObject
+	 */
+	static def getTestObjectByName(String nm) {
+		TestObject tObject = new TestObject(nm)
+		tObject.addProperty('name', ConditionType.EQUALS, nm, true)
 		return tObject
 	}
 }

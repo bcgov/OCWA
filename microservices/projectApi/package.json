@@ -1,14 +1,15 @@
 {
   "name": "project-api",
   "author": "Jeremy Ho",
-  "version": "1.2.3",
+  "version": "2.0.0",
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
     "clean": "rm -rf coverage dist",
     "purge": "rm -rf node_modules",
     "start": "node ./bin/www",
-    "test": "nyc --reporter=lcov mocha --exit --timeout 10000"
+    "test": "nyc --reporter=lcov mocha --exit --timeout 10000",
+    "dev": "nodemon --exec npm start"
   },
   "dependencies": {
     "config": "^3.0.1",
@@ -25,6 +26,7 @@
     "chai": "^4.1.2",
     "chai-http": "^4.3.0",
     "mocha": "^6.2.0",
+    "nodemon": "^1.19.1",
     "nyc": "^14.1.1",
     "sinon": "^7.4.1"
   }

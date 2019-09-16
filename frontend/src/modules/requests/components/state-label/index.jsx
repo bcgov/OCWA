@@ -6,7 +6,7 @@ import RequestIcon from '../request-icon';
 import { getRequestStateColor } from '../../utils';
 import * as styles from './styles.css';
 
-function StateLabel({ value }) {
+function StateLabel({ id, value }) {
   let name = null;
 
   switch (value) {
@@ -39,6 +39,7 @@ function StateLabel({ value }) {
 
   return (
     <div
+      id={`request-${id}-state-label`}
       className={cx('request-state-label', styles.container)}
       style={{ backgroundColor: color }}
     >
@@ -54,6 +55,7 @@ function StateLabel({ value }) {
 }
 
 StateLabel.propTypes = {
+  id: PropTypes.string.isRequired,
   value: PropTypes.number,
 };
 

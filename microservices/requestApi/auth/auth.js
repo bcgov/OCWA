@@ -7,6 +7,7 @@ var logger = require('npmlog');
 
 const isOutputChecker = (user => user.groups.includes(config.get('outputCheckerGroup')))
 const isInReportsGroup = (user => user.groups.includes(config.get('reportsGroup')))
+const isInGroupToCreateRequest = (user => user.groups.includes(config.get('requiredRoleToCreateRequest')))
 
 passport.use(new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
@@ -29,9 +30,9 @@ passport.use(new JWTStrategy({
             INTERNAL_ZONE: 'internal',
         };
         user.outputchecker = isOutputChecker(user);
-        user.supervisor = isInReportsGroup(user);
+        user.supervisor = isInReportsGroup(user); // && !isInGroupToCreateRequest(user);
 
-        logger.verbose('user ' + user.id + ' authenticated successfully');
+        logger.verbose('user ' + user.id + ' authenticated successfully ', user.groups, user.supervisor, user.outputchecker);
 
         var db = require('../db/db');
         db.User.findOneAndUpdate({id: user.id}, user, {upsert: true, setDefaultsOnInsert: true, new: true}, function(err, userDoc){

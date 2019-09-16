@@ -366,10 +366,12 @@ router.put("/save/:requestId", function(req, res, next){
 
             var httpReq = require('request');
 
+            var policy = findRes.type + "-" + findRes.exportType;
+
             for (var i=0; i<findRes.files.length; i++) {
                 var myFile = findRes.files[i];
                 httpReq.put({
-                    url: config.get('validationApi') + '/v1/validate/' + myFile,
+                    url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
                     headers: {
                         'x-api-key': config.get('validationApiSecret')
                     }
@@ -463,8 +465,8 @@ router.put('/submit/:requestId', function(req, res, next){
 
             var config = require('config');
             var storageApi = config.get('storageApi');
-            var warnSize =  storageApi.warnRequestBundlesize;
-            var maxSize = storageApi.maxRequestBundlesize;
+            var warnSize =  reqRes.type === db.Request.EXPORT_TYPE ? storageApi.warnRequestBundlesize : storageApi.warnImportRequestBundlesize;
+            var maxSize = reqRes.type === db.Request.EXPORT_TYPE ? storageApi.maxRequestBundlesize : storageApi.maxImportRequestBundlesize;
             if ( (warnSize > 0) || (maxSize > 0)){
                 util.getBundleMeta(reqRes.files, function(metadataRes){
 

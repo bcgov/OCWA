@@ -11,7 +11,6 @@ public class Constant {
 
 	static final def DEFAULT_TIMEOUT = 10
 	static final def FILE_UPLOAD_TIMEOUT = 5
-	static final def SUBMISSION_TIMEOUT = 10
 
 	final class Alerts {
 		static final def SUCCESS_UPDATED_TEXT = 'Successfully updated'
@@ -82,6 +81,9 @@ public class Constant {
 	}
 
 	final class Status {
+		static final def REQUEST_STATUS_ID = 'request-status'
+		static final def CHECKER_UI_REQUEST_STATUS_ID_PART = 'state-label'
+		static final def REPORTS_UI_REQUEST_STATUS_ID_PART = 'state-label'
 		static final def APPROVED = 'Approved'
 		static final def AWAITING_REVIEW = 'Awaiting Review'
 		static final def CANCELLED = 'Cancelled'
@@ -89,5 +91,41 @@ public class Constant {
 		static final def SUBMITTED = 'Queued/In Review'
 		static final def WORK_IN_PROGRESS = 'Work in Progress'
 		static final def IN_REVIEW = 'In Review'
+	}
+
+	final class CodeRequests {
+		static final def REQUEST_REQUEST_TYPE_DD_ID = 'request-form-exportTypeSelect'
+		static final def REQUEST_CODE_DESCRIPTION_TXT_ID = 'codeDescription-uid'
+		static final def REQUEST_CODE_DESCRIPTION_TEXT = 'Some information about the code...'
+		static final def REQUEST_LOCAL_REPO_TXT_ID = 'repository-uid'
+		static final def REQUEST_REMOTE_REPO_TXT_ID = 'externalRepository-uid'
+		static final def REQUEST_BRANCH_TXT_ID = 'branch-uid'
+		static final def REQUEST_LOCAL_REPO_TEXT = 'https://secureresearch.com/username/internalrepo.git'
+		static final def REQUEST_REMOTE_REPO_TEXT = 'https://github.com/username/myrep.git'
+		static final def REQUEST_CODE_EXPORT_DD_VALUE = 'Code Export'
+		static final def REQUEST_CODE_IMPORT_DD_VALUE = 'Code Import'
+		static final def MERGE_INPROGRESS_TAG = 'strong'
+		static final def MERGE_INPROGRESS_TEXT = 'Merge Request'
+		static final def MERGE_COMPLETE_TAG = 'strong'
+		static final def MERGE_COMPLETE_TEXT = 'Merge Request Complete'
+		static final def MERGE_CANNOT_MERGE_TAG = 'strong'
+		static final def MERGE_CANNOT_MERGE_TEXT = 'Merge request can not be merged.  Check that the MR has met all required criteria.'
+		static final def MERGE_CANNOT_MERGE_TEXT_MISSING_PROJECT_REPO = 'SIM Project repository not found'
+		static final def MERGE_TIMEOUT = 40
+		static final def MERGE_BRANCH_HAPPY_PATH_TEXT = 'happy-1-develop'
+		static final def MERGE_BRANCH_FAILED_SCAN = 's6-1-develop'
+		static final def MERGE_BRANCH_MISSING_REPO_TEXT = 's4-1-develop'
+		static final def HAVE_REVIEWED_CODE_CB_ID = 'viewed-mr'
+		static final def MERGE_REQUEST_APPROVING_TEXT = 'Approving Request'
+	}
+	
+	final class Reports {
+		static final def REPORTS_VARIABLE_TXT_ID = 'request-details-variable-text'
+		static final def REQUEST_CHRONOLOGY_ID_PREFIX = 'request-chronology-item-state-'
+		static final def REQUEST_CHRONOLOGY_DRAFT_STATE_NUMBER = '0'
+		static final def REQUEST_CHRONOLOGY_WIP_STATE_NUMBER = '1'
+		static final def REQUEST_CHRONOLOGY_AWAITING_REVIEW_STATE_NUMBER = '2'
+		static final def REQUEST_CHRONOLOGY_IN_REVIEW_STATE_NUMBER = '3'
+		static final def REQUEST_CHRONOLOGY_APPROVED_STATE_NUMBER = '4'
 	}
 }

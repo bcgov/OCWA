@@ -19,7 +19,7 @@ validate = Blueprint('validate', 'validate')
 @validate.route('/<string:fileId>',
            methods=['GET'], strict_slashes=False)
 @auth
-def validate_policy_result(fileId: str) -> object:
+def get_file_results(fileId: str) -> object:
     """
     Returns the result of file
     :param fileId: File Object ID
@@ -30,17 +30,17 @@ def validate_policy_result(fileId: str) -> object:
     return db.Results.objects(file_id=fileId).to_json()
 
 
-@validate.route('/<string:fileId>',
+@validate.route('/<string:fileId>/<string:policyName>',
            methods=['PUT'], strict_slashes=False)
 @auth
-def validate_policy(fileId: str) -> object:
+def validate_policy(policyName: str, fileId: str) -> object:
     """
     Validates a file
     :param fileId: File Object ID
     :return: JSON of submission state
     """
 
-    policy = get_policies()
+    policy = get_policy(policyName)
 
     db=Db()
 
@@ -84,10 +84,10 @@ def validate_policy(fileId: str) -> object:
     return jsonify({"message": "Successful"}), HTTPStatus.CREATED
 
 
-@validate.route('/<string:fileId>/<string:ruleId>',
+@validate.route('/<string:fileId>/rules/<string:ruleId>',
            methods=['GET'], strict_slashes=False)
 @auth
-def validate_rule_result(fileId: str, ruleId: str) -> object:
+def get_rule_result(fileId: str, ruleId: str) -> object:
     """
     Returns the result of file with specific rule
     :param fileId: File Object ID
@@ -99,7 +99,7 @@ def validate_rule_result(fileId: str, ruleId: str) -> object:
 
 
 
-@validate.route('/<string:fileId>/<string:ruleId>',
+@validate.route('/<string:fileId>/rules/<string:ruleId>',
            methods=['PUT'], strict_slashes=False)
 @auth
 def validate_rule(fileId: str, ruleId: str) -> object:
@@ -120,33 +120,33 @@ def validate_rule(fileId: str, ruleId: str) -> object:
         result.state = 2
         result.save()
 
-        policy = get_policy(None)
+        rule = get_rule(ruleId)
 
-        if result.rule_id in policy.keys():
+        if len(rule) == 1 and rule[0]['name'] == ruleId:
             v = Validator()
-            v.start_validate(policy[result.rule_id], result)
+            v.start_validate(rule[0], result)
 
             return jsonify({"message": "Successful"}), HTTPStatus.OK
         else:
-            return jsonify({"error": "Rule not found in policy"}), HTTPStatus.INTERNAL_SERVER_ERROR
+            return jsonify({"error": "Rule not found"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
     return jsonify({"error": "Couldn't decide on the rule to replace"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-def get_policies():
+def get_policy(policy):
     conf = Config().data
     policy_api_url = conf['policyApi']
     headers = {'X-API-KEY': conf['apiSecret']}
 
-    response = requests.get(policy_api_url + "/v1/", headers=headers)
+    response = requests.get(policy_api_url + "/v1/" + policy, headers=headers)
 
     return response.json()
 
-def get_policy(policy_id):
+def get_rule(rule):
     conf = Config().data
     policy_api_url = conf['policyApi']
+    headers = {'X-API-KEY': conf['apiSecret']}
 
-    response = requests.get(policy_api_url + "v1/" + policy_id)
-
+    response = requests.get(policy_api_url + "/v1/rules/" + rule, headers=headers)
     return response.json()

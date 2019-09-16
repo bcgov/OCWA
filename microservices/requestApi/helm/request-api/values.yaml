@@ -57,6 +57,8 @@ storageSecret: mySecret
 storageUseSSL: false
 storageWarnSize: 1025
 storageMaxSize: 10000000
+storageImpWarnSize: 1025
+storageImpMaxSize: 10000000
 storageBucket: data
 
 autoApprove: false
