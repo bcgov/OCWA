@@ -177,14 +177,26 @@ All installs require an instance of mongodb available.
 
 #### 3.1 Bare Metal Install
 
-Copy and rename `config/default.json.example` to `config/default.json` and fill in the values. See [Configuration](#1-configuration) for details.
+Copy and rename `frontend/config/default.json.example` to `frontend/config/default.json` and fill in the values. See [Configuration](#1-configuration) for details.
 
 ```sh
 npm install
 npm start
 ```
 
-Note that if you want to use a test user, ensure the `default.json` config has the following fields:
+In some cases where you don't have an authentication service setup, you can boot the application in development mode by setting a `testGroup` value and a hardcoded JWT, which you can generate using an [online JWT generator](http://jwtbuilder.jamiekurtz.com/). Just be sure to configure the additional claims like so:
+
+```json
+{
+  "email": "test_user@test.com",
+  "display_name": "Test User",
+  "preferred_username": "test_user",
+  "groups": [
+    "/oc" or "/exporter"
+  ],
+  "
+}
+```
 
 - `testGroup`: set to either `/exporter`, `/reports` or `/oc`
 - `testJWT:exporter`: A JWT that matches the above format (make sure the `group` array includes '/exporter')
@@ -194,12 +206,19 @@ Note that if you want to use a test user, ensure the `default.json` config has t
 
 #### 3.2 Docker Install
 
-You will need Docker installed. Build the container by running `$ docker build .`, then run the following commands:
+You will need Docker installed. Build the container by running
+
+```shell
+$ cd path/to/repo/frontend/
+$ docker build .
+```
+
+then run the following commands (replacing the values inside of the `<placeholder text>`. This would be the same as replacing the `default.json` values in bare metal installs):
 
 ```sh
-hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
-port=8000
-docker run -e TOKEN_ENDPOINT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_LOGOUT_URL=<oidc logout url> -e AUTH_SCOPES="openid offline_access" -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e EXPORTER_GROUP="/exporter" -e OC_GROUP="/oc" -e REPORTS_GROUP="/reports" -e EXPORTER_MODE="export" -e FORUM_SOCKET_HOST=$hostip:3001 -e REQUEST_API_HOST=$hostip:3002 -e FILES_API_HOST=$hostip:1080 -e USER_ID_FIELD=email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
+$ hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
+$ port=8000
+$ docker run -e TOKEN_ENDPOINT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_LOGOUT_URL=<oidc logout url> -e AUTH_SCOPES="openid offline_access" -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e EXPORTER_GROUP="/exporter" -e OC_GROUP="/oc" -e REPORTS_GROUP="/reports" -e EXPORTER_MODE="export" -e FORUM_SOCKET_HOST=$hostip:3001 -e REQUEST_API_HOST=$hostip:3002 -e FILES_API_HOST=$hostip:1080 -e USER_ID_FIELD=email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
 ```
 
 #### 3.3 Helm
@@ -209,13 +228,13 @@ For both below helm commands make a copy of `values.yaml` within the helm/ocwa-f
 **Helm Install (Kubernetes)**
 
 ```sh
-helm install --name ocwa-frontend --namespace ocwa ./helm/ocwa-frontend -f ./helm/ocwa-frontend/config.yaml
+$ helm install --name ocwa-frontend --namespace ocwa ./helm/ocwa-frontend -f ./helm/ocwa-frontend/config.yaml
 ```
 
 **Helm Update (Kubernetes)**
 
 ```sh
-helm upgrade --name ocwa-frontend ./helm/ocwa-frontend  -f ./helm/ocwa-frontend/config.yaml
+$ helm upgrade --name ocwa-frontend ./helm/ocwa-frontend  -f ./helm/ocwa-frontend/config.yaml
 ```
 
 ## 4. Coding Structure and Style
@@ -318,4 +337,5 @@ To run the tests run
 ```sh
 npm test
 ```
-2) 
+
+2.
