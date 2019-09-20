@@ -184,23 +184,34 @@ npm install
 npm start
 ```
 
-In some cases where you don't have an authentication service setup, you can boot the application in development mode by setting a `testGroup` value and a hardcoded JWT, which you can generate using an [online JWT generator](http://jwtbuilder.jamiekurtz.com/). Just be sure to configure the additional claims like so:
+In some cases where you don't have an authentication service setup, you can boot the application in development mode by setting a `testGroup` value (pick either a `exporterGroup`, `ocGroup` as defined in [the configuration section](#1-configuration)) and a hardcoded JWT that matches that group's value, which you can generate using an [online JWT generator](http://jwtbuilder.jamiekurtz.com/). An example configuration to test an exporter could look something like this:
+
+```json 
+// frontend/config/default.json
+{
+  ...
+  "exporterGroup": "/exporter",
+  "testGroup": "/exporter",
+  "testJWT:exporter": "eYJ3242 etc...."
+  ...
+}
+```
 
 ```json
+// JWT token values to be added where you generate a test token
 {
   "email": "test_user@test.com",
   "display_name": "Test User",
   "preferred_username": "test_user",
   "groups": [
-    "/oc" or "/exporter"
+    "/exporter"
   ],
-  "
 }
 ```
 
 - `testGroup`: set to either `/exporter`, `/reports` or `/oc`
-- `testJWT:exporter`: A JWT that matches the above format (make sure the `group` array includes '/exporter')
-- `testJWT:oc`: A JWT that matches the above format (make sure the **`group`** array includes '/oc\*\*)
+- `testJWT:exporter`: A JWT that matches the above format (make sure the `group` array includes `/exporter`)
+- `testJWT:oc`: A JWT that matches the above format (make sure the `group` array includes `/oc`)
 
 **NOTE: DO NOT INCLUDE THESE VALUES IN PRODUCTION**
 
