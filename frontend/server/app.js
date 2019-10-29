@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 const config = require('config');
 const cookieParser = require('cookie-parser');
 const express = require('express');
+const fs = require('fs');
 const isFunction = require('lodash/isFunction');
 const get = require('lodash/get');
 const path = require('path');
@@ -9,6 +10,7 @@ const passport = require('passport');
 const session = require('express-session');
 const manifestHelpers = require('express-manifest-helpers-upgraded');
 const MemoryStore = require('memorystore')(session);
+const morgan = require('morgan');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -42,6 +44,11 @@ const repositoryHost = config.get('repositoryHost');
 
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
+});
+const logger = morgan('common', {
+  stream: fs.createWriteStream(path.join(__dirname, 'logs', 'frontend.log'), {
+    flags: 'a',
+  }),
 });
 
 if (isDevelopment) {
@@ -77,6 +84,7 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'dist')));
+app.use(logger);
 
 // Auth & Session
 app.use(cookieParser(cookieSecret));
@@ -104,6 +112,20 @@ app.use('/versions', versionsRoute);
 
 app.get('/hello', (req, res) => {
   res.status(200).send('hi');
+});
+
+app.post('/log', (req, res) => {
+  const { state, action } = req.body;
+  const date = new Date().toString();
+
+  fs.writeFile(
+    path.join(__dirname, 'logs', `state-${date}.log`),
+    JSON.stringify({
+      state,
+      action,
+    }),
+    () => res.send('Log Received')
+  );
 });
 
 app.get('*', checkAuth, storeUrl, (req, res) => {

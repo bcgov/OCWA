@@ -2,6 +2,16 @@ export const fetchToken = () => ({
   type: 'app/get/token',
 });
 
+export const toggleReportError = () => ({
+  type: 'app/report-error/toggle',
+});
+
+export const reportError = payload => ({
+  type: 'user/report-error',
+  error: true,
+  payload,
+});
+
 export const toggleAbout = () => ({
   type: 'app/about/toggle',
 });
