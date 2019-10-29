@@ -11,6 +11,7 @@ import {
   reportsGroup,
   exporterMode,
 } from '@src/services/config';
+import ReportError from '@src/modules/app/containers/report-error';
 import '@atlaskit/css-reset';
 
 import About from '../../containers/about';
@@ -98,6 +99,7 @@ class App extends React.Component {
     return (
       <LayerManager>
         <main id="app-main" className={styles.main}>
+          <ReportError />
           <About />
           <Messages />
           <Auth

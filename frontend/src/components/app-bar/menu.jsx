@@ -5,11 +5,16 @@ import Avatar from '@atlaskit/avatar';
 import Dropdown, { DropdownItem } from '@atlaskit/dropdown-menu';
 import isEmpty from 'lodash/isEmpty';
 import aboutButton from '@src/modules/app/containers/about-button';
+import reportErrorButton from '@src/modules/app/containers/report-error-button';
 
 const AboutDropdownItem = props => (
   <DropdownItem {...props}>About this App</DropdownItem>
 );
+const ReportErrorDropdownItem = props => (
+  <DropdownItem {...props}>Report an Error</DropdownItem>
+);
 const AboutButton = aboutButton(AboutDropdownItem);
+const ReportErrorButton = reportErrorButton(ReportErrorDropdownItem);
 
 function AppBarMenu({ children, helpURL, user }) {
   const possibleDisplayNameValues = at(user, [
@@ -35,6 +40,7 @@ function AppBarMenu({ children, helpURL, user }) {
         </DropdownItem>
       )}
       {children}
+      <ReportErrorButton />
       <AboutButton />
       <DropdownItem href="/auth/logout">Logout</DropdownItem>
     </Dropdown>
