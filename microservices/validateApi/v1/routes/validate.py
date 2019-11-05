@@ -2,7 +2,7 @@ try:  # Python 3.5+
     from http import HTTPStatus as HTTPStatus
 except ImportError:
     from http import client as HTTPStatus
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from v1.db.db import Db
 from config import Config
 import requests
@@ -14,6 +14,27 @@ import logging
 log = logging.getLogger(__name__)
 
 validate = Blueprint('validate', 'validate')
+
+
+@validate.route('/',
+           methods=['GET'], strict_slashes=False)
+@auth
+def get_files_results() -> object:
+    """
+    Returns the result of files
+    :param fileId: File Object ID
+    :return: JSON of validation result
+    """
+
+    if 'files' in request.args:
+        files = request.args.get('files').split(',')
+        if len(files) > 25:
+            return jsonify({"error": "Too many files specified.  Max 25 allowed."}), HTTPStatus.INTERNAL_SERVER_ERROR
+    else:
+        return jsonify({"error": "Atleast one file ID must be specified."}), HTTPStatus.INTERNAL_SERVER_ERROR
+    
+    db = Db()
+    return db.Results.objects(file_id__in = files).to_json()
 
 
 @validate.route('/<string:fileId>',
