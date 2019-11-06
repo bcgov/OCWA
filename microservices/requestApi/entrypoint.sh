@@ -3,6 +3,7 @@
 mkdir -p ./config
 printf "{\n" > ./config/default.json
 printf "\"apiPort\": ${API_PORT},\n" >> ./config/default.json
+printf "\"wsPort\": ${WS_PORT},\n" >> ./config/default.json
 printf "\"logLevel\": \"${LOG_LEVEL}\",\n" >> ./config/default.json
 printf "\"morganLogType\": \"dev\",\n" >> ./config/default.json
 printf "\"database\": {\n" >> ./config/default.json
@@ -61,6 +62,8 @@ printf "\"ignoreGroupsFromConsideration\": [${IGNORE_GROUPS}],\n" >> ./config/de
 
 printf "\"projectApi\": \"${PROJECT_API}\",\n" >> ./config/default.json
 printf "\"projectApiSecret\": \"${PROJECT_API_KEY}\",\n" >> ./config/default.json
+
+printf "\"webhookSecret\": \"${WEBHOOK_API_KEY}\",\n" >> ./config/default.json
 
 printf "\"emailOnInitialSubmit\": ${EMAIL_ON_SUBMIT},\n" >> ./config/default.json
 
