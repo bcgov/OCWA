@@ -15,6 +15,9 @@ router.use('/api-docs', function(req, res){
     res.send(docs.getDocHTML("v1"));
 });
 
+// webhook to receive file status updates from validate API
+router.use('/webhook', require('./auth/webhook_auth').authenticate('headerapikey', {session: false}), require('./routes/webhook'));
+
 //requests
 router.use('/', auth.authenticate('jwt', {session: false}), requestRouter);
 

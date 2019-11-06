@@ -1,5 +1,6 @@
 {
     "apiPort": 3002,
+    "wsPort": 2998,
     "logLevel": "info",
     "morganLogType": "dev",
 
@@ -13,6 +14,8 @@
     "forumApi": "http://localhost:3000",
     "validationApi": "http://localhost:3003",
     "validationApiSecret": "MySecret",
+
+    "webhookSecret": "s3cr3t",
 
     "storageApi": {
         "uri": "localhost",

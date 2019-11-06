@@ -27,6 +27,9 @@ app.get("/version", function(req, res){
     })
 });
 
+var websockets = require('./websocket');
+var wss = websockets.init();
+
 log.level = config.get('logLevel');
 log.addLevel('debug', 2900, { fg: 'green' });
 
