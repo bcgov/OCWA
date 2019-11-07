@@ -197,6 +197,7 @@ matrix:
       python3 wsgi.py &
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/requestApi
+      NODE_ENV=test npm start &
       sleep 15
       npm test
     - helm lint helm/request-api
