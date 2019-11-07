@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "nyc --reporter=lcov mocha --exit --timeout 10000",
+    "test": "NODE_ENV=test nyc --reporter=lcov mocha --exit --timeout 10000",
     "dev": "nodemon --exec npm start"
   },
   "dependencies": {

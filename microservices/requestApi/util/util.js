@@ -1,6 +1,17 @@
 var log = require('npmlog');
 
+
 util = {};
+
+util.chunkArray = (array=[],chunkSize) =>{
+    return array.length? [array.slice(0,chunkSize), ...util.chunkArray(array.slice(chunkSize),chunkSize)]: []
+}
+
+util.pushError = (status, files, message) => {
+    for (var fileId of files) {
+        status[fileId].push({error: message});
+    }
+}
 
 util.getBundleMeta = function(fileIds, callback){
 
@@ -52,55 +63,58 @@ util.getFileStatus = function(fileIds, callback){
     var numResults = 0;
     var httpReq = require('request');
 
-    for (var i = 0; i < fileIds.length; i++) {
-        (function(index){
-            log.verbose("Attempting to get status for " + fileIds[index]);
-            httpReq.get({
-                url: config.get('validationApi') + '/v1/validate/' + fileIds[index],
-                headers: {
-                    'X-API-KEY': config.get('validationApiSecret')
-                }
-            }, function (apiErr, apiRes, body) {
-                status[fileIds[index]] = [];
-                if (apiErr || !apiRes) {
-                    status[fileIds[index]].push({error: apiErr.message});
-                    fullPass = false;
-                } else {
-                    // 0 is pass
-                    try {
-                        var json = JSON.parse(body);
-                        body = json;
-                        log.verbose("Got status for "+fileIds[index]+": ", body);
+    var chunkedFileIds = this.chunkArray(fileIds, 25);
+    for (var chunk of chunkedFileIds) {
+        log.debug("Attempting to get status for", chunk.length, "fileids");
+        httpReq.get({
+            url: config.get('validationApi') + '/v1/validate',
+            qs: {files: chunk.join(',')},
+            headers: {
+                'X-API-KEY': config.get('validationApiSecret')
+            }
+        }, function (apiErr, apiRes, body) {
+            for (var fileId of chunk) {
+                status[fileId] = []
+            }
+            if (apiErr || !apiRes) {
+                util.pushError (status, chunk, apiErr.message);
+                fullPass = false;
+            } else {
+                // 0 is pass
+                try {
+                    var json = JSON.parse(body);
+                    body = json;
+                    log.debug("Got statuses for", chunk.length, "files:", body.length, "results returned from validate");
 
-                        for (var j = 0; j < body.length; j++) {
+                    for (var j = 0; j < body.length; j++) {
+                        
+                        status[body[j].file_id].push({
+                            pass: (body[j].state === 0),
+                            state: body[j].state,
+                            message: body[j].message,
+                            name: body[j].rule_id,
+                            mandatory: body[j].mandatory
+                        });
 
-                            status[fileIds[index]].push({
-                                pass: (body[j].state === 0),
-                                state: body[j].state,
-                                message: body[j].message,
-                                name: body[j].rule_id,
-                                mandatory: body[j].mandatory
-                            });
-
-                            if (body.state !== 0) {
-                                fullPass = false;
-                            }
+                        if (body[j].state !== 0) {
+                            fullPass = false;
                         }
-                    }catch(ex){
-                        log.error(ex);
-                        status[fileIds[index]].push({error: "parsing error for validation response."});
-                        fullPass = false;
                     }
+                }catch(ex){
+                    log.error(ex);
+                    util.pushError (status, chunk, "parsing error for validation response.");
+                    fullPass = false;
                 }
-                numResults++;
-                if (numResults === fileIds.length) {
-                    log.verbose("Returning all file statuses of:", status);
-                    callback(status, fullPass);
-                    return;
-                }
+            }
+            numResults += chunk.length;
+            if (numResults === fileIds.length) {
+                log.debug("Returning all file statuses for", Object.keys(status).length, "files");
+                log.verbose("Returning all file statuses of:", status);
+                callback(status, fullPass);
+                return;
+            }
 
-            });
-        })(i);
+        });
     }
 };
 

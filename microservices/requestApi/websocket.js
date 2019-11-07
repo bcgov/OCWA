@@ -63,7 +63,6 @@ websocket.init = function(){
         ws.isAlive = true;
         ws.on('pong', heartbeat);
         ws.user = req.user;
-        ws.requestId = req.url.substring(1);
         self.connections[req.user.id] = ws;
     });
 

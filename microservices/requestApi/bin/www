@@ -24,6 +24,12 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
+ * Create Websocket server.
+ */
+var websockets = require('../websocket');
+websockets.init();
+
+/**
  * Listen on provided port, on all network interfaces.
  */
 

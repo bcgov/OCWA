@@ -288,6 +288,26 @@ describe("Requests", function() {
                     setTimeout(done, 2000);
                 });
         });
+
+        
+        it('it should get request file status', function (done) {
+            chai.request(server)
+                .get('/v1/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('fileStatus');
+
+                    var fs = res.body.fileStatus;
+                    expect(fs[Object.keys(fs)[0]].length).to.equal(2);
+                    expect(fs[Object.keys(fs)[0]][0]["pass"]).to.equal(true);
+                    expect(fs[Object.keys(fs)[0]][1]["pass"]).to.equal(true);
+                    // expect(JSON.stringify(res.body, null, 3)).to.equal("");
+                    done();
+                });
+        });
     });
 
     describe('/PUT /v1/submit/requestId', function() {
@@ -298,6 +318,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
+                    expect(res.body.error).to.equal(undefined);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
@@ -313,6 +334,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
+                    expect(res.body.error).to.equal(undefined);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
@@ -329,6 +351,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
+                    expect(res.body.error).to.equal(undefined);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
@@ -428,6 +451,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
+                    expect(res.body.error).to.equal(undefined);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
@@ -441,6 +465,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
+                    expect(res.body.error).to.equal(undefined);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
@@ -454,6 +479,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
+                    expect(res.body.error).to.equal(undefined);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
@@ -461,7 +487,6 @@ describe("Requests", function() {
                     done();
                 });
         });
-
 
     });
 

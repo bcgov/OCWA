@@ -1,15 +1,17 @@
 var express = require('express');
+var logger = require('npmlog');
 var router = express.Router();
 
 var messages = require('../messages/messages')
 
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
     res.json({status:'ok'});
 });
 
-router.post('/fileStatus', function(req, res, next) {
+router.post('/fileStatus', function(req, res) {
+    logger.debug("webhook", "received fileStatus event");
 
-    var json = res.body
+    var json = req.body
     var status = {
         fileId: json.file_id,
         pass: (json.state === 0),

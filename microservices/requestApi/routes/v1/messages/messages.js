@@ -1,21 +1,15 @@
 var messages = {};
 var logger = require('npmlog');
 
-function checkRequestPermissions(user, requestId, fileId, sock, cb){
+function checkRequestPermissions(user, fileId, sock, cb){
 
     var db = require('../db/db');
 
-    logger.debug('Checking request permission', requestId, fileId);
+    logger.debug('messages / Checking permission for file_id:', fileId);
 
-    db.Request.getAll({_id: requestId}, 1, 1, user, function(findErr, findRes){
+    db.Request.getAll({files: fileId}, 1, 1, user, function(findErr, findRes){
         if (findErr || !findRes || findRes.length === 0){
-            logger.debug('Request not found.', requestId, findErr);
-            cb(false, sock);
-            return;
-        }
-        // Verify that the fileId is in the request files list
-        if (!(fileId in findRes.files)) {
-            logger.debug('File not found in request.', requestId);
+            logger.debug('messages / Request with file not found.', fileId, findErr);
             cb(false, sock);
             return;
         }
@@ -30,7 +24,7 @@ function sendFileStatusMessage(fileStatus){
     for (var i=0; i<keys.length; i++){
         // make sure the user has access to the request
         var conn = conns[keys[i]];
-        checkRequestPermissions(conn.user, conn.requestId, fileStatus.fileId, conn, function(send, sock) {
+        checkRequestPermissions(conn.user, fileStatus.fileId, conn, function(send, sock) {
             if (send) {
                 if (websockets.isOpen(sock)) {
                     sock.send(JSON.stringify({fileStatus: fileStatus}));

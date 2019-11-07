@@ -66,3 +66,15 @@ helm upgrade --name ocwa-request-api ./helm/request-api  -f ./helm/request-api/c
 ``` sh
 npm test
 ```
+
+### Running unit tests in a container
+
+```
+(cd ../.. && docker build --tag reqtest -f microservices/requestApi/Dockerfile.unittest .)
+docker run -ti --rm -v `pwd`:/work -w /work reqtest
+
+After minio has started, you will be at a `bash` prompt.
+
+Run: `/rerun.sh` to run the Requests unit tests.
+
+```

@@ -15,13 +15,13 @@
     "validationApi": "http://localhost:3003",
     "validationApiSecret": "MySecret",
 
-    "webhookSecret": "s3cr3t",
+    "webhookSecret": "webhook_s3cr3t",
 
     "storageApi": {
         "uri": "localhost",
         "port": 9000,
-        "key": "myKey",
-        "secret": "mySecret",
+        "key": "accesskey",
+        "secret": "secretkey",
         "useSSL": false,
         "warnRequestBundlesize": 1024,
         "maxRequestBundlesize": 0,
