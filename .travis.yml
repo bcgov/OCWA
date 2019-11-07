@@ -178,8 +178,8 @@ matrix:
     - |-
       wget -q https://dl.minio.io/server/minio/release/linux-amd64/minio
       chmod +x minio
-      export MINIO_ACCESS_KEY="myKey"
-      export MINIO_SECRET_KEY="mySecret"
+      export MINIO_ACCESS_KEY="accesskey"
+      export MINIO_SECRET_KEY="secretkey"
       ./minio server /tmp &
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/validateApi

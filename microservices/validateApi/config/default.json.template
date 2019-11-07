@@ -19,10 +19,6 @@
   },
 
   "subscribers": [
-      {
-          "endpoint": "http://localhost:3002/v1/webhook",
-          "api_key": "webhook_s3cr3t"
-      }
   ],
 
   "policyApi": "http://localhost:3004",
