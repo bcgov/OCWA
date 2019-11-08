@@ -64,57 +64,60 @@ util.getFileStatus = function(fileIds, callback){
     var httpReq = require('request');
 
     var chunkedFileIds = this.chunkArray(fileIds, 25);
-    for (var chunk of chunkedFileIds) {
-        log.debug("Attempting to get status for", chunk.length, "fileids");
-        httpReq.get({
-            url: config.get('validationApi') + '/v1/validate',
-            qs: {files: chunk.join(',')},
-            headers: {
-                'X-API-KEY': config.get('validationApiSecret')
-            }
-        }, function (apiErr, apiRes, body) {
-            for (var fileId of chunk) {
-                status[fileId] = []
-            }
-            if (apiErr || !apiRes) {
-                util.pushError (status, chunk, apiErr.message);
-                fullPass = false;
-            } else {
-                // 0 is pass
-                try {
-                    var json = JSON.parse(body);
-                    body = json;
-                    log.debug("Got statuses for", chunk.length, "files:", body.length, "results returned from validate");
-
-                    for (var j = 0; j < body.length; j++) {
-                        
-                        status[body[j].file_id].push({
-                            pass: (body[j].state === 0),
-                            state: body[j].state,
-                            message: body[j].message,
-                            name: body[j].rule_id,
-                            mandatory: body[j].mandatory
-                        });
-
-                        if (body[j].state !== 0) {
-                            fullPass = false;
-                        }
-                    }
-                }catch(ex){
-                    log.error(ex);
-                    util.pushError (status, chunk, "parsing error for validation response.");
-                    fullPass = false;
+    for (var i in chunkedFileIds) {
+        (function(index){
+            var chunk = chunkedFileIds[index];
+            log.debug("Attempting to get status for", chunk.length, "fileids");
+            httpReq.get({
+                url: config.get('validationApi') + '/v1/validate',
+                qs: {files: chunk.join(',')},
+                headers: {
+                    'X-API-KEY': config.get('validationApiSecret')
                 }
-            }
-            numResults += chunk.length;
-            if (numResults === fileIds.length) {
-                log.debug("Returning all file statuses for", Object.keys(status).length, "files");
-                log.verbose("Returning all file statuses of:", status);
-                callback(status, fullPass);
-                return;
-            }
+            }, function (apiErr, apiRes, body) {
+                for (var fileId of chunk) {
+                    status[fileId] = []
+                }
+                if (apiErr || !apiRes) {
+                    util.pushError (status, chunk, apiErr.message);
+                    fullPass = false;
+                } else {
+                    // 0 is pass
+                    try {
+                        var json = JSON.parse(body);
+                        body = json;
+                        log.debug("Got statuses for", chunk.length, "files:", body.length, "results returned from validate");
 
-        });
+                        for (var j = 0; j < body.length; j++) {
+                            
+                            status[body[j].file_id].push({
+                                pass: (body[j].state === 0),
+                                state: body[j].state,
+                                message: body[j].message,
+                                name: body[j].rule_id,
+                                mandatory: body[j].mandatory
+                            });
+
+                            if (body[j].state !== 0) {
+                                fullPass = false;
+                            }
+                        }
+                    }catch(ex){
+                        log.error(ex);
+                        util.pushError (status, chunk, "parsing error for validation response.");
+                        fullPass = false;
+                    }
+                }
+                numResults += chunk.length;
+                if (numResults === fileIds.length) {
+                    log.debug("Returning all file statuses for", Object.keys(status).length, "files");
+                    log.verbose("Returning all file statuses of:", status);
+                    callback(status, fullPass);
+                    return;
+                }
+
+            });
+        })(i);
     }
 };
 
