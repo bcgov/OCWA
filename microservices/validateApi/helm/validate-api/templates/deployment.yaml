@@ -45,6 +45,10 @@ spec:
               value: {{ .Values.storage.host }}
             - name: STORAGE_BUCKET
               value: {{ .Values.storage.bucket }}
+            - name: REQUEST_WEBHOOK_ENDPOINT
+              value: {{ .Values.requestWebhookEndpoint }}
+            - name: REQUEST_WEBHOOK_SECRET
+              value: {{ .Values.requestWebhookSecret }}
             - name: STORAGE_ACCESS_KEY
               valueFrom:
                 secretKeyRef:

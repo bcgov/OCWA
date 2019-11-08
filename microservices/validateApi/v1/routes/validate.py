@@ -21,9 +21,8 @@ validate = Blueprint('validate', 'validate')
 @auth
 def get_files_results() -> object:
     """
-    Returns the result of files
-    :param fileId: File Object ID
-    :return: JSON of validation result
+    Returns the results of files
+    :return: JSON array of validation results
     """
 
     if 'files' in request.args:
