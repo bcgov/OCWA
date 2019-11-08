@@ -5,7 +5,7 @@ var config = require('config');
 
 let token = config.get('testWebsocketJWT')
 let wsPort = config.get('wsPort')
-const ws = new WebSocket('ws://localhost:' + wsPort, null, { headers: { "sec-websocket-token": token }});
+const ws = new WebSocket('ws://localhost:' + wsPort, null, { headers: { "sec-websocket-protocol": token }});
 
 ws.on('open', function open() {
   logger.debug("Test WS / Opened");

@@ -17,7 +17,7 @@ websocket.init = function(){
         verifyClient: function(info, cb){
             logger.debug("Websocket verifying");
 
-            var token = info.req.headers['sec-websocket-token'];
+            var token = info.req.headers['sec-websocket-protocol'];
             if (!token){
                 cb(false, 401, "Unauthorized")
             }else{
