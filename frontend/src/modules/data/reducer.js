@@ -103,7 +103,7 @@ const handlePostStatus = (state, action) => {
   });
 };
 
-const entities = (state = {}, action) => {
+export const entities = (state = {}, action) => {
   if (/\w+\/(get|post|put|processed)\/success$/.test(action.type)) {
     return mergeWith({}, state, action.payload.entities, mergeStrategy);
   }

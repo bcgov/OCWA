@@ -3,7 +3,6 @@ import { camelizeKeys } from 'humps';
 import { delay, eventChannel } from 'redux-saga';
 import forIn from 'lodash/forIn';
 import get from 'lodash/get';
-import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
 import { normalize } from 'normalizr';
 import union from 'lodash/union';
@@ -43,8 +42,8 @@ function isPendingMergeRequest(request) {
 function createSocketChannel(socket) {
   return eventChannel(emit => {
     socket.onmessage = event => {
-      const parsedJson = JSON.parse(event.data);
-      const { fileId, ...statusProps } = camelizeKeys(parsedJson, {
+      const json = JSON.parse(event.data);
+      const { fileId, ...statusProps } = camelizeKeys(json, {
         process(key, convert, options) {
           return key === '_id' ? key : convert(key, options);
         },
@@ -65,7 +64,7 @@ function createSocketChannel(socket) {
   });
 }
 
-function* fileImportWatcher() {
+export function* fileImportWatcher() {
   if (isEmpty(requestSocketHost.replace(/wss?:\/\//, ''))) return;
 
   const socket = yield call(createSocket, requestSocketHost);
@@ -75,6 +74,7 @@ function* fileImportWatcher() {
     while (true) {
       const { fileId, fileStatus } = yield take(channel);
       const results = yield select(state => get(state, 'data.requests', {}));
+
       let resultId = null;
 
       forIn(results, (value, key) => {
@@ -91,7 +91,7 @@ function* fileImportWatcher() {
           },
           requestSchema
         );
-        yield put({ type: 'request/processed', payload });
+        yield put({ type: 'request/processed/success', payload });
       }
     }
   } catch (err) {
