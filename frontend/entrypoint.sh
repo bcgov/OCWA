@@ -8,6 +8,7 @@ printf "\"helpURL\": \"${HELP_URL}\",\n" >> ./config/default.json
 printf "\"forumApiHost\": \"${FORUM_API_HOST}\",\n" >> ./config/default.json
 printf "\"forumSocket\": \"${FORUM_SOCKET_HOST}\",\n" >> ./config/default.json
 printf "\"requestApiHost\": \"${REQUEST_API_HOST}\",\n" >> ./config/default.json
+printf "\"requestSocket\": \"${REQUEST_SOCKET_HOST}\",\n" >> ./config/default.json
 printf "\"filesApiHost\": \"${FILES_API_HOST}\",\n" >> ./config/default.json
 printf "\"exporterGroup\": \"${EXPORTER_GROUP}\",\n" >> ./config/default.json
 printf "\"ocGroup\": \"${OC_GROUP}\",\n" >> ./config/default.json

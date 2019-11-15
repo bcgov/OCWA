@@ -51,6 +51,12 @@ Defaults to `ws://localhost:3001`
 See [Request service config](../microservices/requestApi/config/default.json.example) for reference.  
 Defaults to `http://localhost:3002`
 
+#### `requestSocket: url` `required`
+
+See [Request service config](../microservices/requestApi/config/default.json.example) for reference.  
+Defaults to `ws://localhost:2998`
+
+
 #### `filesApiHost: url` `required`
 
 See [Storage service README](../microservices/storageApi/README.md) for reference.  
@@ -199,7 +205,7 @@ You will need Docker installed. Build the container by running `$ docker build .
 ```sh
 hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
 port=8000
-docker run -e TOKEN_ENDPOINT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_LOGOUT_URL=<oidc logout url> -e AUTH_SCOPES="openid offline_access" -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e EXPORTER_GROUP="/exporter" -e OC_GROUP="/oc" -e REPORTS_GROUP="/reports" -e EXPORTER_MODE="export" -e FORUM_SOCKET_HOST=$hostip:3001 -e REQUEST_API_HOST=$hostip:3002 -e FILES_API_HOST=$hostip:1080 -e USER_ID_FIELD=email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
+docker run -e TOKEN_ENDPOINT=<oidc token endpoint> -e USER_INFO_ENDPOINT=<oidc user info endpoint> -e AUTH_ENDPOINT=<authendpoint> -e AUTH_CALLBACK_URL=<host/auth> -e AUTH_CLIENT=<oidc client> -e AUTH_ISSUER=<oidc issuer> -e AUTH_LOGOUT_URL=<oidc logout url> -e AUTH_SCOPES="openid offline_access" -e CLIENT_SECRET=<YOUR_CLIENT_SECRET> -e JWT_SECRET=<YOUR_API_SECRET> -e COOKIE_SECRET=<COOKIE_SECRET> -e HOST=docker -e FORUM_API_HOST=$hostip:3000 -e EXPORTER_GROUP="/exporter" -e OC_GROUP="/oc" -e REPORTS_GROUP="/reports" -e EXPORTER_MODE="export" -e FORUM_SOCKET_HOST=$hostip:3001 -e REQUEST_API_HOST=$hostip:3002 -e REQUEST_SOCKET_HOST=$hostip:2998 -e FILES_API_HOST=$hostip:1080 -e USER_ID_FIELD=email -e PORT=$port --add-host=docker:$hostip -p $port:$port <DOCKER_IMAGE>
 ```
 
 #### 3.3 Helm
