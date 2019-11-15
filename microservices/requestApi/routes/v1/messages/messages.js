@@ -9,7 +9,7 @@ function checkRequestPermissions(user, fileId, sock, cb){
 
     db.Request.getAll({files: fileId}, 1, 1, user, function(findErr, findRes){
         if (findErr || !findRes || findRes.length === 0){
-            logger.debug('messages / Request with file not found.', fileId, findErr);
+            logger.debug('messages / Request with file not found for user.', fileId, user, findErr);
             cb(false, sock);
             return;
         }
@@ -21,10 +21,12 @@ function sendFileStatusMessage(fileStatus){
     var websockets = require('../../../websocket');
     var conns = websockets.getConnections();
     var keys = Object.keys(conns);
+    logger.debug('messages / try to send to # connections ', keys.length);
     for (var i=0; i<keys.length; i++){
         // make sure the user has access to the request
         var conn = conns[keys[i]];
         checkRequestPermissions(conn.user, fileStatus.fileId, conn, function(send, sock) {
+            logger.debug('messages / send - ', send, websockets.isOpen(sock));
             if (send) {
                 if (websockets.isOpen(sock)) {
                     sock.send(JSON.stringify({fileStatus: fileStatus}));
