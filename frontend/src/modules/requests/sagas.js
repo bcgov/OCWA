@@ -42,7 +42,7 @@ function isPendingMergeRequest(request) {
 function createSocketChannel(socket) {
   return eventChannel(emit => {
     socket.onmessage = event => {
-      //console.log(`[SOCKET] data - ${event.data}`);
+      console.log(`[SOCKET] data - ${event.data}`);
       const json = JSON.parse(event.data);
       const { fileId, ...statusProps } = camelizeKeys(json, {
         process(key, convert, options) {
