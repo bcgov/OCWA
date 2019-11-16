@@ -29,7 +29,7 @@ function sendFileStatusMessage(fileStatus){
             logger.debug('messages / send - ', send, websockets.isOpen(sock));
             if (send) {
                 if (websockets.isOpen(sock)) {
-                    sock.send(JSON.stringify({fileStatus: fileStatus}));
+                    sock.send(JSON.stringify(fileStatus));
                 }
             }
         });

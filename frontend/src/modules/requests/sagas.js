@@ -44,7 +44,7 @@ function createSocketChannel(socket) {
     socket.onmessage = event => {
       //console.log(`[SOCKET] data - ${event.data}`);
       const json = JSON.parse(event.data);
-      const { fileId, ...statusProps } = camelizeKeys(json['fileStatus'], {
+      const { fileId, ...statusProps } = camelizeKeys(json, {
         process(key, convert, options) {
           return key === '_id' ? key : convert(key, options);
         },
