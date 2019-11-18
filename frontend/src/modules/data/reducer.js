@@ -9,6 +9,7 @@ import last from 'lodash/last';
 import merge from 'lodash/merge';
 import mergeWith from 'lodash/mergeWith';
 import omit from 'lodash/omit';
+import unionBy from 'lodash/unionBy';
 import uniqueId from 'lodash/uniqueId';
 
 /* eslint-disable consistent-return */
@@ -20,7 +21,7 @@ function mergeStrategy(objValue, srcValue) {
 
 function mergeFileStatusStrategy(objValue, srcValue) {
   if (isArray(objValue)) {
-    return [...objValue, ...srcValue];
+    return unionBy(srcValue, objValue, 'name');
   }
 }
 /* eslint-enable consistent-return */
