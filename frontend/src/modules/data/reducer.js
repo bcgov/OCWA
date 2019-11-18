@@ -17,6 +17,12 @@ function mergeStrategy(objValue, srcValue) {
     return srcValue;
   }
 }
+
+function mergeFileStatusStrategy(objValue, srcValue) {
+  if (isArray(objValue)) {
+    return [...objValue, ...srcValue];
+  }
+}
 /* eslint-enable consistent-return */
 
 function handleFetchStatus(state, action, fetchStatus) {
@@ -104,8 +110,17 @@ const handlePostStatus = (state, action) => {
 };
 
 export const entities = (state = {}, action) => {
-  if (/\w+\/(get|post|put|processed)\/success$/.test(action.type)) {
+  if (/\w+\/(get|post|put)\/success$/.test(action.type)) {
     return mergeWith({}, state, action.payload.entities, mergeStrategy);
+  }
+
+  if (/\w+\/processed\/success$/.test(action.type)) {
+    return mergeWith(
+      {},
+      state,
+      action.payload.entities,
+      mergeFileStatusStrategy
+    );
   }
 
   if (/\w+\/delete\/success$/.test(action.type)) {

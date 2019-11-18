@@ -74,7 +74,9 @@ export function* fileImportWatcher() {
   try {
     while (true) {
       const { fileId, fileStatus } = yield take(channel);
-      const results = yield select(state => get(state, 'data.requests', {}));
+      const results = yield select(state =>
+        get(state, 'data.entities.requests', {})
+      );
 
       let resultId = null;
 

@@ -6,12 +6,12 @@ import { saveSession } from '@src/services/auth';
 import { fileImportWatcher } from '../sagas';
 
 const FILE = {
-  fileId: 'f1',
-  pass: 0,
-  state: 0,
-  message: '',
-  name: 'Under 5Mb',
-  mandatory: true,
+  fileId: 'b802d2',
+  pass: false,
+  state: 1,
+  message: 'Warning',
+  name: 'File size is under 3.5Mb',
+  mandatory: false,
 };
 
 describe('Requests Saga', () => {
@@ -22,7 +22,7 @@ describe('Requests Saga', () => {
       saveSession({
         token: '12312313123',
       });
-      ws = new WS(requestSocketHost);
+      ws = new WS(requestSocketHost, { jsonProtocol: true });
     });
 
     afterEach(() => {
@@ -38,18 +38,20 @@ describe('Requests Saga', () => {
         },
         fileImportWatcher
       );
-      ws.send(JSON.stringify(FILE));
+      ws.send(FILE);
       expect(dispatched).toEqual([]);
     });
 
     it('should receive a file notification and send a processed action', () => {
       const { fileId, ...fileProps } = FILE;
       const data = {
-        requests: {
-          r1: {
-            _id: 'r1',
-            files: ['f1'],
-            fileStatus: {},
+        entities: {
+          requests: {
+            r1: {
+              _id: 'r1',
+              files: ['b802d2'],
+              fileStatus: {},
+            },
           },
         },
       };
@@ -64,7 +66,8 @@ describe('Requests Saga', () => {
         },
         fileImportWatcher
       );
-      ws.send(JSON.stringify(FILE));
+      ws.send(FILE);
+
       expect(dispatched).toEqual([
         {
           type: 'request/processed/success',
@@ -74,7 +77,7 @@ describe('Requests Saga', () => {
                 r1: {
                   _id: 'r1',
                   fileStatus: {
-                    f1: [fileProps],
+                    b802d2: [fileProps],
                   },
                 },
               },
