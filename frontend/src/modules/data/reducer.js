@@ -9,12 +9,19 @@ import last from 'lodash/last';
 import merge from 'lodash/merge';
 import mergeWith from 'lodash/mergeWith';
 import omit from 'lodash/omit';
+import unionBy from 'lodash/unionBy';
 import uniqueId from 'lodash/uniqueId';
 
 /* eslint-disable consistent-return */
 function mergeStrategy(objValue, srcValue) {
   if (isArray(objValue)) {
     return srcValue;
+  }
+}
+
+function mergeFileStatusStrategy(objValue, srcValue) {
+  if (isArray(objValue)) {
+    return unionBy(srcValue, objValue, 'name');
   }
 }
 /* eslint-enable consistent-return */
@@ -103,9 +110,18 @@ const handlePostStatus = (state, action) => {
   });
 };
 
-const entities = (state = {}, action) => {
+export const entities = (state = {}, action) => {
   if (/\w+\/(get|post|put)\/success$/.test(action.type)) {
     return mergeWith({}, state, action.payload.entities, mergeStrategy);
+  }
+
+  if (/\w+\/processed\/success$/.test(action.type)) {
+    return mergeWith(
+      {},
+      state,
+      action.payload.entities,
+      mergeFileStatusStrategy
+    );
   }
 
   if (/\w+\/delete\/success$/.test(action.type)) {

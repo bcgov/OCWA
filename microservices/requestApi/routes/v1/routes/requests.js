@@ -376,9 +376,10 @@ router.put("/save/:requestId", function(req, res, next){
                         'x-api-key': config.get('validationApiSecret')
                     }
                 }, function (apiErr, apiRes, body) {
-                    logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
+                    logger.debug("file", myFile, "put up for validation");
+                    logger.verbose("put file", myFile, " up for validation", apiErr, apiRes, body);
                     if (apiErr) {
-                        logger.debug("Error validating file: ", apiErr);
+                        logger.error("Error validating file: ", apiErr);
                     }
                 });
             }

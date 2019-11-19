@@ -21,8 +21,13 @@ export const versionsFailed = payload => ({
   payload,
 });
 
+export const initSockets = () => ({
+  type: 'sockets/init',
+});
+
 export default {
   fetchToken,
+  initSockets,
   toggleAbout,
   versionsFailed,
   versionsRequested,

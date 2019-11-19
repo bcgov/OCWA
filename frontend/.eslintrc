@@ -15,6 +15,7 @@
     "__DEV__": true,
     "FILES_API_HOST": true,
     "SOCKET_HOST": true,
+    "REQUEST_SOCKET_HOST": true,
     "VERSION": true,
     "COMMIT": true,
     "ID_FIELD": true,
@@ -29,6 +30,10 @@
   },
   "parser": "babel-eslint",
   "rules": {
+    "no-param-reassign": [
+      "error",
+      { "props": true, "ignorePropertyModificationsFor": ["socket"] }
+    ],
     "import/no-extraneous-dependencies": 0,
     "no-underscore-dangle": ["error", { "allow": ["_id", "_e"] }],
     "react/jsx-one-expression-per-line": 0

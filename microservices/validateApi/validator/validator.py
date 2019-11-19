@@ -15,6 +15,8 @@ import hashlib
 from validator.md5_scan import md5_is_match
 from ValidationQueue.ValidationQueue import ValidationQueue, QueueObject
 
+from notifications.notifications import Notifications
+
 log = logging.getLogger(__name__)
 
 # sleep time in seconds
@@ -122,6 +124,7 @@ def validateProcess():
 
 
 def validate(rule, resultObj):
+    notifier = Notifications()
     source = ""
     if 'Source' in rule:
         source = rule['Source']
@@ -141,6 +144,8 @@ def validate(rule, resultObj):
             resultObj.message = "Warning"
 
     resultObj.save()
+
+    notifier.publish('fileStatus', resultObj.to_json())
 
 
 def read_file_and_evaluate(source, result):

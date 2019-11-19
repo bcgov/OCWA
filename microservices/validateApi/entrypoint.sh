@@ -12,7 +12,12 @@ printf "\"username\": \"${DB_USERNAME}\",\n" >> ./config/default.json
 printf "\"password\": \"${DB_PASSWORD}\",\n" >> ./config/default.json
 printf "\"dbName\": \"${DB_NAME}\"\n" >> ./config/default.json
 printf "},\n" >> ./config/default.json
-
+printf "\"subscribers\": [\n" >> ./config/default.json
+printf "  {\n" >> ./config/default.json
+printf "    \"endpoint\" : \"${REQUEST_WEBHOOK_ENDPOINT}\",\n" >> ./config/default.json
+printf "    \"api_key\"  : \"${REQUEST_WEBHOOK_SECRET}\"\n" >> ./config/default.json
+printf "  }\n" >> ./config/default.json
+printf "],\n" >> ./config/default.json
 printf "\"storage\": {\n" >> ./config/default.json
 printf "\"endpoint\": \"${STORAGE_HOST}\",\n" >> ./config/default.json
 printf "\"bucket\": \"${STORAGE_BUCKET}\",\n" >> ./config/default.json

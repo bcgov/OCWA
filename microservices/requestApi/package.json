@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "nyc --reporter=lcov mocha --exit --timeout 10000",
+    "test": "NODE_ENV=test nyc --reporter=lcov mocha --exit --timeout 10000",
     "dev": "nodemon --exec npm start"
   },
   "dependencies": {
@@ -22,7 +22,9 @@
     "nodemailer": "^6.3.0",
     "npmlog": "^4.1.2",
     "passport": "^0.4.0",
+    "passport-headerapikey": "^1.1.0",
     "passport-jwt": "^4.0.0",
+    "ws": "^7.1.1",
     "request": "^2.88.0"
   },
   "devDependencies": {

@@ -12,10 +12,10 @@ db.rules.insert({name:"Import file size is under 10Mb", source:"print($${file.si
 db.rules.insert({name:"Import file size is under 20Mb", source:"print($${file.size}<20971520)",mandatory:true });
 
 db.policies.remove({});
-db.policies.insert({name:"export-data", rules:['Not a warning file type','Not a blocked file type','File size is under 3.5Mb','File size is under 5Mb','No study ids are present in the content','Not on blacklist']})
-db.policies.insert({name:"export-code", rules:['Not a warning file type','Not a blocked file type','File size is under 3.5Mb','File size is under 5Mb','No study ids are present in the content','Not on blacklist']})
-db.policies.insert({name:"import-data", rules:['Not a warning file type','Not a blocked file type','Import file size is under 10Mb','Import file size is under 20Mb','No study ids are present in the content','Not on blacklist']})
-db.policies.insert({name:"import-code", rules:['Not a warning file type','Not a blocked file type','Import file size is under 10Mb','Import file size is under 20Mb','No study ids are present in the content','Not on blacklist']})
+db.policies.insert({name:"export-data", rules:['Not a warning file type','Not a blocked file type','File size is under 3.5Mb','File size is under 5Mb','No study ids are present in the content']})
+db.policies.insert({name:"export-code", rules:['Not a warning file type','Not a blocked file type','File size is under 3.5Mb','File size is under 5Mb','No study ids are present in the content']})
+db.policies.insert({name:"import-data", rules:['Not a warning file type','Not a blocked file type','Import file size is under 10Mb','Import file size is under 20Mb','No study ids are present in the content']})
+db.policies.insert({name:"import-code", rules:['Not a warning file type','Not a blocked file type','Import file size is under 10Mb','Import file size is under 20Mb','No study ids are present in the content']})
 
 db.permissions.remove({});
 db.permissions.insert({"allow":true, "topic_id":"*", "group_ids":["/oc","/reports"]});
