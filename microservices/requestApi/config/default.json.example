@@ -70,6 +70,12 @@
         "emailField": "Email",
         "givenNameField": "GivenName",
         "surNameField": "Surname",
-        "groupField": "Groups"
+        "groupField": "Groups",
+  },
+  "formio": {
+    "defaultFormName": "test",
+    "url": "http://localhost:3006",
+    "username": "admin@example.com",
+    "password": "CHANGEME"
   }
 }

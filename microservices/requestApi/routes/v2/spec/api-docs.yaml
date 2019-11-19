@@ -1,6 +1,6 @@
 openapi: "3.0.0"
 info:
-  version: 2.0.0
+  version: 1.0.0
   title: Request API
   description: |
     This is a request api that provides access to requests, for the OCWA it manages comments ands files as well.

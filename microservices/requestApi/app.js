@@ -6,8 +6,8 @@ var logger = require('morgan');
 var log = require ('npmlog');
 var config = require('config');
 
-var db = require('./db/db').init();
 var v1Router = require('./routes/v1/v1');
+var v2Router = require('./routes/v2/v2');
 
 app.get("/version", function(req, res){
     var hash = (process.env.GITHASH) ? process.env.GITHASH : "";
@@ -39,6 +39,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/v1', v1Router);
+app.use('/v2', v2Router);
 
 module.exports = app;
 

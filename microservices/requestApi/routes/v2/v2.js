@@ -14,7 +14,7 @@ router.use('/spec', express.static(path.join(__dirname, 'spec')));
 //api docs
 router.use('/api-docs', function(req, res){
     var docs = require('./docs/docs');
-    res.send(docs.getDocHTML("v1"));
+    res.send(docs.getDocHTML("v2"));
 });
 
 //requests

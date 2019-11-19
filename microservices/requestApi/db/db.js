@@ -10,33 +10,45 @@ dbUser = dbProps.username;
 dbPass = dbProps.password;
 dbName = dbProps.dbName;
 
-var db = {};
+function versionedDB(version){
 
-db.init = function(){
-    var logger = require('npmlog');
-    var connString = "mongodb://" + dbUser + ":" + dbPass + "@" + dbHost + "/" + dbName + "?authSource="+dbName;
-    mongoose.connect(connString, {
-        useNewUrlParser: true,
-        reconnectTries: Number.MAX_VALUE,
-        reconnectInterval: 1000,
-        bufferMaxEntries: 0
-    });
-    db.db = mongoose.connection;
+    if (typeof(version) === "undefined"){
+        version = "v1";
+    }
 
-    db.db.on('error', function(error){
-        logger.error(error);
-        throw (error);
-    });
-    db.db.once('open', function(){
-        logger.debug("Db connection established");
-    });
+    var db = {};
+
+    db.init = function(){
+        var logger = require('npmlog');
+        var connString = "mongodb://" + dbUser + ":" + dbPass + "@" + dbHost + "/" + dbName + "?authSource="+dbName;
+        mongoose.connect(connString, {
+            useNewUrlParser: true,
+            reconnectTries: Number.MAX_VALUE,
+            reconnectInterval: 1000,
+            bufferMaxEntries: 0
+        });
+        db.db = mongoose.connection;
+
+        db.db.on('error', function(error){
+            logger.error(error);
+            throw (error);
+        });
+        db.db.once('open', function(){
+            logger.debug("Db connection established: " + version);
+        });
+
+    };
+
     db.Request = require('./model/request');
     db.User = require('./model/user');
 
-    var collections = Object.keys(db.db.collections);
+    db.init();
 
+    return db;
 };
 
 
 
-module.exports = db;
+module.exports = {
+    db: versionedDB
+};

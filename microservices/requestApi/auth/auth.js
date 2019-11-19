@@ -1,51 +1,73 @@
-const passport = require('passport');
-const passJwt = require('passport-jwt');
-const JWTStrategy = passJwt.Strategy;
-const ExtractJWT = passJwt.ExtractJwt;
-var config = require('config');
-var logger = require('npmlog');
+var auth = function(db){
+    const passport = require('passport');
+    const passJwt = require('passport-jwt');
+    const JWTStrategy = passJwt.Strategy;
+    const ExtractJWT = passJwt.ExtractJwt;
+    var config = require('config');
+    var logger = require('npmlog');
 
-const isOutputChecker = (user => user.groups.includes(config.get('outputCheckerGroup')))
-const isInReportsGroup = (user => user.groups.includes(config.get('reportsGroup')))
-const isInGroupToCreateRequest = (user => user.groups.includes(config.get('requiredRoleToCreateRequest')))
+    const isOutputChecker = (user => user.groups.includes(config.get('outputCheckerGroup')))
+    const isInReportsGroup = (user => user.groups.includes(config.get('reportsGroup')))
+    const isInGroupToCreateRequest = (user => user.groups.includes(config.get('requiredRoleToCreateRequest')))
 
-passport.use(new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey: config.get("jwtSecret"),
-        passReqToCallback: true,
-    }, function(req, jwtPayload, cb) {
+    passport.use(new JWTStrategy({
+            jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+            secretOrKey: config.get("jwtSecret"),
+            passReqToCallback: true,
+        }, function(req, jwtPayload, cb) {
 
-        var encodedJWT = req.headers['authorization'].substring("Bearer ".length);
-        var userConf = config.get('user');
-        var user = {
-            jwt: encodedJWT,
-            email: jwtPayload[userConf.emailField],
-            firstName: jwtPayload[userConf.givenNameField],
-            lastName: jwtPayload[userConf.surNameField],
-            name: jwtPayload[userConf.givenNameField] + " " + jwtPayload[userConf.surNameField],
-            groups: jwtPayload[userConf.groupField],
-            id: jwtPayload[userConf.idField],
-            zone: (jwtPayload.zone) ? jwtPayload.zone : "external",
-            EXTERNAL_ZONE: 'external',
-            INTERNAL_ZONE: 'internal',
-        };
-        user.outputchecker = isOutputChecker(user);
-        user.supervisor = isInReportsGroup(user); // && !isInGroupToCreateRequest(user);
+            var encodedJWT = req.headers['authorization'].substring("Bearer ".length);
+            var userConf = config.get('user');
+            var user = {
+                jwt: encodedJWT,
+                email: jwtPayload[userConf.emailField],
+                firstName: jwtPayload[userConf.givenNameField],
+                lastName: jwtPayload[userConf.surNameField],
+                name: jwtPayload[userConf.givenNameField] + " " + jwtPayload[userConf.surNameField],
+                groups: jwtPayload[userConf.groupField],
+                id: jwtPayload[userConf.idField],
+                zone: (jwtPayload.zone) ? jwtPayload.zone : "external",
+                EXTERNAL_ZONE: 'external',
+                INTERNAL_ZONE: 'internal',
+            };
 
-        logger.verbose('user ' + user.id + ' authenticated successfully ', user.groups, user.supervisor, user.outputchecker);
+            user.getProject = function(){
+                var ocG = config.get('outputCheckerGroup');
+                var repG = config.get('reportsGroup');
+                var expG = config.get('requiredRoleToCreateRequest');
 
-        var db = require('../db/db');
-        db.User.findOneAndUpdate({id: user.id}, user, {upsert: true, setDefaultsOnInsert: true, new: true}, function(err, userDoc){
-            if (err || !userDoc){
-                logger.error("Error upserting user:", err);
-                return;
+                var project = null;
+
+                for (var i=0; i<this.groups.length; i++){
+                    var group = this.groups[i];
+                    if ( (group !== ocG) && (group !== repG) && (group !== expG) ){
+                        project = group;
+                        break;
+                    }
+                }
+                return project;
+
             }
-            logger.debug("User upserted successfully");
-        });
+            user.outputchecker = isOutputChecker(user);
+            user.supervisor = isInReportsGroup(user); // && !isInGroupToCreateRequest(user);
+
+            logger.verbose('user ' + user.id + ' authenticated successfully ', user.groups, user.supervisor, user.outputchecker);
+
+            // var getVersionedDb = require('../db/db');
+            // var db = new getVersionedDb.db();
+            db.User.findOneAndUpdate({id: user.id}, user, {upsert: true, setDefaultsOnInsert: true, new: true}, function(err, userDoc){
+                if (err || !userDoc){
+                    logger.error("Error upserting user:", err);
+                    return;
+                }
+                logger.debug("User upserted successfully");
+            });
 
 
-        cb(null, user);
-    }
-));
+            cb(null, user);
+        }
+    ));
+    return passport
+}
 
-module.exports = passport;
+module.exports = auth;
