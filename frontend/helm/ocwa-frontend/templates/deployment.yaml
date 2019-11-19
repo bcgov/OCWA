@@ -36,6 +36,8 @@ spec:
               value: "{{ .Values.forumSocket }}"
             - name: REQUEST_API_HOST
               value: "{{ .Values.requestApiHost }}"
+            - name: REQUEST_SOCKET_HOST
+              value: "{{ .Values.requestSocket }}"
             - name: FILES_API_HOST
               value: "{{ .Values.filesApiHost }}"
             - name: EXPORTER_GROUP

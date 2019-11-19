@@ -47,6 +47,7 @@ ocwa-frontend:
   forumApiHost: "ocwa-forum-api.ocwa"
   forumSocket: "ocwa-forum-api.ocwa:3001"
   requestApiHost: "ocwa-request-api.ocwa"
+  requestSocket: "ocwa-request-api.ocwa:2998"
   filesApiHost: "ocwa-storage-api.ocwa"
   exporterGroup: "/exporter"
   ocGroup: "/oc"
@@ -308,6 +309,7 @@ request-api:
     tls: []
 
   apiPort: 3002
+  wsPort:  2998
   logLevel: error
   database:
     host: ocwa-forum-api-mongo.ocwa
@@ -328,6 +330,8 @@ request-api:
 
   forumApi: http://ocwa-forum-api.ocwa
   forumApiSecret: none
+
+  webhookSecret: "webhook secret"
 
   storageUri: ocwa-storage-api.ocwa
   storagePort: 9000
@@ -475,6 +479,8 @@ validate-api:
   workingLimit: 5242880,
   failOverWorkingLimit: "true"
 
+  requestWebhookEndpoint: http://ocwa-request-api.ocwa/v1/webhook
+  requestWebhookSecret: "webhook secret"
 
   apiSecret: "ssh this is a secret"
   user:
