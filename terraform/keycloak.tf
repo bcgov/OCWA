@@ -12,9 +12,17 @@ resource "docker_container" "ocwa_keycloak" {
   image   = docker_image.keycloak.latest
   name    = "ocwa_keycloak"
   restart = "on-failure"
-  networks_advanced {
-    name = docker_network.private_network.name
+
+  network_mode = var.privateNetwork ? "" : "host"
+
+  dynamic networks_advanced {
+      for_each = var.privateNetwork ? [""]:[]
+      content {
+        name = var.privateNetwork ? docker_network.private_network.name : "host"
+        ipv4_address = "192.168.50.200"
+      }
   }
+
   env = [
     "DB_VENDOR=postgres",
     "DB_ADDR=ocwa_postgres",
@@ -48,7 +56,9 @@ resource "null_resource" "keycloak_first_time_install" {
       "KEYCLOAK_PASSWORD"      = random_string.keycloakAdminPassword.result
       "KEYCLOAK_CLIENT_SECRET" = random_uuid.outputcheckerClientSecret.result
     }
-    command = "docker run --net=ocwa_vnet -e TESTUSER_PASSWORD -e KEYCLOAK_USER -e KEYCLOAK_PASSWORD -e KEYCLOAK_CLIENT_SECRET -v \"$PWD:/work\" --entrypoint /bin/bash jboss/keycloak:4.1.0.Final -c /work/scripts/keycloak-setup.sh"
+    # This script can connect to keycloak with the 'HTTPS Required' error because the network subnet is not "external"
+    # See: https://www.keycloak.org/docs/latest/server_installation/index.html#setting-up-https-ssl
+    command = "docker run --net=${var.privateNetwork ? docker_network.private_network.name : "host"} -e TESTUSER_PASSWORD -e KEYCLOAK_USER -e KEYCLOAK_PASSWORD -e KEYCLOAK_CLIENT_SECRET -v \"$PWD:/work\" --entrypoint /bin/bash jboss/keycloak:4.1.0.Final -c /work/scripts/keycloak-setup.sh"
   }
 
   depends_on = [docker_container.ocwa_keycloak]

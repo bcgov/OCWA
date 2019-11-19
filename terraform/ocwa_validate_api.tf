@@ -11,9 +11,16 @@ resource "docker_container" "ocwa_validate_api" {
   image   = docker_image.ocwa_validate_api.latest
   name    = "ocwa_validate_api"
   restart = "on-failure"
-  networks_advanced {
-    name = docker_network.private_network.name
+
+  network_mode = var.privateNetwork ? "" : "host"
+
+  dynamic networks_advanced {
+      for_each = var.privateNetwork ? [""]:[]
+      content {
+        name = var.privateNetwork ? docker_network.private_network.name : "host"
+      }
   }
+
   volumes {
     host_path      = "${var.hostRootPath}/data/ocwa_validate_api"
     container_path = "/data"

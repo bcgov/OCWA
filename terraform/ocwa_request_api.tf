@@ -11,10 +11,18 @@ resource "docker_container" "ocwa_request_api" {
   image   = docker_image.ocwa_request_api.latest
   name    = "ocwa_request_api"
   restart = "on-failure"
-  networks_advanced {
-    name = docker_network.private_network.name
+
+  network_mode = var.privateNetwork ? "" : "host"
+
+  dynamic networks_advanced {
+      for_each = var.privateNetwork ? [""]:[]
+      content {
+        name = var.privateNetwork ? docker_network.private_network.name : "host"
+      }
   }
+
   env = [
+    "LOG_LEVEL=debug",
     "JWT_SECRET=${random_string.jwtSecret.result}",
     "API_PORT=3002",
     "WS_PORT=2998",
@@ -62,7 +70,7 @@ resource "docker_container" "ocwa_request_api" {
     "EMAIL_PASSWORD=password",
     "EMAIL_FROM=no-reply@gmail.com",
     "GITOPS_ENABLED=true",
-    "GITOPS_URL=http://gitops_simulator:2000",
+    "GITOPS_URL=http://ocwa_gitops_simulator:2000",
     "GITOPS_SECRET=s3cr3t",
   ]
 }

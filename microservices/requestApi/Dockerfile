@@ -13,5 +13,6 @@ RUN npm ci
 COPY . .
 RUN chmod +x entrypoint.sh
 
+EXPOSE 2998
 EXPOSE 3002
 ENTRYPOINT ["./entrypoint.sh"]

@@ -70,8 +70,10 @@ websocket.init = function(){
 //terminate stale websockets
     const interval = setInterval(function ping() {
         self.server.clients.forEach(function each(ws) {
-            if (ws.isAlive === false) return ws.terminate();
-
+            if (ws.isAlive === false) {
+                logger.debug("websocket / terminating stale session:", ws.user);
+                return ws.terminate();
+            }
             ws.isAlive = false;
             ws.ping(function(){});
         });

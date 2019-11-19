@@ -12,9 +12,16 @@ resource "docker_container" "minio" {
   name    = "ocwaminio"
   restart = "on-failure"
   command = ["server", "/data"]
-  networks_advanced {
-    name = docker_network.private_network.name
+
+  network_mode = var.privateNetwork ? "bridge" : "host"
+
+  dynamic networks_advanced {
+      for_each = var.privateNetwork ? [""]:[]
+      content {
+        name = var.privateNetwork ? docker_network.private_network.name : "host"
+      }
   }
+
   volumes {
     host_path      = "${var.hostRootPath}/data/minio"
     container_path = "/data"
@@ -55,9 +62,16 @@ resource "docker_container" "tusd" {
     container_path = "/srv/tusd-hooks"
   }
   restart = "on-failure"
-  networks_advanced {
-    name = docker_network.private_network.name
+
+  network_mode = var.privateNetwork ? "" : "host"
+
+  dynamic networks_advanced {
+      for_each = var.privateNetwork ? [""]:[]
+      content {
+        name = var.privateNetwork ? docker_network.private_network.name : "host"
+      }
   }
+
   env = [
     "AWS_ACCESS_KEY=${random_id.accessKey.hex}",
     "AWS_SECRET_ACCESS_KEY=${random_string.secretKey.result}",
@@ -76,9 +90,9 @@ resource "null_resource" "minio_first_install" {
 
   provisioner "local-exec" {
     environment = {
-      MC_HOSTS_PRIMARY = "http://${random_id.accessKey.hex}:${random_string.secretKey.result}@ocwaminio:9000"
+      MC_HOST_PRIMARY = "http://${random_id.accessKey.hex}:${random_string.secretKey.result}@ocwaminio:9000"
     }
-    command = "docker run -e MC_HOSTS_PRIMARY --net=ocwa_vnet minio/mc mb PRIMARY/bucket"
+    command = "docker run -e MC_HOST_PRIMARY --net=ocwa_vnet minio/mc mb PRIMARY/bucket"
   }
 
   depends_on = [docker_container.minio]

@@ -2,42 +2,6 @@
 
 # Terraform-Based deployment
 
-Create a terraform.tfvars file (see terraform.tfvars.example):
-
-```
-hostRootPath = "/var/ocwa"
-
-mongodb = {
-    username = "appuser"
-}
-
-postgres = {
-    username = "kcuser"
-}
-
-keycloak = {
-    username = "kcadmin"
-}
-
-ocwaHost = "https://ocwa.example.com"
-
-ocwaWebSocketHost = "wss://ocwa.example.com/socket"
-
-authHost = "https://auth.example.com"
-
-sslCertificate = "/ssl/cert.pem"
-sslCertificateKey = "/ssl/key.pem"
-
-images = {
-    request_api = ":edge"
-    validate_api = ":edge"
-    forum_api = ":edge"
-    policy_api = ":edge"
-    frontend = ":edge"
-    minio = ":latest"
-    tusd = ":latest"
-}
-
 ```
 
 Run the following commands:
@@ -45,7 +9,26 @@ Run the following commands:
 ```
 terraform init
 
-terraform plan -var hostRootPath=`pwd`/_tmp
+cp terraform.tfvars.example terraform.tfvars
 
-terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
+echo "hostRootPath = \"`pwd`/_tmp\"" >> terraform.tfvars
+
+terraform plan
+
+terraform apply -auto-approve
+```
+
+
+# Cleanup
+
+You should always try: `terraform destroy` first, and then:
+
+```
+docker container stop $(docker container ls -aq --filter name=ocwa*) || true
+docker container rm $(docker container ls -aq --filter name=ocwa*) || true
+docker network rm ocwa_vnet || true
+rm -rf _tmp
+rm *.tfstate
+mv terraform.tfvars terraform.tfvars.bak
+terraform init
 ```

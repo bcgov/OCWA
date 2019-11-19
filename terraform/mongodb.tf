@@ -16,8 +16,14 @@ resource "docker_container" "ocwa_mongodb" {
     host_path      = "${var.hostRootPath}/data/mongodb"
     container_path = "/data/db"
   }
-  networks_advanced {
-    name = docker_network.private_network.name
+
+  network_mode = var.privateNetwork ? "" : "host"
+
+  dynamic networks_advanced {
+      for_each = var.privateNetwork ? [""]:[]
+      content {
+        name = var.privateNetwork ? docker_network.private_network.name : "host"
+      }
   }
 
   healthcheck {

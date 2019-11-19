@@ -19,6 +19,8 @@ ocwaDLHostname = "ocwadl.example.demo"
 
 ocwaWebSocketHost = "wss://ocwa.example.demo/socket"
 
+requestWebSocketHost = "wss://ocwa.example.demo/reqsocket"
+
 authHostname = "auth.example.demo"
 authHost = "https://auth.example.demo"
 

@@ -20,8 +20,14 @@ resource "docker_container" "ocwa_postgres" {
     "POSTGRES_USER=padmin",
     "POSTGRES_PASSWORD=${random_string.postgresSuperPassword.result}",
   ]
-  networks_advanced {
-    name = docker_network.private_network.name
+
+  network_mode = var.privateNetwork ? "" : "host"
+
+  dynamic networks_advanced {
+      for_each = var.privateNetwork ? [""]:[]
+      content {
+        name = var.privateNetwork ? docker_network.private_network.name : "host"
+      }
   }
 
   healthcheck {

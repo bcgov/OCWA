@@ -12,7 +12,7 @@ resource "docker_container" "ocwa_download_frontend" {
   name    = "ocwa_download_frontend"
   restart = "on-failure"
   networks_advanced {
-    name = docker_network.private_network.name
+    name = var.privateNetwork ? docker_network.private_network.name : "host"
   }
 
   host {
@@ -34,10 +34,11 @@ resource "docker_container" "ocwa_download_frontend" {
     "CLIENT_SECRET=${random_uuid.outputcheckerClientSecret.result}",
     "FILES_API_HOST=${var.ocwaDLHost}",
     "REQUEST_API_HOST=http://ocwa_request_api:3002",
+    "REQUEST_SOCKET=2998",
     "FORUM_API_HOST=http://ocwa_forum_api:3000",
     "FORUM_SOCKET_HOST=${var.ocwaWebSocketHost}",
     "HOST=0.0.0.0",
-    "PORT=8000",
+    "PORT=8001",
     "USER_ID_FIELD=preferred_username",
     "STORAGE_ENDPOINT=ocwaminio",
     "STORAGE_PORT=9000",
@@ -59,7 +60,7 @@ resource "docker_container" "ocwa_frontend" {
   name    = "ocwa_frontend"
   restart = "on-failure"
   networks_advanced {
-    name = docker_network.private_network.name
+    name = var.privateNetwork ? docker_network.private_network.name : "host"
   }
 
   host {
@@ -81,6 +82,7 @@ resource "docker_container" "ocwa_frontend" {
     "CLIENT_SECRET=${random_uuid.outputcheckerClientSecret.result}",
     "FILES_API_HOST=${var.ocwaHost}",
     "REQUEST_API_HOST=http://ocwa_request_api:3002",
+    "REQUEST_SOCKET_HOST=${var.requestWebSocketHost}",
     "FORUM_API_HOST=http://ocwa_forum_api:3000",
     "FORUM_SOCKET_HOST=${var.ocwaWebSocketHost}",
     "HOST=0.0.0.0",

@@ -11,9 +11,16 @@ resource "docker_container" "ocwa_project_api" {
   image   = docker_image.ocwa_project_api.latest
   name    = "ocwa_project_api"
   restart = "on-failure"
-  networks_advanced {
-    name = docker_network.private_network.name
+
+  network_mode = var.privateNetwork ? "" : "host"
+
+  dynamic networks_advanced {
+      for_each = var.privateNetwork ? [""]:[]
+      content {
+        name = var.privateNetwork ? docker_network.private_network.name : "host"
+      }
   }
+
   env = [
     "JWT_SECRET=${random_string.jwtSecret.result}",
     "API_KEY=${random_string.apiSecret.result}",

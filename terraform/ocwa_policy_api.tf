@@ -11,9 +11,16 @@ resource "docker_container" "ocwa_policy_api" {
   image   = docker_image.ocwa_policy_api.latest
   name    = "ocwa_policy_api"
   restart = "on-failure"
-  networks_advanced {
-    name = docker_network.private_network.name
+
+  network_mode = var.privateNetwork ? "" : "host"
+
+  dynamic networks_advanced {
+      for_each = var.privateNetwork ? [""]:[]
+      content {
+        name = var.privateNetwork ? docker_network.private_network.name : "host"
+      }
   }
+
   env = [
     "LOG_LEVEL=info",
     "JWT_SECRET=${random_string.jwtSecret.result}",
