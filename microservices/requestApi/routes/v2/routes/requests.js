@@ -33,6 +33,17 @@ var getRouter = function(db){
         });
     });
 
+    router.get(FORMS_SUB_ROUTE+'/code_default', function(req, res, next){
+        formioClient.getForm(config.get('formio.defaultCodeFormName'), function(formRes, formErr){
+            if (formErr){
+                res.status(500);
+                res.json({error: formErr});
+                return;
+            }
+            res.json(formRes);
+        });
+    });
+
     router.post(FORMS_SUB_ROUTE, function(req, res, next){
         formioClient.postForm(req.body, function(formRes, formErr){
             if (formErr){
@@ -47,7 +58,7 @@ var getRouter = function(db){
     router = routes.buildStatic(db, router);
 
     //create a new request
-    router.post("/", function(req, res, next){
+    router.post("/", async function(req, res, next){
         
         var config = require('config');
         var log = require('npmlog');
@@ -88,8 +99,12 @@ var getRouter = function(db){
             };
         }
 
-        request.formName = config.get("formio.defaultFormName");
+
         request.project = req.user.getProject();
+        var formName = await projectConfig.get(request.project, 'formio.defaultFormName');
+        var codeFormName = await projectConfig.get(request.project, 'formio.defaultCodeFormName');
+        request.formName = request.exportType==="code" ? codeFormName : formName;
+        
 
         db.Request.setChrono(request, req.user.id);
 

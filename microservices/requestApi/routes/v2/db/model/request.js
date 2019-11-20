@@ -107,7 +107,7 @@ model.getAll = function(query, limit, page, user, callback){
                     author: 1,
                     project: 1,
                     formName: {
-                        $ifNull: ["$formName", DEFAULT_FORM]
+                        $ifNull: ["$formName", { $cond: { if: { $eq: [ "$exportType", baseModel.CODE_EXPORT_TYPE ] }, then: DEFAULT_CODE_FORM, else: DEFAULT_FORM } } ]
                     },
                     submissionId: 1,
                     submittedDate: {

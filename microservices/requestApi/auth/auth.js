@@ -1,5 +1,6 @@
 var auth = function(db){
     const passport = require('passport');
+    const projectClient = require('../clients/project_config_client');
     const passJwt = require('passport-jwt');
     const JWTStrategy = passJwt.Strategy;
     const ExtractJWT = passJwt.ExtractJwt;
@@ -32,22 +33,10 @@ var auth = function(db){
                 };
 
                 user.getProject = function(){
-                    var ocG = config.get('outputCheckerGroup');
-                    var repG = config.get('reportsGroup');
-                    var expG = config.get('requiredRoleToCreateRequest');
-
-                    var project = null;
-
-                    for (var i=0; i<this.groups.length; i++){
-                        var group = this.groups[i];
-                        if ( (group !== ocG) && (group !== repG) && (group !== expG) ){
-                            project = group;
-                            break;
-                        }
-                    }
+                    var project = projectClient.deriveProjectFromUser(this);
                     return project;
-
                 }
+                
                 user.outputchecker = isOutputChecker(user);
                 user.supervisor = isInReportsGroup(user); // && !isInGroupToCreateRequest(user);
 

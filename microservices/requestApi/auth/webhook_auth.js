@@ -19,7 +19,8 @@ var auth = function(){
             }
         }
     ));
-    return passport
+    
+    return passport;
 }
 
 module.exports = auth;
