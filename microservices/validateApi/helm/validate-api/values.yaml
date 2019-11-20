@@ -40,6 +40,8 @@ storage:
 
 policyApi: ocwa-policy-api.ocwa
 
+requestWebhookEndpoint: ocwa-request-api/webhook
+requestWebhookSecret: "webhook secret"
 
 apiSecret: "ssh this is a secret"
 user:

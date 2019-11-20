@@ -7,6 +7,8 @@ const formioClient = require('../../clients/formio_client');
 
 const DEFAULT_FORM = config.get("formio.defaultFormName");
 
+const schemaFields = ['name', 'state', 'supportingFiles', 'topic', 'reviewers', 'chronology', 'files', 'author', 'project', 'exportType', 'type', 'formName', 'submissionId'];
+
 var requestSchema = new Schema({
     name: {type: String, required: true, index: true},
     state: {type: Number, required: true, default: baseModel.DRAFT_STATE, index: true},
@@ -152,8 +154,11 @@ model.getAll = function(query, limit, page, user, callback){
                                 var keys = Object.keys(submis.data);
                                 for (var j=0; j<keys.length; j++){
                                     var key = keys[j];
-                                    var val = submis.data[key];
-                                    workingReq[key] = val;
+                                    //protect schema fields
+                                    if (schemaFields.indexOf(key) === -1){
+                                        var val = submis.data[key];
+                                        workingReq[key] = val;
+                                    }
                                     v2Results.push(workingReq);
                                 }
                             }catch(e){}
@@ -161,7 +166,6 @@ model.getAll = function(query, limit, page, user, callback){
                             v2Results.push(workingReq);
                         }
                         processed += 1;
-                        console.log("PROCESSED", processed, results.length);
                         if (processed === results.length){
                             callback(null, v2Results);
                         }

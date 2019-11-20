@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import { withRouter } from 'react-router-dom';
-import { initSocket } from '@src/modules/discussion/actions';
 import { helpURL, zone } from '@src/services/config';
 
 import App from '../components/app';
 import { fetchToken } from '../actions';
+import { initSockets } from '../actions';
 
 const mapStateToProps = state => ({
   authFetchStatus: state.app.auth.fetchStatus,
@@ -16,8 +16,11 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, {
-    fetchToken,
-    initSocket,
-  })(App)
+  connect(
+    mapStateToProps,
+    {
+      fetchToken,
+      initSockets,
+    }
+  )(App)
 );

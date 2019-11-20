@@ -1,7 +1,13 @@
-import { call, put, select, takeLatest } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
+import { call, put, select, take, takeLatest } from 'redux-saga/effects';
+import { camelizeKeys } from 'humps';
+import { delay, eventChannel } from 'redux-saga';
+import forIn from 'lodash/forIn';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import { normalize } from 'normalizr';
 import union from 'lodash/union';
+import { requestSocketHost } from '@src/services/config';
+import { createSocket } from '@src/utils';
 
 import { fetchRequest, saveRequest } from './actions';
 import { requestSchema } from './schemas';
@@ -27,6 +33,73 @@ function isPendingMergeRequest(request) {
   }
 
   return isCodeExport;
+}
+
+/**
+   Create and socket functions
+ */
+
+function createSocketChannel(socket) {
+  return eventChannel(emit => {
+    socket.onmessage = event => {
+      console.log(`[SOCKET] data - ${event.data}`);
+      const json = JSON.parse(event.data);
+      const { fileId, ...statusProps } = camelizeKeys(json, {
+        process(key, convert, options) {
+          return key === '_id' ? key : convert(key, options);
+        },
+      });
+      const fileStatus = {
+        [fileId]: [statusProps],
+      };
+
+      emit({
+        fileId,
+        fileStatus,
+      });
+    };
+
+    const unsubscribe = () => socket.close();
+
+    return unsubscribe;
+  });
+}
+
+export function* fileImportWatcher() {
+  if (isEmpty(requestSocketHost.replace(/wss?:\/\//, ''))) return;
+
+  const socket = yield call(createSocket, requestSocketHost);
+  const channel = yield call(createSocketChannel, socket);
+
+  try {
+    while (true) {
+      const { fileId, fileStatus } = yield take(channel);
+      const results = yield select(state =>
+        get(state, 'data.entities.requests', {})
+      );
+
+      let resultId = null;
+
+      forIn(results, (value, key) => {
+        if (value.files.includes(fileId)) {
+          resultId = key;
+        }
+      });
+
+      if (resultId) {
+        const payload = normalize(
+          {
+            _id: resultId,
+            fileStatus,
+          },
+          requestSchema
+        );
+        yield put({ type: 'request/processed/success', payload });
+      }
+    }
+  } catch (err) {
+    throw new Error(err);
+  }
 }
 
 function* onCreateRequest(action) {
@@ -109,6 +182,7 @@ function* onFinishEditing(action) {
 }
 
 export default function* root() {
+  yield takeLatest('sockets/init', fileImportWatcher);
   yield takeLatest('request/post/success', onCreateRequest);
   yield takeLatest('request/put/success', onSaveRequest);
   yield takeLatest('request/finish-editing', onFinishEditing);

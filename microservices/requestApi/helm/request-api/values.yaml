@@ -23,6 +23,7 @@ ingress:
 
 ##Configuration for OCWA Request Api
 apiPort: 3002
+wsPort: 2998
 logLevel: error
 
 global:
@@ -49,6 +50,8 @@ user:
 
 forumApi: http://ocwa-forum-api.ocwa
 forumApiSecret: none
+
+webhookSecret: s3cr3t
 
 storageUri: ocwa-storage-api.ocwa
 storagePort: 9000

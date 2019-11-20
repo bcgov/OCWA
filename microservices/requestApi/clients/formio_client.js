@@ -119,6 +119,23 @@ formio.putSubmission = function(formName, submissionId, values, callback) {
     });
 };
 
+formio.getForms = function(callback) {
+    this.auth(function(err, jwt){
+        if (err){
+            logger.error("Error getting jwt", err);
+        }
+        var url = config.get('formio.url') + "/form";
+        
+        httpReq.post(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
+            if (err){
+                callback(err);
+            }else{
+                callback(err, body);
+            }
+        });
+    });
+};
+
 formio.getForm = function(formName, callback) {
     this.auth(function(err, jwt){
         if (err){
@@ -127,6 +144,57 @@ formio.getForm = function(formName, callback) {
         var url = config.get('formio.url') + "/form/"+formName;
         
         httpReq.post(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
+            if (err){
+                callback(err);
+            }else{
+                callback(err, body);
+            }
+        });
+    });
+};
+
+formio.postForm = function(data, callback) {
+    this.auth(function(err, jwt){
+        if (err){
+            logger.error("Error getting jwt", err);
+        }
+        var url = config.get('formio.url') + "/form";
+        
+        httpReq.post(url, {headers: {'x-jwt-token': jwt}, body: data, json: true}, function(err, res, body){
+            if (err){
+                callback(err);
+            }else{
+                callback(err, body);
+            }
+        });
+    });
+};
+
+formio.putForm = function(formName, data, callback) {
+    this.auth(function(err, jwt){
+        if (err){
+            logger.error("Error getting jwt", err);
+        }
+        var url = config.get('formio.url') + "/form/" + formName;
+        
+        httpReq.put(url, {headers: {'x-jwt-token': jwt}, body: data, json: true}, function(err, res, body){
+            if (err){
+                callback(err);
+            }else{
+                callback(err, body);
+            }
+        });
+    });
+};
+
+formio.deleteForm = function(formName, callback) {
+    this.auth(function(err, jwt){
+        if (err){
+            logger.error("Error getting jwt", err);
+        }
+        var url = config.get('formio.url') + "/" + formName;
+        
+        httpReq.delete(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
             if (err){
                 callback(err);
             }else{

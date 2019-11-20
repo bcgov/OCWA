@@ -32,6 +32,7 @@ const idField = config.get('user.idField');
 const exporterGroup = config.get('exporterGroup');
 const ocGroup = config.get('ocGroup');
 const reportsGroup = config.get('reportsGroup');
+const requestSocket = config.get('requestSocket');
 const exporterMode = config.get('exporterMode');
 const codeExportEnabled = config.get('codeExportEnabled');
 const repositoryHost = config.get('repositoryHost');
@@ -101,6 +102,7 @@ app.get('*', checkAuth, storeUrl, (req, res) => {
     title: 'OCWA | Output Checker Workflow App',
     filesApiHost: parseApiHost(filesApiHost),
     socketHost: parseWsHost(forumSocket),
+    requestSocketHost: parseWsHost(requestSocket),
     commit: get(process, 'env.GITHASH', ''),
     helpURL,
     codeExportEnabled,

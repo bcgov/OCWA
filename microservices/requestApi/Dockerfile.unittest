@@ -1,0 +1,120 @@
+FROM node:13.0.1-buster
+
+
+ENV MONGODB=4.1.1
+
+WORKDIR /
+
+RUN apt-get update && apt-get install -y python3-pip
+
+# Prepare Database
+RUN wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+RUN tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+RUN mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+
+COPY terraform/scripts/mongodb-rules.tpl /mongodb-rules.tpl
+
+# Prepare Forum API
+COPY microservices/forumApi /forumApi
+RUN cd /forumApi; \
+    npm ci; \
+    cp config/default.json.example config/default.json; \
+    cp config/test.json.example config/test.json
+
+# Prepare Storage API
+RUN wget -q https://dl.minio.io/server/minio/release/linux-amd64/minio; \
+    chmod +x minio;
+ENV MINIO_ACCESS_KEY="accesskey"
+ENV MINIO_SECRET_KEY="secretkey"
+
+# Prepare Validate API
+COPY microservices/validateApi /validateApi
+RUN cd /validateApi ;\
+    pip3 install -U setuptools ;\
+    pip3 install -r requirements.txt ;\
+    cp config/default.json.template config/default.json ;\
+    pip3 install -e .
+
+# Prepare Policy API
+COPY microservices/policyApi /policyApi
+RUN cd /policyApi \
+    pip3 install -U setuptools ;\
+    pip3 install -r requirements.txt ;\
+    cp config/default.json.template config/default.json ;\
+    pip3 install -e .
+
+# Prepare Request API
+COPY microservices/requestApi/package*.json /requestApi/
+COPY microservices/requestApi/config /requestApi/config
+RUN cd /requestApi; \
+    npm ci; \
+    cp config/default.json.example config/default.json; \
+    cp config/test.json.example config/test.json
+
+
+RUN echo " \
+db.rules.remove({}); \n\
+db.rules.insert({name:\"Not a warning file type\", source:\"print('\${file.Filename}'['\${file.Filename}'.rfind('.')+1:] not in ['sav','dbf','dat','csv','bin','egp'])\",mandatory:false}); \n\
+db.rules.insert({name:\"Not a blocked file type\", source:\"print('\${file.Filename}'['\${file.Filename}'.rfind('.')+1:] not in ['zip','tgz','gzip','tar','com','exe','dll','scr','sas7bdat','spv','rda','dta'])\",mandatory:true}); \n\
+db.policies.remove({}); \n\
+db.policies.insert({name:'export-data', rules:['Not a warning file type','Not a blocked file type']}); \n\
+db.policies.insert({name:'export-code', rules:['Not a warning file type','Not a blocked file type']}); \n\
+db.policies.insert({name:'import-data', rules:['Not a warning file type','Not a blocked file type']}); \n\
+db.policies.insert({name:'import-code', rules:['Not a warning file type','Not a blocked file type']}); \n\
+" > /mongo-rules-script.sql
+
+
+RUN echo " \
+
+set -e \n\
+${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork \n\
+${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:\"forumUser\", pwd:\"forumPass\", roles:[\"readWrite\"]});' \n\
+${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb /mongo-rules-script.sql \n\
+
+sleep 5 \n\
+
+(cd /forumApi && NODE_ENV=test npm start > /forumApi.log 2>&1 &) \n\
+
+/minio server /tmp & \n\
+echo '127.0.0.1 minio' >> /etc/hosts \n\
+
+(cd /validateApi && python3 wsgi.py > /validateApi.log 2>&1 &) \n\
+
+(cd /policyApi && python3 wsgi.py > /policyApi.log 2>&1 &) \n\
+
+cp -r /work/bin /requestApi \n\
+cp -r /work/auth /requestApi \n\
+cp -r /work/db /requestApi \n\
+cp -r /work/routes /requestApi \n\
+cp -r /work/notifications /requestApi \n\
+cp -r /work/test /requestApi \n\
+cp -r /work/util /requestApi \n\
+cp -r /work/config/default.json.example /requestApi/config/default.json \n\
+cp -r /work/config/test.json.example /requestApi/config/test.json \n\
+cp /work/*.js /requestApi \n\
+
+(cd /requestApi && NODE_ENV=test npm start > /requestApi.log 2>&1 &) \n\
+
+/bin/bash \
+
+" > run_tests.sh && chmod +x run_tests.sh
+
+RUN echo " \
+
+set -e \n\
+
+cp -r /work/auth /requestApi \n\
+cp -r /work/db /requestApi \n\
+cp -r /work/routes /requestApi \n\
+cp -r /work/notifications /requestApi \n\
+cp -r /work/test /requestApi \n\
+cp -r /work/util /requestApi \n\
+cp -r /work/config/default.json.example /requestApi/config/default.json \n\
+cp -r /work/config/test.json.example /requestApi/config/test.json \n\
+cp /work/*.js /requestApi \n\
+
+cd /requestApi; npm test \n\
+
+" > rerun.sh && chmod +x rerun.sh
+
+ENTRYPOINT ["sh","-c", "/run_tests.sh"]

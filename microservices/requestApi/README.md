@@ -23,11 +23,13 @@ Run `docker build . -t ocwa_request_api` to build the docker container and the f
 ``` sh
 hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
 apiport=3002
+wsport=2998
 docker run -e CREATE_ROLE="exporter" -e OC_GROUP="oc" -e REPORTS_GROUP="reports" -e ALLOW_DENY=true -e EMAIL_FIELD=Email -e GIVENNAME_FIELD=GivenName -e SURNAME_FIELD=Surname \
-           -e GROUP_FIELD=Groups -e API_PORT=$apiport -e JWT_SECRET=MySecret -e LOG_LEVEL=info -e FORUM_API=docker:3000 -e VALIDATION_API_KEY=myForumApiKey \
+           -e GROUP_FIELD=Groups -e API_PORT=$apiport -e WS_PORT=$wsport -e JWT_SECRET=MySecret -e LOG_LEVEL=info -e FORUM_API=docker:3000 -e VALIDATION_API_KEY=myForumApiKey \
            -e VALIDATION_API=docker:3003 -e VALIDATION_API_KEY=myApiKey -e DB_USERNAME=mongoUser -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e USER_ID_FIELD=email \
            -e DB_HOST=docker -e STORAGE_URI=storageURI -e STORAGE_PORT=9000 -e STORAGE_KEY=myKey -e STORAGE_SECRET=mySecret -e STORAGE_USESSL=false \
            -e PROJECT_API=http://docker:3005 -e PROJECT_API_KEY=ApiKeySecret \
+           -e WEBHOOK_API_KEY=WebhookSecret \
            -e GITOPS_ENABLED=false -e GITOPS_URL=https://projectsc.com -e GITOPS_SECRET=s3cr3t \
            -e OCWA_URL=http://localhost:8000 -e EMAIL_ENABLED=false -e EMAIL_USER=me@ocwa.com -e EMAIL_PASSWORD=MYPASS -e EMAIL_FROM=donotreply@ocwa.com \
            -e IGNORE_GROUPS="\"group1\", \"group2\"" \
@@ -63,4 +65,16 @@ helm upgrade --name ocwa-request-api ./helm/request-api  -f ./helm/request-api/c
 
 ``` sh
 npm test
+```
+
+### Running unit tests in a container
+
+```
+(cd ../.. && docker build --tag reqtest -f microservices/requestApi/Dockerfile.unittest .)
+docker run -ti --rm -v `pwd`:/work -w /work reqtest
+
+After minio has started, you will be at a `bash` prompt.
+
+Run: `/rerun.sh` to run the Requests unit tests.
+
 ```

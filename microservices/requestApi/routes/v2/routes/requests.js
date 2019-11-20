@@ -8,6 +8,39 @@ var getRouter = function(db){
     var router = express.Router();
 
     var routes = require('../../routes/requests');
+    
+    router.get('/formio', function(req, res, next){
+        formioClient.getForms(function(formRes, formErr){
+            if (formErr){
+                res.status(500);
+                res.json({error: formErr});
+                return;
+            }
+            res.json(formRes);
+        });
+    });
+
+    router.get('/formio/default', function(req, res, next){
+        formioClient.getForm(config.get('formio.defaultFormName'), function(formRes, formErr){
+            if (formErr){
+                res.status(500);
+                res.json({error: formErr});
+                return;
+            }
+            res.json(formRes);
+        });
+    });
+
+    router.post('/formio', function(req, res, next){
+        formioClient.postForm(req.body, function(formRes, formErr){
+            if (formErr){
+                res.status(500);
+                res.json({error: formErr});
+                return;
+            }
+            res.json(formRes);
+        });
+    });
 
     router = routes.buildStatic(db, router);
 
@@ -150,9 +183,177 @@ var getRouter = function(db){
 
     });
 
+    //save a request
+    router.put("/save/:requestId", function(req, res, next){
+        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        var config = require('config');
+        var logger = require('npmlog');
+
+        db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, findRes){
+            if (findErr || !findRes || findRes.length <= 0){
+                res.status(400);
+                res.json({error: "No such request"});
+                return;
+            }
+
+            findRes = findRes[0];
+
+            if (findRes.state > db.Request.WIP_STATE){
+                res.status(400);
+                res.json({error: "Can't update a request that is in a state other than Draft/WIP"});
+                return;
+            }
+
+            var objectDelta = {};
+            if ( (typeof(req.body.files) !== "undefined") && (JSON.stringify(req.body.files) !== JSON.stringify(findRes.files)) ){
+                objectDelta['files'] = findRes.files;
+            }
+
+            if ( (typeof(req.body.supportingFiles) !== "undefined") && (JSON.stringify(req.body.supportingFiles) !== JSON.stringify(findRes.supportingFiles)) ){
+                objectDelta['supportingFiles'] = findRes.supportingFiles;
+            }
+
+            findRes.name = (typeof(req.body.name) !== "undefined") ? req.body.name : findRes.name;
+            findRes.files = (typeof(req.body.files) !== "undefined") ? req.body.files : findRes.files;
+            findRes.supportingFiles = (typeof(req.body.supportingFiles) !== "undefined") ? req.body.supportingFiles : findRes.supportingFiles;
+
+            var setChrono = (findRes.state!==db.Request.WIP_STATE) || (Object.keys(objectDelta).length > 0 );
+            findRes.state = db.Request.WIP_STATE;
+
+            if (setChrono) {
+                db.Request.setChrono(findRes, req.user.id, objectDelta);
+            }
+
+            formioClient.putSubmission(findRes.formName, findRes.submissionId, req.body, function(formErr, formRes){
+                log.verbose("formio put resp", formErr, formRes);
+    
+                if (formErr){
+                    res.status(500);
+                    res.json({error: formErr});
+                    return;
+                }
+    
+                if (typeof(formRes) === 'string'){
+                    try{
+                        formRes = JSON.parse(formRes);
+                    }catch(e){
+                        res.status(500);
+                        res.json({error: e});
+                        return;
+                    }
+                }
+
+                db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
+                    if (saveErr) {
+                        res.json({error: saveErr.message});
+                        return;
+                    }
+
+                    var httpReq = require('request');
+
+                    var policy = findRes.type + "-" + findRes.exportType;
+
+                    for (var i=0; i<findRes.files.length; i++) {
+                        var myFile = findRes.files[i];
+                        httpReq.put({
+                            url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
+                            headers: {
+                                'x-api-key': config.get('validationApiSecret')
+                            }
+                        }, function (apiErr, apiRes, body) {
+                            logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
+                            if (apiErr) {
+                                logger.debug("Error validating file: ", apiErr);
+                            }
+                        });
+                    }
+
+                    notify.process(findRes, req.user);
+
+                    res.json({message: "Successfully updated", result: findRes});
+                });
+            });
+        });
+
+    });
+
+    router.delete('/:requestId', function(req, res){
+        var config = require('config');
+        var logger = require('npmlog');
+        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+
+        db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
+            if (reqErr || !reqRes || reqRes.length <= 0){
+                res.status(500);
+                res.json({error: reqErr.message});
+                return;
+            }
+
+            reqRes = reqRes[0];
+            var topicId = reqRes.topic;
+
+            if (reqRes.author == req.user.id){
+                if (reqRes.state > db.Request.WIP_STATE){
+                    res.status(403);
+                    res.json({error: "You cannot delete a request that isn't in the draft/wip state"});
+                    return;
+                }
+
+                var map = reqRes.chronology.map(x => x.enteredState);
+
+                if (map.indexOf(db.Request.AWAITING_REVIEW_STATE) !== -1){
+                    res.status(403);
+                    res.json({error: "You cannot delete a request if it has ever been submitted"});
+                    return;
+                }
+
+                formioClient.deleteSubmission(reqRes.formName, reqRes.submissionId, function(formErr, formRes){
+
+                    if (formErr){
+                        res.status(500);
+                        res.json({error: formErr});
+                        return;
+                    }
+
+                    db.Request.deleteOne({_id: requestId}, function(err, result){
+                        if (err){
+                            res.status(500);
+                            res.json({error: err});
+                            return;
+                        }
+
+                        var httpReq = require('request');
+                        httpReq.delete({
+                            url: config.get('forumApi')+'/v1/'+topicId,
+                            headers: {
+                                'Authorization': "Bearer "+req.user.jwt
+                            }
+                        }, function(apiErr, apiRes, body){
+                            if ((!apiErr) && (apiRes.statusCode === 200)){
+                                logger.debug("Deleted request topic");
+                            }else{
+                                logger.error("Error deleting topic: ", apiErr, body);
+                            }
+                        });
+
+                        notify.gitops().delete(reqRes);
+
+                        res.json({message: "Record successfully deleted"});
+                    });
+                });
+
+            }else{
+                res.status(403);
+                res.json({error: "You did not create this request and can therefore not delete it"});
+            }
+
+
+        });
+    });
+
     router = routes.buildDynamic(projectConfig, db, notify, util, router);
 
     return router;
-}
+};
 
 module.exports = getRouter;

@@ -1,6 +1,7 @@
 export const limit = 100;
 
 export const socketHost = SOCKET_HOST;
+export const requestSocketHost = REQUEST_SOCKET_HOST;
 export const version = VERSION;
 export const commit = COMMIT;
 export const idField = ID_FIELD;
@@ -27,6 +28,7 @@ export default {
   exporterMode,
   socketHost,
   repositoryHost,
+  requestSocketHost,
   zone,
   getZone,
 };

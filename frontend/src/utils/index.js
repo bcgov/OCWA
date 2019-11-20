@@ -1,6 +1,7 @@
 import get from 'lodash/get';
 import template from 'lodash/template';
 import { getZone } from '@src/services/config';
+import { getToken } from '@src/services/auth';
 
 const interpolate = /{([\s\S]+?)}/g;
 // Add this for cases where we pass a zone lookup key, but want the request type equivalent
@@ -56,7 +57,10 @@ export const getZoneString = (options, typeOverride) => {
   return get(options, zone, '');
 };
 
-export default {
-  _e,
-  getZoneString,
-};
+export function createSocket(socketHost) {
+  const token = getToken();
+  const socket = new WebSocket(socketHost, token);
+  socket.onopen = () => console.log(`[SOCKET] ${socketHost} connected`);
+  socket.onclose = () => console.log(`[SOCKET] ${socketHost} closed`);
+  return socket;
+}
