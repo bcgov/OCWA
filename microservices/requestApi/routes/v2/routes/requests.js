@@ -7,9 +7,11 @@ var getRouter = function(db){
     var express = require('express');
     var router = express.Router();
 
+    const FORMS_SUB_ROUTE = '/forms';
+
     var routes = require('../../routes/requests');
     
-    router.get('/formio', function(req, res, next){
+    router.get(FORMS_SUB_ROUTE, function(req, res, next){
         formioClient.getForms(function(formRes, formErr){
             if (formErr){
                 res.status(500);
@@ -20,7 +22,7 @@ var getRouter = function(db){
         });
     });
 
-    router.get('/formio/default', function(req, res, next){
+    router.get(FORMS_SUB_ROUTE+'/default', function(req, res, next){
         formioClient.getForm(config.get('formio.defaultFormName'), function(formRes, formErr){
             if (formErr){
                 res.status(500);
@@ -31,7 +33,7 @@ var getRouter = function(db){
         });
     });
 
-    router.post('/formio', function(req, res, next){
+    router.post(FORMS_SUB_ROUTE, function(req, res, next){
         formioClient.postForm(req.body, function(formRes, formErr){
             if (formErr){
                 res.status(500);
@@ -348,6 +350,42 @@ var getRouter = function(db){
             }
 
 
+        });
+    });
+
+    router.get(FORMS_SUB_ROUTE+'/:formName', function(req, res, next){
+        var formName = req.params.formName;
+        formioClient.getForm(formName, function(formRes, formErr){
+            if (formErr){
+                res.status(500);
+                res.json({error: formErr});
+                return;
+            }
+            res.json(formRes);
+        });
+    });
+
+    router.put(FORMS_SUB_ROUTE+'/:formName', function(req, res, next){
+        var formName = req.params.formName;
+        formioClient.putForm(formName, req.body, function(formRes, formErr){
+            if (formErr){
+                res.status(500);
+                res.json({error: formErr});
+                return;
+            }
+            res.json(formRes);
+        });
+    });
+
+    router.delete('/formio/:formName', function(req, res, next){
+        var formName = req.params.formName;
+        formioClient.putForm(formName, req.body, function(formRes, formErr){
+            if (formErr){
+                res.status(500);
+                res.json({error: formErr});
+                return;
+            }
+            res.json(formRes);
         });
     });
 

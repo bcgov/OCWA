@@ -6,6 +6,7 @@ var config = require('config');
 const formioClient = require('../../clients/formio_client');
 
 const DEFAULT_FORM = config.get("formio.defaultFormName");
+const DEFAULT_CODE_FORM = config.get("formio.defaultCodeFormName");
 
 const schemaFields = ['name', 'state', 'supportingFiles', 'topic', 'reviewers', 'chronology', 'files', 'author', 'project', 'exportType', 'type', 'formName', 'submissionId'];
 
