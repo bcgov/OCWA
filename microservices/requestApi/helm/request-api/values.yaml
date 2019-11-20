@@ -14,7 +14,7 @@ service:
   port: 80
 
 wsService:
-  type: ClusterIp
+  type: ClusterIP
   websocketPort: 3006
 
 ingress:
