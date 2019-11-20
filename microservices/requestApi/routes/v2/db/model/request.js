@@ -8,6 +8,10 @@ const formioClient = require('../../clients/formio_client');
 const DEFAULT_FORM = config.get("formio.defaultFormName");
 const DEFAULT_CODE_FORM = config.get("formio.defaultCodeFormName");
 
+function codeTypeValidator() {
+    return this.exportType === CODE_EXPORT_TYPE;
+}
+
 const schemaFields = ['name', 'state', 'supportingFiles', 'topic', 'reviewers', 'chronology', 'files', 'author', 'project', 'exportType', 'type', 'formName', 'submissionId'];
 
 var requestSchema = new Schema({
@@ -20,6 +24,10 @@ var requestSchema = new Schema({
     files: {type: [String], required: true},
     author: {type: String, required: true},
     project: {type: String, required: true},
+    mergeRequestStatus: {
+        code: {type: Number, required: codeTypeValidator},
+        message: { type: String, required: false }
+    },
     exportType: {
         type: String,
         required: false,
@@ -102,6 +110,7 @@ model.getAll = function(query, limit, page, user, callback){
                     topic: 1,
                     reviewers: 1,
                     chronology: 1,
+                    mergeRequestStatus: 1,
                     exportType: 1,
                     files: 1,
                     author: 1,

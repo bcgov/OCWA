@@ -126,7 +126,7 @@ formio.getForms = function(callback) {
         }
         var url = config.get('formio.url') + "/form";
         
-        httpReq.post(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
+        httpReq.get(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
             if (err){
                 callback(err);
             }else{
@@ -143,7 +143,7 @@ formio.getForm = function(formName, callback) {
         }
         var url = config.get('formio.url') + "/"+formName;
         
-        httpReq.post(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
+        httpReq.get(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
             if (err){
                 callback(err);
             }else{

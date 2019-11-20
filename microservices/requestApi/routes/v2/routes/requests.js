@@ -23,6 +23,7 @@ var getRouter = function(db){
     });
 
     router.get(FORMS_SUB_ROUTE+'/default', function(req, res, next){
+        var config = require('config');
         formioClient.getForm(config.get('formio.defaultFormName'), function(formErr, formRes){
             if (formErr){
                 res.status(500);
