@@ -169,6 +169,9 @@ spec:
             - name: http
               containerPort: {{ .Values.apiPort }}
               protocol: TCP
+            - name: websocket
+              containerPort: {{ .Values.wsPort }}
+              protocol: TCP
           livenessProbe:
             httpGet:
               path: /v1/api-docs

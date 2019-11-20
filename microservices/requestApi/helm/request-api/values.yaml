@@ -13,6 +13,10 @@ service:
   type: ClusterIP
   port: 80
 
+wsService:
+  type: ClusterIp
+  websocketPort: 3006
+
 ingress:
   enabled: false
   annotations: {}
