@@ -12,7 +12,7 @@ var getRouter = function(db){
     var routes = require('../../routes/requests');
     
     router.get(FORMS_SUB_ROUTE, function(req, res, next){
-        formioClient.getForms(function(formRes, formErr){
+        formioClient.getForms(function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});
@@ -23,7 +23,7 @@ var getRouter = function(db){
     });
 
     router.get(FORMS_SUB_ROUTE+'/default', function(req, res, next){
-        formioClient.getForm(config.get('formio.defaultFormName'), function(formRes, formErr){
+        formioClient.getForm(config.get('formio.defaultFormName'), function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});
@@ -34,7 +34,7 @@ var getRouter = function(db){
     });
 
     router.get(FORMS_SUB_ROUTE+'/code_default', function(req, res, next){
-        formioClient.getForm(config.get('formio.defaultCodeFormName'), function(formRes, formErr){
+        formioClient.getForm(config.get('formio.defaultCodeFormName'), function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});
@@ -45,7 +45,7 @@ var getRouter = function(db){
     });
 
     router.post(FORMS_SUB_ROUTE, function(req, res, next){
-        formioClient.postForm(req.body, function(formRes, formErr){
+        formioClient.postForm(req.body, function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});
@@ -370,7 +370,7 @@ var getRouter = function(db){
 
     router.get(FORMS_SUB_ROUTE+'/:formName', function(req, res, next){
         var formName = req.params.formName;
-        formioClient.getForm(formName, function(formRes, formErr){
+        formioClient.getForm(formName, function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});
@@ -382,7 +382,7 @@ var getRouter = function(db){
 
     router.put(FORMS_SUB_ROUTE+'/:formName', function(req, res, next){
         var formName = req.params.formName;
-        formioClient.putForm(formName, req.body, function(formRes, formErr){
+        formioClient.putForm(formName, req.body, function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});
@@ -394,7 +394,7 @@ var getRouter = function(db){
 
     router.delete('/formio/:formName', function(req, res, next){
         var formName = req.params.formName;
-        formioClient.putForm(formName, req.body, function(formRes, formErr){
+        formioClient.putForm(formName, req.body, function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});

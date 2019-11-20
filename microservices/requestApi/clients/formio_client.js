@@ -36,7 +36,7 @@ formio.getSubmissions = function(formName, callback) {
             if (err){
                 callback(err);
             }else{
-                callback(err, body);
+                callback(null, body);
             }
         });
     });
@@ -54,7 +54,7 @@ formio.getSubmission = function(formName, submissionId, callback) {
             if (err){
                 callback(err);
             }else{
-                callback(err, body);
+                callback(null, body);
             }
         });
     });
@@ -75,7 +75,7 @@ formio.postSubmission = function(formName, values, callback) {
             if (err){
                 callback(err);
             }else{
-                callback(err, body);
+                callback(null, body);
             }
         });
     });
@@ -92,7 +92,7 @@ formio.deleteSubmission = function(formName, submissionId, callback) {
             if (err){
                 callback(err);
             }else{
-                callback(err, body);
+                callback(null, body);
             }
         });
     });
@@ -113,7 +113,7 @@ formio.putSubmission = function(formName, submissionId, values, callback) {
             if (err){
                 callback(err);
             }else{
-                callback(err, body);
+                callback(null, body);
             }
         });
     });
@@ -130,7 +130,7 @@ formio.getForms = function(callback) {
             if (err){
                 callback(err);
             }else{
-                callback(err, body);
+                callback(null, body);
             }
         });
     });
@@ -141,13 +141,13 @@ formio.getForm = function(formName, callback) {
         if (err){
             logger.error("Error getting jwt", err);
         }
-        var url = config.get('formio.url') + "/form/"+formName;
+        var url = config.get('formio.url') + "/"+formName;
         
         httpReq.post(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
             if (err){
                 callback(err);
             }else{
-                callback(err, body);
+                callback(null, body);
             }
         });
     });
@@ -164,7 +164,7 @@ formio.postForm = function(data, callback) {
             if (err){
                 callback(err);
             }else{
-                callback(err, body);
+                callback(null, body);
             }
         });
     });
@@ -181,7 +181,7 @@ formio.putForm = function(formName, data, callback) {
             if (err){
                 callback(err);
             }else{
-                callback(err, body);
+                callback(null, body);
             }
         });
     });
@@ -198,7 +198,7 @@ formio.deleteForm = function(formName, callback) {
             if (err){
                 callback(err);
             }else{
-                callback(err, body);
+                callback(null, body);
             }
         });
     });
