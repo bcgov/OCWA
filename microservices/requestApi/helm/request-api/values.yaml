@@ -19,10 +19,14 @@ wsService:
 
 ingress:
   enabled: false
-  annotations: {}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.org/websocket-services: ocwa-request-api-ws
   path: /
   hosts:
-    - chart-example.local
+    - name: chart-example.local
+      service: ocwa-request-api-ws
+      port: 3006
   tls: []
 
 ##Configuration for OCWA Request Api
