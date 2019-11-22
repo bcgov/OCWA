@@ -30,18 +30,6 @@ log = logging.getLogger(__name__)
 
 # monitoring.register(CommandLogger())
 
-config = Config()
-connect(
-    db=config.data['database']['dbName'],
-    host=config.data['database']['host'],
-    port=config.data['database']['port'],
-    username=config.data['database']['username'],
-    password=config.data['database']['password'],
-    authentication_source=config.data['database']['dbName'],
-    maxPoolSize=5,
-    minPoolSize=1,
-    connect=True)
-    
 class Db:
     Results = None
     def __init__(self, createClient=True):
@@ -49,4 +37,17 @@ class Db:
         self.db = {}
         self.Rules = Rules
         self.Policies = Policies
+        self.initConnection(config)
+        log.debug("Db(%s)", _connections)
 
+    def initConnection(self, config):
+        connect(
+            db=config.data['database']['dbName'],
+            host=config.data['database']['host'],
+            port=config.data['database']['port'],
+            username=config.data['database']['username'],
+            password=config.data['database']['password'],
+            authentication_source=config.data['database']['dbName'],
+            maxPoolSize=5,
+            minPoolSize=1,
+            connect=True)
