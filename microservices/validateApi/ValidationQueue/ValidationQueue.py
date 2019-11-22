@@ -1,6 +1,7 @@
 from multiprocessing import Queue
 from config import Config
 from db.db import Db
+import sys
 import requests
 import logging
 
@@ -32,9 +33,12 @@ class ValidationQueue(object):
             try:
                 policy = get_policy(result.rule_id)[0]
                 queueItem = QueueObject(policy, result)
+                log.debug("Prepared queue item.. adding to queue")
                 cls.q.put(queueItem)
             except:
                 log.error("error getting policy from api")
+                log.error(result)
+                log.error(sys.exc_info()[0])
 
 def get_policy(policy_id):
     conf = Config().data

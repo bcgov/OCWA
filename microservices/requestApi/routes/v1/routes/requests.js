@@ -369,19 +369,20 @@ router.put("/save/:requestId", function(req, res, next){
             var policy = findRes.type + "-" + findRes.exportType;
 
             for (var i=0; i<findRes.files.length; i++) {
-                var myFile = findRes.files[i];
-                httpReq.put({
-                    url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
-                    headers: {
-                        'x-api-key': config.get('validationApiSecret')
-                    }
-                }, function (apiErr, apiRes, body) {
-                    logger.debug("file", myFile, "put up for validation");
-                    logger.verbose("put file", myFile, " up for validation", apiErr, apiRes, body);
-                    if (apiErr) {
-                        logger.error("Error validating file: ", apiErr);
-                    }
-                });
+                ((myFile) => {
+                    httpReq.put({
+                        url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
+                        headers: {
+                            'x-api-key': config.get('validationApiSecret')
+                        }
+                    }, function (apiErr, apiRes, body) {
+                        logger.debug("file", myFile, "put up for validation");
+                        logger.verbose("put file", myFile, " up for validation", apiErr, apiRes, body);
+                        if (apiErr) {
+                            logger.error("Error validating file: ", apiErr);
+                        }
+                    });
+                })(findRes.files[i])
             }
 
             var notify = require('../notifications/notifications');

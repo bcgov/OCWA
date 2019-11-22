@@ -10,7 +10,7 @@ function checkRequestPermissions(user, fileId, sock, cb){
     db.Request.getAll({files: fileId}, 1, 1, user, function(findErr, findRes){
         if (findErr || !findRes || findRes.length === 0){
             logger.debug('messages / Request with file not found for user.', fileId, user, findErr);
-            cb(false, sock);
+            cb(true, sock);
             return;
         }
         cb(true, sock);
