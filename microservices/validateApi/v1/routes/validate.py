@@ -4,6 +4,7 @@ except ImportError:
     from http import client as HTTPStatus
 from flask import Blueprint, jsonify, request
 from v1.db.db import Db
+
 from config import Config
 import requests
 import hcl
@@ -93,10 +94,7 @@ def validate_policy(policyName: str, fileId: str) -> object:
             if alwaysScan and len(results) > 0:
                 result = results[0]
 
-            log.debug("pre save")
             result.save()
-            log.debug("creating validator")
-            log.debug("calling start validate")
             v = Validator()
             v.start_validate(policy[i], result)
             
