@@ -13,13 +13,14 @@ from db.db import Db
 def mock_db(self):
     connect('mongoenginetest', host='mongomock://localhost')
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def mockdb(mocker):
     """A test mock database."""
     mock_init_conn = mocker.patch('db.db.Db.initConnection')
     mock_init_conn.side_effect = mock_db
 
     db = Db()
+
     # Tried scoping to module - but mocker is function, so not able.  Is there a bulk delete?
     for r in db.Results.objects():
         r.delete()
