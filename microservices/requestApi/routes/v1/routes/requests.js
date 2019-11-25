@@ -272,6 +272,11 @@ router.get('/:requestId', function(req, res, next) {
     var logger = require('npmlog');
     var db = require('../db/db');
 
+    var includeFileStatus = true;
+    if (typeof(req.query.include_file_status) !== "undefined"){
+        includeFileStatus = Boolean(req.query.include_file_status);
+    }
+
     var requestId = mongoose.Types.ObjectId(req.params.requestId);
 
     db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, findRes){
@@ -282,21 +287,25 @@ router.get('/:requestId', function(req, res, next) {
         }
 
         findRes = findRes[0];
-        var util = require('../util/util');
 
-        var project = projectConfig.deriveProjectFromUser(req.user);
-        projectConfig.get(project, 'autoAccept').then((autoAccept) => {
+        if (includeFileStatus) {
+            var util = require('../util/util');
 
-            findRes.autoAccept = 
-                (findRes.type === db.Request.INPUT_TYPE && autoAccept.import) ||
-                (findRes.type === db.Request.EXPORT_TYPE && autoAccept.export);
+            var project = projectConfig.deriveProjectFromUser(req.user);
+            projectConfig.get(project, 'autoAccept').then((autoAccept) => {
 
-            util.getFileStatus(findRes.files, function(status) {
-                findRes.fileStatus = status;
-                res.json(findRes);
+                findRes.autoAccept = 
+                    (findRes.type === db.Request.INPUT_TYPE && autoAccept.import) ||
+                    (findRes.type === db.Request.EXPORT_TYPE && autoAccept.export);
+
+                util.getFileStatus(findRes.files, function(status) {
+                    findRes.fileStatus = status;
+                    res.json(findRes);
+                });
             });
-        });
-    
+        } else {
+            res.json(findRes)
+        }
 
     });
 
