@@ -151,17 +151,18 @@ model.getAll = function(query, limit, page, user, callback){
         ]).exec(function(err, results){
             var processed = 0;
             if (results){
-                var v2Results = []
+                var v2Results = [];
                 for (var i=0; i<results.length; i++){
                     let topicId = results[i].topic;
                     results[i].projects = projectR.get(topicId);
                     
-                    var workingReq = results[i];
+                    let workingReq = results[i];
                     formioClient.getSubmission(results[i].formName, workingReq.submissionId, function(formErr, formRes){
-                        if (formRes){
+                        if (formRes && workingReq.submissionId){
                             try{
                                 var submis = JSON.parse(formRes);
                                 var keys = Object.keys(submis.data);
+                                console.log("adding fields to ", workingReq)
                                 for (var j=0; j<keys.length; j++){
                                     var key = keys[j];
                                     //protect schema fields
@@ -169,12 +170,10 @@ model.getAll = function(query, limit, page, user, callback){
                                         var val = submis.data[key];
                                         workingReq[key] = val;
                                     }
-                                    v2Results.push(workingReq);
                                 }
                             }catch(e){}
-                        }else{
-                            v2Results.push(workingReq);
                         }
+                        v2Results.push(workingReq);
                         processed += 1;
                         if (processed === results.length){
                             callback(null, v2Results);
