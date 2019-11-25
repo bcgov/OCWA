@@ -3,6 +3,7 @@ const express = require('express');
 const get = require('lodash/get');
 const has = require('lodash/has');
 const Minio = require('minio');
+const _async = require('async');
 const request = require('request-promise');
 
 const router = express.Router();
@@ -72,19 +73,11 @@ const validateFileRequest = async (req, requestId) => {
 };
 
 async function fetchIds(ids) {
-  const result = [];
-
-  for (const id of ids) {
-    try {
-      const { metaData } = await minioClient.statObject(bucket, id);
-      const { jwt, ...file } = metaData;
-      result.push({ id, ...file });
-    } catch (err) {
-      console.log('Unable to fetch file', err);
-    }
-  }
-
-  return result;
+    return _async.mapLimit(ids, 10, async (id) => {
+        const { metaData } = await minioClient.statObject(bucket, id);
+        const { jwt, ...file } = metaData;
+        return { id, ...file };
+    });
 }
 
 router.get('/', authenticateRequest, async (req, res, next) => {

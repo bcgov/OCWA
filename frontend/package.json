@@ -99,6 +99,7 @@
     "@atlaskit/textfield": "^0.1.6",
     "@atlaskit/util-shared-styles": "^3.0.0",
     "@babel/polyfill": "^7.4.3",
+    "async": "^3.1.0",
     "body-parser": "^1.18.3",
     "classnames": "^2.2.6",
     "config": "^2.0.1",
