@@ -35,6 +35,10 @@ router.get('/', function(req, res, next) {
         q['parent_id'] = pid;
     }
 
+    if (typeof(req.query.id) !== "undefined"){
+        q['_id'] = req.query.id;
+    }
+
     db.Topic.getAll(q, limit, page, req.user, function(err, results){
         var log = require('npmlog');
         if (err){

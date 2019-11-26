@@ -45,8 +45,14 @@ model.getAll = function(query, limit, page, user, callback){
         };
     }
 
+    if ('_id' in query) {
+        query['_id'] = new ObjectId(query['_id']);
+    }
 
     var agg = [
+        {
+            $match: query
+        },
         {
             $lookup:{
                 from: "permissions",
@@ -91,9 +97,6 @@ model.getAll = function(query, limit, page, user, callback){
             $project: {
                 "permissions": 0,
             }
-        },
-        {
-            $match: query
         },
         {
             $skip: skip

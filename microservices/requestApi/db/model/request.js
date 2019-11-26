@@ -148,7 +148,7 @@ model.stateCodeLookup = function(){
     return rv;
 };
 
-var getAllTopics = function(user, callback, page){
+var getAllTopics = function(user, filter, callback, page){
     var config = require('config');
     var httpReq = require('request');
     var logger = require('npmlog');
@@ -161,6 +161,10 @@ var getAllTopics = function(user, callback, page){
     var topics = [];
     var projects = new Map();
     var url = config.get('forumApi') + '/v1?limit='+limit+'&page='+page+'&parent_id=-1';
+
+    if ('id' in filter) {
+        url += "&id=" + id
+    }
 
     httpReq.get({
         url: url,
@@ -211,7 +215,7 @@ var getAllTopics = function(user, callback, page){
             projects = new Map([...projects, ...projectResults]);
 
             if (topicResults.length >= limit) {
-                getAllTopics(user, function (err, topicR, projectR) {
+                getAllTopics(user, {}, function (err, topicR, projectR) {
 
                     for (var i=0; i<topicR.length; i++){
                         topics.push(topicR[i]);
@@ -311,7 +315,7 @@ model.getAll = function(query, limit, page, user, callback){
         }
     }
 
-    getAllTopics(user, function(err, topicR, projectR){
+    function queryRequests(err, topicR, projectR){
         logger.verbose("get all topics model get all", topicR);
 
         db.Request.aggregate([
@@ -387,8 +391,17 @@ model.getAll = function(query, limit, page, user, callback){
             }
             callback(err, results);
         });
+    }
 
-    });
+    if ('_id' in query) {
+        query['_id'] = new ObjectId(query['_id']);
+
+        db.Request.findById(query['_id'], (err, req) => {
+            getAllTopics(user, { id: req.topic }, queryRequests);
+        });
+    } else {
+        getAllTopics(user, topicQuery, queryRequests);
+    }
 };
 
 module.exports = model;
