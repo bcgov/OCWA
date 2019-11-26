@@ -274,7 +274,7 @@ router.get('/:requestId', function(req, res, next) {
 
     var includeFileStatus = true;
     if (typeof(req.query.include_file_status) !== "undefined"){
-        includeFileStatus = Boolean(req.query.include_file_status);
+        includeFileStatus = req.query.include_file_status == "true";
     }
 
     var requestId = mongoose.Types.ObjectId(req.params.requestId);

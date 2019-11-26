@@ -224,9 +224,23 @@ describe("Requests", function() {
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.have.property('_id');
+                    res.body.should.have.property('fileStatus')
                     done();
                 });
         });
+
+        it('it should get a specific request but with file statuses', function (done) {
+            chai.request(server)
+                .get('/v1/' + activeRequestId + "?include_file_status=false")
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('_id');
+                    res.body.should.not.have.property('fileStatus')
+                    done();
+                });
+        });
+
     });
 
     describe('/DELETE /v1/requestId', function() {
