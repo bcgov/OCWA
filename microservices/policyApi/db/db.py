@@ -4,8 +4,6 @@ from config import Config
 from db.models.rules import Rules
 from db.models.policies import Policies
 
-from pymongo import monitoring
-
 class Db:
     Results = None
     def __init__(self, createClient=True):
