@@ -1,4 +1,4 @@
-var gitops = function(){
+var gitops = function(db){
 
     var gitops = {};
 
