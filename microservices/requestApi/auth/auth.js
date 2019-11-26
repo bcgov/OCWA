@@ -44,7 +44,7 @@ var auth = function(db){
 
                 // var getVersionedDb = require('../db/db');
                 // var db = new getVersionedDb.db();
-                db.User.findOneAndUpdate({id: user.id}, user, {upsert: true, setDefaultsOnInsert: true, new: true}, function(err, userDoc){
+                db.User.findOneAndUpdate({id: user.id}, user, {upsert: true, setDefaultsOnInsert: true, new: true, useFindAndModify: false}, function(err, userDoc){
                     if (err || !userDoc){
                         logger.error("Error upserting user:", err);
                         return;

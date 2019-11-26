@@ -58,6 +58,7 @@
     "requiredRoleToCreateRequest": "exporter",
     "outputCheckerGroup": "oc",
     "reportsGroup": "reports",
+    "adminGroup": "admin",
     "allowDenyRequest": true,
 
     "projectApi": "http://localhost:2005/",
@@ -73,7 +74,7 @@
         "emailField": "Email",
         "givenNameField": "GivenName",
         "surNameField": "Surname",
-        "groupField": "Groups",
+        "groupField": "Groups"
   },
   "formio": {
     "defaultFormName": "test",

@@ -200,6 +200,7 @@ describe("Requests", function() {
                 .get('/v1')
                 .set("Authorization", "Bearer " + config.get('testSupervisorInternalJWT'))
                 .end(function (err, res) {
+                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.length.should.be.eql(1);
                     done();
