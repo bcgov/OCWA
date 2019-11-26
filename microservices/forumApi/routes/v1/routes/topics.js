@@ -36,7 +36,7 @@ router.get('/', function(req, res, next) {
     }
 
     if (typeof(req.query.id) !== "undefined"){
-        q['_id'] = req.query.id;
+        q['_id'] = mongoose.Types.ObjectId(req.query.id);
     }
 
     db.Topic.getAll(q, limit, page, req.user, function(err, results){
