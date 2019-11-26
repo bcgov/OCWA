@@ -1,5 +1,4 @@
 from mongoengine import connect
-from mongoengine.connection import _connections
 from config import Config
 from db.models.rules import Rules
 from db.models.policies import Policies
