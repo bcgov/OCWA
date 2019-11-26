@@ -163,7 +163,7 @@ var getAllTopics = function(user, filter, callback, page){
     var url = config.get('forumApi') + '/v1?limit='+limit+'&page='+page+'&parent_id=-1';
 
     if ('id' in filter) {
-        url += "&id=" + id
+        url += "&id=" + filter['id']
     }
 
     httpReq.get({
@@ -321,7 +321,7 @@ model.getAll = function(query, limit, page, user, callback){
         if ('_id' in query) {
             query['_id'] = mongoose.Types.ObjectId(query['_id']);
         }
-        
+
         db.Request.aggregate([
             {
                 $match: {
@@ -403,7 +403,7 @@ model.getAll = function(query, limit, page, user, callback){
             getAllTopics(user, { id: req.topic }, queryRequests);
         });
     } else {
-        getAllTopics(user, topicQuery, queryRequests);
+        getAllTopics(user, {}, queryRequests);
     }
 };
 
