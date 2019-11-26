@@ -229,7 +229,7 @@ describe("Requests", function() {
                 });
         });
 
-        it('it should get a specific request but with file statuses', function (done) {
+        it('it should get a specific request but without file statuses', function (done) {
             chai.request(server)
                 .get('/v1/' + activeRequestId + "?include_file_status=false")
                 .set("Authorization", "Bearer " + jwt)
