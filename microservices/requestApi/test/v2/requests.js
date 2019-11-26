@@ -115,6 +115,7 @@ describe("Requests", function() {
                 .get('/v2/')
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
+                    console.log("RECORDS", res.body);
                     res.should.have.status(200);
                     res.body.length.should.be.eql(0);
                     done();
