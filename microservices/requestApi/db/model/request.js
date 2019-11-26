@@ -215,7 +215,7 @@ var getAllTopics = function(user, filter, callback, page){
             projects = new Map([...projects, ...projectResults]);
 
             if (topicResults.length >= limit) {
-                getAllTopics(user, {}, function (err, topicR, projectR) {
+                getAllTopics(user, filter, function (err, topicR, projectR) {
 
                     for (var i=0; i<topicR.length; i++){
                         topics.push(topicR[i]);
