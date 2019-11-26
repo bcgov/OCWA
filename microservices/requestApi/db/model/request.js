@@ -318,6 +318,10 @@ model.getAll = function(query, limit, page, user, callback){
     function queryRequests(err, topicR, projectR){
         logger.verbose("get all topics model get all", topicR);
 
+        if ('_id' in query) {
+            query['_id'] = mongoose.Types.ObjectId(query['_id']);
+        }
+        
         db.Request.aggregate([
             {
                 $match: {
@@ -394,7 +398,6 @@ model.getAll = function(query, limit, page, user, callback){
     }
 
     if ('_id' in query) {
-        query['_id'] = new ObjectId(query['_id']);
 
         db.Request.findById(query['_id'], (err, req) => {
             getAllTopics(user, { id: req.topic }, queryRequests);
