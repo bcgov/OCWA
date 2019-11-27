@@ -49,13 +49,14 @@ log.addLevel('debug', 2900, { fg: 'green' });
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
 });
-const logger = morgan('common', {
-  stream: fs.createWriteStream(path.join(__dirname, 'logs', 'frontend.log'), {
-    flags: 'a',
-  }),
-});
 
 if (process.env.NODE_ENV !== 'test') {
+  const logger = morgan('common', {
+    stream: fs.createWriteStream(path.join(__dirname, 'logs', 'frontend.log'), {
+      flags: 'a',
+    }),
+  });
+  app.use(logger);
   app.use(morgan('dev'));
 }
 
@@ -92,7 +93,6 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'dist')));
-app.use(logger);
 
 // Auth & Session
 app.use(cookieParser(cookieSecret));

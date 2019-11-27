@@ -33,15 +33,16 @@ function withRequest(Component) {
     componentDidCatch(error, info) {
       const { onError } = this.props;
       const { message } = error;
+      const { componentStack } = info;
 
       this.setState({
         error: {
           message,
-          info: info.componentStack,
+          info: componentStack,
         },
       });
 
-      onError(message);
+      onError(message, componentStack);
     }
 
     getParams = () => {

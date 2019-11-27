@@ -9,7 +9,7 @@ import Textarea from '@atlaskit/textarea';
 
 function ReportError({ open, onCancel, onSubmit }) {
   const Container = ({ children, className }) => (
-    <Form onSubmit={data => onSubmit(data)}>
+    <Form onSubmit={data => onSubmit(data.error)}>
       {({ formProps }) => (
         <form {...formProps} className={className}>
           {children}

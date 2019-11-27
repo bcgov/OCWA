@@ -14,8 +14,6 @@ const ReportErrorButton = reportErrorButton(props => (
 ));
 
 function ErrorComponent({ data }) {
-  //        {data.info}
-
   return (
     <div className={styles.container}>
       <div>
