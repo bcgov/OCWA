@@ -39,5 +39,4 @@ printf "\"workingLimit\": ${WORKING_LIMIT},\n" >> ./config/default.json
 printf "\"failOverWorkingLimit\": ${FAIL_OVER_WORKING_LIMIT}\n" >> ./config/default.json
 printf "}" >> ./config/default.json
 
-cat ./config/default.json
 python wsgi.py

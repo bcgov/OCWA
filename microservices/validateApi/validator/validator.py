@@ -142,7 +142,7 @@ def validate(rule, result):
     logid = "Validate [" + str(os.getpid()) + "] "
     log.debug(logid + " multi name = " + current_process().name)
 
-    db = Db(True, 5)
+    db = Db(True, 15)
 
     resultObj = db.Results.objects(file_id=result.file_id, rule_id=result.rule_id)[0]
     log.debug(logid + "Result =  " + str(resultObj))
