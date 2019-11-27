@@ -26,7 +26,6 @@ def mockdb(mocker):
         r.delete()
     db.Results(file_id="file_1",rule_id="rule_1",state=1,message="").save()
     db.Results(file_id="file_2",rule_id="rule_1",state=1,message="").save()
-    db.Results(file_id="file_2",rule_id="rule_1",state=1,message="").save()
 
     return db
 
