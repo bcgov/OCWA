@@ -52,7 +52,7 @@ var requestSchema = new Schema({
     reviewers: {type: [String], required: false, default: []},
     chronology: {type: [chronologySchema], required: true, default: []},
     name: {type: String, required: true, index: true},
-    files: {type: [String], required: true},
+    files: {type: [String], required: true, index: true},
     author: {type: String, required: true},
     // Code Attributes
     branch: {
