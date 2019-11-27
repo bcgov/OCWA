@@ -62,6 +62,12 @@ websocket.init = function(){
 
         ws.isAlive = true;
         ws.on('pong', heartbeat);
+        ws.on('message', (message) => {
+            var payload = JSON.parse(message);
+            if ('access_token' in payload) {
+                ws.user['jwt'] = payload['access_token']
+            }
+        });
         ws.user = req.user;
         self.connections[req.user.id] = ws;
     });
