@@ -2,6 +2,21 @@ import ky from 'ky';
 
 import { getToken } from './auth';
 
+async function handleError(err) {
+  const { response } = err;
+  const { statusText } = response;
+  let errorMessage = statusText;
+
+  try {
+    const { error, message } = await response.json();
+    errorMessage = error || message;
+  } catch {
+    throw new Error(errorMessage);
+  }
+
+  throw new Error(errorMessage);
+}
+
 export const get = async (url, options) => {
   try {
     const token = getToken();
@@ -16,8 +31,7 @@ export const get = async (url, options) => {
 
     return json;
   } catch (err) {
-    const { message } = await err.response.json();
-    throw new Error(message);
+    return handleError(err);
   }
 };
 
@@ -37,8 +51,7 @@ export const post = async (url, options) => {
 
     return json;
   } catch (err) {
-    const { error } = await err.response.json();
-    throw new Error(error || err);
+    return handleError(err);
   }
 };
 
@@ -58,8 +71,7 @@ export const put = async (url, options) => {
 
     return json;
   } catch (err) {
-    const { error } = await err.response.json();
-    throw new Error(error || err);
+    return handleError(err);
   }
 };
 
@@ -77,8 +89,7 @@ export const destroy = async (url, options) => {
 
     return json;
   } catch (err) {
-    const { error } = await err.response.json();
-    throw new Error(error || err);
+    return handleError(err);
   }
 };
 

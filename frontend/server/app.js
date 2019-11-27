@@ -5,6 +5,7 @@ const express = require('express');
 const fs = require('fs');
 const isFunction = require('lodash/isFunction');
 const get = require('lodash/get');
+const log = require('npmlog');
 const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
@@ -42,6 +43,9 @@ const exporterMode = config.get('exporterMode');
 const codeExportEnabled = config.get('codeExportEnabled');
 const repositoryHost = config.get('repositoryHost');
 
+log.level = 'debug'; // config.get('logLevel');
+log.addLevel('debug', 2900, { fg: 'green' });
+
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
 });
@@ -50,6 +54,10 @@ const logger = morgan('common', {
     flags: 'a',
   }),
 });
+
+if (process.env.NODE_ENV !== 'test') {
+  app.use(morgan('dev'));
+}
 
 if (isDevelopment) {
   const compiler = webpack(webpackConfig);
