@@ -148,8 +148,8 @@ def validate_rule(fileId: str, ruleId: str) -> object:
         else:
             return jsonify({"error": "Rule not found"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
-
-    return jsonify({"error": "Couldn't decide on the rule to replace"}), HTTPStatus.INTERNAL_SERVER_ERROR
+    # Will never reach here because a new unique index is on Results (file_id, rule_id)
+    #return jsonify({"error": "Couldn't decide on the rule to replace"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def get_policy(policy):
