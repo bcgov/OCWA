@@ -16,6 +16,9 @@ const minioClient = new Minio.Client({
 });
 const bucket = config.get('storage.bucket');
 
+const NodeCache = require( "node-cache" );
+const cache = new NodeCache({deleteOnExpire: true});
+
 // Ensure the user is logged in before sending any files and ensure the request
 // has the file they want
 const authenticateRequest = (req, res, done) => {
@@ -74,9 +77,12 @@ const validateFileRequest = async (req, requestId) => {
 
 async function fetchIds(ids) {
     return _async.mapLimit(ids, 10, async (id) => {
-        const { metaData } = await minioClient.statObject(bucket, id);
-        const { jwt, ...file } = metaData;
-        return { id, ...file };
+        if (!cache.has(id)) {
+            const { metaData } = await minioClient.statObject(bucket, id);
+            const { jwt, ...file } = metaData;
+            cache.set(id, { id, ...file }, 60*60*4); // 4 hour cache
+        }
+        return cache.get(id);
     });
 }
 
