@@ -15,13 +15,13 @@ websocket.init = function(){
         port: config.get("wsPort"),
         perMessageDeflate: false,
         verifyClient: function(info, cb){
-            logger.debug("Websocket verifying");
+            logger.debug("Websocket / verifying");
 
             var token = info.req.headers['sec-websocket-protocol'];
             if (!token){
                 cb(false, 401, "Unauthorized")
             }else{
-                logger.debug("Websocket verifying validate JWT");
+                logger.debug("Websocket / Websocket verifying validate JWT");
                 jwt.verify(token, config.get("jwtSecret"), function(err, decoded){
                     if (err){
                         logger.error(err);
@@ -55,8 +55,8 @@ websocket.init = function(){
     this.server.on('connection', function connection(ws, req) {
         var logger = require('npmlog');
 
-        logger.debug("Websocket connection opened for " + req.user.id);
-        logger.debug("Connection: " + req.url);
+        logger.debug("Websocket / Connection opened for " + req.user.id);
+        logger.debug("Websocket / Connection: " + req.url);
 
         // URL: /{requestId}
 
@@ -65,6 +65,7 @@ websocket.init = function(){
         ws.on('message', (message) => {
             var payload = JSON.parse(message);
             if ('access_token' in payload) {
+                logger.debug("Websocket / Refreshed access token for " + ws.user.id);
                 ws.user['jwt'] = payload['access_token']
             }
         });

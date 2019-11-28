@@ -15,7 +15,7 @@ function checkRequestPermissions(user, fileId, sock, cb){
             db.Request.getAll({_id: doc._id}, 1, 1, user, function(findErr, findRes){
                 if (findErr || !findRes || findRes.length === 0){
                     logger.debug('messages / Request with file not found for user.', fileId, user, findErr);
-                    cb(true, sock);
+                    cb(false, sock);
                     return;
                 }
                 cb(true, sock);
