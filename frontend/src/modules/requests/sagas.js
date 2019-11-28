@@ -39,10 +39,10 @@ function isPendingMergeRequest(request) {
 /**
    Create and socket functions
  */
-
-function createSocketChannel(socket) {
+let socket = null;
+function createSocketChannel(requestSocket) {
   return eventChannel(emit => {
-    socket.onmessage = event => {
+    requestSocket.onmessage = event => {
       console.log(`[SOCKET] data - ${event.data}`);
       const json = JSON.parse(event.data);
       const { fileId, ...statusProps } = camelizeKeys(json, {
@@ -60,13 +60,15 @@ function createSocketChannel(socket) {
       });
     };
 
-    const unsubscribe = () => socket.close();
+    const unsubscribe = () => {
+      requestSocket.close();
+      socket = null;
+    };
 
     return unsubscribe;
   });
 }
 
-let socket = null;
 export function* fileImportWatcher() {
   if (isEmpty(requestSocketHost.replace(/wss?:\/\//, ''))) return;
 
