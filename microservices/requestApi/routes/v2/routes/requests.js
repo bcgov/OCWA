@@ -18,7 +18,7 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(formRes);
+            res.json(JSON.parse(formRes));
         });
     });
 
@@ -30,7 +30,7 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(formRes);
+            res.json(JSON.parse(formRes));
         });
     });
 
@@ -41,18 +41,23 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(formRes);
+            res.json(JSON.parse(formRes));
         });
     });
 
     router.post(FORMS_SUB_ROUTE, function(req, res, next){
+        let adminGroup = config.get("adminGroup");
+        if (req.user.groups.indexOf(adminGroup) === -1){
+            res.status(403);
+            res.json({error: "Forbidden"});
+        }
         formioClient.postForm(req.body, function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});
                 return;
             }
-            res.json(formRes);
+            res.json(JSON.parse(formRes));
         });
     });
 
@@ -377,11 +382,16 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(formRes);
+            res.json(JSON.parse(formRes));
         });
     });
 
     router.put(FORMS_SUB_ROUTE+'/:formName', function(req, res, next){
+        let adminGroup = config.get("adminGroup");
+        if (req.user.groups.indexOf(adminGroup) === -1){
+            res.status(403);
+            res.json({error: "Forbidden"});
+        }
         var formName = req.params.formName;
         formioClient.putForm(formName, req.body, function(formErr, formRes){
             if (formErr){
@@ -389,11 +399,17 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(formRes);
+            res.json(JSON.parse(formRes));
         });
     });
 
     router.delete('/formio/:formName', function(req, res, next){
+        var adminGroup = config.get("adminGroup");
+
+        if (req.user.groups.indexOf(adminGroup) === -1){
+            res.status(403);
+            res.json({error: "Forbidden"});
+        }
         var formName = req.params.formName;
         formioClient.putForm(formName, req.body, function(formErr, formRes){
             if (formErr){
@@ -401,7 +417,7 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(formRes);
+            res.json(JSON.parse(formRes));
         });
     });
 

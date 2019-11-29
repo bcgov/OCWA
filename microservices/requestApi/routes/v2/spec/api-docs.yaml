@@ -10,7 +10,7 @@ info:
   contact:
     name: Brandon Sharratt
 servers:
-  - url: /v1
+  - url: /v2
     description: This Server
 paths:
   /:
@@ -51,7 +51,7 @@ paths:
       summary: Create a request
       operationId: createRequest
       tags:
-        - Request
+        - Requests
       requestBody:
         required: true
         content:
@@ -71,9 +71,172 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+  /forms:
+    get:
+      summary: List all forms
+      tags:
+        - Forms
+      # parameters:
+      #   - name: limit
+      #     in: query
+      #     description: How many items to return at one time (max 100)
+      #     required: false
+      #     schema:
+      #       type: integer
+      #       format: int32
+      responses:
+        '200':
+          description: An array of forms
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Forms"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a form. Requires admin group.
+      tags:
+        - Forms
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormPost"
+      responses:
+        '200':
+          description: Success Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Success"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /forms/default:
+    summary: Get the default form. See /forms/{name} for more information
+    tags:
+      - Forms
+    responses:
+        '200':
+          description: Success Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Success"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  
+  /forms/code_default:
+    summary: Get the default code form. See /forms/{name} for more information
+    tags:
+      - Forms
+    responses:
+        '200':
+          description: Success Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Success"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /forms/{name}:
+    get:
+      summary: Get the form for the given name. See https://apidocs.form.io/ for more information
+      tags:
+        - Forms
+      responses:
+          '200':
+            description: Success Message
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Success"
+          default:
+            description: unexpected error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+    put:
+      summary: Updates the form for the given name. See https://apidocs.form.io/ for more information. Requires admin group
+      tags:
+        - Forms
+      responses:
+          '200':
+            description: Success Message
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Success"
+          default:
+            description: unexpected error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+    
+    delete:
+      summary: Deletes the form for the given name. See https://apidocs.form.io/ for more information. Requires admin group
+      tags:
+        - Forms
+      responses:
+          '200':
+            description: Success Message
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Success"
+          default:
+            description: unexpected error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+                
+
 
 components:
   schemas:
+    Forms:
+      type: array
+      items:
+        $ref: "#/components/schemas/Form"
+
+    Form:
+      type: object
+      properties:
+        note: 
+          type: none
+          description: "See the formio docs for the fields returned https://apidocs.form.io/"
+
+
+    FormPost:
+      type: object
+      properties:
+        note: 
+          type: object
+          description: "See the formio docs for the fields returned https://apidocs.form.io/"
+        
+
+
     Request:
       required:
         - _id
@@ -141,30 +304,16 @@ components:
       properties:
         name:
           type: string
-          description: Name of the request for user convinience (not required to be unique)
-        tags:
+          description: Name of the request for user convinience
+        files:
           type: array
-          items:
-            type: string
-          description: Array of strings containing the tags currently applied to the request.
-        purpose:
-          type: string
-          description: Purpose of the request
-        variableDescriptions:
-          type: string
-          description: Description of variables in the request
-        selectionCriteria:
-          type: string
-          description: Selection criteria and sample size description for the request
-        steps:
-          type: string
-          description: Annotation of steps taken
-        freq:
-          type: string
-          description: Weighted results and unweighted frequencies
-        confidentiality:
-          type: string
-          description: Confidentiality disclosure to describe how it's upheld when criteria isn't met
+          description: An array of file ids attached to the request
+        supportingFiles:
+          type: array
+          description: An array of file ids for supporting files attached to the request
+        other:
+          type: any
+          description: Any other fields passed along to the post will be passed on to formio, which should be configured to save the fields you want to keep
 
     Success:
       required:

@@ -9,7 +9,7 @@ var expect = chai.expect;
 var config = require('config');
 var jwt = config.get('testJWT');
 
-var db = require('../../routes/v1/db/db');
+var db = require('../../routes/v2/db/db');
 
 var logger = require('npmlog');
 
@@ -83,10 +83,10 @@ describe("Requests", function() {
 
     });
 
-    describe('/GET v1/', function () {
+    describe('/GET v2/', function () {
         it('it should get unauthorized', function (done) {
             chai.request(server)
-                .get('/v1/')
+                .get('/v2/')
                 .end(function (err, res) {
                     res.should.have.status(401);
                     done();
@@ -95,7 +95,7 @@ describe("Requests", function() {
 
         it('it should get all status code mappings', function (done) {
             chai.request(server)
-                .get('/v1/status_codes')
+                .get('/v2/status_codes')
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -112,9 +112,10 @@ describe("Requests", function() {
 
         it('it should get all records (max 100) (currently 0)', function (done) {
             chai.request(server)
-                .get('/v1/')
+                .get('/v2/')
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
+                    console.log("RECORDS", res.body);
                     res.should.have.status(200);
                     res.body.length.should.be.eql(0);
                     done();
@@ -122,10 +123,10 @@ describe("Requests", function() {
         });
     });
 
-    describe('/POST v1/', function () {
+    describe('/POST v2/', function () {
         it('it should get unauthorized', function (done) {
             chai.request(server)
-                .post('/v1/')
+                .post('/v2/')
                 .end(function (err, res) {
                     res.should.have.status(401);
                     done();
@@ -134,7 +135,7 @@ describe("Requests", function() {
 
         it('it should fail without a name', function (done) {
             chai.request(server)
-                .post('/v1/')
+                .post('/v2/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     tags: ["test"],
@@ -156,7 +157,7 @@ describe("Requests", function() {
 
         it('it should create a request', function (done) {
             chai.request(server)
-                .post('/v1/')
+                .post('/v2/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName",
@@ -183,10 +184,10 @@ describe("Requests", function() {
 
     });
 
-    describe('/GET  v1 & v1/requestId', function () {
+    describe('/GET  v2 & v2/requestId', function () {
         it('it should get requests', function (done) {
             chai.request(server)
-                .get('/v1')
+                .get('/v2')
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -197,10 +198,9 @@ describe("Requests", function() {
 
         it('it should get supervisor requests from internal', function (done) {
             chai.request(server)
-                .get('/v1')
+                .get('/v2')
                 .set("Authorization", "Bearer " + config.get('testSupervisorInternalJWT'))
                 .end(function (err, res) {
-                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.length.should.be.eql(1);
                     done();
@@ -209,7 +209,7 @@ describe("Requests", function() {
 
         it('it should get supervisor requests from external', function (done) {
             chai.request(server)
-                .get('/v1')
+                .get('/v2')
                 .set("Authorization", "Bearer " + config.get('testSupervisorExternalJWT'))
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -220,7 +220,7 @@ describe("Requests", function() {
 
         it('it should get a specific request', function (done) {
             chai.request(server)
-                .get('/v1/' + activeRequestId)
+                .get('/v2/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -230,11 +230,11 @@ describe("Requests", function() {
         });
     });
 
-    describe('/DELETE /v1/requestId', function() {
+    describe('/DELETE /v2/requestId', function() {
 
         it('it should delete a request', function (done) {
             chai.request(server)
-                .delete('/v1/' + activeRequestId)
+                .delete('/v2/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
@@ -246,11 +246,11 @@ describe("Requests", function() {
         });
     });
 
-    describe('/PUT /v1/save/requestId', function() {
+    describe('/PUT /v2/save/requestId', function() {
 
         it('it should create a request', function (done) {
             chai.request(server)
-                .post('/v1/')
+                .post('/v2/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName2",
@@ -277,7 +277,7 @@ describe("Requests", function() {
 
         it('it should save a request', function (done) {
             chai.request(server)
-                .put('/v1/save/' + activeRequestId)
+                .put('/v2/save/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     files: [fileId]
@@ -293,7 +293,7 @@ describe("Requests", function() {
         
         it('it should get request file status', function (done) {
             chai.request(server)
-                .get('/v1/' + activeRequestId)
+                .get('/v2/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
@@ -311,11 +311,11 @@ describe("Requests", function() {
         });
     });
 
-    describe('/PUT /v1/submit/requestId', function() {
+    describe('/PUT /v2/submit/requestId', function() {
 
         it('it should submit a request', function (done) {
             chai.request(server)
-                .put('/v1/submit/' + activeRequestId)
+                .put('/v2/submit/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
@@ -328,10 +328,10 @@ describe("Requests", function() {
         });
     });
 
-    describe('/PUT /v1/pickup/requestId', function() {
+    describe('/PUT /v2/pickup/requestId', function() {
         it('it should pickup a request', function (done) {
             chai.request(server)
-                .put('/v1/pickup/' + activeRequestId)
+                .put('/v2/pickup/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
@@ -344,11 +344,11 @@ describe("Requests", function() {
         });
     });
 
-    describe('/PUT /v1/approve/requestId', function() {
+    describe('/PUT /v2/approve/requestId', function() {
 
         it('it should approve a request', function (done) {
             chai.request(server)
-                .put('/v1/approve/' + activeRequestId)
+                .put('/v2/approve/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
@@ -361,10 +361,10 @@ describe("Requests", function() {
         });
     });
 
-    describe('/PUT /v1/cancel/requestId', function() {
+    describe('/PUT /v2/cancel/requestId', function() {
         it('it should create a request', function (done) {
             chai.request(server)
-                .post('/v1/')
+                .post('/v2/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName3",
@@ -391,7 +391,7 @@ describe("Requests", function() {
 
         it('it should cancel a request', function (done) {
             chai.request(server)
-                .put('/v1/cancel/' + activeRequestId)
+                .put('/v2/cancel/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
@@ -403,10 +403,10 @@ describe("Requests", function() {
         });
     });
 
-    describe('/PUT /v1/deny/requestId', function() {
+    describe('/PUT /v2/deny/requestId', function() {
         it('it should create a request', function (done) {
             chai.request(server)
-                .post('/v1/')
+                .post('/v2/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName6",
@@ -433,7 +433,7 @@ describe("Requests", function() {
 
         it('it should save a request', function (done) {
             chai.request(server)
-                .put('/v1/save/' + activeRequestId)
+                .put('/v2/save/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     files: [fileId]
@@ -448,7 +448,7 @@ describe("Requests", function() {
 
         it('it should submit a request', function (done) {
             chai.request(server)
-                .put('/v1/submit/' + activeRequestId)
+                .put('/v2/submit/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
@@ -462,7 +462,7 @@ describe("Requests", function() {
 
         it('it should pickup a request', function (done) {
             chai.request(server)
-                .put('/v1/pickup/' + activeRequestId)
+                .put('/v2/pickup/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
@@ -476,7 +476,7 @@ describe("Requests", function() {
 
         it('it should deny a request', function (done) {
             chai.request(server)
-                .put('/v1/deny/' + activeRequestId)
+                .put('/v2/deny/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
@@ -495,7 +495,7 @@ describe("Requests", function() {
     describe('CODE Requests', function() {
         it('it should create a CODE request', function (done) {
             chai.request(server)
-                .post('/v1/')
+                .post('/v2/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName6",
@@ -521,7 +521,7 @@ describe("Requests", function() {
 
         it('it should save a request', function (done) {
             chai.request(server)
-                .put('/v1/save/' + activeRequestId)
+                .put('/v2/save/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                 })
@@ -535,7 +535,7 @@ describe("Requests", function() {
 
         it('it should fail submit', function (done) {
             chai.request(server)
-                .put('/v1/submit/' + activeRequestId)
+                .put('/v2/submit/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
