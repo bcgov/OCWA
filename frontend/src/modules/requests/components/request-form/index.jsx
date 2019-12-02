@@ -7,6 +7,7 @@ import { _e } from '@src/utils';
 import { Form } from 'react-formio';
 // import Form from './form';
 import * as styles from './styles.css';
+import './form.scss';
 
 // NOTE: This container has to physically switch the forms, due to the black
 // box nature of the `Form` component it cache's the onSubmit callback and will

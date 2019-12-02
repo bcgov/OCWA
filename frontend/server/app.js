@@ -36,6 +36,7 @@ const requestSocket = config.get('requestSocket');
 const exporterMode = config.get('exporterMode');
 const codeExportEnabled = config.get('codeExportEnabled');
 const repositoryHost = config.get('repositoryHost');
+const newRequestForm = config.get('forms.newRequest');
 
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
@@ -112,6 +113,7 @@ app.get('*', checkAuth, storeUrl, (req, res) => {
     reportsGroup,
     exporterMode,
     repositoryHost,
+    newRequestForm,
     zone: getZone(),
   });
 });

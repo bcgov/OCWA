@@ -1,3 +1,4 @@
+const getLocalIdent = require('css-loader/lib/getLocalIdent');
 const merge = require('webpack-merge');
 const path = require('path');
 const webpack = require('webpack');
@@ -25,7 +26,7 @@ module.exports = merge(common, {
   module: {
     rules: [
       {
-        test: /\.css$/,
+        test: /\.s?css$/,
         use: [
           'style-loader',
           {
@@ -33,8 +34,24 @@ module.exports = merge(common, {
             options: {
               modules: true,
               importLoaders: 2,
+              getLocalIdent: (context, localIdentName, localName, options) => {
+                console.log(context.resourcePath);
+                if (context.resourcePath.includes('form.scss')) {
+                  console.log('hi!', localName);
+                  return localName;
+                }
+                return getLocalIdent(
+                  context,
+                  localIdentName,
+                  localName,
+                  options
+                );
+              },
               localIdentName: '[path][name]_[local]--[hash:base64:8]',
             },
+          },
+          {
+            loader: 'sass-loader',
           },
         ],
       },
