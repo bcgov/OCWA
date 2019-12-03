@@ -40,7 +40,7 @@ const forumSocketProxy = proxy({
 });
 
 const requestProxy = proxy({
-  target: parseApiHost(`${requestApiHost}/v1`),
+  target: parseApiHost(`${requestApiHost}/v2`),
   onProxyReq,
   pathRewrite,
 });

@@ -18,6 +18,9 @@ printf "\"codeExportEnabled\": \"${CODE_EXPORT_ENABLED}\",\n" >> ./config/defaul
 printf "\"repositoryHost\": \"${REPOSITORY_HOST}\",\n" >> ./config/default.json
 printf "\"cookieSecret\": \"${COOKIE_SECRET}\",\n" >> ./config/default.json
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
+printf "\"forms\": {\n" >> ./config/default.json
+printf "\"newRequest\": \"${NEW_REQUEST_FORM}\",\n" >> ./config/default.json
+printf "},\n" >> ./config/default.json
 printf "\"auth\": {\n" >> ./config/default.json
 printf "\"authorizationEndpoint\": \"${AUTH_ENDPOINT}\",\n" >> ./config/default.json
 printf "\"callbackURL\": \"${AUTH_CALLBACK_URL}\",\n" >> ./config/default.json

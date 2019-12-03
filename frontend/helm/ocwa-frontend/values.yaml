@@ -54,6 +54,8 @@ ocGroup: "/oc"
 codeExportEnabled: false
 repositoryHost: ""
 reportsGroup: "/reports"
+forms:
+  newRequest: "new-request"
 auth:
   authorizationEndpoint: "openid.auth.endpoint"
   callbackURL: "chart-example.local/auth"

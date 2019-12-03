@@ -121,7 +121,7 @@ function* onCreateRequest(action) {
       yield call(delay, 30000);
       yield put(
         fetchRequest({
-          url: `/api/v1/requests/${id}`,
+          url: `/api/v2/requests/${id}`,
           schema: requestSchema,
           id,
         })
@@ -138,7 +138,7 @@ function* checkMergeRequestStatus(action) {
     yield call(delay, 30000);
     yield put(
       fetchRequest({
-        url: `/api/v1/requests/${id}`,
+        url: `/api/v2/requests/${id}`,
         schema: requestSchema,
         id,
       })
@@ -175,7 +175,7 @@ function* onFinishEditing(action) {
 
   yield put(
     saveRequest(payload, meta, {
-      url: `/api/v1/requests/save/${id}`,
+      url: `/api/v2/requests/save/${id}`,
       schema: { result: requestSchema },
     })
   );
