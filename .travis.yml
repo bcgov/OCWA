@@ -175,7 +175,7 @@ matrix:
       cd formio
       cp ../default.json ./config/default.json
       npm install
-      npm start < prompt.txt &
+      npm start < ../prompt.txt &
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/forumApi
       npm ci
