@@ -176,7 +176,7 @@ matrix:
       npm ci
       cp ../default.json ./config/default.json
       cp ../prompt.txt ./prompt.txt
-      printf "y\n\1\n\nroot@root.ca\n\n" | npm start < prompt.txt &
+      npm start < prompt.txt &
       
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/forumApi
