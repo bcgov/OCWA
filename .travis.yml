@@ -171,6 +171,7 @@ matrix:
       npm ci
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/formio
+      mongorestore -u forumUser -p forumPass -d forumDb
       git clone https://github.com/formio/formio.git
       cd formio
       npm ci
