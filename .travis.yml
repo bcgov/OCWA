@@ -175,6 +175,7 @@ matrix:
       cd formio
       sed '0,/3001:3001/s//3006:3001/' docker-compose.yml > docker-compose.yml
       cat docker-compose.yml
+      npm install
       docker-compose up &
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/forumApi
