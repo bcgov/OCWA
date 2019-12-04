@@ -182,7 +182,7 @@ matrix:
       sed -i '0,/3001:3001/s//3006:3001/' docker-compose.yml
       npm ci
       cat ./docker-compose.yml
-      docker-compose up &
+      docker-compose up
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/forumApi
       npm ci
