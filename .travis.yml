@@ -173,9 +173,10 @@ matrix:
       cd /home/travis/build/bcgov/OCWA/microservices/formio
       git clone https://github.com/formio/formio.git
       cd formio
+      cat ./docker-compose.yml
       sed '0,/3001:3001/s//3006:3001/' docker-compose.yml > docker-compose.yml
-      cat docker-compose.yml
-      npm install
+      npm ci
+      cat ./docker-compose.yml
       docker-compose up &
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/forumApi
