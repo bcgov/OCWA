@@ -10,6 +10,45 @@ addons:
       secure: yoqO9/QRJlT4mcpgQ4RMSg6h97PRnql70EVCcPaBr6nGNaxSmea8K1AxdqFZcC5PMrj+i4oRFrIQIEmOPeJAzh+5wvygXhwsavXR2S0LcTcScXZQQ8ZWXw9exYl5ELt3Ee6BUF4TIGnR3iztp6VGm9mv992Pi7NqYwdIN9z1rVodb/rH3vlBRzxIH6p+eo4cs/rpUatFNDjRnCVvHxDWy2reC43r3Vf61jGR3FFALcah/PrIUDVemY9wqbdqA78HGB97o5UU6Jgwk2qmvUXTxJcyN+7dSi0bhr8SHEGN1TTr7TmOOxFIKy+fPs9krCF8Ll4CruAXu1YLaTRD6Ilxb4U5yUJgjANnsYbR7klD/DC4pwRx1L90cCVbgsNRzrsq+Qvn57bdSoyHGFCSWqQdkW6EG9xcqogMP6y9/DBcgb4SYIMNLjaoqSgunSmDFTFgidHBTcLN6e4mvM89FRDY64i+DINp9gginqHak/LxhNct6LTREx8bcoOA4J28eHY02Cwrtu2pful7uOonZD49XrGW+OfOAQY2c1b91hNJUK+tWPh0B/0CgWyKNize3WclV3pBedFDYzbzeni3TkqoN7Na22xQTl95mrV9vZ7VQpIft0Jlf+OFS+I8s3G2W/Wp/Rhk9tXfxcEa6yvDwxFMv3QsQrs7No3yTRNFw6U3QWs=
 matrix:
   include:
+  - name: Formio
+    stage: test
+    language: node_js
+    node_js:
+    - lts/*
+    cache: npm
+    addons:
+      apt:
+        sources:
+        - ubuntu-toolchain-r-test
+        packages:
+        - g++-4.8
+        - python3-pip
+    before_script:
+    - |-
+      wget -q ${HELM_URL}/${HELM_TGZ}
+      tar xzfv ${HELM_TGZ}
+      PATH=`pwd`/linux-amd64/:$PATH
+      helm init --client-only
+    - sudo pip install yamllint=="${YAMLLINT_VERSION}"
+    - cd /home/travis/build/bcgov/OCWA
+    - |-
+      wget -q ${SONAR_URL}${SONAR_APP}-cli-${SONAR_VERSION}.zip
+      unzip ${SONAR_APP}-cli-${SONAR_VERSION}.zip
+      PATH=`pwd`/${SONAR_APP}-${SONAR_VERSION}/bin:$PATH
+    - |-
+      wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+      tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+      mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+      ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+      ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["dbAdmin", "readWrite"]});'
+    script:
+    - |-
+      cd /home/travis/build/bcgov/OCWA/microservices/formio
+      git clone https://github.com/formio/formio.git
+      cd formio
+      cp ../default.json ./config/default.json
+      npm install
+      npm start < ../prompt.txt
   - name: Forum Api
     stage: APIs
     language: node_js
