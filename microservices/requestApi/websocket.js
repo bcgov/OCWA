@@ -66,7 +66,8 @@ websocket.init = function(){
             var payload = JSON.parse(message);
             if ('access_token' in payload) {
                 logger.debug("Websocket / Refreshed access token for " + ws.user.id);
-                ws.user['jwt'] = payload['access_token']
+                logger.debug("Websocket / Access token: " + payload['access_token']);
+                ws.user.jwt = payload['access_token']
             }
         });
         ws.user = req.user;
