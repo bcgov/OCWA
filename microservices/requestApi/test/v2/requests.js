@@ -138,13 +138,8 @@ describe("Requests", function() {
                 .post('/v2/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
-                    tags: ["test"],
-                    purpose: "purpose",
-                    variableDescriptions: "variable descriptions",
-                    selectionCriteria: "selection criteria",
-                    steps: "steps",
-                    freq: "freq",
-                    confidentiality: "none"
+                    text: "text",
+                    number: 9
                 })
                 .end(function (err, res) {
                     res.should.have.status(500);
