@@ -332,15 +332,8 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName3",
-                    tags: ["test"],
-                    purpose: "purpose",
-                    phoneNumber: "555-555-5555",
-                    subPopulation: "sub-population",
-                    variableDescriptions: "variable descriptions",
-                    selectionCriteria: "selection criteria",
-                    steps: "steps",
-                    freq: "freq",
-                    confidentiality: "none"
+                    text: "text",
+                    number: 9
                 })
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -374,15 +367,8 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName6",
-                    tags: ["test"],
-                    purpose: "purpose",
-                    phoneNumber: "555-555-5555",
-                    subPopulation: "sub-population",
-                    variableDescriptions: "variable descriptions",
-                    selectionCriteria: "selection criteria",
-                    steps: "steps",
-                    freq: "freq",
-                    confidentiality: "none"
+                    text: "text",
+                    number: 9
                 })
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -463,8 +449,8 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName6",
-                    tags: ["test"],
-                    phoneNumber: "555-555-5555",
+                    text: "text",
+                    number: 9,
                     exportType: "code",
                     codeDescription: "Whats the code about",
                     repository: "http://somewhere.com",

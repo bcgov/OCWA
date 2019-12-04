@@ -9,7 +9,7 @@ const DEFAULT_FORM = config.get("formio.defaultFormName");
 const DEFAULT_CODE_FORM = config.get("formio.defaultCodeFormName");
 
 function codeTypeValidator() {
-    return this.exportType === CODE_EXPORT_TYPE;
+    return this.exportType === baseModel.CODE_EXPORT_TYPE;
 }
 
 const schemaFields = ['name', 'state', 'supportingFiles', 'topic', 'reviewers', 'chronology', 'files', 'author', 'project', 'exportType', 'type', 'formName', 'submissionId'];
