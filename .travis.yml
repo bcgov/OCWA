@@ -174,7 +174,8 @@ matrix:
       git clone https://github.com/formio/formio.git
       cd formio
       cat ./docker-compose.yml
-      sed '0,/3001:3001/s//3006:3001/' docker-compose.yml > docker-compose.yml
+      sed '0,/3001:3001/s//3006:3001/' docker-compose.yml
+      sed -i '0,/3001:3001/s//3006:3001/' docker-compose.yml
       npm ci
       cat ./docker-compose.yml
       docker-compose up &
