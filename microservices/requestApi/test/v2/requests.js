@@ -110,14 +110,14 @@ describe("Requests", function() {
                 });
         });
 
-        it('it should get all records (max 100) (currently 0)', function (done) {
+        it('it should get all records (max 100) (currently 1 [from v1])', function (done) {
             chai.request(server)
                 .get('/v2/')
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
                     console.log("RECORDS", res.body);
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(0);
+                    res.body.length.should.be.eql(1);
                     done();
                 });
         });
@@ -133,38 +133,14 @@ describe("Requests", function() {
                 });
         });
 
-        it('it should fail without a name', function (done) {
-            chai.request(server)
-                .post('/v2/')
-                .set("Authorization", "Bearer " + jwt)
-                .send({
-                    text: "text",
-                    number: 9
-                })
-                .end(function (err, res) {
-                    res.should.have.status(500);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('error');
-                    res.body.error.should.be.a('string');
-                    done();
-                });
-        });
-
         it('it should create a request', function (done) {
             chai.request(server)
                 .post('/v2/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName",
-                    tags: ["test"],
-                    purpose: "purpose",
-                    phoneNumber: "555-555-5555",
-                    subPopulation: "sub-population",
-                    variableDescriptions: "variable descriptions",
-                    selectionCriteria: "selection criteria",
-                    steps: "steps",
-                    freq: "freq",
-                    confidentiality: "none"
+                    text: "text",
+                    number: 9
                 })
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -186,7 +162,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(1);
+                    res.body.length.should.be.eql(2);
                     done();
                 });
         });
@@ -197,7 +173,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + config.get('testSupervisorInternalJWT'))
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(1);
+                    res.body.length.should.be.eql(2);
                     done();
                 });
         });
@@ -208,7 +184,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + config.get('testSupervisorExternalJWT'))
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(1);
+                    res.body.length.should.be.eql(2);
                     done();
                 });
         });
@@ -249,15 +225,8 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName2",
-                    tags: ["test"],
-                    purpose: "purpose",
-                    phoneNumber: "555-555-5555",
-                    subPopulation: "sub-population",
-                    variableDescriptions: "variable descriptions",
-                    selectionCriteria: "selection criteria",
-                    steps: "steps",
-                    freq: "freq",
-                    confidentiality: "none"
+                    text: "text",
+                    number: 9
                 })
                 .end(function (err, res) {
                     res.should.have.status(200);

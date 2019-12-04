@@ -16,13 +16,13 @@ formio.auth = function(callback){
         }
     };
     var url = config.get('formio.url') + "/user/login";
-    logger.debug("formio auth", url);
+    logger.verbose("formio auth", url);
     httpReq.post(url, {body: data, json: true}, function(err, res, body){
         if (err){
-            logger.debug("formio auth err", err);
+            logger.verbose("formio auth err", err);
             callback(err);
         }else{
-            logger.debug("formio auth success");
+            logger.verbose("formio auth success");
             callback(err, res.headers['x-jwt-token']);
         }
     });
@@ -35,13 +35,13 @@ formio.getSubmissions = function(formName, callback) {
         }
         var url = config.get('formio.url') + "/"+formName+"/submission";
         
-        logger.debug("formio get submissions", url);
+        logger.verbose("formio get submissions", url);
         httpReq.get(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
             if (err){
-                logger.debug("formio get submissions err", err);
+                logger.verbose("formio get submissions err", err);
                 callback(err);
             }else{
-                logger.debug("formio get submissions success");
+                logger.verbose("formio get submissions success");
                 callback(null, body);
             }
         });
@@ -54,14 +54,14 @@ formio.getSubmission = function(formName, submissionId, callback) {
             logger.error("Error getting jwt", err);
         }
         var url = config.get('formio.url') + "/"+formName+"/submission/"+submissionId;
-        logger.debug("formio get submission", url);
+        logger.verbose("formio get submission", url);
         
         httpReq.get(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
             if (err){
-                logger.debug("formio get submission err", err);
+                logger.verbose("formio get submission err", err);
                 callback(err);
             }else{
-                logger.debug("formio get submission success");
+                logger.verbose("formio get submission success");
                 callback(null, body);
             }
         });
@@ -79,13 +79,13 @@ formio.postSubmission = function(formName, values, callback) {
             data: values
         };
         
-        logger.debug("formio post submission", url);
+        logger.verbose("formio post submission", url);
         httpReq.post(url, {headers: {'x-jwt-token': jwt}, body: data, json: true}, function(err, res, body){
             if (err){
-                logger.debug("formio post submission err", err);
+                logger.verbose("formio post submission err", err);
                 callback(err);
             }else{
-                logger.debug("formio post submission success");
+                logger.verbose("formio post submission success");
                 callback(null, body);
             }
         });
@@ -137,13 +137,13 @@ formio.getForms = function(callback) {
         }
         var url = config.get('formio.url') + "/form";
         
-        logger.debug("formio get forms", url);
+        logger.verbose("formio get forms", url);
         httpReq.get(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
             if (err){
-                logger.debug("formio get forms err", err);
+                logger.verbose("formio get forms err", err);
                 callback(err);
             }else{
-                logger.debug("formio get forms success");
+                logger.verbose("formio get forms success");
                 callback(null, body);
             }
         });
@@ -157,13 +157,13 @@ formio.getForm = function(formName, callback) {
         }
         var url = config.get('formio.url') + "/"+formName;
         
-        logger.debug("formio get form", url);
+        logger.verbose("formio get form", url);
         httpReq.get(url, {headers: {'x-jwt-token': jwt}}, function(err, res, body){
             if (err){
-                logger.debug("formio get form err", err);
+                logger.verbose("formio get form err", err);
                 callback(err);
             }else{
-                logger.debug("formio get form success");
+                logger.verbose("formio get form success");
                 callback(null, body);
             }
         });
