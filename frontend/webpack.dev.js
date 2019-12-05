@@ -35,11 +35,12 @@ module.exports = merge(common, {
               modules: true,
               importLoaders: 2,
               getLocalIdent: (context, localIdentName, localName, options) => {
-                console.log(context.resourcePath);
+                // Turn off ident parsing for bootstrap related content
+                // so the Form.io layout works.
                 if (context.resourcePath.includes('form.scss')) {
-                  console.log('hi!', localName);
                   return localName;
                 }
+
                 return getLocalIdent(
                   context,
                   localIdentName,

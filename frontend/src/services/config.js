@@ -11,7 +11,8 @@ export const reportsGroup = REPORTS_GROUP;
 export const exporterMode = EXPORTER_MODE; // Can be (undefined || 'export') or 'download'
 export const codeExportEnabled = CODE_EXPORT_ENABLED; // Can be (undefined || 'export') or 'download'
 export const repositoryHost = REPOSITORY_HOST; // Can be (undefined || 'export') or 'download'
-export const newRequestForm = NEW_REQUEST_FORM;
+export const dataRequestForm = DATA_REQUEST_FORM;
+export const codeRequestForm = CODE_REQUEST_FORM;
 export const zone = ZONE;
 export const helpURL = HELP_URL;
 export const getZone = () => ZONE;
@@ -30,7 +31,8 @@ export default {
   socketHost,
   repositoryHost,
   requestSocketHost,
-  newRequestForm,
+  dataRequestForm,
+  codeRequestForm,
   zone,
   getZone,
 };
