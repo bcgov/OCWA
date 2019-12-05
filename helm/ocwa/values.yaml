@@ -303,6 +303,10 @@ request-api:
     type: ClusterIP
     port: 80
 
+  wsService:
+    type: ClusterIP
+    websocketPort: 3006
+
   ingress:
     enabled: false
     annotations: {}
