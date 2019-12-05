@@ -205,18 +205,12 @@ var getRouter = function(db){
 
     //save a request
     router.put("/save/:requestId", function(req, res, next){
-        console.log("v2 save request 1");
         var mongoose = require('mongoose');
-        console.log("v2 save request 2");
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
-        console.log("v2 save request 3");
         var config = require('config');
-        console.log("v2 save request 4");
         var logger = require('npmlog');
-        console.log("v2 save request 5");
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, findRes){
-            console.log("v2 save request 6", findErr, findRes);
             if (findErr || !findRes || findRes.length <= 0){
                 res.status(400);
                 res.json({error: "No such request"});
@@ -252,7 +246,7 @@ var getRouter = function(db){
             }
 
             formioClient.putSubmission(findRes.formName, findRes.submissionId, req.body, function(formErr, formRes){
-                console.log("formio put resp", formErr, formRes);
+                logger.verbose("formio put resp", formErr, formRes);
     
                 if (formErr){
                     res.status(500);

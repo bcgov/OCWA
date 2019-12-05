@@ -120,7 +120,7 @@ formio.putSubmission = function(formName, submissionId, values, callback) {
             data: values
         };
         
-        httpReq.post(url, {headers: {'x-jwt-token': jwt}, body: data, json: true}, function(err, res, body){
+        httpReq.put(url, {headers: {'x-jwt-token': jwt}, body: data, json: true}, function(err, res, body){
             if (err){
                 callback(err);
             }else{
