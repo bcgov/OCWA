@@ -142,7 +142,7 @@ describe("Requests", function() {
                     number: 9
                 })
                 .end(function (err, res) {
-                    console.log("create request response", err, res);
+                    console.log("create request response", err, res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
