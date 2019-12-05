@@ -149,6 +149,7 @@ model.getAll = function(query, limit, page, user, callback){
                 $limit: limit
             }
         ]).exec(function(err, results){
+            logger.verbose('v2 finished db call', err, results);
             var processed = 0;
             if (results){
                 var v2Results = [];
