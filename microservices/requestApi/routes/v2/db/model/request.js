@@ -152,6 +152,11 @@ model.getAll = function(query, limit, page, user, callback){
             logger.verbose('v2 finished db call', err, results);
             var processed = 0;
             if (results){
+                if (results.length === 0){
+                    logger.verbose('v2 returning no results', err, results);
+                    callback(null, results);
+                    return;
+                }
                 var v2Results = [];
                 for (var i=0; i<results.length; i++){
                     let topicId = results[i].topic;
@@ -183,9 +188,6 @@ model.getAll = function(query, limit, page, user, callback){
                         }
                     });
                 }
-            }else{
-                logger.verbose('v2 returning no results', err, results, callback);
-                callback(null, results);
             }
             
         });
