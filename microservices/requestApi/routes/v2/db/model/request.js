@@ -24,7 +24,6 @@ var requestSchema = new Schema({
         code: {
             type: Number, 
             required: function(){
-                console.log("v2 code type validator", this.exportType, baseModel.CODE_EXPORT_TYPE);
                 return this.exportType && this.exportType === baseModel.CODE_EXPORT_TYPE;
             }
         },
@@ -172,7 +171,7 @@ model.getAll = function(query, limit, page, user, callback){
                             try{
                                 var submis = JSON.parse(formRes);
                                 var keys = Object.keys(submis.data);
-                                console.log("adding fields to ", workingReq)
+                                logger.verbose("adding fields to ", workingReq);
                                 for (var j=0; j<keys.length; j++){
                                     var key = keys[j];
                                     //protect schema fields

@@ -298,14 +298,18 @@ var getRouter = function(db){
     });
 
     router.delete('/:requestId', function(req, res){
+        console.log("v2 delete route");
         var config = require('config');
         var logger = require('npmlog');
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
 
+        console.log("attempting to delete request id ", requestId);
+
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
+            console.log("delete v2 got requests ", reqErr, reqRes);
             if (reqErr || !reqRes || reqRes.length <= 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: reqErr});
                 return;
             }
 
@@ -328,7 +332,7 @@ var getRouter = function(db){
                 }
 
                 formioClient.deleteSubmission(reqRes.formName, reqRes.submissionId, function(formErr, formRes){
-
+                    console.log("finished formio delete sub call ", formErr, formRes);
                     if (formErr){
                         res.status(500);
                         res.json({error: formErr});
