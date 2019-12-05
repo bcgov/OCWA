@@ -10,11 +10,6 @@ const DEFAULT_CODE_FORM = config.get("formio.defaultCodeFormName");
 
 const schemaFields = ['name', 'state', 'supportingFiles', 'topic', 'reviewers', 'chronology', 'files', 'author', 'project', 'exportType', 'type', 'formName', 'submissionId'];
 
-function codeTypeValidator() {
-    console.log("v2 code type validator", this.exportType, baseModel.CODE_EXPORT_TYPE);
-    return this.exportType === baseModel.CODE_EXPORT_TYPE;
-}
-
 var requestSchema = new Schema({
     name: {type: String, required: true, index: true},
     state: {type: Number, required: true, default: baseModel.DRAFT_STATE, index: true},
@@ -26,7 +21,13 @@ var requestSchema = new Schema({
     author: {type: String, required: true},
     project: {type: String, required: true},
     mergeRequestStatus: {
-        code: {type: Number, required: codeTypeValidator},
+        code: {
+            type: Number, 
+            required: function(){
+                console.log("v2 code type validator", this, this.exportType, baseModel.CODE_EXPORT_TYPE);
+                return this.exportType === baseModel.CODE_EXPORT_TYPE;
+            }
+        },
         message: { type: String, required: false }
     },
     exportType: {
