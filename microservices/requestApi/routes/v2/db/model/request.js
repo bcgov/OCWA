@@ -24,8 +24,8 @@ var requestSchema = new Schema({
         code: {
             type: Number, 
             required: function(){
-                console.log("v2 code type validator", this, this.exportType, baseModel.CODE_EXPORT_TYPE);
-                return this.exportType === baseModel.CODE_EXPORT_TYPE;
+                console.log("v2 code type validator", this.exportType, baseModel.CODE_EXPORT_TYPE);
+                return this.exportType && this.exportType === baseModel.CODE_EXPORT_TYPE;
             }
         },
         message: { type: String, required: false }
