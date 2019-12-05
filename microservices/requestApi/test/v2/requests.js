@@ -162,7 +162,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(2);
+                    res.body.length.should.be.eql(1);
                     done();
                 });
         });
@@ -173,7 +173,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + config.get('testSupervisorInternalJWT'))
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(2);
+                    res.body.length.should.be.eql(1);
                     done();
                 });
         });
@@ -184,7 +184,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + config.get('testSupervisorExternalJWT'))
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(2);
+                    res.body.length.should.be.eql(1);
                     done();
                 });
         });
