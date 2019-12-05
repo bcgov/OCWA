@@ -14,8 +14,8 @@ const mapStateToProps = (state, props) => {
 
   return {
     newRequestId: state.requests.newRequestId,
-    fetchStatus: get(state, 'data.fetchStatus.postRequests.requests', 'idle'),
     form,
+    formId,
   };
 };
 

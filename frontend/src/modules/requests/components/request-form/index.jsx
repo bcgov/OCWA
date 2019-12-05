@@ -16,7 +16,8 @@ import './form.scss';
 function NewRequestForm({
   data,
   codeExportEnabled,
-  helpURL,
+  formFetchStatus,
+  // helpURL,
   history,
   // isCreating,
   location,
@@ -24,11 +25,11 @@ function NewRequestForm({
 }) {
   const submission = location.state || null;
   const [exportType, setExportType] = React.useState(data[0]);
-  const onSubmit = (formData, files) =>
+  const onSubmit = (formData, formId) =>
     sendAction(
       'onCreate',
-      { ...formData, exportType: exportType.value },
-      { history, files }
+      { ...formData, _id: formId, exportType: exportType.value },
+      { history }
     );
 
   return (
@@ -44,6 +45,7 @@ function NewRequestForm({
                 >
                   <Select
                     options={data}
+                    isDisabled={formFetchStatus === 'loading'}
                     placeholder={_e('Choose an {Request} Type')}
                     id="request-form-exportTypeSelect"
                     defaultValue={exportType}
@@ -59,6 +61,7 @@ function NewRequestForm({
                     key={d.form}
                     id={d.form}
                     form={d.form}
+                    fetchStatus={formFetchStatus}
                     submission={submission}
                     onSubmit={onSubmit}
                   />
@@ -67,26 +70,30 @@ function NewRequestForm({
                 ),
               null
             )}
-            <SectionMessage appearance="info" title="Additional Help">
-              <p>
-                For guidance, please review the documentation in your project
-                folder.
-              </p>
-            </SectionMessage>
-            <br />
-            <SectionMessage
-              appearance="warning"
-              title="Affirmation of Confidentiality"
-            >
-              <p>
-                {getZoneString({
-                  internal:
-                    'By completing this form and submitting the output package for review, I affirm that the requested outputs have been aggregated such that they are anonymous and do not relate, or cannot be related, to an identifiable individual, business or organization and therefore are safe for release.',
-                  external:
-                    'By completing this form and submitting this information for import, I affirm that the import does not contain any data which could be used to identify an individual person or other Protected Data. I also affirm that there are no legal, contractual or policy restrictions which would limit the use of the information for the Approved Project.',
-                })}
-              </p>
-            </SectionMessage>
+            {formFetchStatus === 'loaded' && (
+              <React.Fragment>
+                <SectionMessage appearance="info" title="Additional Help">
+                  <p>
+                    For guidance, please review the documentation in your
+                    project folder.
+                  </p>
+                </SectionMessage>
+                <br />
+                <SectionMessage
+                  appearance="warning"
+                  title="Affirmation of Confidentiality"
+                >
+                  <p>
+                    {getZoneString({
+                      internal:
+                        'By completing this form and submitting the output package for review, I affirm that the requested outputs have been aggregated such that they are anonymous and do not relate, or cannot be related, to an identifiable individual, business or organization and therefore are safe for release.',
+                      external:
+                        'By completing this form and submitting this information for import, I affirm that the import does not contain any data which could be used to identify an individual person or other Protected Data. I also affirm that there are no legal, contractual or policy restrictions which would limit the use of the information for the Approved Project.',
+                    })}
+                  </p>
+                </SectionMessage>
+              </React.Fragment>
+            )}
           </GridColumn>
         </Grid>
       </div>
@@ -103,7 +110,9 @@ NewRequestForm.propTypes = {
     })
   ).isRequired,
   codeExportEnabled: PropTypes.bool.isRequired,
-  helpURL: PropTypes.string,
+  formFetchStatus: PropTypes.oneOf(['loading', 'loaded', 'idle', 'failed'])
+    .isRequired,
+  // helpURL: PropTypes.string,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
@@ -114,8 +123,8 @@ NewRequestForm.propTypes = {
   sendAction: PropTypes.func.isRequired,
 };
 
-NewRequestForm.defaultProps = {
-  helpURL: null,
-};
+// NewRequestForm.defaultProps = {
+// helpURL: null,
+// };
 
 export default NewRequestForm;

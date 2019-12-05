@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import withRequest from '@src/modules/data/components/data-request';
-import { helpURL } from '@src/services/config';
 import {
   codeExportEnabled,
-  dataRequestForm,
   codeRequestForm,
+  dataRequestForm,
+  helpURL,
 } from '@src/services/config';
 import { _e } from '@src/utils';
 
@@ -29,6 +29,7 @@ const mapStateToProps = state => {
     codeExportEnabled,
     newRequestId: state.requests.newRequestId,
     fetchStatus: get(state, 'data.fetchStatus.postRequests.requests', 'idle'),
+    formFetchStatus: get(state, 'data.fetchStatus.dataTypes.forms', 'idle'),
   };
 };
 
