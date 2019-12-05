@@ -4,14 +4,20 @@
 
 .exportTypeSelect {
   margin: 20px 0;
-  background-color:#fafbfc;
+  background-color: #fafbfc;
 }
 
 .exportTypeSelect section > div:last-child {
   width: 100%;
 }
 
-
 .exportTypeSelect section h1 {
   margin-bottom: 20px;
+}
+
+.loading {
+  margin: 30px 0;
+  text-align: center;
+  overflow: hidden;
+  clear: both;
 }
