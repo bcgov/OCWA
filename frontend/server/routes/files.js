@@ -76,11 +76,12 @@ const validateFileRequest = async (req, requestId) => {
 };
 
 async function fetchIds(ids) {
+    const CACHE_TIME = 60*60*24*7; // 7 day cache
     return _async.mapLimit(ids, 10, async (id) => {
         if (!cache.has(id)) {
             const { metaData } = await minioClient.statObject(bucket, id);
             const { jwt, ...file } = metaData;
-            cache.set(id, { id, ...file }, 60*60*4); // 4 hour cache
+            cache.set(id, { id, ...file }, CACHE_TIME);
         }
         return cache.get(id);
     });
