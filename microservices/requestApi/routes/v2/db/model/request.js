@@ -172,7 +172,7 @@ model.getAll = function(query, limit, page, user, callback){
                             try{
                                 var submis = JSON.parse(formRes);
                                 var keys = Object.keys(submis.data);
-                                console.log("adding fields to ", workingReq)
+                                logger.verbose("adding fields to ", workingReq);
                                 for (var j=0; j<keys.length; j++){
                                     var key = keys[j];
                                     //protect schema fields
