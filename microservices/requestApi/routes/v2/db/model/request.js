@@ -9,6 +9,7 @@ const DEFAULT_FORM = config.get("formio.defaultFormName");
 const DEFAULT_CODE_FORM = config.get("formio.defaultCodeFormName");
 
 function codeTypeValidator() {
+    console.log("CODE TYPE VALIDATOR v2", this.exportType, baseModel.CODE_EXPORT_TYPE);
     return this.exportType === baseModel.CODE_EXPORT_TYPE;
 }
 
