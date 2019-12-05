@@ -127,9 +127,6 @@ var getRouter = function(db){
                 try{
                     formRes = JSON.parse(formRes);
                 }catch(e){
-                    res.status(500);
-                    res.json({error: e});
-                    return;
                 }
             }
 

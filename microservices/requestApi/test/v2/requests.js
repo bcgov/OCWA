@@ -115,7 +115,6 @@ describe("Requests", function() {
                 .get('/v2/')
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
-                    console.log("RECORDS", res.body);
                     res.should.have.status(200);
                     res.body.length.should.be.eql(0);
                     done();
@@ -143,6 +142,7 @@ describe("Requests", function() {
                     number: 9
                 })
                 .end(function (err, res) {
+                    console.log("create request response", err, res);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
