@@ -246,7 +246,7 @@ var getRouter = function(db){
             }
 
             formioClient.putSubmission(findRes.formName, findRes.submissionId, req.body, function(formErr, formRes){
-                log.verbose("formio put resp", formErr, formRes);
+                logger.verbose("formio put resp", formErr, formRes);
     
                 if (formErr){
                     res.status(500);
