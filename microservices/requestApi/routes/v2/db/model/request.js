@@ -184,6 +184,7 @@ model.getAll = function(query, limit, page, user, callback){
                     });
                 }
             }else{
+                logger.verbose('v2 returning no results', err, results, callback);
                 callback(null, results);
             }
             
