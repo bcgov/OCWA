@@ -36,7 +36,7 @@ var gitops = function(db){
                 branch: request.branch
             }
 
-            gitops.updateRequest(request, null, 100, 'Waiting for merge request to be ready.');
+            this.updateRequest(request, null, 100, 'Waiting for merge request to be ready.');
 
             httpReq.post({
                 url: gitopsConfig.url + '/v1/request',
@@ -50,22 +50,22 @@ var gitops = function(db){
 
                     logger.info("[gitops] Request Success - ", data);
 
-                    gitops.updateRequest(request, data.location, 200, '');
+                    this.updateRequest(request, data.location, 200, '');
 
                 } else {
 
                     logger.error("Errors ", apiErr, apiRes.statusCode, apiRes.statusMessage, apiRes.body);
                     if (apiErr || apiRes.statusCode === 400) {
-                        gitops.updateRequest(request, null, 400, (apiErr ? apiErr : apiRes.body['message']));
+                        this.updateRequest(request, null, 400, (apiErr ? apiErr : apiRes.body['message']));
                     } else {
-                        gitops.updateRequest(request, null, 400, 'Unexpected error - please try again later.');
+                        this.updateRequest(request, null, 400, 'Unexpected error - please try again later.');
                     }
                 }
             });
 
         } else if (transition == "3-1" /* back to WIP */ || transition == "2-1" /* back to WIP */ ) {
             //this.callGitops(request, 'delete').then (d => {
-            //    gitops.updateRequest(request, null, 200, '');
+            //    this.updateRequest(request, null, 200, '');
             //});
 
         } else if (request.state == 4 /* approved */) {
@@ -74,7 +74,7 @@ var gitops = function(db){
         } else if (request.state == 5 /* denied */ || request.state == 6 /* cancelled */) {
             this.callGitops(request, 'close').catch (err => {
                 logger.error("Errors handling ", action, " MR in Gitops", err);
-                gitops.updateRequest(request, null, 400, err);
+                this.updateRequest(request, null, 400, err);
             });
 
         } else {
@@ -109,18 +109,18 @@ var gitops = function(db){
     gitops.approve = function(request) {
         if (!config.has('gitops')){
             logger.debug("Approve[gitops] - Triggered but not configured");
-            return gitops.noop();
+            return this.noop();
         }
 
         logger.info("Approve[gitops]", "exportType=", request.exportType, ",State=", db.Request.stateToText(request.state), ",Type=", request.type);
 
         var gitopsConfig = config.get('gitops');
         if (!gitopsConfig.enabled){
-            return gitops.noop();
+            return this.noop();
         }
 
         if (request.exportType != "code") {
-            return gitops.noop();
+            return this.noop();
         }
 
         return this.callGitops(request, 'merge');
