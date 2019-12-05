@@ -110,14 +110,14 @@ describe("Requests", function() {
                 });
         });
 
-        it('it should get all records (max 100) (currently 1 [from v1])', function (done) {
+        it('it should get all records (max 100) (currently 0)', function (done) {
             chai.request(server)
                 .get('/v2/')
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
                     console.log("RECORDS", res.body);
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(1);
+                    res.body.length.should.be.eql(0);
                     done();
                 });
         });

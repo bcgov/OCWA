@@ -183,6 +183,8 @@ model.getAll = function(query, limit, page, user, callback){
                         }
                     });
                 }
+            }else{
+                callback(null, results);
             }
             
         });
