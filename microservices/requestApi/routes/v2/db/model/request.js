@@ -10,6 +10,11 @@ const DEFAULT_CODE_FORM = config.get("formio.defaultCodeFormName");
 
 const schemaFields = ['name', 'state', 'supportingFiles', 'topic', 'reviewers', 'chronology', 'files', 'author', 'project', 'exportType', 'type', 'formName', 'submissionId'];
 
+function codeTypeValidator() {
+    console.log("v2 code type validator", this.exportType, CODE_EXPORT_TYPE);
+    return this.exportType === CODE_EXPORT_TYPE;
+}
+
 var requestSchema = new Schema({
     name: {type: String, required: true, index: true},
     state: {type: Number, required: true, default: baseModel.DRAFT_STATE, index: true},
@@ -21,7 +26,7 @@ var requestSchema = new Schema({
     author: {type: String, required: true},
     project: {type: String, required: true},
     mergeRequestStatus: {
-        code: {type: Number, required: model.codeTypeValidator},
+        code: {type: Number, required: codeTypeValidator},
         message: { type: String, required: false }
     },
     exportType: {
@@ -50,11 +55,6 @@ var requestSchema = new Schema({
 var model = mongoose.model('request.v2', requestSchema, 'requests');
 
 model.setChrono = baseModel.setChrono;
-
-model.codeTypeValidator = function() {
-    console.log("CODE TYPE VALIDATOR v2", this.exportType, baseModel.CODE_EXPORT_TYPE);
-    return this.exportType === baseModel.CODE_EXPORT_TYPE;
-};
 
 model.DRAFT_STATE = baseModel.DRAFT_STATE;
 model.WIP_STATE = baseModel.WIP_STATE;
