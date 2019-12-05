@@ -84,14 +84,14 @@ model.getAll = function(query, limit, page, user, callback){
     var logger = require('npmlog');
     var db = require('../db');
     var skip = limit * (page - 1);
-    logger.verbose("request get all, skip, limit", skip, limit);
+    logger.verbose("v2 request get all, skip, limit", skip, limit);
 
     var zoneRestrict = model.getZoneRestrict(user);
 
-    logger.verbose("getAll ", user.supervisor, user.outputchecker);
+    logger.verbose("v2 getAll ", user.supervisor, user.outputchecker);
 
    this.getAllTopics(user, function(err, topicR, projectR){
-        logger.verbose("get all topics model get all", topicR);
+        logger.verbose("V2 get all topics model get all", topicR);
 
         db.Request.aggregate([
             {
@@ -157,7 +157,9 @@ model.getAll = function(query, limit, page, user, callback){
                     results[i].projects = projectR.get(topicId);
                     
                     let workingReq = results[i];
+                    logger.verbose('v2 about to get formio submissions request model');
                     formioClient.getSubmission(results[i].formName, workingReq.submissionId, function(formErr, formRes){
+                        logger.verbose('v2 got formio submissions request model', formErr, formRes);
                         if (formRes && workingReq.submissionId){
                             try{
                                 var submis = JSON.parse(formRes);
