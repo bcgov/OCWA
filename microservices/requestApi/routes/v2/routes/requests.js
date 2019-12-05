@@ -298,6 +298,7 @@ var getRouter = function(db){
     });
 
     router.delete('/:requestId', function(req, res){
+        console.log("v2 delete route");
         var config = require('config');
         var logger = require('npmlog');
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
