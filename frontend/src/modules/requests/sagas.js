@@ -194,7 +194,7 @@ function* onFinishEditing(action) {
 
 export default function* root() {
   yield takeLatest('sockets/init', fileImportWatcher);
-  yield takeLatest('app/get/refresh-token', onRefreshToken);
+  yield takeLatest('app/get/refresh-token/success', onRefreshToken);
   yield takeLatest('request/post/success', onCreateRequest);
   yield takeLatest('request/put/success', onSaveRequest);
   yield takeLatest('request/finish-editing', onFinishEditing);
