@@ -208,7 +208,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-                    console.log("DELETE REQUEST", err, res);
+                    console.log("DELETE REQUEST", err, res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
