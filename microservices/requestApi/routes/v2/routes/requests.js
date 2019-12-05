@@ -205,6 +205,7 @@ var getRouter = function(db){
 
     //save a request
     router.put("/save/:requestId", function(req, res, next){
+        var mongoose = require('mongoose');
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
         var config = require('config');
         var logger = require('npmlog');
@@ -298,17 +299,12 @@ var getRouter = function(db){
     });
 
     router.delete('/:requestId', function(req, res){
-        console.log("v2 delete route 1");
+        var mongoose = require('mongoose');
         var config = require('config');
-        console.log("v2 delete route 2");
         var logger = require('npmlog');
-        console.log("v2 delete route 3");
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
 
-        console.log("attempting to delete request id ", requestId);
-
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
-            console.log("delete v2 got requests ", reqErr, reqRes);
             if (reqErr || !reqRes || reqRes.length <= 0){
                 res.status(500);
                 res.json({error: reqErr});
@@ -334,7 +330,6 @@ var getRouter = function(db){
                 }
 
                 formioClient.deleteSubmission(reqRes.formName, reqRes.submissionId, function(formErr, formRes){
-                    console.log("finished formio delete sub call ", formErr, formRes);
                     if (formErr){
                         res.status(500);
                         res.json({error: formErr});
