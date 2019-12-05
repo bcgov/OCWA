@@ -43,11 +43,14 @@ const mapStateToProps = (state, props) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  initialRequest: ({ ids = [] }) =>
-    fetchFiles({
-      url: `/api/v1/files?ids=${ids.join(',')}`,
-      schema: filesListSchema,
-    }),
-  onUpload: uploadFile,
-})(withRequest(FileUploader));
+export default connect(
+  mapStateToProps,
+  {
+    initialRequest: ({ id, ids = [] }) =>
+      fetchFiles({
+        url: `/api/v1/files?request_id=${id}&ids=${ids.join(',')}`,
+        schema: filesListSchema,
+      }),
+    onUpload: uploadFile,
+  }
+)(withRequest(FileUploader));

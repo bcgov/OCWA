@@ -90,6 +90,7 @@ function RequestDetails({
                 <FileUploader
                   data={uploadData}
                   filesKey="files"
+                  id={id}
                   uploadText="Upload files you wish to request for output"
                 />
               )}
@@ -107,6 +108,7 @@ function RequestDetails({
               {isEditing && (
                 <FileUploader
                   data={uploadData}
+                  id={id}
                   filesKey="supportingFiles"
                   uploadText="Upload any files to help support your request"
                 />
