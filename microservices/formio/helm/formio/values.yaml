@@ -1,0 +1,63 @@
+# Default values for ocwaForumApi.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: h3brandon/formio
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 80
+
+##Configuration for OCWA Forum Api
+apiPort: 3006
+logLevel: error
+
+global:
+  jwtSecret: "ssh this is a secret"
+
+database:
+  host: ocwa-formio-mongo.ocwa
+  username: forumApi
+  password: password
+  dbName: formioApp
+
+username: "admin@example.com"
+password: CHANGEME
+
+createDatabase: true
+storageClassName: default
+dbPod:
+  persistence: /data/db
+  adminEnv: MONGO_INITDB_ROOT_USERNAME
+  admin: root
+  passEnv: MONGO_INITDB_ROOT_PASSWORD
+  pass: root
+  dbEnv: MONGO_INITDB_DATABASE
+  addAdminPassEnv: false
+  adminPassEnv: MONGODB_ADMIN_PASSWORD
+  initDb: true
+
+mongoImage:
+  repository: mongo
+  tag: 4.1
+
+resources: {}
+  # If you want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

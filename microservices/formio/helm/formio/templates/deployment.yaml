@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "ocwaForumApi.fullname" . }}
+  labels:
+    app: {{ template "ocwaForumApi.name" . }}
+    chart: {{ template "ocwaForumApi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ocwaForumApi.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ocwaForumApi.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      {{ if .Values.emailTemplateEnabled }}
+      volumes:
+      - name: emailtemplate
+        configMap:
+          name: {{ template "ocwaForumApi.fullname" . }}-forumapi-configmap
+          defaultMode: 511
+      {{ end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{ if .Values.emailTemplateEnabled }}
+          volumeMounts:
+          - name: emailtemplate
+            mountPath: ./notifications
+            subPath: "emailTemplate"
+          {{ end }}
+          env:
+            - name: API_PORT
+              value: "{{ .Values.apiPort }}"
+            - name: WS_PORT
+              value: "{{ .Values.wsPort }}"
+            - name: LOG_LEVEL
+              value: {{ .Values.logLevel }}
+            - name: DB_HOST
+              value: {{ .Values.database.host }}
+            - name: DB_USERNAME
+              value: {{ .Values.database.username }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
+                  key: dbPassword
+            - name: DB_NAME
+              value: {{ .Values.database.dbName }}
+            - name: DEFAULT_ACCESS_IS_GROUP
+              value: "{{ .Values.defaultAccessIsGroup }}"
+            - name: REQUIRED_CREATE_ROLE
+              value: {{ .Values.requiredRoleToCreateTopic }}
+            - name: IGNORE_GROUPS
+              value: '{{ .Values.ignoreGroups }}'
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
+                  key: jwtSecret
+            - name: USER_ID_FIELD
+              value: {{ .Values.user.idField }}
+            - name: EMAIL_FIELD
+              value: {{ .Values.user.emailField }}
+            - name: GIVENNAME_FIELD
+              value: {{ .Values.user.givenNameField }}
+            - name: SURNAME_FIELD
+              value: {{ .Values.user.surNameField }}
+            - name: GROUP_FIELD
+              value: {{ .Values.user.groupField }}
+            - name: EMAIL_ENABLED
+              value: "{{ .Values.emailEnabled }}"
+            - name: EMAIL_SERVICE
+              value: "{{ .Values.emailService }}"
+            - name: EMAIL_SECURE
+              value: "{{ .Values.emailSecure }}"
+            - name: EMAIL_PORT
+              value: "{{ .Values.emailPort }}"
+            - name: EMAIL_USER
+              value: "{{ .Values.emailUser }}"
+            - name: EMAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaForumApi.fullname" . }}-secrets
+                  key: emailPassword
+            - name: EMAIL_FROM
+              value: "{{ .Values.emailFrom }}"
+            - name: EMAIL_SUBJECT
+              value: "{{ .Values.emailSubject }}"
+
+          ports:
+            - name: http
+              containerPort: {{ .Values.apiPort }}
+              protocol: TCP
+            - name: websocket
+              containerPort: {{ .Values.wsPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /v1/api-docs
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /v1/api-docs
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

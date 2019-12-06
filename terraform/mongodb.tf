@@ -37,9 +37,22 @@ data "template_file" "mongodb_script" {
   }
 }
 
+data "template_file" "formio_script" {
+  template = file("${path.module}/scripts/formio.tpl")
+  vars = {
+    MONGO_USERNAME = var.mongodb["username"]
+    MONGO_PASSWORD = random_string.mongoSuperPassword.result
+  }
+}
+
 resource "local_file" "mongodb_script" {
   content  = data.template_file.mongodb_script.rendered
   filename = "${var.hostRootPath}/mongodb_script.js"
+}
+
+resource "local_file" "formio_script" {
+  content  = data.template_file.formio_script.rendered
+  filename = "${var.hostRootPath}/formio_script.js"
 }
 
 resource "null_resource" "mongodb_first_time_install" {
@@ -52,6 +65,20 @@ resource "null_resource" "mongodb_first_time_install" {
       SCRIPT_PATH = var.hostRootPath
     }
     command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.1.3 mongo mongodb://ocwa_mongodb/oc_db /work/mongodb_script.js"
+  }
+  depends_on = [docker_container.ocwa_mongodb]
+}
+
+resource "null_resource" "mongodb_formio_first_Time_install" {
+  provisioner "local-exec" {
+    command = "${path.module}/scripts/wait-for-healthy.sh ocwa_mongodb"
+  }
+
+  provisioner "local-exec" {
+    environment = {
+      SCRIPT_PATH = var.hostRootPath
+    }
+    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.1.3 mongo mongodb://ocwa_mongodb/formioapp /work/formio_script.js"
   }
   depends_on = [docker_container.ocwa_mongodb]
 }
