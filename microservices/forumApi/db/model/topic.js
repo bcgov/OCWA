@@ -45,8 +45,10 @@ model.getAll = function(query, limit, page, user, callback){
         };
     }
 
-
     var agg = [
+        {
+            $match: query
+        },
         {
             $lookup:{
                 from: "permissions",
@@ -91,9 +93,6 @@ model.getAll = function(query, limit, page, user, callback){
             $project: {
                 "permissions": 0,
             }
-        },
-        {
-            $match: query
         },
         {
             $skip: skip

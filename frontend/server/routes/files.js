@@ -3,6 +3,7 @@ const express = require('express');
 const get = require('lodash/get');
 const has = require('lodash/has');
 const Minio = require('minio');
+const _async = require('async');
 const request = require('request-promise');
 
 const router = express.Router();
@@ -14,6 +15,9 @@ const minioClient = new Minio.Client({
   secretKey: config.get('storage.secretKey'),
 });
 const bucket = config.get('storage.bucket');
+
+const NodeCache = require( "node-cache" );
+const cache = new NodeCache({deleteOnExpire: true});
 
 // Ensure the user is logged in before sending any files and ensure the request
 // has the file they want
@@ -41,7 +45,7 @@ const validateFileRequest = async (req, requestId) => {
 
   try {
     const r = await request.get({
-      url: `${requestApiHost}/v1/${requestId}`,
+      url: `${requestApiHost}/v1/${requestId}?include_file_status=false`,
       headers: {
         Authorization: token,
       },
@@ -72,19 +76,15 @@ const validateFileRequest = async (req, requestId) => {
 };
 
 async function fetchIds(ids) {
-  const result = [];
-
-  for (const id of ids) {
-    try {
-      const { metaData } = await minioClient.statObject(bucket, id);
-      const { jwt, ...file } = metaData;
-      result.push({ id, ...file });
-    } catch (err) {
-      console.log('Unable to fetch file', err);
-    }
-  }
-
-  return result;
+    const CACHE_TIME = 60*60*24*7; // 7 day cache
+    return _async.mapLimit(ids, 10, async (id) => {
+        if (!cache.has(id)) {
+            const { metaData } = await minioClient.statObject(bucket, id);
+            const { jwt, ...file } = metaData;
+            cache.set(id, { id, ...file }, CACHE_TIME);
+        }
+        return cache.get(id);
+    });
 }
 
 router.get('/', authenticateRequest, async (req, res, next) => {

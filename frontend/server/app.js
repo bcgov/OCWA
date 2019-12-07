@@ -13,6 +13,9 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
+const logger = require('morgan');
+const log = require ('npmlog');
+
 const { checkAuth } = require('./auth');
 const { getZone, parseApiHost, parseWsHost, storeUrl } = require('./utils');
 const proxy = require('./proxy');
@@ -53,6 +56,13 @@ if (isDevelopment) {
     })
   );
   app.use(webpackHotMiddleware(compiler));
+}
+
+log.level = 'debug'; // config.get('logLevel');
+log.addLevel('debug', 2900, { fg: 'green' });
+
+if (process.env.NODE_ENV !== 'test') {
+    app.use(logger('dev'));
 }
 
 // Express config

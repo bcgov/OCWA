@@ -20,4 +20,6 @@ class Db:
             username=config.data['database']['username'],
             password=config.data['database']['password'],
             authentication_source=config.data['database']['dbName'],
+            maxPoolSize=10,
+            minPoolSize=1,
             connect=True)

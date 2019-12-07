@@ -7,14 +7,21 @@ function checkRequestPermissions(user, fileId, sock, cb){
 
     logger.debug('messages / Checking permission for file_id:', fileId);
 
-    db.Request.getAll({files: fileId}, 1, 1, user, function(findErr, findRes){
-        if (findErr || !findRes || findRes.length === 0){
-            logger.debug('messages / Request with file not found for user.', fileId, user, findErr);
+    db.Request.findOne({ files: fileId }, (err, doc) => {
+        if (err) {
+            logger.error('messages / Not able to find a request with file', fileId, err);
             cb(false, sock);
-            return;
+        } else {
+            db.Request.getAll({_id: doc._id}, 1, 1, user, function(findErr, findRes){
+                if (findErr || !findRes || findRes.length === 0){
+                    logger.debug('messages / Request with file not found for user.', fileId, user, findErr);
+                    cb(false, sock);
+                    return;
+                }
+                cb(true, sock);
+            });
         }
-        cb(true, sock);
-    });
+    })
 }
 
 function sendFileStatusMessage(fileStatus){
