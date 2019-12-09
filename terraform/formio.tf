@@ -1,5 +1,5 @@
 data "docker_registry_image" "formio" {
-  name = "${var.images["owner"]}/formio${var.images["formio"]}"
+  name = "${var.images["formio"]}"
 }
 
 data "null_data_source" "values" {
