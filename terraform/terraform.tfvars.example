@@ -32,7 +32,6 @@ images = {
     project_api = ":edge"
     forum_api = ":edge"
     formio = ":latest"
-    formio = ":latest"
     policy_api = ":edge"
     frontend = ":edge"
     minio = ":latest"
