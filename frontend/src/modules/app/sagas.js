@@ -62,6 +62,7 @@ export function* refreshTokenWatcher() {
     const payload = yield call(requestRefreshToken);
     const refreshInt = differenceInMilliseconds(payload.expiresAt, Date.now());
     saveSession(payload);
+    yield put({ type: 'app/get/refresh-token/success' });
     yield call(delay, refreshInt);
     yield put({ type: 'app/get/refresh-token' });
   } catch (err) {

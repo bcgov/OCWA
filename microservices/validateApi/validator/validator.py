@@ -2,9 +2,12 @@
 import logging
 import re
 import sys
+import os
 import time
 from io import StringIO
-from multiprocessing import Process
+from multiprocessing import Process, current_process
+
+from gevent.pool import Pool
 
 import boto3
 from config import Config
@@ -15,6 +18,8 @@ import hashlib
 from validator.md5_scan import md5_is_match
 from ValidationQueue.ValidationQueue import ValidationQueue, QueueObject
 
+from notifications.notifications import Notifications
+
 log = logging.getLogger(__name__)
 
 # sleep time in seconds
@@ -22,6 +27,8 @@ SLEEP_TIME = 1
 
 # aborting?
 ABORTING = False
+
+boto3.set_stream_logger('', logging.INFO)
 
 class Validator:
     proc = None
@@ -33,14 +40,14 @@ class Validator:
 
     def start_validate_process(self):
         log.debug("Starting validation header process")
-        
-        ValidationQueue.initQueue()
+
+        Process(target=ValidationQueue.initQueue).start()
 
         self.proc = Process(target=validateProcess)
         self.proc.start()
 
     def start_validate(self, rule, result):
-        log.debug("Adding to queue")
+        log.debug("Adding to queue (current queue height %d)" % ValidationQueue.getQueue().qsize())
         item = QueueObject(rule, result)
         ValidationQueue.getQueue().put(item)
 
@@ -60,19 +67,32 @@ def validateProcess():
                         aws_access_key_id=access_key_id,
                         aws_secret_access_key=access_secret_id,
                         endpoint_url=endpoint)
-    
+
+    # Start a pool for validation workers
+    pool = Pool(size=10)
+    log.debug("Pool = " + str(pool))
+
+    log.info("Validate Process Started..")
+
+    metrics = {'size':0,'jobs':0,'files':{}}
     while not(ABORTING):
         #queue work
         if ValidationQueue.getQueue().empty():
             time.sleep(SLEEP_TIME)
+
+            if metrics['size'] != 0:
+                log.info("Processed %d bytes for %d files with %d rules" % (metrics['size'], len(metrics['files'].keys()), metrics['jobs']))
+                metrics = {'size':0,'jobs':0,'files':{}}
+
         else:
-            item = ValidationQueue.getQueue().get(False)
+            item = ValidationQueue.getQueue().get_nowait()
             if item.size == -1:
                 try:
                     headObj = conn.head_object(Bucket=bucket, Key=item.result.file_id)
                     item.size = headObj['ContentLength']
                 except:
                     log.error("error getting object from s3")
+                    log.error(sys.exc_info()[0])
                 
             if item.size > workingLimit:
                 # Can't ever scan this it's too big
@@ -94,14 +114,18 @@ def validateProcess():
             else:
                 # can start work on now
                 workingSize += item.size
-                proc = Process(target=validate, args=(item.rule, item.result))
-                proc.start()
+                metrics['size'] += item.size
+                metrics['jobs'] += 1
+                metrics['files'][item.result.file_id] = True
+
+                proc = pool.apply_async(validate, (item.rule, item.result))
                 processes.append({'size': item.size, 'proc': proc})
-        
+
         # process trimming
         index = 0
         for i in range(len(processes)):
-            if not(processes[index]['proc'].is_alive()):
+            if processes[index]['proc'].ready():
+                log.debug("DONE " + str(proc))
                 # process is done
                 workingSize -= processes[index]['size']
                 del processes[index]
@@ -109,19 +133,21 @@ def validateProcess():
 
             index = index + 1
 
-    log.debug("Validation header process exiting")
-    # aborting, wait till all the processes exit
-    for i in range(len(processes)):
-        if processes[i]['proc'].is_alive():
-            processes[i]['proc'].join()
-            log.debug("a proccess exited")
+    log.debug("Killing pool...")
+    pool.kill()
 
-    log.debug("Validation header exited")
+    log.info("Validation exited")
 
+def validate(rule, result):
+    logid = "Validate [" + str(os.getpid()) + "] "
+    log.debug(logid + " multi name = " + current_process().name)
 
+    db = Db(True, 15)
 
+    resultObj = db.Results.objects(file_id=result.file_id, rule_id=result.rule_id)[0]
+    log.debug(logid + "Result =  " + str(resultObj))
 
-def validate(rule, resultObj):
+    notifier = Notifications()
     source = ""
     if 'Source' in rule:
         source = rule['Source']
@@ -130,7 +156,7 @@ def validate(rule, resultObj):
 
     result, message = read_file_and_evaluate(source, resultObj)
     log.debug("Running validation process for " +
-              rule['name'] + " got result " + str(result) + " and message " + message)
+            rule['name'] + " got result " + str(result) + " and message " + message)
     if result:
         resultObj.state = 0
     else:
@@ -141,6 +167,8 @@ def validate(rule, resultObj):
             resultObj.message = "Warning"
 
     resultObj.save()
+
+    notifier.publish('fileStatus', resultObj.to_json())
 
 
 def read_file_and_evaluate(source, result):
@@ -178,7 +206,7 @@ def evaluate_source(source, file_attributes):
         # exec_src = niño_cédille_postulate(source, format_fn)
 
         exec_output = execute_script(exec_src)
-        log.info("exec output = %s" % exec_output)
+        log.debug("exec output = %s" % exec_output)
         result = exec_output.rstrip() in ("yes", "true", "t", "1")
     except (Exception, NameError) as e:
         log.error("Failed to evaluate source %s" % source)

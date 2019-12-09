@@ -13,16 +13,25 @@ service:
   type: ClusterIP
   port: 80
 
+wsService:
+  type: ClusterIP
+  websocketPort: 3006
+
 ingress:
   enabled: false
-  annotations: {}
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.org/websocket-services: ocwa-request-api-ws
   path: /
   hosts:
-    - chart-example.local
+    - name: chart-example.local
+      service: ocwa-request-api-ws
+      port: 3006
   tls: []
 
 ##Configuration for OCWA Request Api
 apiPort: 3002
+wsPort: 2998
 logLevel: error
 
 global:
@@ -49,6 +58,8 @@ user:
 
 forumApi: http://ocwa-forum-api.ocwa
 forumApiSecret: none
+
+webhookSecret: s3cr3t
 
 storageUri: ocwa-storage-api.ocwa
 storagePort: 9000

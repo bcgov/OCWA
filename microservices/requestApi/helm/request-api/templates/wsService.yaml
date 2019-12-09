@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "ocwaRequestApi.fullname" . }}-ws
+  labels:
+    app: {{ template "ocwaRequestApi.name" . }}
+    chart: {{ template "ocwaRequestApi.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.wsService.type }}
+  sessionAffinity: ClientIP
+  ports:
+    - port: {{ .Values.wsService.websocketPort }}
+      targetPort: websocket
+      protocol: TCP
+      name: websocket
+  selector:
+    app: {{ template "ocwaRequestApi.name" . }}
+    release: {{ .Release.Name }}

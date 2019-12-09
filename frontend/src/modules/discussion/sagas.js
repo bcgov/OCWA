@@ -2,21 +2,13 @@ import { call, take, takeLatest, put, select } from 'redux-saga/effects';
 import { eventChannel } from 'redux-saga';
 import { normalize } from 'normalizr';
 import { camelizeKeys } from 'humps';
-import { getToken } from '@src/services/auth';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
 import { socketHost } from '@src/services/config';
+import { createSocket } from '@src/utils';
 
 import { postSchema } from './schemas';
-
-function createSocket() {
-  const token = getToken();
-  const socket = new WebSocket(socketHost, token);
-  socket.onopen = () => console.log('[SOCKET] connected');
-  socket.onclose = () => console.log('[SOCKET] closed');
-  return socket;
-}
 
 function createSocketChannel(socket, username) {
   return eventChannel(emit => {
@@ -55,7 +47,7 @@ function* authWatcher() {
   if (isEmpty(socketHost.replace(/wss?:\/\//, ''))) return;
 
   try {
-    const socket = yield call(createSocket);
+    const socket = yield call(createSocket, socketHost);
     const user = yield select(state => get(state, 'app.auth.user', {}));
     const email = get(user, 'email', '');
     const username = get(user, 'id', email);
@@ -71,5 +63,5 @@ function* authWatcher() {
 }
 
 export default function* root() {
-  yield takeLatest('discussion/socket/init', authWatcher);
+  yield takeLatest('sockets/init', authWatcher);
 }

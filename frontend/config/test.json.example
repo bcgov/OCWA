@@ -8,6 +8,7 @@
   "forumApiHost": "localhost:3000",
   "forumSocket": "localhost:3001",
   "requestApiHost": "localhost:3002",
+  "requestSocket": "ws://localhost:2998",
   "filesApiHost": "localhost:1080",
   "exporterGroup": "/exporter",
   "ocGroup": "/oc",

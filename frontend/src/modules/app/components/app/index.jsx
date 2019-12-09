@@ -39,15 +39,21 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { isAuthenticated, initSocket } = this.props;
+    const { isAuthenticated, initSockets } = this.props;
 
     if (isAuthenticated && !prevProps.isAuthenticated) {
-      initSocket();
+      initSockets();
     }
   }
 
   renderMain = () => {
-    const { authFetchStatus, helpURL, isAuthenticated, user, zone } = this.props;
+    const {
+      authFetchStatus,
+      helpURL,
+      isAuthenticated,
+      user,
+      zone,
+    } = this.props;
     // TODO: These values should be in config.json
     const validGroups = [exporterGroup, ocGroup, reportsGroup];
     let el = null;
@@ -63,7 +69,7 @@ class App extends React.Component {
       const props = {
         user,
         helpURL,
-        zone
+        zone,
       };
 
       if (!hasValidGroupAccess) {
@@ -109,7 +115,7 @@ App.propTypes = {
   authFetchStatus: PropTypes.string.isRequired,
   fetchToken: PropTypes.func.isRequired,
   helpURL: PropTypes.string,
-  initSocket: PropTypes.func.isRequired,
+  initSockets: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.shape({
     displayName: PropTypes.string,

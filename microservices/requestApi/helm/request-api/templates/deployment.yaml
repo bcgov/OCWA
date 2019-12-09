@@ -39,6 +39,8 @@ spec:
           env:
             - name: API_PORT
               value: "{{ .Values.apiPort }}"
+            - name: WS_PORT
+              value: "{{ .Values.wsPort }}"
             - name: LOG_LEVEL
               value: {{ .Values.logLevel }}
             - name: DB_HOST
@@ -78,6 +80,11 @@ spec:
                 secretKeyRef:
                   name: {{ template "ocwaRequestApi.fullname" . }}-secrets
                   key: jwtSecret
+            - name: WEBHOOK_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "ocwaRequestApi.fullname" . }}-secrets
+                  key: webhookSecret
             - name: CREATE_ROLE
               value: {{ .Values.createRole }}
             - name: OC_GROUP
@@ -161,6 +168,9 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.apiPort }}
+              protocol: TCP
+            - name: websocket
+              containerPort: {{ .Values.wsPort }}
               protocol: TCP
           livenessProbe:
             httpGet:

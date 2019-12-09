@@ -14,37 +14,42 @@ passport.use(new JWTStrategy({
         secretOrKey: config.get("jwtSecret"),
         passReqToCallback: true,
     }, function(req, jwtPayload, cb) {
+        logger.verbose('JWT');
 
-        var encodedJWT = req.headers['authorization'].substring("Bearer ".length);
-        var userConf = config.get('user');
-        var user = {
-            jwt: encodedJWT,
-            email: jwtPayload[userConf.emailField],
-            firstName: jwtPayload[userConf.givenNameField],
-            lastName: jwtPayload[userConf.surNameField],
-            name: jwtPayload[userConf.givenNameField] + " " + jwtPayload[userConf.surNameField],
-            groups: jwtPayload[userConf.groupField],
-            id: jwtPayload[userConf.idField],
-            zone: (jwtPayload.zone) ? jwtPayload.zone : "external",
-            EXTERNAL_ZONE: 'external',
-            INTERNAL_ZONE: 'internal',
-        };
-        user.outputchecker = isOutputChecker(user);
-        user.supervisor = isInReportsGroup(user); // && !isInGroupToCreateRequest(user);
+        try {
+            var encodedJWT = req.headers['authorization'].substring("Bearer ".length);
+            var userConf = config.get('user');
+            var user = {
+                jwt: encodedJWT,
+                email: jwtPayload[userConf.emailField],
+                firstName: jwtPayload[userConf.givenNameField],
+                lastName: jwtPayload[userConf.surNameField],
+                name: jwtPayload[userConf.givenNameField] + " " + jwtPayload[userConf.surNameField],
+                groups: jwtPayload[userConf.groupField],
+                id: jwtPayload[userConf.idField],
+                zone: (jwtPayload.zone) ? jwtPayload.zone : "external",
+                EXTERNAL_ZONE: 'external',
+                INTERNAL_ZONE: 'internal',
+            };
+            user.outputchecker = isOutputChecker(user);
+            user.supervisor = isInReportsGroup(user); // && !isInGroupToCreateRequest(user);
 
-        logger.verbose('user ' + user.id + ' authenticated successfully ', user.groups, user.supervisor, user.outputchecker);
+            logger.verbose('user ' + user.id + ' authenticated successfully ', user.groups, user.supervisor, user.outputchecker);
 
-        var db = require('../db/db');
-        db.User.findOneAndUpdate({id: user.id}, user, {upsert: true, setDefaultsOnInsert: true, new: true}, function(err, userDoc){
-            if (err || !userDoc){
-                logger.error("Error upserting user:", err);
-                return;
-            }
-            logger.debug("User upserted successfully");
-        });
+            var db = require('../db/db');
+            db.User.findOneAndUpdate({id: user.id}, user, {upsert: true, setDefaultsOnInsert: true, new: true}, function(err, userDoc){
+                if (err || !userDoc){
+                    logger.error("Error upserting user:", err);
+                    return;
+                }
+                logger.debug("User upserted successfully");
+            });
+            cb(null, user);
+        } catch (e) {
+            logger.error(e);
+            raise(e);
+        }
 
-
-        cb(null, user);
     }
 ));
 

@@ -15,8 +15,10 @@ resource "docker_container" "ocwa_request_api" {
     name = docker_network.private_network.name
   }
   env = [
+    "LOG_LEVEL=debug",
     "JWT_SECRET=${random_string.jwtSecret.result}",
     "API_PORT=3002",
+    "WS_PORT=2998",
     "DB_HOST=ocwa_mongodb",
     "DB_PORT=27017",
     "DB_NAME=oc_db",
@@ -41,6 +43,7 @@ resource "docker_container" "ocwa_request_api" {
     "FORUM_API_KEY=${random_string.apiSecret.result}",
     "PROJECT_API=http://ocwa_project_api:3005",
     "PROJECT_API_KEY=${random_string.apiSecret.result}",
+    "WEBHOOK_API_KEY=${random_string.webhookSecret.result}",
     "STORAGE_URI=ocwaminio",
     "STORAGE_PORT=9000",
     "STORAGE_USESSL=false",

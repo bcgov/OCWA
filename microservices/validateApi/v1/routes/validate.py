@@ -2,8 +2,9 @@ try:  # Python 3.5+
     from http import HTTPStatus as HTTPStatus
 except ImportError:
     from http import client as HTTPStatus
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from v1.db.db import Db
+
 from config import Config
 import requests
 import hcl
@@ -14,6 +15,26 @@ import logging
 log = logging.getLogger(__name__)
 
 validate = Blueprint('validate', 'validate')
+
+
+@validate.route('/',
+           methods=['GET'], strict_slashes=False)
+@auth
+def get_files_results() -> object:
+    """
+    Returns the results of files
+    :return: JSON array of validation results
+    """
+
+    if 'files' in request.args:
+        files = request.args.get('files').split(',')
+        if len(files) > 25:
+            return jsonify({"error": "Too many files specified.  Max 25 allowed."}), HTTPStatus.INTERNAL_SERVER_ERROR
+    else:
+        return jsonify({"error": "Atleast one file ID must be specified."}), HTTPStatus.INTERNAL_SERVER_ERROR
+    
+    db = Db()
+    return db.Results.objects(file_id__in = files).to_json()
 
 
 @validate.route('/<string:fileId>',
@@ -73,10 +94,7 @@ def validate_policy(policyName: str, fileId: str) -> object:
             if alwaysScan and len(results) > 0:
                 result = results[0]
 
-            log.debug("pre save")
             result.save()
-            log.debug("creating validator")
-            log.debug("calling start validate")
             v = Validator()
             v.start_validate(policy[i], result)
             
@@ -130,8 +148,8 @@ def validate_rule(fileId: str, ruleId: str) -> object:
         else:
             return jsonify({"error": "Rule not found"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
-
-    return jsonify({"error": "Couldn't decide on the rule to replace"}), HTTPStatus.INTERNAL_SERVER_ERROR
+    # Will never reach here because a new unique index is on Results (file_id, rule_id)
+    #return jsonify({"error": "Couldn't decide on the rule to replace"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 def get_policy(policy):
