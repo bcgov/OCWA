@@ -21,7 +21,7 @@ import { colors } from '@atlaskit/theme';
 import InfoIcon from '@atlaskit/icon/glyph/info';
 import CommentIcon from '@atlaskit/icon/glyph/comment';
 
-import Details from './details';
+import Details from '../../containers/request-details';
 import RequestType from './request-type';
 import StateLabel from '../state-label';
 import Sidebar from '../../containers/sidebar';

@@ -28,7 +28,7 @@ function NewRequestForm({
   const onSubmit = (formData, formId) =>
     sendAction(
       'onCreate',
-      { ...formData, _id: formId, exportType: exportType.value },
+      { ...formData, exportType: exportType.value },
       { history }
     );
 

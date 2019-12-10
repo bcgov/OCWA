@@ -1,13 +1,15 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'react-formio';
+import omit from 'lodash/omit';
 import Spinner from '@atlaskit/spinner';
 
 import * as styles from './styles.css';
 
 function FormWrapper({ formId, isLoading, onSubmit, ...formProps }) {
   const onSubmitHandler = ({ data }) => {
-    onSubmit(data, formId);
+    const formData = omit(data, 'submit');
+    onSubmit(formData, formId);
   };
 
   if (isLoading) {

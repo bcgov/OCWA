@@ -13,34 +13,35 @@ import { _e } from '@src/utils';
 
 import EditField from './edit-field';
 import { RequestSchema } from '../../types';
-import { requestFields } from '../../utils';
 import * as styles from './styles.css';
 
 function RequestDetails({
   data,
   duplicateFiles,
+  fetchForm,
+  fields,
   id,
   isEditing,
   isLoading,
   onSave,
 }) {
   const files = get(data, 'files', []);
-  const exportType = get(data, 'exportType', 'data');
   const supportingFiles = get(data, 'supportingFiles', []);
-  const requestDetails = requestFields(data.type)
-    .filter(
-      d =>
-        (d.exportType === 'all' || d.exportType === exportType) &&
-        (d.zone === 'all' || d.zone === zone)
-    )
-    .map(d => ({
-      name: d.name,
-      type: d.type,
-      value: get(data, d.value, ''),
-      key: d.value,
-      isRequired: d.isRequired,
-    }));
+  console.log(fields);
+  const requestDetails = fields.map(d => ({
+    name: d.label,
+    type: d.type,
+    value: get(data, d.key, ''),
+    key: d.key,
+    isRequired: d.validate && d.validate.required,
+  }));
   const uploadData = merge({}, data, duplicateFiles);
+
+  React.useEffect(() => {
+    if (data.formName && fields.length <= 0) {
+      fetchForm({ id: data.formName });
+    }
+  }, [data]);
 
   if (isLoading && !data._id) {
     return (
@@ -59,16 +60,14 @@ function RequestDetails({
         message="Are you sure you want to leave this page before finishing your edits?"
       />
       <div className={styles.section}>
-        {requestDetails
-          .filter(d => (isEditing ? true : !isEmpty(d.value)))
-          .map(d => (
-            <EditField
-              key={uid(d)}
-              data={d}
-              isEditing={isEditing}
-              onSave={onSave}
-            />
-          ))}
+        {requestDetails.map(d => (
+          <EditField
+            key={uid(d)}
+            data={d}
+            isEditing={isEditing}
+            onSave={onSave}
+          />
+        ))}
       </div>
       {(data.exportType === 'data' || !data.exportType) && (
         <React.Fragment>
@@ -127,6 +126,8 @@ RequestDetails.propTypes = {
     files: PropTypes.arrayOf(PropTypes.string),
     supportingFiles: PropTypes.arrayOf(PropTypes.string),
   }),
+  fetchForm: PropTypes.func.isRequired,
+  fields: PropTypes.array.isRequired,
   id: PropTypes.string.isRequired,
   isEditing: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
