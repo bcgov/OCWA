@@ -29,234 +29,219 @@ import { RequestSchema } from '../../types';
 import { validCode, failedCode } from '../../utils';
 import * as styles from './styles.css';
 
-class Request extends React.Component {
-  state = {
-    isEditing: get(this, 'props.location.state.isEditing', false),
-  };
+function Request({
+  data,
+  duplicateFiles,
+  history,
+  isSubmitting,
+  isLoaded,
+  isLoading,
+  isOutputChecker,
+  location,
+  onFinishEditing,
+  onReset,
+  updatedAt,
+  match,
+  zone,
+}) {
+  const [isEditing, toggleEditing] = React.useState(
+    get(location, 'state.isEditing', false)
+  );
 
-  componentDidUpdate(prevProps, prevState) {
-    const { data, onFinishEditing } = this.props;
-    const { isEditing } = this.state;
-
-    if (prevState.isEditing && !isEditing) {
-      onFinishEditing(data._id);
+  React.useEffect(() => {
+    if (isEditing && get(location, 'state.isEditing')) {
+      history.replace(location.pathname, { isEditing: false });
     }
+  }, [isEditing]);
+
+  React.useEffect(() => {
+    return () => {
+      onReset();
+    };
+  }, []);
+
+  function onToggleEdit() {
+    toggleEditing(state => !state);
   }
 
-  componentWillUnmount() {
-    const { onReset } = this.props;
-    onReset();
+  /* onSave = updatedData => {
+   *   const { data, onSave } = this.props;
+
+   *   onSave(merge({}, data, updatedData), { id: data._id });
+   *   this.setState({
+   *     isEditing: false,
+   *   });
+   * }; */
+
+  const title = data.name || 'Loading...';
+  const isDiscussionEnabled =
+    (data.type === 'export' && zone === 'internal') ||
+    (data.type === 'import' && zone === 'external');
+
+  if (!isLoaded && isEmpty(data)) {
+    return null;
   }
 
-  onEdit = () => {
-    const { isEditing } = this.state;
-    const { history, location } = this.props;
+  const isCodeExport = data.exportType === 'code';
+  const mergeRequestStatusCode = get(data, 'mergeRequestStatus.code');
+  const showMergeRequestError =
+    isCodeExport && mergeRequestStatusCode === failedCode;
+  const showMergeRequestLoading =
+    isCodeExport && mergeRequestStatusCode < validCode;
+  const showMergeRequestComplete =
+    isCodeExport && mergeRequestStatusCode === validCode;
 
-    // Always turn off the cached editing value after editing
-    this.setState(
-      state => ({
-        isEditing: !state.isEditing,
-      }),
-      () => {
-        if (isEditing) {
-          history.replace(location.pathname, { isEditing: false });
-        }
-      }
-    );
-  };
-
-  onSave = updatedData => {
-    const { data, onSave } = this.props;
-
-    onSave(merge({}, data, updatedData), { id: data._id });
-    this.setState({
-      isEditing: false,
-    });
-  };
-
-  render() {
-    const {
-      data,
-      duplicateFiles,
-      isSubmitting,
-      isLoaded,
-      isLoading,
-      isOutputChecker,
-      updatedAt,
-      match,
-      zone,
-    } = this.props;
-    const { isEditing } = this.state;
-    const title = data.name || 'Loading...';
-    const isDiscussionEnabled =
-      (data.type === 'export' && zone === 'internal') ||
-      (data.type === 'import' && zone === 'external');
-
-    if (!isLoaded && isEmpty(data)) {
-      return null;
-    }
-
-    const isCodeExport = data.exportType === 'code';
-    const mergeRequestStatusCode = get(data, 'mergeRequestStatus.code');
-    const showMergeRequestError =
-      isCodeExport && mergeRequestStatusCode === failedCode;
-    const showMergeRequestLoading =
-      isCodeExport && mergeRequestStatusCode < validCode;
-    const showMergeRequestComplete =
-      isCodeExport && mergeRequestStatusCode === validCode;
-
-    return (
-      <div id="requests-page">
-        <Title>{title}</Title>
-        {isCodeExport && (
-          <LoadingDialog
-            open={data.autoAccept && isSubmitting}
-            title="Approving Request"
-            text="This can take some time, please wait for the merge request to complete"
-          />
-        )}
-        <Page>
-          <header
-            className={cx(styles.header, {
-              [styles.headerWithDiscussion]: isDiscussionEnabled,
-            })}
-          >
+  return (
+    <div id="requests-page">
+      <Title>{title}</Title>
+      {isCodeExport && (
+        <LoadingDialog
+          open={data.autoAccept && isSubmitting}
+          title="Approving Request"
+          text="This can take some time, please wait for the merge request to complete"
+        />
+      )}
+      <Page>
+        <header
+          className={cx(styles.header, {
+            [styles.headerWithDiscussion]: isDiscussionEnabled,
+          })}
+        >
+          <Grid>
+            <GridColumn medium={9}>
+              <h1 id="request-title">
+                <ExportTypeIcon large exportType={data.exportType} />
+                <span>{title}</span>
+              </h1>
+              <p id="request-header-details">
+                <RequestType type={data.type} />
+                <span>
+                  <CalendarIcon size="small" primaryColor={colors.DN300} />
+                </span>
+                {'Updated at '}
+                <Date value={updatedAt} format="HH:MMa on MMMM Do, YYYY" />
+                {isEditing && (
+                  <Lozenge appearance="inprogress">Editing</Lozenge>
+                )}
+              </p>
+            </GridColumn>
+            <GridColumn medium={3}>
+              <div id="request-status" style={{ textAlign: 'right' }}>
+                <StateLabel value={data.state} />
+              </div>
+            </GridColumn>
+          </Grid>
+          {isDiscussionEnabled && (
             <Grid>
-              <GridColumn medium={9}>
-                <h1 id="request-title">
-                  <ExportTypeIcon large exportType={data.exportType} />
-                  <span>{title}</span>
-                </h1>
-                <p id="request-header-details">
-                  <RequestType type={data.type} />
-                  <span>
-                    <CalendarIcon size="small" primaryColor={colors.DN300} />
-                  </span>
-                  {'Updated at '}
-                  <Date value={updatedAt} format="HH:MMa on MMMM Do, YYYY" />
-                  {isEditing && (
-                    <Lozenge appearance="inprogress">Editing</Lozenge>
-                  )}
-                </p>
-              </GridColumn>
-              <GridColumn medium={3}>
-                <div id="request-status" style={{ textAlign: 'right' }}>
-                  <StateLabel value={data.state} />
-                </div>
+              <GridColumn>
+                <nav className={styles.tabs}>
+                  <NavLink
+                    exact
+                    activeClassName={styles.tabActive}
+                    className={styles.tab}
+                    id="request-details-tab"
+                    to={match.url}
+                  >
+                    <InfoIcon size="small" />
+                    {' Details'}
+                  </NavLink>
+                  <NavLink
+                    exact
+                    disabled={isEditing}
+                    activeClassName={styles.tabActive}
+                    className={styles.tab}
+                    id="request-discussion-tab"
+                    to={`${match.url}/discussion`}
+                  >
+                    <CommentIcon size="small" />
+                    {' Discussion'}
+                  </NavLink>
+                </nav>
               </GridColumn>
             </Grid>
-            {isDiscussionEnabled && (
-              <Grid>
-                <GridColumn>
-                  <nav className={styles.tabs}>
-                    <NavLink
-                      exact
-                      activeClassName={styles.tabActive}
-                      className={styles.tab}
-                      id="request-details-tab"
-                      to={match.url}
-                    >
-                      <InfoIcon size="small" />
-                      {' Details'}
-                    </NavLink>
-                    <NavLink
-                      exact
-                      disabled={isEditing}
-                      activeClassName={styles.tabActive}
-                      className={styles.tab}
-                      id="request-discussion-tab"
-                      to={`${match.url}/discussion`}
-                    >
-                      <CommentIcon size="small" />
-                      {' Discussion'}
-                    </NavLink>
-                  </nav>
-                </GridColumn>
-              </Grid>
-            )}
-          </header>
-          <div id="request-details" className={styles.main}>
-            <Grid>
-              <GridColumn medium={9}>
-                {(showMergeRequestComplete ||
-                  showMergeRequestLoading ||
-                  showMergeRequestError) &&
-                  !isEditing && (
-                    <div className={styles.mergeRequestStatus}>
-                      {showMergeRequestLoading && (
-                        <SectionMessage icon={Spinner}>
-                          <strong>Merge Request</strong> is in progress, please
-                          wait before submitting.
-                        </SectionMessage>
-                      )}
-                      {showMergeRequestComplete && data.state < 2 && (
-                        <SectionMessage
-                          appearance="confirmation"
-                          icon={CheckCircleIcon}
-                        >
-                          <strong>Merge Request Complete</strong>. Please submit
-                          your request.
-                        </SectionMessage>
-                      )}
-                      {showMergeRequestError && (
-                        <SectionMessage appearance="error">
-                          {get(
-                            data,
-                            'mergeRequestStatus.message',
-                            'There was an error.'
-                          )}
-                        </SectionMessage>
-                      )}
-                    </div>
-                  )}
-                <Switch>
-                  <Route
-                    exact
-                    path={match.url}
-                    render={() => (
-                      <Details
-                        data={data}
-                        duplicateFiles={duplicateFiles}
-                        id={match.params.requestId}
-                        isEditing={isEditing}
-                        isLoaded={isLoaded}
-                        isLoading={isLoading}
-                        onSave={this.onSave}
-                      />
+          )}
+        </header>
+        <div id="request-details" className={styles.main}>
+          <Grid>
+            <GridColumn medium={9}>
+              {(showMergeRequestComplete ||
+                showMergeRequestLoading ||
+                showMergeRequestError) &&
+                !isEditing && (
+                  <div className={styles.mergeRequestStatus}>
+                    {showMergeRequestLoading && (
+                      <SectionMessage icon={Spinner}>
+                        <strong>Merge Request</strong> is in progress, please
+                        wait before submitting.
+                      </SectionMessage>
                     )}
-                  />
-                  {!isDiscussionEnabled && (
-                    <Redirect from={`${match.url}/discussion`} to={match.url} />
-                  )}
-                  {isDiscussionEnabled && (
-                    <Route
-                      exact
-                      path={`${match.url}/discussion`}
-                      render={() =>
-                        data.topic ? (
-                          <Discussion id={data.topic} title={title} />
-                        ) : (
-                          <Spinner />
-                        )
-                      }
+                    {showMergeRequestComplete && data.state < 2 && (
+                      <SectionMessage
+                        appearance="confirmation"
+                        icon={CheckCircleIcon}
+                      >
+                        <strong>Merge Request Complete</strong>. Please submit
+                        your request.
+                      </SectionMessage>
+                    )}
+                    {showMergeRequestError && (
+                      <SectionMessage appearance="error">
+                        {get(
+                          data,
+                          'mergeRequestStatus.message',
+                          'There was an error.'
+                        )}
+                      </SectionMessage>
+                    )}
+                  </div>
+                )}
+              <Switch>
+                <Route
+                  exact
+                  path={match.url}
+                  render={() => (
+                    <Details
+                      data={data}
+                      duplicateFiles={duplicateFiles}
+                      id={match.params.requestId}
+                      isEditing={isEditing}
+                      isLoaded={isLoaded}
+                      isLoading={isLoading}
+                      onSave={onFinishEditing}
                     />
                   )}
-                </Switch>
-              </GridColumn>
-              <GridColumn medium={3}>
-                <Sidebar
-                  data={data}
-                  isEditing={isEditing}
-                  isOutputChecker={isOutputChecker}
-                  onEdit={this.onEdit}
                 />
-              </GridColumn>
-            </Grid>
-          </div>
-        </Page>
-      </div>
-    );
-  }
+                {!isDiscussionEnabled && (
+                  <Redirect from={`${match.url}/discussion`} to={match.url} />
+                )}
+                {isDiscussionEnabled && (
+                  <Route
+                    exact
+                    path={`${match.url}/discussion`}
+                    render={() =>
+                      data.topic ? (
+                        <Discussion id={data.topic} title={title} />
+                      ) : (
+                        <Spinner />
+                      )
+                    }
+                  />
+                )}
+              </Switch>
+            </GridColumn>
+            <GridColumn medium={3}>
+              <Sidebar
+                data={data}
+                isEditing={isEditing}
+                isOutputChecker={isOutputChecker}
+                onEdit={onToggleEdit}
+              />
+            </GridColumn>
+          </Grid>
+        </div>
+      </Page>
+    </div>
+  );
 }
 
 Request.propTypes = {

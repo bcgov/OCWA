@@ -38,13 +38,13 @@ export default connect(
   {
     onFetch: id =>
       fetchRequest({
-        url: `/api/v1/requests/${id}`,
+        url: `/api/v2/requests/${id}`,
         schema: requestSchema,
         id,
       }),
     onCreate: (payload, meta) =>
       createRequest(payload, meta, {
-        url: '/api/v1/requests',
+        url: '/api/v2/requests',
         schema: { result: requestSchema },
       }),
   }

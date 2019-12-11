@@ -24,7 +24,7 @@ export default connect(
   {
     initialRequest: ({ id }) =>
       fetchForm({
-        url: `/api/v1/requests/forms/${id}`,
+        url: `/api/v2/requests/forms/${id}`,
         schema: formSchema,
       }),
   }

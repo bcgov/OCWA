@@ -11,7 +11,8 @@ const mapStateToProps = (state, props) => {
   const formName = get(props, 'data.formName');
   const formEntities = get(state, 'data.entities.forms', {});
   const formId = findKey(formEntities, f => f.path === formName);
-  const allFields = get(formEntities, [formId, 'components'], []);
+  const form = get(formEntities, formId, {});
+  const allFields = get(form, 'components', []);
   const fields = [];
 
   const fieldCrawler = d => {
@@ -27,6 +28,10 @@ const mapStateToProps = (state, props) => {
   allFields.forEach(fieldCrawler);
 
   return {
+    form: {
+      ...form,
+      components: fields.filter(f => f.key !== 'name'),
+    },
     fields,
   };
 };
@@ -36,7 +41,7 @@ export default connect(
   {
     fetchForm: ({ id }) =>
       fetchForm({
-        url: `/api/v1/requests/forms/${id}`,
+        url: `/api/v2/requests/forms/${id}`,
         schema: formSchema,
       }),
   }
