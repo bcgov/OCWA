@@ -56,9 +56,10 @@ export const closeDraftRequest = () => ({
 
 export const reset = () => ({ type: 'request/reset' });
 
-export const finishEditing = id => ({
+export const finishEditing = (id, payload) => ({
   type: 'request/finish-editing',
-  payload: id,
+  meta: { id },
+  payload,
 });
 
 export const removeFile = (id, filesKey) => ({

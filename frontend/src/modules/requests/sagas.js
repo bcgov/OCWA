@@ -149,7 +149,7 @@ function* checkMergeRequestStatus(action) {
 // After a request is finished being edited normalize the added/removed files
 function* onFinishEditing(action) {
   // Grab the uploaded files to add to the request
-  const id = action.payload;
+  const { id } = action.meta;
   const { files, supportingFiles } = yield select(
     state => state.files.fileTypes
   );
@@ -162,6 +162,7 @@ function* onFinishEditing(action) {
   const deletedFilesHandler = fileId => !filesToDelete.includes(fileId);
   const payload = {
     ...request,
+    ...action.payload,
     files: union(request.files, files, filesToDuplicate.files).filter(
       deletedFilesHandler
     ),

@@ -1,17 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { Code } from 'react-content-loader';
-import isEmpty from 'lodash/isEmpty';
 import Files from '@src/modules/files/containers/files';
 import FileUploader from '@src/modules/files/containers/file-uploader';
+import { Form } from 'react-formio';
 import get from 'lodash/get';
+import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 import merge from 'lodash/merge';
 import { Prompt } from 'react-router-dom';
 import { uid } from 'react-uid';
-import { zone } from '@src/services/config';
 import { _e } from '@src/utils';
 
-import EditField from './edit-field';
 import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
@@ -20,28 +20,37 @@ function RequestDetails({
   duplicateFiles,
   fetchForm,
   fields,
+  form,
   id,
   isEditing,
   isLoading,
   onSave,
 }) {
+  const formRef = React.useRef({});
   const files = get(data, 'files', []);
   const supportingFiles = get(data, 'supportingFiles', []);
-  console.log(fields);
-  const requestDetails = fields.map(d => ({
-    name: d.label,
-    type: d.type,
-    value: get(data, d.key, ''),
-    key: d.key,
-    isRequired: d.validate && d.validate.required,
-  }));
   const uploadData = merge({}, data, duplicateFiles);
+
+  function onChange(submission) {
+    if (submission.changed) {
+      formRef.current = {
+        ...formRef.current,
+        [submission.changed.component.key]: submission.changed.value,
+      };
+    }
+  }
 
   React.useEffect(() => {
     if (data.formName && fields.length <= 0) {
       fetchForm({ id: data.formName });
     }
   }, [data]);
+
+  React.useEffect(() => {
+    if (!isEditing && !isEmpty(formRef.current)) {
+      onSave(id, formRef.current);
+    }
+  }, [isEditing]);
 
   if (isLoading && !data._id) {
     return (
@@ -56,19 +65,28 @@ function RequestDetails({
   return (
     <React.Fragment>
       <Prompt
-        when={isEditing}
+        when={isEditing && !isEmpty(formRef.current)}
         message="Are you sure you want to leave this page before finishing your edits?"
       />
-      <div className={styles.section}>
-        {requestDetails.map(d => (
-          <EditField
-            key={uid(d)}
-            data={d}
-            isEditing={isEditing}
-            onSave={onSave}
-          />
-        ))}
-      </div>
+      {isEditing && (
+        <Form form={form} submission={{ data }} onChange={onChange} />
+      )}
+      {!isEditing && (
+        <div className={styles.section}>
+          {fields
+            .filter(d => d.key !== 'name')
+            .map(d => (
+              <div
+                key={uid(d)}
+                id={`request-${data.key}-field`}
+                className={styles.fieldRow}
+              >
+                <h6>{d.label}</h6>
+                <p>{data[d.key] || '-'}</p>
+              </div>
+            ))}
+        </div>
+      )}
       {(data.exportType === 'data' || !data.exportType) && (
         <React.Fragment>
           <div id="request-export-files" className={styles.section}>
@@ -128,6 +146,7 @@ RequestDetails.propTypes = {
   }),
   fetchForm: PropTypes.func.isRequired,
   fields: PropTypes.array.isRequired,
+  form: PropTypes.object.isRequired,
   id: PropTypes.string.isRequired,
   isEditing: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
