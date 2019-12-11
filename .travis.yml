@@ -26,7 +26,6 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/forumApi
       npm ci
-    - npm audit
     before_script:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/forumApi
@@ -85,7 +84,6 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/projectApi
       npm ci
-    - npm audit
     before_script:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/projectApi
@@ -165,7 +163,6 @@ matrix:
       cp config/test.json.example config/test.json
       cp config/default.json.example config/default.json
       npm ci
-    - npm audit
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/shared/js
       npm ci
@@ -357,7 +354,6 @@ matrix:
       cd /home/travis/build/bcgov/OCWA/frontend
       cp config/test.json.example config/test.json
     - npm ci
-    - npm audit
     - npm test
     - |-
       cd /home/travis/build/bcgov/OCWA/frontend
@@ -379,7 +375,7 @@ matrix:
     language: java
     addons:
       apt:
-        packages:    
+        packages:
           - dpkg
           - google-chrome-stable
       hosts:
@@ -432,11 +428,11 @@ matrix:
     script:
     - cd /usr/local/bin/Katalon_Studio
     - |-
-      if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then 
+      if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
         xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/HappyPathSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
       fi
     - |-
-      if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then 
+      if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
         xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/FullFeatureSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
         xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/AccessSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
       fi
