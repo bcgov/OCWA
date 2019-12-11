@@ -4,6 +4,7 @@ import { delay, eventChannel } from 'redux-saga';
 import forIn from 'lodash/forIn';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 import { normalize } from 'normalizr';
 import union from 'lodash/union';
 import { requestSocketHost } from '@src/services/config';
@@ -174,12 +175,14 @@ function* onFinishEditing(action) {
   };
   const meta = { id };
 
-  yield put(
-    saveRequest(payload, meta, {
-      url: `/api/v2/requests/save/${id}`,
-      schema: { result: requestSchema },
-    })
-  );
+  if (!isEqual(request, payload)) {
+    yield put(
+      saveRequest(payload, meta, {
+        url: `/api/v2/requests/save/${id}`,
+        schema: { result: requestSchema },
+      })
+    );
+  }
 }
 
 export default function* root() {
