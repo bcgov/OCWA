@@ -291,9 +291,7 @@ var getRouter = function(db){
 
                     notify.process(findRes, req.user);
 
-                    db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, updatedFindRes){
-                        res.json({message: "Successfully updated", result: updatedFindRes});
-                    }
+                    res.json({message: "Successfully updated", result: findRes});
                 });
             });
         });
