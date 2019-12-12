@@ -26,7 +26,7 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/forumApi
       npm ci
-      if [ "$TRAVIS_TAG" == "" ]; then npm audit; fi
+      if [ "$TRAVIS_TAG" = "" ]; then npm audit; fi
     before_script:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/forumApi
@@ -85,7 +85,7 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/projectApi
       npm ci
-      if [ "$TRAVIS_TAG" == "" ]; then npm audit; fi
+      if [ "$TRAVIS_TAG" = "" ]; then npm audit; fi
     before_script:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/projectApi
@@ -165,7 +165,7 @@ matrix:
       cp config/test.json.example config/test.json
       cp config/default.json.example config/default.json
       npm ci
-      if [ "$TRAVIS_TAG" == "" ]; then npm audit; fi
+      if [ "$TRAVIS_TAG" = "" ]; then npm audit; fi
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/shared/js
       npm ci
@@ -358,7 +358,7 @@ matrix:
       cp config/test.json.example config/test.json
       - |-
       npm ci
-      if [ "$TRAVIS_TAG" == "" ]; then npm audit; fi    - npm test
+      if [ "$TRAVIS_TAG" = "" ]; then npm audit; fi    - npm test
     - |-
       cd /home/travis/build/bcgov/OCWA/frontend
       helm lint helm/ocwa-frontend
