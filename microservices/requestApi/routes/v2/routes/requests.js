@@ -291,7 +291,7 @@ var getRouter = function(db){
 
                     notify.process(findRes, req.user);
 
-                    var keys = Object.keys(formRes.data)
+                    var keys = Object.keys(formRes.data);
                     for (var i=0; i<keys.length; i++){
                         if (db.Request.schemaFields.indexOf(keys[i]) === -1){
                             findRes[keys[i]] = formRes.data[keys[i]];

@@ -74,6 +74,15 @@ printf "\"givenNameField\": \"${GIVENNAME_FIELD}\",\n" >> ./config/default.json
 printf "\"surNameField\": \"${SURNAME_FIELD}\",\n" >> ./config/default.json
 printf "\"groupField\": \"${GROUP_FIELD}\"\n" >> ./config/default.json
 printf "}\n" >> ./config/default.json
+
+printf "\"formio\": {\n" >> ./config/default.json
+printf "\"defaultFormName\": \"${DEFAULT_FORM_NAME}\",\n" >> ./config/default.json
+printf "\"defaultCodeFormName\": \"${DEFAULT_CODE_FORM_NAME}\",\n" >> ./config/default.json
+printf "\"url\": \"${FORMIO_URL}\",\n" >> ./config/default.json
+printf "\"username\": \"${FORMIO_USERNAME}\",\n" >> ./config/default.json
+printf "\"password\": \"${FORMIO_PASSWORD}\",\n" >> ./config/default.json
+printf "}\n" >> ./config/default.json
+
 printf "}" >> ./config/default.json
 
 npm start
