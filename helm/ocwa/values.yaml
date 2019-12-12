@@ -294,6 +294,12 @@ project-api:
 request-api:
   replicaCount: 1
 
+  defaultFormName: "dataForm"
+  defaultCodeFormName: "codeForm"
+  formioUrl: "http://ocwa-formio.ocwa"
+  formioUsername: "admin@example.com"
+  formioPassword: "CHANGEME"
+
   image:
     repository: bcgovimages/ocwa_request_api
     tag: latest
