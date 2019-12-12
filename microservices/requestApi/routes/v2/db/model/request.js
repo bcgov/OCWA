@@ -67,6 +67,8 @@ model.CANCELLED_STATE = baseModel.CANCELLED_STATE;
 model.INPUT_TYPE = baseModel.INPUT_TYPE;
 model.EXPORT_TYPE = baseModel.EXPORT_TYPE;
 
+model.schemaFields = schemaFields;
+
 model.validState = baseModel.validState;
 
 

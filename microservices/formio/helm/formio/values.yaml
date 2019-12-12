@@ -29,6 +29,8 @@ database:
 username: "admin@example.com"
 password: CHANGEME
 
+NODE_CONFIG: "{}"
+
 createDatabase: true
 storageClassName: default
 dbPod:
