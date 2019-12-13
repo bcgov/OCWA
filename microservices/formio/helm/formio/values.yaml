@@ -14,7 +14,7 @@ service:
   port: 80
 
 ##Configuration for OCWA Forum Api
-apiPort: 3006
+apiPort: 3001
 logLevel: error
 
 global:
@@ -24,12 +24,12 @@ database:
   host: ocwa-formio-mongo.ocwa
   username: forumApi
   password: password
-  dbName: formioApp
+  dbName: formioapp
 
 username: "admin@example.com"
 password: CHANGEME
 
-NODE_CONFIG: "{}"
+nodeConfig: '{\"mongo\": \"mongodb://forumApi:password@ocwa-formio-mongo.ocwa:27017/formioapp\", \"jwt\": { \"secret\": \"ssh this is a secret\" } }'
 
 createDatabase: true
 storageClassName: default

@@ -11,9 +11,9 @@ WORKDIR /app
 # (note: using pinned versions to ensure immutable build environment)
 RUN apk update && \
     apk upgrade && \
-    apk add python=2.7.15-r2 && \
+    apk add python=2.7.16-r1 && \
     apk add make=4.2.1-r2 && \
-    apk add g++=6.4.0-r9
+    apk add g++=8.3.0-r0
 
 # Using an alternative package install location
 # to allow overwriting the /app folder at runtime
@@ -35,10 +35,14 @@ RUN npm ci --prefix=$NPM_PACKAGES
 #          See docker-compose.yml for instructions
 RUN ln -sf $NPM_PACKAGES/node_modules node_modules
 
+RUN chmod 777 /.npm-packages && chmod 777 /app
+
 # Set this to inspect more from the application. Examples:
 #   DEBUG=formio:db (see index.js for more)
 #   DEBUG=formio:*
 ENV DEBUG=""
+
+COPY . /app
 
 # This will initialize the application based on
 # some questions to the user (login email, password, etc.)

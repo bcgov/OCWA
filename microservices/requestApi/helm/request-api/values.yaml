@@ -101,6 +101,12 @@ gitopsEnabled: false
 gitopsUrl: http://gitops.ocwa
 gitopsSecret: s3cr3t
 
+defaultFormName: "dataForm"
+defaultCodeFormName: "codeForm"
+formioUrl: "http://ocwa-formio.ocwa"
+formioUsername: "admin@example.com"
+formioPassword: "CHANGEME"
+
 resources: {}
   # If you want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.

@@ -1,60 +1,52 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "ocwaForumApi.fullname" . }}
+  name: {{ template "formio.fullname" . }}
   labels:
-    app: {{ template "ocwaForumApi.name" . }}
-    chart: {{ template "ocwaForumApi.chart" . }}
+    app: {{ template "formio.name" . }}
+    chart: {{ template "formio.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "ocwaForumApi.name" . }}
+      app: {{ template "formio.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "ocwaForumApi.name" . }}
+        app: {{ template "formio.name" . }}
         release: {{ .Release.Name }}
     spec:
-      {{ if .Values.emailTemplateEnabled }}
-      volumes:
-      - name: emailtemplate
-        configMap:
-          name: {{ template "ocwaForumApi.fullname" . }}-forumapi-configmap
-          defaultMode: 511
-      {{ end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{ if .Values.emailTemplateEnabled }}
-          volumeMounts:
-          - name: emailtemplate
-            mountPath: ./notifications
-            subPath: "emailTemplate"
-          {{ end }}
           env:
             - name: NODE_CONFIG
               value: "{{ .Values.nodeConfig }}"
+            - name: ROOT_EMAIL
+              value: "{{ .Values.username }}"
+            - name: ROOT_PASSWORD
+              value: "{{ .Values.password }}"
+            - name: DEBUG
+              value: "formio:*"
 
           ports:
             - name: http
               containerPort: {{ .Values.apiPort }}
               protocol: TCP
-            - name: websocket
-              containerPort: {{ .Values.wsPort }}
-              protocol: TCP
           livenessProbe:
             httpGet:
-              path: /v1/api-docs
+              path: /
               port: http
+            initialDelaySeconds: 30
           readinessProbe:
             httpGet:
-              path: /v1/api-docs
+              path: /
               port: http
+            initialDelaySeconds: 30
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
