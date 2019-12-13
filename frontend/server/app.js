@@ -16,9 +16,6 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 
-const logger = require('morgan');
-const log = require ('npmlog');
-
 const { checkAuth } = require('./auth');
 const { getZone, parseApiHost, parseWsHost, storeUrl } = require('./utils');
 const proxy = require('./proxy');
@@ -76,10 +73,6 @@ if (isDevelopment) {
 
 log.level = 'debug'; // config.get('logLevel');
 log.addLevel('debug', 2900, { fg: 'green' });
-
-if (process.env.NODE_ENV !== 'test') {
-    app.use(logger('dev'));
-}
 
 // Express config
 app.set('view engine', 'pug');
@@ -158,11 +151,13 @@ app.get('*', checkAuth, storeUrl, (req, res) => {
 
 app.use((err, req, res) => {
   // set locals, only providing error in development
+  /* eslint-disable no-param-reassign */
   res.locals = res.locals || {};
   res.locals.message = err.message;
   res.locals.error = isDevelopment ? err : {};
+  /* eslint-enable no-param-reassign */
 
-  console.log('app error', err);
+  log.error('app error', err);
   // render the error page
   if (isFunction(res.status)) {
     res.status(err.status || 500);
