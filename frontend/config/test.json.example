@@ -17,6 +17,10 @@
   "codeExportEnabled": false,
   "repositoryHost": "any code repository regex",
   "exporterMode": "export",
+  "forms": {
+    "dataRequest": "FORM.IO ID",
+    "codeRequest": "FORM.IO ID"
+  },
   "auth": {
     "authorizationEndpoint": "URL_REQUIRED",
     "callbackURL": "http://localhost:8000/auth",

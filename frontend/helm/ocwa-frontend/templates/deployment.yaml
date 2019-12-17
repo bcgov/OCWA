@@ -52,8 +52,10 @@ spec:
               value: "{{ .Values.codeExportEnabled }}"
             - name: REPOSITORY_HOST
               value: "{{ .Values.repositoryHost }}"
-            - name: NEW_REQUEST_FORM
-              value: "{{ .Values.forms.newRequest }}"
+            - name: DATA_REQUEST_FORM
+              value: "{{ .Values.forms.dataRequest }}"
+            - name: CODE_REQUEST_FORM
+              value: "{{ .Values.forms.codeRequest }}"
             - name: COOKIE_SECRET
               valueFrom:
                 secretKeyRef:

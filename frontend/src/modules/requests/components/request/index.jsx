@@ -10,7 +10,6 @@ import Date from '@src/components/date';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import { NavLink, Redirect, Route, Switch } from 'react-router-dom';
-import merge from 'lodash/merge';
 import LoadingDialog from '@src/components/loading-dialog';
 import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
@@ -54,24 +53,16 @@ function Request({
     }
   }, [isEditing]);
 
-  React.useEffect(() => {
-    return () => {
+  React.useEffect(
+    () => () => {
       onReset();
-    };
-  }, []);
+    },
+    []
+  );
 
   function onToggleEdit() {
     toggleEditing(state => !state);
   }
-
-  /* onSave = updatedData => {
-   *   const { data, onSave } = this.props;
-
-   *   onSave(merge({}, data, updatedData), { id: data._id });
-   *   this.setState({
-   *     isEditing: false,
-   *   });
-   * }; */
 
   const title = data.name || 'Loading...';
   const isDiscussionEnabled =
@@ -272,7 +263,6 @@ Request.propTypes = {
   }).isRequired,
   onFinishEditing: PropTypes.func.isRequired,
   onReset: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
   zone: PropTypes.string.isRequired,
 };
 
