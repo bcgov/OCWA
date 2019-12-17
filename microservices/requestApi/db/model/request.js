@@ -325,7 +325,7 @@ model.getAll = function(query, limit, page, user, callback){
 
     logger.verbose("getAll ", user.supervisor, user.outputchecker);   
 
-    function queryRequests(err, topicR, projectR){
+    var queryRequests = function(err, topicR, projectR){
         logger.verbose("get all topics model get all", topicR);
         if ('_id' in query) {
             query['_id'] = mongoose.Types.ObjectId(query['_id']);

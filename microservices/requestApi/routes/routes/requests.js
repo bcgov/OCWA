@@ -270,7 +270,6 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
     /* GET specific request. */
     router.get('/:requestId', function(req, res, next) {
         var logger = require('npmlog');
-        var db = require('../db/db');
 
         var includeFileStatus = true;
         if (typeof(req.query.include_file_status) !== "undefined"){
@@ -289,7 +288,6 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
             findRes = findRes[0];
 
             if (includeFileStatus) {
-                var util = require('../util/util');
 
                 var project = projectConfig.deriveProjectFromUser(req.user);
                 projectConfig.get(project, 'autoAccept').then((autoAccept) => {
@@ -314,7 +312,6 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     //save a request
     router.put("/save/:requestId", function(req, res, next){
-        var db = require('../db/db');
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
         var config = require('config');
         var logger = require('npmlog');
@@ -394,7 +391,6 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                     })(findRes.files[i])
                 }
 
-                var notify = require('../notifications/notifications');
                 notify.process(findRes, req.user);
 
                 res.json({message: "Successfully updated", result: findRes});
