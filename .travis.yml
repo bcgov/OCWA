@@ -261,7 +261,7 @@ matrix:
       pip3 install --upgrade -r requirements.txt
       pip3 install -e .
       coverage run --branch --source=db,v1 -m pytest --cov
-      coverage xml
+      coverage xml || echo "hi"
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
       helm lint helm/policy-api
@@ -319,7 +319,7 @@ matrix:
       pip3 install -r requirements.txt
       pip3 install -e .
       coverage run --branch --source=db,v1,validator -m pytest --cov
-      coverage xml
+      coverage xml || echo "hi"
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       helm lint helm/validate-api
