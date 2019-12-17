@@ -260,7 +260,7 @@ matrix:
       cp config/default.json.template config/default.json
       pip3 install --upgrade -r requirements.txt
       pip3 install -e .
-    - coverage run --branch --source=db,v1 -m pytest --cov
+    - coverage run --branch --source=db,v1 -m pytest --cov=policyApi
     - coverage xml
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
@@ -318,7 +318,7 @@ matrix:
       cp config/default.json.template config/default.json
       pip3 install -r requirements.txt
       pip3 install -e .
-    - coverage run --branch --source=db,v1,validator -m pytest --cov
+    - coverage run --branch --source=db,v1,validator -m pytest --cov=validateApi
     - coverage xml
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/validateApi
