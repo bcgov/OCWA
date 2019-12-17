@@ -212,3 +212,7 @@ venv.bak/
 config/.metadata
 
 minioTmp**
+.config
+.ash_history
+LOCAL.md
+_tmp

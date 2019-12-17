@@ -76,7 +76,6 @@ server {
     client_max_body_size     0;
   }
 
-  # Proxy everything else to the frontend
   location /socket {
     resolver 127.0.0.11 valid=30s;
     proxy_set_header        Host            $host;
@@ -88,6 +87,21 @@ server {
     proxy_set_header        Connection $connection_upgrade;
 
     set $backend "http://ocwa_forum_api:3001";
+
+    proxy_pass $backend;
+  }
+
+  location /reqsocket {
+    resolver 127.0.0.11 valid=30s;
+    proxy_set_header        Host            $host;
+    proxy_set_header        X-Real-IP       $remote_addr;
+    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header        X-Forwarded-Proto $scheme;
+    proxy_http_version      1.1;
+    proxy_set_header        Upgrade $http_upgrade;
+    proxy_set_header        Connection $connection_upgrade;
+
+    set $backend "http://ocwa_request_api:2998";
 
     proxy_pass $backend;
   }
@@ -127,23 +141,6 @@ server {
   ssl_certificate           ${sslCertificate};
   ssl_certificate_key       ${sslCertificateKey};
 
-  # Proxy everything else to the frontend
-  location /socket {
-    resolver 127.0.0.11 valid=30s;
-    proxy_set_header        Host            $host;
-    proxy_set_header        X-Real-IP       $remote_addr;
-    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header        X-Forwarded-Proto $scheme;
-    proxy_http_version      1.1;
-    proxy_set_header        Upgrade $http_upgrade;
-    proxy_set_header        Connection $connection_upgrade;
-
-    set $backend "http://ocwa_forum_api:3001";
-
-    proxy_pass $backend;
-
-  }
-
   location /files {
     resolver 127.0.0.11 valid=30s;
 
@@ -166,6 +163,38 @@ server {
     client_max_body_size     0;
   }
 
+  location /socket {
+    resolver 127.0.0.11 valid=30s;
+    proxy_set_header        Host            $host;
+    proxy_set_header        X-Real-IP       $remote_addr;
+    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header        X-Forwarded-Proto $scheme;
+    proxy_http_version      1.1;
+    proxy_set_header        Upgrade $http_upgrade;
+    proxy_set_header        Connection $connection_upgrade;
+
+    set $backend "http://ocwa_forum_api:3001";
+
+    proxy_pass $backend;
+
+  }
+
+  location /reqsocket {
+    resolver 127.0.0.11 valid=30s;
+    proxy_set_header        Host            $host;
+    proxy_set_header        X-Real-IP       $remote_addr;
+    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header        X-Forwarded-Proto $scheme;
+    proxy_http_version      1.1;
+    proxy_set_header        Upgrade $http_upgrade;
+    proxy_set_header        Connection $connection_upgrade;
+
+    set $backend "http://ocwa_request_api:2998";
+
+    proxy_pass $backend;
+  }
+
+  # Proxy everything else to the frontend
   location / {
     resolver 127.0.0.11 valid=30s;
 

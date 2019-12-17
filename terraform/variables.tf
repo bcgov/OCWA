@@ -30,6 +30,14 @@ variable "ocwaWebSocketHost" {
   type = string
 }
 
+variable "requestWebSocketHost" {
+  type = string
+}
+
+variable "requestDLWebSocketHost" {
+  type = string
+}
+
 variable "authHost" {
   type = string
 }

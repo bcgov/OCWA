@@ -1,3 +1,4 @@
+var mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
 
@@ -33,6 +34,10 @@ router.get('/', function(req, res, next) {
 
         var pid = (req.query.parent_id == "-1") ? null : req.query.parent_id;
         q['parent_id'] = pid;
+    }
+
+    if (typeof(req.query.id) !== "undefined"){
+        q['_id'] = mongoose.Types.ObjectId(req.query.id);
     }
 
     db.Topic.getAll(q, limit, page, req.user, function(err, results){

@@ -1,5 +1,5 @@
 data "docker_registry_image" "mongodb" {
-  name = "mongo:4.1.3"
+  name = "mongo:4.2.1"
 }
 
 resource "docker_image" "mongodb" {

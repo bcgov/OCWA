@@ -29,12 +29,6 @@ def test_put_validate_rule_with_invalid_file(client, mocker, mockdb):
 
     assert response.data == b'{"error":"Can\'t rerun a rule that hasn\'t been bulk run"}\n'
 
-def test_put_validate_rule_with_unexpected_data(client, mocker, mockdb):
-    config = Config()
-    response = client.put('/v1/validate/file_2/rules/rule_1', headers=[('x-api-key', config.data['apiSecret'])])
-
-    assert response.data == b'{"error":"Couldn\'t decide on the rule to replace"}\n'
-
 def test_put_validate_rule_with_missing_rule_in_policy(client, mocker, mockdb):
     mock_get_rule = mocker.patch('v1.routes.validate.get_rule')
     mock_get_rule.return_value = {}

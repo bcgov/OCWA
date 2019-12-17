@@ -270,6 +270,12 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
     /* GET specific request. */
     router.get('/:requestId', function(req, res, next) {
         var logger = require('npmlog');
+        var db = require('../db/db');
+
+        var includeFileStatus = true;
+        if (typeof(req.query.include_file_status) !== "undefined"){
+            includeFileStatus = req.query.include_file_status == "true";
+        }
 
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
 
@@ -282,19 +288,24 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
             findRes = findRes[0];
 
-            var project = projectConfig.deriveProjectFromUser(req.user);
-            projectConfig.get(project, 'autoAccept').then((autoAccept) => {
+            if (includeFileStatus) {
+                var util = require('../util/util');
 
-                findRes.autoAccept = 
-                    (findRes.type === db.Request.INPUT_TYPE && autoAccept.import) ||
-                    (findRes.type === db.Request.EXPORT_TYPE && autoAccept.export);
+                var project = projectConfig.deriveProjectFromUser(req.user);
+                projectConfig.get(project, 'autoAccept').then((autoAccept) => {
 
-                util.getFileStatus(findRes.files, function(status) {
-                    findRes.fileStatus = status;
-                    res.json(findRes);
+                    findRes.autoAccept = 
+                        (findRes.type === db.Request.INPUT_TYPE && autoAccept.import) ||
+                        (findRes.type === db.Request.EXPORT_TYPE && autoAccept.export);
+
+                    util.getFileStatus(findRes.files, function(status) {
+                        findRes.fileStatus = status;
+                        res.json(findRes);
+                    });
                 });
-            });
-        
+            } else {
+                res.json(findRes)
+            }
 
         });
 
@@ -303,6 +314,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     //save a request
     router.put("/save/:requestId", function(req, res, next){
+        var db = require('../db/db');
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
         var config = require('config');
         var logger = require('npmlog');
@@ -366,20 +378,23 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                 var policy = findRes.type + "-" + findRes.exportType;
 
                 for (var i=0; i<findRes.files.length; i++) {
-                    var myFile = findRes.files[i];
-                    httpReq.put({
-                        url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
-                        headers: {
-                            'x-api-key': config.get('validationApiSecret')
-                        }
-                    }, function (apiErr, apiRes, body) {
-                        logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
-                        if (apiErr) {
-                            logger.debug("Error validating file: ", apiErr);
-                        }
-                    });
+                    ((myFile) => {
+                        httpReq.put({
+                            url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
+                            headers: {
+                                'x-api-key': config.get('validationApiSecret')
+                            }
+                        }, function (apiErr, apiRes, body) {
+                            logger.debug("file", myFile, "put up for validation");
+                            logger.verbose("put file", myFile, " up for validation", apiErr, apiRes, body);
+                            if (apiErr) {
+                                logger.error("Error validating file: ", apiErr);
+                            }
+                        });
+                    })(findRes.files[i])
                 }
 
+                var notify = require('../notifications/notifications');
                 notify.process(findRes, req.user);
 
                 res.json({message: "Successfully updated", result: findRes});
@@ -387,6 +402,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         });
 
     });
+
 
     //submit a request
     router.put('/submit/:requestId', function(req, res, next){

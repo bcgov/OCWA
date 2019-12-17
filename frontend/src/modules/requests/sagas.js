@@ -8,6 +8,7 @@ import { normalize } from 'normalizr';
 import union from 'lodash/union';
 import { requestSocketHost } from '@src/services/config';
 import { createSocket } from '@src/utils';
+import { getToken } from '@src/services/auth';
 
 import { fetchRequest, saveRequest } from './actions';
 import { requestSchema } from './schemas';
@@ -38,10 +39,10 @@ function isPendingMergeRequest(request) {
 /**
    Create and socket functions
  */
-
-function createSocketChannel(socket) {
+let socket = null;
+function createSocketChannel(requestSocket) {
   return eventChannel(emit => {
-    socket.onmessage = event => {
+    requestSocket.onmessage = event => {
       console.log(`[SOCKET] data - ${event.data}`);
       const json = JSON.parse(event.data);
       const { fileId, ...statusProps } = camelizeKeys(json, {
@@ -59,7 +60,10 @@ function createSocketChannel(socket) {
       });
     };
 
-    const unsubscribe = () => socket.close();
+    const unsubscribe = () => {
+      requestSocket.close();
+      socket = null;
+    };
 
     return unsubscribe;
   });
@@ -68,7 +72,7 @@ function createSocketChannel(socket) {
 export function* fileImportWatcher() {
   if (isEmpty(requestSocketHost.replace(/wss?:\/\//, ''))) return;
 
-  const socket = yield call(createSocket, requestSocketHost);
+  socket = yield call(createSocket, requestSocketHost);
   const channel = yield call(createSocketChannel, socket);
 
   try {
@@ -99,6 +103,13 @@ export function* fileImportWatcher() {
     }
   } catch (err) {
     throw new Error(err);
+  }
+}
+
+function onRefreshToken() {
+  const token = getToken();
+  if (socket) {
+    socket.send(JSON.stringify({ access_token: token }));
   }
 }
 
@@ -184,6 +195,7 @@ function* onFinishEditing(action) {
 
 export default function* root() {
   yield takeLatest('sockets/init', fileImportWatcher);
+  yield takeLatest('app/get/refresh-token/success', onRefreshToken);
   yield takeLatest('request/post/success', onCreateRequest);
   yield takeLatest('request/put/success', onSaveRequest);
   yield takeLatest('request/finish-editing', onFinishEditing);
