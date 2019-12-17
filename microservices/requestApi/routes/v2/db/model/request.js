@@ -93,7 +93,7 @@ model.getAll = function(query, limit, page, user, callback){
 
     logger.verbose("v2 getAll ", user.supervisor, user.outputchecker);
 
-   this.getAllTopics(user, function(err, topicR, projectR){
+    var queryRequests = function(err, topicR, projectR){
         logger.verbose("V2 get all topics model get all", topicR);
 
         db.Request.aggregate([
@@ -195,7 +195,17 @@ model.getAll = function(query, limit, page, user, callback){
             
         });
 
-    });
+    };
+
+
+    if ('_id' in query) {
+        db.Request.findById(query['_id'], (err, req) => {
+            getAllTopics(user, { id: req.topic }, queryRequests);
+        });
+    } else {
+        getAllTopics(user, {}, queryRequests);
+    }
+
 };
 
 module.exports = model;
