@@ -14,7 +14,7 @@ function FormWrapper({ formId, isLoading, onSubmit, ...formProps }) {
 
   if (isLoading) {
     return (
-      <div className={styles.loading}>
+      <div id="request-form-wrapper-loading" className={styles.loading}>
         <Spinner size="medium" />
       </div>
     );

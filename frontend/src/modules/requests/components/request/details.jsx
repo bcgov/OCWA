@@ -6,7 +6,6 @@ import FileUploader from '@src/modules/files/containers/file-uploader';
 import { Form } from 'react-formio';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import isEqual from 'lodash/isEqual';
 import merge from 'lodash/merge';
 import { Prompt } from 'react-router-dom';
 import { uid } from 'react-uid';
@@ -78,7 +77,7 @@ function RequestDetails({
             .map(d => (
               <div
                 key={uid(d)}
-                id={`request-${data.key}-field`}
+                id={`request-${d.key}-field`}
                 className={styles.fieldRow}
               >
                 <h6>{d.label}</h6>

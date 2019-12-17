@@ -3,29 +3,23 @@ import PropTypes from 'prop-types';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import SectionMessage from '@atlaskit/section-message';
 import Select from '@atlaskit/select';
-import { getZoneString } from '@src/utils';
-import { _e } from '@src/utils';
+import { getZoneString, _e } from '@src/utils';
 
 import Form from '../../containers/form-wrapper';
 import * as styles from './styles.css';
 import './form.scss';
 
-// NOTE: This container has to physically switch the forms, due to the black
-// box nature of the `Form` component it cache's the onSubmit callback and will
-// not change if the `exportType` variable changes
 function NewRequestForm({
   data,
   codeExportEnabled,
   formFetchStatus,
-  // helpURL,
   history,
-  // isCreating,
   location,
   sendAction,
 }) {
   const submission = location.state || null;
   const [exportType, setExportType] = React.useState(data[0]);
-  const onSubmit = (formData, formId) =>
+  const onSubmit = formData =>
     sendAction(
       'onCreate',
       { ...formData, exportType: exportType.value },
@@ -112,19 +106,13 @@ NewRequestForm.propTypes = {
   codeExportEnabled: PropTypes.bool.isRequired,
   formFetchStatus: PropTypes.oneOf(['loading', 'loaded', 'idle', 'failed'])
     .isRequired,
-  // helpURL: PropTypes.string,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
-  // isCreating: PropTypes.bool.isRequired,
   location: PropTypes.shape({
     state: PropTypes.object,
   }).isRequired,
   sendAction: PropTypes.func.isRequired,
 };
-
-// NewRequestForm.defaultProps = {
-// helpURL: null,
-// };
 
 export default NewRequestForm;
