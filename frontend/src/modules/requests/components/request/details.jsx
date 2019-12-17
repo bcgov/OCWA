@@ -81,7 +81,7 @@ function RequestDetails({
                 className={styles.fieldRow}
               >
                 <h6>{d.label}</h6>
-                <p>{data[d.key] || '-'}</p>
+                <p id={`request-${d.key}-text`}>{data[d.key] || '-'}</p>
               </div>
             ))}
         </div>
