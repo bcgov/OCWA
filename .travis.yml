@@ -366,15 +366,11 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/OCWA/frontend
       cp config/test.json.example config/test.json
-    - |-
       npm ci
       if [ "$TRAVIS_TAG" = "" ]; then npm audit; fi
       npm test
-    - |-
-      cd /home/travis/build/bcgov/OCWA/frontend
       helm lint helm/ocwa-frontend
       bash docker_quayio_push ocwa_frontend
-    - |-
       cd /home/travis/build/bcgov/OCWA
       sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dproject.settings=sonar-project.properties -Dsonar.projectKey=ocwa_frontend -Dsonar.projectName="OCWA Frontend" -Dsonar.modules=frontend
     before_deploy:
