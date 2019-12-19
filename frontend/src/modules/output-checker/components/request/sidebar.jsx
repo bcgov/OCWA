@@ -37,6 +37,14 @@ function Sidebar({
   const [hasViewedMR, setViewed] = React.useState(false);
   const isDisabledActionButton = isCodeExport ? !hasViewedMR : false;
 
+  function handleApproveClick() {
+    const c = confirm('Are you sure you want to confirm?');
+
+    if (c) {
+      onApproveRequest(id);
+    }
+  }
+
   React.useEffect(() => {
     setViewed(false);
   }, [data]);
@@ -113,7 +121,7 @@ function Sidebar({
               id="request-sidebar-approve-button"
               iconBefore={<CheckCircleIcon primaryColor="green" />}
               isDisabled={isSaving || isDisabledActionButton}
-              onClick={() => onApproveRequest(id)}
+              onClick={handleApproveClick}
             >
               Approve Request
             </Button>

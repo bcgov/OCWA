@@ -1,4 +1,5 @@
 import React from 'react';
+import { action } from '@storybook/addon-actions';
 import '@atlaskit/css-reset';
 
 import Sidebar from '../sidebar';
@@ -6,20 +7,20 @@ import Sidebar from '../sidebar';
 export default { title: 'Request Sidebar' };
 
 const props = {
-  id: 1,
+  id: 'r101',
   isApprovingRequest: false,
   isSaving: false,
-  onApproveRequest: () => console.log('hi'),
-  onDenyRequest: () => console.log('hi'),
-  onPickupRequest: () => console.log('hi'),
-  onRequestRevisions: () => console.log('hi'),
+  onApproveRequest: action('Approve'),
+  onDenyRequest: action('Deny'),
+  onPickupRequest: action('Pickup Request'),
+  onRequestRevisions: action('Request Revisions'),
   user: {
     id: 'reviewer-01',
   },
 };
 
 const unclaimedData = {
-  _id: 1,
+  _id: 'eb101',
   author: 'researcher-01',
   name: 'tst',
   reviewers: [],
@@ -29,7 +30,7 @@ const unclaimedData = {
 export const withUnclaimed = () => <Sidebar {...props} data={unclaimedData} />;
 
 const claimedData = {
-  _id: 1,
+  _id: 'eb101',
   author: 'researcher-01',
   name: 'tst',
   reviewers: ['reviewer-01'],
