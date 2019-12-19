@@ -4,7 +4,7 @@ data "docker_registry_image" "formio" {
 
 data "null_data_source" "indConfig" {
   inputs = {
-    mongoConfig = "\"mongo\": \"mongodb:${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb:27017/formioapp\""
+    mongoConfig = "\"mongo\": \"mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb:27017/formioapp\""
     jwtConfig = "\"jwt\": { \"secret\": \"${random_string.jwtSecret.result}\"}"
     portConfig = "\"port\": 3006, \"host\": \"localhost:3006\", \"domain\": \"http://localhost:3006\""
 
