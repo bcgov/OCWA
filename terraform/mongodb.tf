@@ -78,13 +78,6 @@ resource "null_resource" "mongodb_formio_first_Time_install" {
     environment = {
       SCRIPT_PATH = var.hostRootPath
     }
-    command = "ls -liah $SCRIPT_PATH"
-  }
-
-  provisioner "local-exec" {
-    environment = {
-      SCRIPT_PATH = var.hostRootPath
-    }
     command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.1.3 mongo mongodb://ocwa_mongodb/formioapp /work/formio_script.js"
   }
   depends_on = [docker_container.ocwa_mongodb, local_file.formio_script]

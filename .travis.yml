@@ -65,6 +65,7 @@ matrix:
       sudo chmod -R 777 Katalon_Studio
     - docker images --digests
     - docker ps
+    - docker logs formio
     script:
     - cd /usr/local/bin/Katalon_Studio
     - |-
