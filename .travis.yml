@@ -388,72 +388,72 @@ matrix:
         condition: "$TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG"
 
   - name: Integration Tests
-        stage: One
-        language: java
-        addons:
-          apt:
-            packages:
-              - dpkg
-              - google-chrome-stable
-          hosts:
-          - auth.example.demo
-          - ocwa.example.demo
-          - ocwadl.example.demo
-        jdk: openjdk8
-        cache:
-          directories:
-          - "/tmp/traviscache"
-        before_install:
-        - |-
-          if [ ! -d "/tmp/traviscache" ]; then
-            mkdir -p /tmp/traviscache
-          fi
-        - |-
-          cd /tmp
-          sudo wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-        - |-
-          cd /usr/local/bin
-          sudo unzip -o /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-          sudo rm -rf /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
-          sudo chmod +x terraform
-        install:
-        - |-
-          cd /home/travis/build/bcgov/OCWA/terraform
-          mkdir _tmp
-          cp terraform.tfvars.example terraform.tfvars
-          python2 scripts/prepare_images_variable.py
-        - terraform init
-        - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
-        before_script:
-        - |-
-          if [ ! -d "/tmp/traviscache" ]; then
-            mkdir -p /tmp/traviscache
-          fi
-        - |-
-          if [ ! -f "/tmp/traviscache/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz" ]; then
-            cd /tmp/traviscache
-            sudo wget -q https://download.katalon.com/${KATALON_VERSION}/Katalon_Studio_Linux_64.tar.gz -O Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
-          fi
-        - |-
-          cd /usr/local/bin
-          sudo mkdir -p Katalon_Studio
-          sudo tar -xf /tmp/traviscache/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz -C Katalon_Studio
-          sudo chmod +x Katalon_Studio/katalon
-          sudo chmod -R 777 Katalon_Studio
-        - docker images --digests
-        - docker ps
-        - docker logs ocwa_frontend
-        script:
-        - cd /usr/local/bin/Katalon_Studio
-        - |-
-          if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
-            xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/HappyPathSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
-          fi
-        - |-
-          if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-            xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/FullFeatureSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
-            xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/AccessSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
-          fi
+    stage: One
+    language: java
+    addons:
+      apt:
+        packages:
+          - dpkg
+          - google-chrome-stable
+      hosts:
+      - auth.example.demo
+      - ocwa.example.demo
+      - ocwadl.example.demo
+    jdk: openjdk8
+    cache:
+      directories:
+      - "/tmp/traviscache"
+    before_install:
+    - |-
+      if [ ! -d "/tmp/traviscache" ]; then
+        mkdir -p /tmp/traviscache
+      fi
+    - |-
+      cd /tmp
+      sudo wget -q https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+    - |-
+      cd /usr/local/bin
+      sudo unzip -o /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+      sudo rm -rf /tmp/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+      sudo chmod +x terraform
+    install:
+    - |-
+      cd /home/travis/build/bcgov/OCWA/terraform
+      mkdir _tmp
+      cp terraform.tfvars.example terraform.tfvars
+      python2 scripts/prepare_images_variable.py
+    - terraform init
+    - terraform apply -var hostRootPath=`pwd`/_tmp -auto-approve
+    before_script:
+    - |-
+      if [ ! -d "/tmp/traviscache" ]; then
+        mkdir -p /tmp/traviscache
+      fi
+    - |-
+      if [ ! -f "/tmp/traviscache/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz" ]; then
+        cd /tmp/traviscache
+        sudo wget -q https://download.katalon.com/${KATALON_VERSION}/Katalon_Studio_Linux_64.tar.gz -O Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz
+      fi
+    - |-
+      cd /usr/local/bin
+      sudo mkdir -p Katalon_Studio
+      sudo tar -xf /tmp/traviscache/Katalon_Studio_Linux_64-${KATALON_VERSION}.tar.gz -C Katalon_Studio
+      sudo chmod +x Katalon_Studio/katalon
+      sudo chmod -R 777 Katalon_Studio
+    - docker images --digests
+    - docker ps
+    - docker logs ocwa_frontend
+    script:
+    - cd /usr/local/bin/Katalon_Studio
+    - |-
+      if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+        xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/HappyPathSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+      fi
+    - |-
+      if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+        xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/FullFeatureSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+        xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/AccessSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+      fi
 
 
   - name: OCWA Master Helm Chart
