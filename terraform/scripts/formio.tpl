@@ -1,3 +1,5 @@
+use formioapp;
+
 db.createUser(
     {
         user: "${MONGO_USERNAME}",
@@ -5,8 +7,6 @@ db.createUser(
         roles: [ "dbAdmin", "readWrite" ]
     }
 );
-
-use formioapp;
 
 db.forms.insert({
     "type" : "form",
