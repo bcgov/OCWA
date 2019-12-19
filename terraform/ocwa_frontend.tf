@@ -51,8 +51,8 @@ resource "docker_container" "ocwa_download_frontend" {
     "OC_GROUP=/oc",
     "REPORTS_GROUP=/reports",
     "EXPORTER_MODE=download",
-    "DATA_REQUEST_FORM=test",
-    "CODE_REQUEST_FORM=test",
+    "DATA_REQUEST_FORM=dataexport",
+    "CODE_REQUEST_FORM=codeexport",
     "CODE_EXPORT_ENABLED=true",
   ]
 }
@@ -102,8 +102,8 @@ resource "docker_container" "ocwa_frontend" {
     "REPORTS_GROUP=/reports",
     "EXPORTER_MODE=export",
     "CODE_EXPORT_ENABLED=true",
-    "DATA_REQUEST_FORM=test",
-    "CODE_REQUEST_FORM=test",
+    "DATA_REQUEST_FORM=dataexport",
+    "CODE_REQUEST_FORM=codeexport"
   ]
 }
 
