@@ -20,7 +20,7 @@ printf "\"cookieSecret\": \"${COOKIE_SECRET}\",\n" >> ./config/default.json
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 printf "\"forms\": {\n" >> ./config/default.json
 printf "\"dataRequest\": \"${DATA_REQUEST_FORM}\",\n" >> ./config/default.json
-printf "\"codeRequest\": \"${CODE_REQUEST_FORM}\",\n" >> ./config/default.json
+printf "\"codeRequest\": \"${CODE_REQUEST_FORM}\"\n" >> ./config/default.json
 printf "},\n" >> ./config/default.json
 printf "\"auth\": {\n" >> ./config/default.json
 printf "\"authorizationEndpoint\": \"${AUTH_ENDPOINT}\",\n" >> ./config/default.json
