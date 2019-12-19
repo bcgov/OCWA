@@ -1,5 +1,3 @@
-use formioapp;
-
 db.createUser(
     {
         user: "${MONGO_USERNAME}",
