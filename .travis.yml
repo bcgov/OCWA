@@ -441,8 +441,9 @@ matrix:
       sudo chmod +x Katalon_Studio/katalon
       sudo chmod -R 777 Katalon_Studio
     - docker images --digests
+    - sleep 5
     - docker ps
-    - docker logs ocwa_frontend
+    - docker logs formio
     script:
     - cd /usr/local/bin/Katalon_Studio
     - |-
