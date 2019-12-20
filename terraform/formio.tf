@@ -28,7 +28,7 @@ resource "docker_container" "formio" {
   networks_advanced {
     name = docker_network.private_network.name
   }
-  ports = {
+  ports {
     internal = 3001
     external = 3006
   }
