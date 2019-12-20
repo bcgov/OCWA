@@ -80,7 +80,7 @@ printf "\"defaultFormName\": \"${DEFAULT_FORM_NAME}\",\n" >> ./config/default.js
 printf "\"defaultCodeFormName\": \"${DEFAULT_CODE_FORM_NAME}\",\n" >> ./config/default.json
 printf "\"url\": \"${FORMIO_URL}\",\n" >> ./config/default.json
 printf "\"username\": \"${FORMIO_USERNAME}\",\n" >> ./config/default.json
-printf "\"password\": \"${FORMIO_PASSWORD}\",\n" >> ./config/default.json
+printf "\"password\": \"${FORMIO_PASSWORD}\"\n" >> ./config/default.json
 printf "}\n" >> ./config/default.json
 
 printf "}" >> ./config/default.json
