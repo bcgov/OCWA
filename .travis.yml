@@ -388,7 +388,7 @@ matrix:
         condition: "$TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG"
 
   - name: Integration Tests
-    stage: One
+    stage: Tests
     language: java
     addons:
       apt:
