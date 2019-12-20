@@ -55,16 +55,16 @@ public class Constant {
 		static final def REQUEST_OUTPUT_FILES_UPLOAD_BTN_XPATH = "//div[@id='request-export-files']/descendant::input[@type='file']"
 		static final def REQUEST_SUPPORT_FILES_UPLOAD_BTN_XPATH = "//div[@id='request-support-files']/descendant::input[@type='file']"
 
-		static final def REQUEST_NAME_TXT_ID = 'name-uid'
+		static final def REQUEST_NAME_TXT_ID = 'data[name]'
 		static final def REQUEST_PATH = '/requests/'
 
-		static final def REQUEST_CONFIDENTIALITY_TXT_ID = 'confidentiality-uid'
+		static final def REQUEST_CONFIDENTIALITY_TXT_ID = 'data[confidentiality]'
 		static final def REQUEST_CONFIDENTIALITY_EDT_TXT_ID = 'request-confidentiality-input'
 		static final def REQUEST_CONFIDENTIALITY_LBL_TXT_ID = 'request-confidentiality-text'
-		static final def REQUEST_PHONE_TXT_ID = 'phoneNumber-uid'
-		static final def REQUEST_VARIABLE_TXT_ID = 'variableDescriptions-uid'
-		static final def REQUEST_SUBPOP_TXT_ID = 'subPopulation-uid'
-		static final def REQUEST_GENERAL_COMMENTS_TXT_ID = 'purpose-uid'
+		static final def REQUEST_PHONE_TXT_ID = 'data[phoneNumber]'
+		static final def REQUEST_VARIABLE_TXT_ID = 'data[variableDescriptions]'
+		static final def REQUEST_SUBPOP_TXT_ID = 'data[subPopulation]'
+		static final def REQUEST_GENERAL_COMMENTS_TXT_ID = 'data[purpose]'
 
 		static final def REQUEST_PHONE_TEXT = '555-555-5555'
 		static final def REQUEST_VARIABLE_TEXT = 'My variables are...'
@@ -95,11 +95,11 @@ public class Constant {
 
 	final class CodeRequests {
 		static final def REQUEST_REQUEST_TYPE_DD_ID = 'request-form-exportTypeSelect'
-		static final def REQUEST_CODE_DESCRIPTION_TXT_ID = 'codeDescription-uid'
+		static final def REQUEST_CODE_DESCRIPTION_TXT_ID = 'data[codeDescription]'
 		static final def REQUEST_CODE_DESCRIPTION_TEXT = 'Some information about the code...'
-		static final def REQUEST_LOCAL_REPO_TXT_ID = 'repository-uid'
-		static final def REQUEST_REMOTE_REPO_TXT_ID = 'externalRepository-uid'
-		static final def REQUEST_BRANCH_TXT_ID = 'branch-uid'
+		static final def REQUEST_LOCAL_REPO_TXT_ID = 'data[repository]'
+		static final def REQUEST_REMOTE_REPO_TXT_ID = 'data[externalRepository]'
+		static final def REQUEST_BRANCH_TXT_ID = 'data[branch]'
 		static final def REQUEST_LOCAL_REPO_TEXT = 'https://secureresearch.com/username/internalrepo.git'
 		static final def REQUEST_REMOTE_REPO_TEXT = 'https://github.com/username/myrep.git'
 		static final def REQUEST_CODE_EXPORT_DD_VALUE = 'Code Export'
@@ -118,7 +118,7 @@ public class Constant {
 		static final def HAVE_REVIEWED_CODE_CB_ID = 'viewed-mr'
 		static final def MERGE_REQUEST_APPROVING_TEXT = 'Approving Request'
 	}
-	
+
 	final class Reports {
 		static final def REPORTS_VARIABLE_TXT_ID = 'request-details-variable-text'
 		static final def REQUEST_CHRONOLOGY_ID_PREFIX = 'request-chronology-item-state-'
