@@ -34,6 +34,9 @@ resource "docker_container" "formio" {
   }
   env = [
     "NODE_CONFIG=${data.null_data_source.values.outputs["nodeConfig"]}",
+    "DEBUG=formio:*",
+    "ROOT_EMAIL=${var.formio["username"]}",
+    "ROOT_PASSWORD=${random_string.formioSuperPassword.result}"
   ]
 }
 
