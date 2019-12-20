@@ -71,7 +71,6 @@ public class Constant {
 		static final def REQUEST_SUBPOP_TEXT = 'My sub-population is...'
 		static final def GENERAL_COMMENTS_TEXT = 'My general comments...'
 
-		static final def REQUEST_SAVE_FILES_BTN_ID = 'request-form-save-files-button'
 		// Submit button on the request page
 		static final def REQUEST_SUBMIT_BTN_ID = 'request-sidebar-submit-button'
 		static final def REQUEST_WITHDRAW_BTN_ID = 'request-sidebar-withdraw-button'

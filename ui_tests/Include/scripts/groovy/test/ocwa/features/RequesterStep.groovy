@@ -77,7 +77,7 @@ public class RequesterStep extends Step {
 		WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
 		WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_PHONE_TXT_ID), Constant.Requester.REQUEST_PHONE_TEXT)
 
-		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
+		TestObject requestFormSaveFilesButton = Utils.getTestObjectByType()
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
