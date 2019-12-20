@@ -441,9 +441,7 @@ matrix:
       sudo chmod +x Katalon_Studio/katalon
       sudo chmod -R 777 Katalon_Studio
     - docker images --digests
-    - sleep 5
-    - docker ps
-    - docker logs formio
+    - sleep 180 #formio is really slow to comeup
     script:
     - cd /usr/local/bin/Katalon_Studio
     - |-
