@@ -73,7 +73,7 @@ printf "\"emailField\": \"${EMAIL_FIELD}\",\n" >> ./config/default.json
 printf "\"givenNameField\": \"${GIVENNAME_FIELD}\",\n" >> ./config/default.json
 printf "\"surNameField\": \"${SURNAME_FIELD}\",\n" >> ./config/default.json
 printf "\"groupField\": \"${GROUP_FIELD}\"\n" >> ./config/default.json
-printf "}\n" >> ./config/default.json
+printf "},\n" >> ./config/default.json
 
 printf "\"formio\": {\n" >> ./config/default.json
 printf "\"defaultFormName\": \"${DEFAULT_FORM_NAME}\",\n" >> ./config/default.json
