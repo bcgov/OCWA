@@ -67,7 +67,7 @@ resource "docker_container" "ocwa_request_api" {
     "GITOPS_SECRET=s3cr3t",
     "DEFAULT_FORM_NAME=dataexport",
     "DEFAULT_CODE_FORM_NAME=codeexport",
-    "FORMIO_URL=http://localhost:3006",
+    "FORMIO_URL=http://ocwa_formio:3001",
     "FORMIO_USERNAME=${var.formio["username"]}",
     "FORMIO_PASSWORD=${random_string.formioSuperPassword.result}"
   ]

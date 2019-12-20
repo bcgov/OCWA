@@ -23,7 +23,7 @@ resource "docker_image" "formio" {
 
 resource "docker_container" "formio" {
   image   = docker_image.formio.latest
-  name    = "formio"
+  name    = "ocwa_formio"
   restart = "on-failure"
   networks_advanced {
     name = docker_network.private_network.name
