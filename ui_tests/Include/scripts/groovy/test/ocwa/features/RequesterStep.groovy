@@ -40,12 +40,12 @@ public class RequesterStep extends Step {
 
 		switch (requestType) {
 			case "a":
-				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID, 'textarea'), Constant.Requester.CONFIDENTIALITY_TEXT)
-				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_VARIABLE_TXT_ID, 'textarea'), Constant.Requester.REQUEST_VARIABLE_TEXT)
-				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_SUBPOP_TXT_ID, 'textarea'), Constant.Requester.REQUEST_SUBPOP_TEXT)
+				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID), Constant.Requester.CONFIDENTIALITY_TEXT)
+				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_VARIABLE_TXT_ID), Constant.Requester.REQUEST_VARIABLE_TEXT)
+				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_SUBPOP_TXT_ID), Constant.Requester.REQUEST_SUBPOP_TEXT)
 				break
 			case "import":
-				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID, 'textarea'), Constant.Requester.GENERAL_COMMENTS_TEXT)
+				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID), Constant.Requester.GENERAL_COMMENTS_TEXT)
 				break
 			case "code import":
 				fillOutCommonCodeRequestFields(false)
@@ -99,7 +99,7 @@ public class RequesterStep extends Step {
 		}
 		WebUI.click(requestTypeDropDown)
 		WebUI.click(requestTypeCode)
-		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TXT_ID, 'textarea'), Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TEXT)
+		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TXT_ID), Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TEXT)
 		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_REMOTE_REPO_TXT_ID), Constant.CodeRequests.REQUEST_REMOTE_REPO_TEXT)
 		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_LOCAL_REPO_TXT_ID), Constant.CodeRequests.REQUEST_LOCAL_REPO_TEXT)
 	}
