@@ -441,7 +441,7 @@ matrix:
       sudo chmod +x Katalon_Studio/katalon
       sudo chmod -R 777 Katalon_Studio
     - docker images --digests
-    - sleep 180 #formio is really slow to comeup
+    - docker ps
     script:
     - cd /usr/local/bin/Katalon_Studio
     - |-
@@ -455,6 +455,7 @@ matrix:
       fi
     - docker logs ocwa_request_api
     - docker logs formio
+    - docker ps
 
 
   - name: OCWA Master Helm Chart
