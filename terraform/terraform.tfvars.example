@@ -3,6 +3,10 @@ mongodb = {
     username = "appuser"
 }
 
+formio = {
+    username = "admin@example.com"
+}
+
 postgres = {
     username = "kcuser"
 }
