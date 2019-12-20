@@ -11,7 +11,7 @@ data "null_data_source" "indConfig" {
 
 data "null_data_source" "values" {
   inputs = {
-    nodeConfig = "{ ${data.null_data_source.indConfig.outputs["portConfig"]}, ${data.null_data_source.indConfig.outputs["mongoConfig"]}, ${data.null_data_source.indConfig.outputs["jwtConfig"]} }"
+    nodeConfig = "{ ${data.null_data_source.indConfig.outputs["mongoConfig"]}, ${data.null_data_source.indConfig.outputs["jwtConfig"]} }"
 
   }
 }
