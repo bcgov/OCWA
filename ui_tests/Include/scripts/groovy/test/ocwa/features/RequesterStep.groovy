@@ -40,42 +40,42 @@ public class RequesterStep extends Step {
 
 		switch (requestType) {
 			case "a":
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID, 'textarea'), Constant.Requester.CONFIDENTIALITY_TEXT)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_VARIABLE_TXT_ID, 'textarea'), Constant.Requester.REQUEST_VARIABLE_TEXT)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_SUBPOP_TXT_ID, 'textarea'), Constant.Requester.REQUEST_SUBPOP_TEXT)
+				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID, 'textarea'), Constant.Requester.CONFIDENTIALITY_TEXT)
+				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_VARIABLE_TXT_ID, 'textarea'), Constant.Requester.REQUEST_VARIABLE_TEXT)
+				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_SUBPOP_TXT_ID, 'textarea'), Constant.Requester.REQUEST_SUBPOP_TEXT)
 				break
 			case "import":
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID, 'textarea'), Constant.Requester.GENERAL_COMMENTS_TEXT)
+				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID, 'textarea'), Constant.Requester.GENERAL_COMMENTS_TEXT)
 				break
 			case "code import":
 				fillOutCommonCodeRequestFields(false)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			case "code export":
 				fillOutCommonCodeRequestFields(true)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			case "missing repository code import":
 				fillOutCommonCodeRequestFields(false)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_MISSING_REPO_TEXT)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_MISSING_REPO_TEXT)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			case "missing repository code export":
 				fillOutCommonCodeRequestFields(true)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_MISSING_REPO_TEXT)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_MISSING_REPO_TEXT)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			case 'fails scanning code import':
 				fillOutCommonCodeRequestFields(false)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			case 'fails scanning code export':
 				fillOutCommonCodeRequestFields(true)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			default:
 				throw new Exception("Request type $requestType is unknown")
 		}
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_PHONE_TXT_ID), Constant.Requester.REQUEST_PHONE_TEXT)
+		WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
+		WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_PHONE_TXT_ID), Constant.Requester.REQUEST_PHONE_TEXT)
 
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
@@ -99,9 +99,9 @@ public class RequesterStep extends Step {
 		}
 		WebUI.click(requestTypeDropDown)
 		WebUI.click(requestTypeCode)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TXT_ID, 'textarea'), Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TEXT)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_REMOTE_REPO_TXT_ID), Constant.CodeRequests.REQUEST_REMOTE_REPO_TEXT)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_LOCAL_REPO_TXT_ID), Constant.CodeRequests.REQUEST_LOCAL_REPO_TEXT)
+		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TXT_ID, 'textarea'), Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TEXT)
+		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_REMOTE_REPO_TXT_ID), Constant.CodeRequests.REQUEST_REMOTE_REPO_TEXT)
+		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_LOCAL_REPO_TXT_ID), Constant.CodeRequests.REQUEST_LOCAL_REPO_TEXT)
 	}
 
 	@Given("has not submitted the request")
@@ -482,7 +482,7 @@ public class RequesterStep extends Step {
 			KeywordUtil.markFailed('Failing scenario because request is unexpected state.')
 		}
 	}
-	
+
 	@Then('requests of status "(.+)" should be displayed')
 	def requests_of_given_status_should_be_displayed(String status) {
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
