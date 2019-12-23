@@ -94,9 +94,6 @@ public class LoginStep extends Step {
 		WebUI.openBrowser(null)
 		WebUI.navigateToUrl(url)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
-		WebUI.maximizeWindow()
-		WebUI.executeJavaScript("document.body.style.zoom='60%'", null)
-
 		TestObject kcLoginButton = Utils.getTestObjectById('kc-login')
 		WebUI.setText(Utils.getTestObjectById('username'), username)
 		WebUI.setText(Utils.getTestObjectById('password'), password)

@@ -27,7 +27,8 @@ public class RequesterStep extends Step {
 	@Given("requester has started (.+) request")
 	def requester_starts_new_request(String requestType) {
 		G_REQUESTNAME = Utils.generateRequestNameDate()
-
+		WebUI.maximizeWindow()
+		WebUI.executeJavaScript("document.body.style.zoom='60%'", null)
 
 		TestObject newRequestButtonObject = Utils.getTestObjectByText(Constant.Requester.NEW_REQUEST_BTN_TXT)
 
