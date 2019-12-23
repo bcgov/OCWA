@@ -105,7 +105,7 @@ public class Utils {
 	static def getTestObjectByType(String ty = 'submit', String tag = 'input') {
 		TestObject tObject = new TestObject(ty)
 		tObject.addProperty('type', ConditionType.EQUALS, ty, true)
-		tObject.addProperty('tag', ConditionType.EQUALS, tag, true)
+		//tObject.addProperty('tag', ConditionType.EQUALS, tag, true)
 		return tObject
 	}
 }
