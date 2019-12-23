@@ -80,6 +80,7 @@ public class RequesterStep extends Step {
 		TestObject requestFormSaveFilesButton = Utils.getTestObjectByType()
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
+		WebUI.waitForElementNotPresent(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT, FailureHandling.STOP_ON_FAILURE)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		G_REQUESTURL = WebUI.getUrl()
 	}
