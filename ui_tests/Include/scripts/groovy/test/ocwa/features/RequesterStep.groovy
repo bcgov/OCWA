@@ -81,6 +81,7 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
 		WebUI.waitForElementNotPresent(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT, FailureHandling.STOP_ON_FAILURE)
+		WebUI.waitForElementPresent(Utils.getTestObjectByXPath(Constant.Requester.REQUEST_SUPPORT_FILES_UPLOAD_BTN_XPATH), Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		G_REQUESTURL = WebUI.getUrl()
 	}
