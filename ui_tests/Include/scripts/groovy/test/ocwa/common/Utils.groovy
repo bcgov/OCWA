@@ -102,9 +102,10 @@ public class Utils {
 	 * @param tag The tag attribute to filter on
 	 * @return TestObject
 	 */
-	static def getTestObjectByType(String ty = 'submit') {
+	static def getTestObjectByType(String ty = 'submit', String tag = 'input') {
 		TestObject tObject = new TestObject(ty)
 		tObject.addProperty('type', ConditionType.EQUALS, ty, true)
+		tObject.addProperty('tag', ConditionType.EQUALS, tag, true)
 		return tObject
 	}
 }
