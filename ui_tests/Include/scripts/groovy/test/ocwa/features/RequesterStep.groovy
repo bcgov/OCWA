@@ -86,6 +86,7 @@ public class RequesterStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		G_REQUESTURL = WebUI.getUrl()
 		WebUI.executeJavaScript("document.body.style.zoom='60%'", null) //zoom out
+		WebUI.delay(10)
 	}
 
 	/**
