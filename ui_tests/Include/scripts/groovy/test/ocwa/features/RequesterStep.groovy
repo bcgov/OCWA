@@ -28,7 +28,6 @@ public class RequesterStep extends Step {
 	def requester_starts_new_request(String requestType) {
 		G_REQUESTNAME = Utils.generateRequestNameDate()
 		WebUI.maximizeWindow()
-		//WebUI.executeJavaScript("document.body.style.zoom='60%'", null)
 
 		TestObject newRequestButtonObject = Utils.getTestObjectByText(Constant.Requester.NEW_REQUEST_BTN_TXT)
 
@@ -85,8 +84,6 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementPresent(Utils.getTestObjectByXPath(Constant.Requester.REQUEST_SUPPORT_FILES_UPLOAD_BTN_XPATH), Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		G_REQUESTURL = WebUI.getUrl()
-		WebUI.executeJavaScript("document.body.style.zoom='60%'", null) //zoom out
-		WebUI.delay(10)
 	}
 
 	/**
