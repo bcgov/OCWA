@@ -64,7 +64,7 @@ resource "null_resource" "mongodb_first_time_install" {
     environment = {
       SCRIPT_PATH = var.hostRootPath
     }
-    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.1.3 mongo mongodb://ocwa_mongodb/oc_db /work/mongodb_script.js"
+    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.2.1 mongo mongodb://ocwa_mongodb/oc_db /work/mongodb_script.js"
   }
   depends_on = [docker_container.ocwa_mongodb]
 }
@@ -78,7 +78,7 @@ resource "null_resource" "mongodb_formio_first_Time_install" {
     environment = {
       SCRIPT_PATH = var.hostRootPath
     }
-    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.1.3 mongo mongodb://ocwa_mongodb/formioapp /work/formio_script.js"
+    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.2.1 mongo mongodb://ocwa_mongodb/formioapp /work/formio_script.js"
   }
   depends_on = [docker_container.ocwa_mongodb, local_file.formio_script]
 }
