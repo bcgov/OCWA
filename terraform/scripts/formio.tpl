@@ -6,8 +6,6 @@ db.createUser(
     }
 );
 
-use formioapp;
-
 db.forms.insert({
     "type" : "form",
     "tags" : [ 
@@ -611,5 +609,6 @@ db.forms.insert({
 });
 
 
+use formioapp;
 
 db.forms.find({});
