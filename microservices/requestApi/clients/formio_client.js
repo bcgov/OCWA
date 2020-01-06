@@ -85,7 +85,7 @@ formio.postSubmission = function(formName, values, callback) {
                 logger.verbose("formio post submission err", err);
                 callback(err);
             }else{
-                logger.verbose("formio post submission success");
+                logger.verbose("formio post submission success", res.statusCode, res.body, body);
                 callback(null, body);
             }
         });
