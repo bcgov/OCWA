@@ -78,9 +78,18 @@ formio.postSubmission = function(formName, values, callback) {
         var data = {
             data: values
         };
+
+        var opts = {
+            headers: {
+                'x-jwt-token': jwt,
+                'Content-Type': "application/json"
+            },
+            body: data,
+            json: true
+        }
         
         logger.verbose("formio post submission", url);
-        httpReq.post(url, {headers: {'x-jwt-token': jwt}, body: data, json: true}, function(err, res, body){
+        httpReq.post(url, opts, function(err, res, body){
             if (err){
                 logger.verbose("formio post submission err", err);
                 callback(err);
