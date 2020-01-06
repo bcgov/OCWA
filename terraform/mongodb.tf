@@ -80,6 +80,65 @@ resource "null_resource" "mongodb_formio_first_Time_install" {
     }
     command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.2.1 mongo mongodb://ocwa_mongodb/formioapp /work/formio_script.js"
   }
+
+
+  provisioner "local-exec" {
+    environment = {
+      SCRIPT_PATH = var.hostRootPath
+    }
+    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.2.1 mongoimport  --uri=mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb/formioapp --file=/work/formio/actionItems.json --collection=actionItems"
+  }
+
+  provisioner "local-exec" {
+    environment = {
+      SCRIPT_PATH = var.hostRootPath
+    }
+    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.2.1 mongoimport  --uri=mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb/formioapp --file=/work/formio/actions.json --collection=actions"
+  }
+
+  provisioner "local-exec" {
+    environment = {
+      SCRIPT_PATH = var.hostRootPath
+    }
+    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.2.1 mongoimport  --uri=mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb/formioapp --file=/work/formio/forms.json --collection=forms"
+  }
+
+  provisioner "local-exec" {
+    environment = {
+      SCRIPT_PATH = var.hostRootPath
+    }
+    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.2.1 mongoimport  --uri=mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb/formioapp --file=/work/formio/projects.json --collection=projects"
+  }
+
+  provisioner "local-exec" {
+    environment = {
+      SCRIPT_PATH = var.hostRootPath
+    }
+    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.2.1 mongoimport  --uri=mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb/formioapp --file=/work/formio/roles.json --collection=roles"
+  }
+
+  provisioner "local-exec" {
+    environment = {
+      SCRIPT_PATH = var.hostRootPath
+    }
+    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.2.1 mongoimport  --uri=mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb/formioapp --file=/work/formio/schema.json --collection=schema"
+  }
+
+  provisioner "local-exec" {
+    environment = {
+      SCRIPT_PATH = var.hostRootPath
+    }
+    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.2.1 mongoimport  --uri=mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb/formioapp --file=/work/formio/submissions.json --collection=submissions"
+  }
+
+  provisioner "local-exec" {
+    environment = {
+      SCRIPT_PATH = var.hostRootPath
+    }
+    command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH:/work\" mongo:4.2.1 mongoimport  --uri=mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb/formioapp --file=/work/formio/tokens.json --collection=tokens"
+  }
+
+
   depends_on = [docker_container.ocwa_mongodb, local_file.formio_script]
 }
 
