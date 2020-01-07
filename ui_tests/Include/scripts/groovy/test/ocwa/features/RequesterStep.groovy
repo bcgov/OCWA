@@ -297,11 +297,11 @@ public class RequesterStep extends Step {
 		WebUI.takeScreenshot()
 
 		//test if an error alert displays when request is submitted.
-		//		if (WebUI.waitForElementPresent(errorAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
-		//			WebUI.takeScreenshot()
-		//			KeywordUtil.markFailed('An error alert displayed upon submission.')
-		//		}
-		//		WebUI.comment('No error message displayed so submission looks good.')
+		if (WebUI.waitForElementPresent(errorAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
+			WebUI.takeScreenshot()
+			KeywordUtil.markFailed('An error alert displayed upon submission.')
+		}
+		WebUI.comment('No error message displayed so submission looks good.')
 	}
 
 	@When("requester writes and submits a new comment")
