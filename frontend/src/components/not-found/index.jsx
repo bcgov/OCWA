@@ -3,6 +3,7 @@ import EditorUnlinkIcon from '@atlaskit/icon/glyph/editor/unlink';
 import { colors } from '@atlaskit/theme';
 
 import * as styles from './styles.css';
+const test = null;
 
 function NotFound() {
   return (

@@ -4,9 +4,10 @@
     "prettier",
     "plugin:jest/recommended",
     "plugin:import/errors",
-    "plugin:import/warnings"
+    "plugin:import/warnings",
+    "plugin:css-modules/recommended"
   ],
-  "plugins": ["import", "jest"],
+  "plugins": ["import", "jest", "css-modules"],
   "env": {
     "browser": true,
     "node": true
@@ -41,7 +42,9 @@
     ],
     "import/no-extraneous-dependencies": 0,
     "no-underscore-dangle": ["error", { "allow": ["_id", "_e"] }],
-    "react/jsx-one-expression-per-line": 0
+    "react/jsx-one-expression-per-line": 0,
+    "css-modules/no-unused-class": [2, { "camelCase": true }],
+    "css-modules/no-undef-class": [2, { "camelCase": true }]
   },
   "settings": {
     "import/resolver": {

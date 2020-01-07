@@ -2,9 +2,8 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import withRequest from '@src/modules/data/components/data-request';
 import { requestsListSchema } from '@src/modules/requests/schemas';
-import { limit } from '@src/services/config';
+import { limit, zone } from '@src/services/config';
 import { fetchRequests } from '@src/modules/requests/actions';
-import { zone } from '@src/services/config';
 
 import { sortRequests } from '../actions';
 import Requests from '../components/requests';

@@ -30,5 +30,5 @@
 .removeButton {
   display: flex;
   align-items: center;
-  jusitfy-content: flex-end;
+  justify-content: flex-end;
 }
