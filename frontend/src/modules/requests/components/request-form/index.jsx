@@ -11,7 +11,7 @@ import './form.scss';
 
 function NewRequestForm({
   data,
-  codeExportEnabled,
+  // codeExportEnabled,
   formFetchStatus,
   history,
   location,
@@ -31,23 +31,21 @@ function NewRequestForm({
       <div id="request-form-container" className={styles.container}>
         <Grid>
           <GridColumn medium={12}>
-            {codeExportEnabled && (
-              <div className={styles.exportTypeSelect}>
-                <SectionMessage
-                  appearance="info"
-                  title={_e('Select {Request} Type')}
-                >
-                  <Select
-                    options={data}
-                    isDisabled={formFetchStatus === 'loading'}
-                    placeholder={_e('Choose an {Request} Type')}
-                    id="request-form-exportTypeSelect"
-                    defaultValue={exportType}
-                    onChange={value => setExportType(value)}
-                  />
-                </SectionMessage>
-              </div>
-            )}
+            <div className={styles.exportTypeSelect}>
+              <SectionMessage
+                appearance="info"
+                title={_e('Select {Request} Type')}
+              >
+                <Select
+                  options={data}
+                  isDisabled={formFetchStatus === 'loading'}
+                  placeholder={_e('Choose an {Request} Type')}
+                  id="request-form-exportTypeSelect"
+                  defaultValue={exportType}
+                  onChange={value => setExportType(value)}
+                />
+              </SectionMessage>
+            </div>
             {data.reduce(
               (p, d) =>
                 d.form === exportType.form ? (
@@ -103,7 +101,7 @@ NewRequestForm.propTypes = {
       form: PropTypes.string.isRequired,
     })
   ).isRequired,
-  codeExportEnabled: PropTypes.bool.isRequired,
+  // codeExportEnabled: PropTypes.bool.isRequired,
   formFetchStatus: PropTypes.oneOf(['loading', 'loaded', 'idle', 'failed'])
     .isRequired,
   history: PropTypes.shape({
