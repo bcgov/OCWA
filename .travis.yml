@@ -455,6 +455,8 @@ matrix:
       fi
     - docker logs ocwa_formio
     - docker logs ocwa_request_api
+    - docker logs ocwaminio
+    - docker logs ocwa_tusd
 
 
   - name: OCWA Master Helm Chart
