@@ -21,7 +21,7 @@ printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 printf "\"forms\": {\n" >> ./config/default.json
 printf "\"dataExportRequest\": \"${DATA_EXPORT_REQUEST_FORM}\",\n" >> ./config/default.json
 printf "\"dataImportRequest\": \"${DATA_IMPORT_REQUEST_FORM}\",\n" >> ./config/default.json
-printf "\"codeExportRequest\": \"${CODE_EXPORT_REQUEST_FORM}\"\n" >> ./config/default.json
+printf "\"codeExportRequest\": \"${CODE_EXPORT_REQUEST_FORM}\",\n" >> ./config/default.json
 printf "\"codeImportRequest\": \"${CODE_IMPORT_REQUEST_FORM}\"\n" >> ./config/default.json
 printf "},\n" >> ./config/default.json
 printf "\"auth\": {\n" >> ./config/default.json
