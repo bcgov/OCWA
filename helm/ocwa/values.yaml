@@ -56,8 +56,10 @@ ocwa-frontend:
   reportsGroup: "/reports"
 
   forms:
-    dataRequest: "data-export"
-    codeRequest: "code-export"
+    dataExportRequest: "dataexport"
+    dataImportRequest: "dataimport"
+    codeExportRequest: "codeexport"
+    codeImportRequest: "codeimport"
 
   auth:
     authorizationEndpoint: "openid.auth.endpoint"
@@ -295,8 +297,10 @@ project-api:
 request-api:
   replicaCount: 1
 
-  defaultFormName: "dataForm"
-  defaultCodeFormName: "codeForm"
+  defaultExportFormName: "dataexport"
+  defaultImportFormName: "dataimport"
+  defaultExportCodeFormName: "codeexport"
+  defaultImportCodeFormName: "codeimport"
   formioUrl: "http://ocwa-formio.ocwa"
   formioUsername: "admin@example.com"
   formioPassword: "CHANGEME"

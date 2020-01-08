@@ -55,8 +55,10 @@ codeExportEnabled: false
 repositoryHost: ""
 reportsGroup: "/reports"
 forms:
-  dataRequest: "data-export"
-  codeRequest: "code-export"
+  dataExportRequest: "dataexport"
+  dataImportRequest: "dataimport"
+  codeExportRequest: "codeexport"
+  codeImportRequest: "codeimport"
 auth:
   authorizationEndpoint: "openid.auth.endpoint"
   callbackURL: "chart-example.local/auth"

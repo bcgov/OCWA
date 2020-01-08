@@ -51,8 +51,10 @@ resource "docker_container" "ocwa_download_frontend" {
     "OC_GROUP=/oc",
     "REPORTS_GROUP=/reports",
     "EXPORTER_MODE=download",
-    "DATA_REQUEST_FORM=dataexport",
-    "CODE_REQUEST_FORM=codeexport",
+    "DATA_EXPORT_REQUEST_FORM=dataexport",
+    "DATA_IMPORT_REQUEST_FORM=datimport",
+    "CODE_EXPORT_REQUEST_FORM=codeexport",
+    "CODE_IMPORT_REQUEST_FORM=codeimport",
     "CODE_EXPORT_ENABLED=true",
   ]
 }
@@ -102,8 +104,11 @@ resource "docker_container" "ocwa_frontend" {
     "REPORTS_GROUP=/reports",
     "EXPORTER_MODE=export",
     "CODE_EXPORT_ENABLED=true",
-    "DATA_REQUEST_FORM=dataexport",
-    "CODE_REQUEST_FORM=codeexport"
+    "DATA_EXPORT_REQUEST_FORM=dataexport",
+    "DATA_IMPORT_REQUEST_FORM=datimport",
+    "CODE_EXPORT_REQUEST_FORM=codeexport",
+    "CODE_IMPORT_REQUEST_FORM=codeimport",
+    "CODE_EXPORT_ENABLED=true",
   ]
 }
 

@@ -10,32 +10,23 @@ var getRouter = function(db){
     const FORMS_SUB_ROUTE = '/forms';
 
     var routes = require('../../routes/requests');
-    
+
+    router.get(FORMS_SUB_ROUTE+'/defaults', async function(req, res, next){
+        var exportFormName = await projectConfig.get(request.project, 'formio.defaultExportFormName');
+        var importFormName = await projectConfig.get(request.project, 'formio.defaultImportFormName');
+        var exportCodeFormName = await projectConfig.get(request.project, 'formio.defaultExportCodeFormName');
+        var importCodeFormName = await projectConfig.get(request.project, 'formio.defaultImportCodeFormName');
+        
+        res.json({
+            "EXPORT_FORM": exportFormName,
+            "IMPORT_FORM": importFormName,
+            "CODE_EXPORT_FORM": exportCodeFormName,
+            "CODE_IMPORT_FORM": importCodeFormName,
+        });
+    });
+
     router.get(FORMS_SUB_ROUTE, function(req, res, next){
         formioClient.getForms(function(formErr, formRes){
-            if (formErr){
-                res.status(500);
-                res.json({error: formErr});
-                return;
-            }
-            res.json(JSON.parse(formRes));
-        });
-    });
-
-    router.get(FORMS_SUB_ROUTE+'/default', function(req, res, next){
-        var config = require('config');
-        formioClient.getForm(config.get('formio.defaultFormName'), function(formErr, formRes){
-            if (formErr){
-                res.status(500);
-                res.json({error: formErr});
-                return;
-            }
-            res.json(JSON.parse(formRes));
-        });
-    });
-
-    router.get(FORMS_SUB_ROUTE+'/code_default', function(req, res, next){
-        formioClient.getForm(config.get('formio.defaultCodeFormName'), function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});
@@ -107,9 +98,13 @@ var getRouter = function(db){
 
 
         request.project = req.user.getProject();
-        var formName = await projectConfig.get(request.project, 'formio.defaultFormName');
-        var codeFormName = await projectConfig.get(request.project, 'formio.defaultCodeFormName');
-        request.formName = request.exportType==="code" ? codeFormName : formName;
+        var exportFormName = await projectConfig.get(request.project, 'formio.defaultExportFormName');
+        var importFormName = await projectConfig.get(request.project, 'formio.defaultImportFormName');
+        var exportCodeFormName = await projectConfig.get(request.project, 'formio.defaultExportCodeFormName');
+        var importCodeFormName = await projectConfig.get(request.project, 'formio.defaultImportCodeFormName');
+
+
+        request.formName = request.type===db.Request.EXPORT_TYPE ? (request.exportType==="code" ? exportCodeFormName : exportFormName) : (request.exportType==="code" ? importCodeFormName : importFormName);
         
 
         db.Request.setChrono(request, req.user.id);

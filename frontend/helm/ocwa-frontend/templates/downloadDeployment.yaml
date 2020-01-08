@@ -58,10 +58,14 @@ spec:
               value: "{{ .Values.codeExportEnabled }}"
             - name: REPOSITORY_HOST
               value: "{{ .Values.repositoryHost }}"
-            - name: DATA_REQUEST_FORM
-              value: "{{ .Values.forms.dataRequest }}"
-            - name: CODE_REQUEST_FORM
-              value: "{{ .Values.forms.codeRequest }}"
+            - name: DATA_EXPORT_REQUEST_FORM
+              value: "{{ .Values.forms.dataExportRequest }}"
+            - name: DATA_IMPORT_REQUEST_FORM
+              value: "{{ .Values.forms.dataImportRequest }}"
+            - name: CODE_EXPORT_REQUEST_FORM
+              value: "{{ .Values.forms.codeExportRequest }}"
+            - name: CODE_IMPORT_REQUEST_FORM
+              value: "{{ .Values.forms.codeImportRequest }}"
             - name: COOKIE_SECRET
               valueFrom:
                 secretKeyRef:

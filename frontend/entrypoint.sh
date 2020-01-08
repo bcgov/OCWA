@@ -19,8 +19,10 @@ printf "\"repositoryHost\": \"${REPOSITORY_HOST}\",\n" >> ./config/default.json
 printf "\"cookieSecret\": \"${COOKIE_SECRET}\",\n" >> ./config/default.json
 printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 printf "\"forms\": {\n" >> ./config/default.json
-printf "\"dataRequest\": \"${DATA_REQUEST_FORM}\",\n" >> ./config/default.json
-printf "\"codeRequest\": \"${CODE_REQUEST_FORM}\"\n" >> ./config/default.json
+printf "\"dataExportRequest\": \"${DATA_EXPORT_REQUEST_FORM}\",\n" >> ./config/default.json
+printf "\"dataImportRequest\": \"${DATA_IMPORT_REQUEST_FORM}\",\n" >> ./config/default.json
+printf "\"codeExportRequest\": \"${CODE_EXPORT_REQUEST_FORM}\"\n" >> ./config/default.json
+printf "\"codeImportRequest\": \"${CODE_IMPORT_REQUEST_FORM}\"\n" >> ./config/default.json
 printf "},\n" >> ./config/default.json
 printf "\"auth\": {\n" >> ./config/default.json
 printf "\"authorizationEndpoint\": \"${AUTH_ENDPOINT}\",\n" >> ./config/default.json

@@ -5,8 +5,10 @@ const Schema = mongoose.Schema;
 var config = require('config');
 const formioClient = require('../../clients/formio_client');
 
-const DEFAULT_FORM = config.get("formio.defaultFormName");
-const DEFAULT_CODE_FORM = config.get("formio.defaultCodeFormName");
+const DEFAULT_EXPORT_FORM = config.get("formio.defaultExportFormName");
+const DEFAULT_IMPORT_FORM = config.get("formio.defaultImportFormName");
+const DEFAULT_EXPORT_CODE_FORM = config.get("formio.defaultExportCodeFormName");
+const DEFAULT_IMPORT_CODE_FORM = config.get("formio.defaultImportCodeFormName");
 
 const schemaFields = ['name', 'state', 'supportingFiles', 'topic', 'reviewers', 'chronology', 'files', 'author', 'project', 'exportType', 'type', 'formName', 'submissionId'];
 
@@ -44,7 +46,7 @@ var requestSchema = new Schema({
     formName: {
         type: String,
         required: true,
-        default: DEFAULT_FORM
+        default: DEFAULT_EXPORT_FORM
     },
     submissionId: {
         type: String,
@@ -119,7 +121,33 @@ model.getAll = function(query, limit, page, user, callback){
                     author: 1,
                     project: 1,
                     formName: {
-                        $ifNull: ["$formName", { $cond: { if: { $eq: [ "$exportType", baseModel.CODE_EXPORT_TYPE ] }, then: DEFAULT_CODE_FORM, else: DEFAULT_FORM } } ]
+                        $ifNull: ["$formName", { 
+                            $cond: {
+                                if: {
+                                    $eq: ["$type", this.EXPORT_TYPE]
+                                },
+                                then: { 
+                                    $cond: { 
+                                        if: { 
+                                            $eq: [ "$exportType", baseModel.CODE_EXPORT_TYPE ] 
+                                        }, 
+                                        then: DEFAULT_EXPORT_CODE_FORM, 
+                                        else: DEFAULT_EXPORT_FORM 
+                                    }
+                                },
+                                else: {
+                                    then: { 
+                                        $cond: { 
+                                            if: { 
+                                                $eq: [ "$exportType", baseModel.CODE_EXPORT_TYPE ] 
+                                            }, 
+                                            then: DEFAULT_IMPORT_CODE_FORM, 
+                                            else: DEFAULT_IMPORT_FORM 
+                                        }
+                                    }
+                                }
+                            } 
+                        } ]
                     },
                     submissionId: 1,
                     submittedDate: {

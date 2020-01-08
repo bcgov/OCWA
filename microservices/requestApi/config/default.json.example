@@ -77,8 +77,10 @@
         "groupField": "Groups"
   },
   "formio": {
-    "defaultFormName": "test",
-    "defaultCodeFormName": "test",
+    "defaultExportFormName": "test",
+    "defaultImportFormName": "test",
+    "defaultExportCodeFormName": "test",
+    "defaultImportCodeFormName": "test",
     "url": "http://localhost:3006",
     "username": "admin@example.com",
     "password": "CHANGEME"

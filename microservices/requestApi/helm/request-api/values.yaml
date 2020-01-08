@@ -101,8 +101,10 @@ gitopsEnabled: false
 gitopsUrl: http://gitops.ocwa
 gitopsSecret: s3cr3t
 
-defaultFormName: "dataForm"
-defaultCodeFormName: "codeForm"
+defaultExportFormName: "dataexport"
+defaultImportFormName: "dataimport"
+defaultExportCodeFormName: "codeexport"
+defaultImportCodeFormName: "codeimport"
 formioUrl: "http://ocwa-formio.ocwa"
 formioUsername: "admin@example.com"
 formioPassword: "CHANGEME"
