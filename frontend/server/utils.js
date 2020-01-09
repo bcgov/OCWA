@@ -36,6 +36,7 @@ const storeUrl = (req, res, done) => {
 
 const getZone = () => {
   const exporterMode = config.get('exporterMode');
+  // mode can be export(internal) or download(external)
   const zone = exporterMode === 'download' ? 'external' : 'internal';
 
   return zone;

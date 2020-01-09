@@ -12,17 +12,23 @@ var getRouter = function(db){
     var routes = require('../../routes/requests');
 
     router.get(FORMS_SUB_ROUTE+'/defaults', async function(req, res, next){
-        var exportFormName = await projectConfig.get(request.project, 'formio.defaultExportFormName');
-        var importFormName = await projectConfig.get(request.project, 'formio.defaultImportFormName');
-        var exportCodeFormName = await projectConfig.get(request.project, 'formio.defaultExportCodeFormName');
-        var importCodeFormName = await projectConfig.get(request.project, 'formio.defaultImportCodeFormName');
+        var exportFormName = await projectConfig.get(req.project, 'formio.defaultExportFormName');
+        var importFormName = await projectConfig.get(req.project, 'formio.defaultImportFormName');
+        var exportCodeFormName = await projectConfig.get(req.project, 'formio.defaultExportCodeFormName');
+        var importCodeFormName = await projectConfig.get(req.project, 'formio.defaultImportCodeFormName');
         
-        res.json({
-            "EXPORT_FORM": exportFormName,
-            "IMPORT_FORM": importFormName,
-            "CODE_EXPORT_FORM": exportCodeFormName,
-            "CODE_IMPORT_FORM": importCodeFormName,
-        });
+      res.json({
+        forms: {
+          internal: [
+            { value: 'data', form: importFormName },
+            { value: 'code', form: importCodeFormName },
+          ],
+          external: [
+            {  value: 'data', form: exportFormName },
+            {  value: 'code', form: exportCodeFormName },
+          ]
+        }
+       });
     });
 
     router.get(FORMS_SUB_ROUTE, function(req, res, next){

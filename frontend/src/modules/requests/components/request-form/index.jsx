@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import isEmpty from 'lodash/isEmpty';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import SectionMessage from '@atlaskit/section-message';
 import Select from '@atlaskit/select';
@@ -18,13 +19,19 @@ function NewRequestForm({
   sendAction,
 }) {
   const submission = location.state || null;
-  const [exportType, setExportType] = React.useState(data[0]);
+  const [exportType, setExportType] = React.useState({});
   const onSubmit = formData =>
     sendAction(
       'onCreate',
       { ...formData, exportType: exportType.value },
       { history }
     );
+
+  React.useEffect(() => {
+    if (isEmpty(exportType) && data.length >= 1) {
+      setExportType(data[0]);
+    }
+  }, [data]);
 
   return (
     <Page>
@@ -41,7 +48,7 @@ function NewRequestForm({
                   isDisabled={formFetchStatus === 'loading'}
                   placeholder={_e('Choose an {Request} Type')}
                   id="request-form-exportTypeSelect"
-                  defaultValue={exportType}
+                  value={exportType}
                   onChange={value => setExportType(value)}
                 />
               </SectionMessage>
