@@ -84,7 +84,7 @@ function Sidebar({
             Assign to Me
           </Button>
         )}
-        {data.reviewers.includes(user.id) && data.state === 3 && (
+        {data.state === 3 && (
           <React.Fragment>
             <h6>Actions</h6>
             {isCodeExport && (
