@@ -50,7 +50,7 @@ export default connect(mapStateToProps, {
       { page: 1 },
       { state: 4 },
       {
-        url: `/api/v1/requests?page=1&state=4&type=${type}`,
+        url: `/api/v2/requests?page=1&state=4&type=${type}`,
         schema: requestsListSchema,
       }
     );
