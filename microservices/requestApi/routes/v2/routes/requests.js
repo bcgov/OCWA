@@ -151,7 +151,7 @@ var getRouter = function(db){
                         name: request.name
                     }
                 }, function(apiErr, apiRes, body){
-                    if ((!apiErr) && (apiRes.statusCode === 200)){
+                    if (!apiErr){
                         result.topic = body._id;
                         result.save(function(e, r){
                             if (!e){
@@ -173,7 +173,7 @@ var getRouter = function(db){
                         return;
                     }
 
-                    log.error("Error creating topic, deleting request as a result", apiRes.statusCode, apiErr, result);
+                    log.error("Error creating topic, deleting request as a result", apiErr, result);
                     db.Request.deleteOne({_id: result._id}, function(e){
                         if (e) {
                             log.error("Error deleting request", result, e);
@@ -358,7 +358,7 @@ var getRouter = function(db){
                                 'Authorization': "Bearer "+req.user.jwt
                             }
                         }, function(apiErr, apiRes, body){
-                            if ((!apiErr) && (apiRes.statusCode === 200)){
+                            if (!apiErr){
                                 logger.debug("Deleted request topic");
                             }else{
                                 logger.error("Error deleting topic: ", apiErr, body);

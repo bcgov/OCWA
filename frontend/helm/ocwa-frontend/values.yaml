@@ -54,11 +54,6 @@ ocGroup: "/oc"
 codeExportEnabled: false
 repositoryHost: ""
 reportsGroup: "/reports"
-forms:
-  dataExportRequest: "dataexport"
-  dataImportRequest: "dataimport"
-  codeExportRequest: "codeexport"
-  codeImportRequest: "codeimport"
 auth:
   authorizationEndpoint: "openid.auth.endpoint"
   callbackURL: "chart-example.local/auth"

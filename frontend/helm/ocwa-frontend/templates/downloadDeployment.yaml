@@ -59,7 +59,7 @@ spec:
             - name: REPOSITORY_HOST
               value: "{{ .Values.repositoryHost }}"
             - name: DATA_EXPORT_REQUEST_FORM
-              value: "{{ .Values.forms.dataExportRequest }}"
+              value: "{{ .Values.forms. }}"
             - name: DATA_IMPORT_REQUEST_FORM
               value: "{{ .Values.forms.dataImportRequest }}"
             - name: CODE_EXPORT_REQUEST_FORM
