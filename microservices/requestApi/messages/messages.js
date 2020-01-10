@@ -25,7 +25,7 @@ function checkRequestPermissions(user, fileId, sock, cb){
 }
 
 function sendFileStatusMessage(fileStatus){
-    var websockets = require('../../../websocket');
+    var websockets = require('../websocket');
     var conns = websockets.getConnections();
     var keys = Object.keys(conns);
     logger.debug('messages / try to send to # connections ', keys.length);
