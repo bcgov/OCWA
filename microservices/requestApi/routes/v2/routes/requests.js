@@ -135,6 +135,7 @@ var getRouter = function(db){
 
             request.save(function(saveErr, result){
                 if (saveErr || !result) {
+                    log.error("Error saving request", saveErr, result);
                     res.status(500);
                     res.json({error: saveErr.message});
                     return;
@@ -188,9 +189,11 @@ var getRouter = function(db){
                     });
                     res.status(500);
                     if (apiErr) {
+                        log.error("Error deleting formio submission", apiErr);
                         res.json({error: "Error creating forum topic: " + apiErr});
                         return;
                     }else if (body.error){
+                        log.error("Error deleting formio submission", body.error);
                         res.json({error: "Error creating forum topic: " + body.error});
                         return;
                     }
