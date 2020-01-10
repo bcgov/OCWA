@@ -17,8 +17,10 @@
   "codeExportEnabled": false,
   "repositoryHost": "any code repository regex",
   "forms": {
-    "dataRequest": "FORM.IO ID",
-    "codeRequest": "FORM.IO ID"
+    "dataExportRequest": "FORM.IO ID",
+    "dataImportRequest": "FORM.IO ID",
+    "codeExportRequest": "FORM.IO ID",
+    "codeImportRequest": "FORM.IO ID"
   },
   "auth": {
     "authorizationEndpoint": "URL_REQUIRED",
