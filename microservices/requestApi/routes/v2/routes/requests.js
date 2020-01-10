@@ -20,12 +20,12 @@ var getRouter = function(db){
       res.json({
         forms: {
           internal: [
-            { value: 'data', form: importFormName },
-            { value: 'code', form: importCodeFormName },
+            { value: 'data', form: exportFormName },
+            { value: 'code', form: exportCodeFormName },
           ],
           external: [
-            {  value: 'data', form: exportFormName },
-            {  value: 'code', form: exportCodeFormName },
+            {  value: 'data', form: importFormName },
+            {  value: 'code', form: importCodeFormName },
           ]
         }
        });
