@@ -37,6 +37,6 @@ resource "docker_container" "formio" {
     "DEBUG=formio:*",
   ]
 
-  depends_on = [null_resource.mongodb_formio_first_Time_install
+  depends_on = [null_resource.mongodb_formio_first_Time_install]
 }
 
