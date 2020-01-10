@@ -12,10 +12,11 @@ var getRouter = function(db){
     var routes = require('../../routes/requests');
 
     router.get(FORMS_SUB_ROUTE+'/defaults', async function(req, res, next){
-        var exportFormName = await projectConfig.get(req.project, 'formio.defaultExportFormName');
-        var importFormName = await projectConfig.get(req.project, 'formio.defaultImportFormName');
-        var exportCodeFormName = await projectConfig.get(req.project, 'formio.defaultExportCodeFormName');
-        var importCodeFormName = await projectConfig.get(req.project, 'formio.defaultImportCodeFormName');
+        var project = req.user.getProject();
+        var exportFormName = await projectConfig.get(project, 'formio.defaultExportFormName');
+        var importFormName = await projectConfig.get(project, 'formio.defaultImportFormName');
+        var exportCodeFormName = await projectConfig.get(project, 'formio.defaultExportCodeFormName');
+        var importCodeFormName = await projectConfig.get(project, 'formio.defaultImportCodeFormName');
         
       res.json({
         forms: {
