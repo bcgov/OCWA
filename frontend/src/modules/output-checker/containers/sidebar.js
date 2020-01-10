@@ -21,7 +21,7 @@ export default connect(mapStateToProps, {
         isApproval: true,
       },
       {
-        url: `/api/v1/requests/approve/${id}`,
+        url: `/api/v2/requests/approve/${id}`,
       }
     ),
   onDenyRequest: id =>
@@ -29,7 +29,7 @@ export default connect(mapStateToProps, {
       null,
       { id, dataType: 'requests', schema: { result: requestSchema } },
       {
-        url: `/api/v1/requests/deny/${id}`,
+        url: `/api/v2/requests/deny/${id}`,
       }
     ),
   onPickupRequest: id =>
@@ -37,7 +37,7 @@ export default connect(mapStateToProps, {
       null,
       { id, dataType: 'requests', schema: { result: requestSchema } },
       {
-        url: `/api/v1/requests/pickup/${id}`,
+        url: `/api/v2/requests/pickup/${id}`,
       }
     ),
   onRequestRevisions: id =>
@@ -45,7 +45,7 @@ export default connect(mapStateToProps, {
       null,
       { id, dataType: 'requests', schema: { result: requestSchema } },
       {
-        url: `/api/v1/requests/requestRevisions/${id}`,
+        url: `/api/v2/requests/requestRevisions/${id}`,
       }
     ),
 })(Sidebar);
