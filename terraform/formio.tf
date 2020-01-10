@@ -36,5 +36,7 @@ resource "docker_container" "formio" {
     "NODE_CONFIG=${data.null_data_source.values.outputs["nodeConfig"]}",
     "DEBUG=formio:*",
   ]
+
+  depends_on = [null_resource.mongodb_formio_first_Time_install
 }
 
