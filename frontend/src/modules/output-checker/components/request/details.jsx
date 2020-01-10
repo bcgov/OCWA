@@ -7,7 +7,13 @@ import { uid } from 'react-uid';
 
 import * as styles from './styles.css';
 
-function Details({ data, fields }) {
+function Details({ data, fetchForm, fields }) {
+  React.useEffect(() => {
+    if (data.formName && fields.length <= 0) {
+      fetchForm({ id: data.formName });
+    }
+  }, [data]);
+
   return (
     <div id="request-details-container">
       {fields.map(d => (
@@ -38,6 +44,7 @@ function Details({ data, fields }) {
 
 Details.propTypes = {
   data: RequestSchema.isRequired,
+  fetchForm: PropTypes.func.isRequired,
   fields: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.string.isRequired,
