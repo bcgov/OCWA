@@ -20,7 +20,7 @@ var buildStatic = function(router, messages){
             mandatory: json.mandatory
         }
 
-        messages.sendFileStatusMessage (status);
+        messages.sendFileStatusMessage (db, status);
         res.json({status:'ok'});
     });
 }

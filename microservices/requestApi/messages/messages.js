@@ -1,7 +1,7 @@
 var messages = {};
 var logger = require('npmlog');
 
-function checkRequestPermissions(user, fileId, sock, cb){
+function checkRequestPermissions(db, user, fileId, sock, cb){
 
     var db = require('../db/db');
 
@@ -24,7 +24,7 @@ function checkRequestPermissions(user, fileId, sock, cb){
     })
 }
 
-function sendFileStatusMessage(fileStatus){
+function sendFileStatusMessage(db, fileStatus){
     var websockets = require('../websocket');
     var conns = websockets.getConnections();
     var keys = Object.keys(conns);
@@ -32,7 +32,7 @@ function sendFileStatusMessage(fileStatus){
     for (var i=0; i<keys.length; i++){
         // make sure the user has access to the request
         var conn = conns[keys[i]];
-        checkRequestPermissions(conn.user, fileStatus.fileId, conn, function(send, sock) {
+        checkRequestPermissions(db, conn.user, fileStatus.fileId, conn, function(send, sock) {
             logger.debug('messages / send - ', send, websockets.isOpen(sock));
             if (send) {
                 if (websockets.isOpen(sock)) {
