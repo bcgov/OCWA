@@ -138,6 +138,13 @@ resource "null_resource" "mongodb_formio_first_Time_install" {
     command = "docker run --net=ocwa_vnet -v \"$SCRIPT_PATH/..:/work\" mongo:4.2.1 mongoimport  --uri=mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb:27017/formioapp --file=/work/scripts/formio/tokens.json --collection=tokens"
   }
 
+  provisioner "local-exec" {
+    environment = {
+      SCRIPT_PATH = var.hostRootPath
+    }
+    command = "docker run --net=ocwa_vnet mongo:4.2.1 mongo mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb:27017/formioapp --eval \"db.forms.find({})\""
+  }
+
 
   depends_on = [docker_container.ocwa_mongodb, local_file.formio_script]
 }
