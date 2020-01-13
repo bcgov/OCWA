@@ -75,6 +75,10 @@ resource "null_resource" "mongodb_formio_first_Time_install" {
   }
 
   provisioner "local-exec" {
+    command = "sleep 30"
+  }
+
+  provisioner "local-exec" {
     environment = {
       SCRIPT_PATH = var.hostRootPath
     }
@@ -146,6 +150,6 @@ resource "null_resource" "mongodb_formio_first_Time_install" {
   }
 
 
-  depends_on = [docker_container.ocwa_mongodb, local_file.formio_script]
+  depends_on = [docker_container.ocwa_mongodb, docker_container.formio, local_file.formio_script]
 }
 

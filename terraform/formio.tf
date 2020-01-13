@@ -35,9 +35,11 @@ resource "docker_container" "formio" {
   env = [
     "NODE_CONFIG=${data.null_data_source.values.outputs["nodeConfig"]}",
     "DEBUG=formio:*",
-    "MONGO=mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb:27017/formioapp"
+    "MONGO=mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb:27017/formioapp",
+    "ROOT_EMAIL=admin@example.com",
+    "ROOT_PASSWORD=CHANGEME"
   ]
 
-  depends_on = [null_resource.mongodb_formio_first_Time_install]
+  depends_on = [docker_container.ocwa_mongodb]
 }
 
