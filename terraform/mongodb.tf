@@ -75,7 +75,7 @@ resource "null_resource" "mongodb_formio_first_Time_install" {
   }
 
   provisioner "local-exec" {
-    command = "sleep 30"
+    command = "sleep 60"
   }
 
   provisioner "local-exec" {
