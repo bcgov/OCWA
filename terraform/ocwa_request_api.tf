@@ -70,8 +70,8 @@ resource "docker_container" "ocwa_request_api" {
     "DEFAULT_EXPORT_CODE_FORM_NAME=codeexport",
     "DEFAULT_IMPORT_CODE_FORM_NAME=codeimport",
     "FORMIO_URL=http://ocwa_formio:3001",
-    "FORMIO_USERNAME=${var.formio["username"]}",
-    "FORMIO_PASSWORD=${random_string.formioSuperPassword.result}"
+    "FORMIO_USERNAME=admin@example.com",
+    "FORMIO_PASSWORD=CHANGEME"
   ]
 }
 
