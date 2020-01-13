@@ -146,7 +146,7 @@ resource "null_resource" "mongodb_formio_first_Time_install" {
     environment = {
       SCRIPT_PATH = var.hostRootPath
     }
-    command = "docker restart ocwa_formio"
+    command = "docker restart ocwa_mongodb; sleep 10; docker restart ocwa_formio"
   }
 
 
