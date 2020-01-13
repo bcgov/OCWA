@@ -112,16 +112,16 @@ function Sidebar({
               appearance="link"
               id="request-sidebar-approve-button"
               iconBefore={<CheckCircleIcon primaryColor="green" />}
-              isDisabled={isSaving || isDisabledActionButton}
+              isDisabled={isDisabledActionButton}
               onClick={() => onApproveRequest(id)}
             >
               Approve Request
             </Button>
             <Button
               appearance="link"
-              id="request-sidebar-approve-button"
+              id="request-sidebar-deny-button"
               iconBefore={<SelectClearIcon primaryColor="red" />}
-              isDisabled={isSaving || isDisabledActionButton}
+              isDisabled={isDisabledActionButton}
               onClick={() => onDenyRequest(id)}
             >
               Deny Request
@@ -131,7 +131,6 @@ function Sidebar({
                 appearance="link"
                 id="request-sidebar-request-revisions-button"
                 iconBefore={<FlagFilledIcon primaryColor="orange" />}
-                isDisabled={isSaving}
                 onClick={() => onRequestRevisions(id)}
               >
                 Request Revisions
