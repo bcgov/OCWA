@@ -146,7 +146,7 @@ resource "null_resource" "mongodb_formio_first_Time_install" {
     environment = {
       SCRIPT_PATH = var.hostRootPath
     }
-    command = "docker run --net=ocwa_vnet mongo:4.2.1 mongo mongodb://${var.mongodb["username"]}:${random_string.mongoSuperPassword.result}@ocwa_mongodb:27017/formioapp --eval \"db.forms.find({})\""
+    command = "docker restart ocwa_formio"
   }
 
 
