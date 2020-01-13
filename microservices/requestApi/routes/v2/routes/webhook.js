@@ -7,8 +7,8 @@ var router = function(db){
 
     var routes = require('../../routes/webhook');
 
-    routes.buildStatic(router, messages);
-    routes.buildDynamic(router, messages);
+    routes.buildStatic(router, messages, db);
+    routes.buildDynamic(router, messages, db);
     return router;
 }
 

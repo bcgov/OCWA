@@ -1,7 +1,7 @@
 
 var logger = require('npmlog');
 
-var buildStatic = function(router, messages){
+var buildStatic = function(router, messages, db){
 
     router.get('/', function(req, res) {
         res.json({status:'ok'});
