@@ -298,7 +298,6 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(requestSubmitBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.comment('Clicking the submit button')
 		WebUI.click(requestSubmitBtn)
-		WebUI.takeScreenshot()
 
 		//test if an error alert displays when request is submitted.
 		if (WebUI.waitForElementPresent(errorAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
@@ -306,6 +305,7 @@ public class RequesterStep extends Step {
 			KeywordUtil.markFailed('An error alert displayed upon submission.')
 		}
 		WebUI.comment('No error message displayed so submission looks good.')
+		WebUI.takeScreenshot()
 	}
 
 	@When("requester writes and submits a new comment")
