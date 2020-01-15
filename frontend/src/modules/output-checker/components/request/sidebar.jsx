@@ -78,7 +78,6 @@ function Sidebar({
             appearance="link"
             id="request-sidebar-pickup-button"
             iconBefore={<AddCircleIcon primaryColor="green" />}
-            isDisabled={isSaving}
             onClick={() => onPickupRequest(id)}
           >
             Assign to Me

@@ -47,6 +47,13 @@ public class CheckerStep extends Step {
 		WebUI.waitForElementClickable(assignToMeButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(assignToMeButtonObject)
 		WebUI.comment("found and clicked the Assign to Me button")
+		//test if an error alert displays when request is assigned.
+		TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)
+		if (WebUI.waitForElementPresent(errorAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
+			WebUI.takeScreenshot()
+			KeywordUtil.markFailed('An error alert displayed upon assignment.')
+		}
+		WebUI.comment('No error message displayed so assignment looks good.')
 	}
 
 	@When("the output checker marks the request as approved")
@@ -67,14 +74,6 @@ public class CheckerStep extends Step {
 		WebUI.waitForElementClickable(revisionsButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(revisionsButtonObject)
 		WebUI.comment("found and clicked the needs revisions button")
-		
-		//test if an error alert displays when request is submitted.
-		TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)
-		if (WebUI.waitForElementPresent(errorAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
-			WebUI.takeScreenshot()
-			KeywordUtil.markFailed('An error alert displayed upon assignment.')
-		}
-		WebUI.comment('No error message displayed so assignment looks good.')
 	}
 
 	@When("the output checker marks the code request as approved")
