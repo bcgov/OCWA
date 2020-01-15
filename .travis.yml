@@ -391,10 +391,6 @@ matrix:
     stage: Tests
     language: java
     addons:
-      apt:
-        packages:
-          - dpkg
-          - google-chrome-stable
       hosts:
       - auth.example.demo
       - ocwa.example.demo
@@ -405,6 +401,7 @@ matrix:
       - "/tmp/traviscache"
     before_install:
     - |-
+      sudo -E apt-get -yq --no-install-suggests --no-install-recommends --allow-unauthenticated install dpkg google-chrome-stable
       if [ ! -d "/tmp/traviscache" ]; then
         mkdir -p /tmp/traviscache
       fi
