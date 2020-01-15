@@ -26,7 +26,7 @@ public class CheckerStep extends Step {
 		WebUI.waitForElementPresent(showAll, Constant.DEFAULT_TIMEOUT)
 		WebUI.scrollToElement(showAll, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(showAll)
-		
+
 		TestObject linkToRequest = Utils.getTestObjectByText(G_REQUESTNAME)
 		WebUI.waitForElementPresent(linkToRequest, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementVisible(linkToRequest, Constant.DEFAULT_TIMEOUT)
@@ -123,7 +123,7 @@ public class CheckerStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementVisible(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
-
+		WebUI.delay(Constant.DOWNLOAD_INTERFACE_TIMEOUT)
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.closeBrowser()
 	}
