@@ -956,7 +956,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
                 db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                     if (!updateErr) {
-                        logger.verbose("pickup request successful");
+                        logger.verbose("pickup request successful", reqRes);
                         res.json({message: "Request picked up successfully", result: reqRes});
                         return;
                     }
