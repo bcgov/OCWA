@@ -93,12 +93,13 @@ model.getAll = function(query, limit, page, user, callback){
 
     var zoneRestrict = model.getZoneRestrict(user);
 
+    logger.verbose("v2 zone restrict", zoneRestrict.$match.$or);
+
     logger.verbose("v2 getAll ", user.supervisor, user.outputchecker);
 
     var queryRequests = function(err, topicR, projectR){
         logger.verbose("V2 get all topics model get all", topicR);
-
-        db.Request.aggregate([
+        var agg = [
             {
                 $match: {
                     topic: {$in: topicR}
@@ -158,7 +159,7 @@ model.getAll = function(query, limit, page, user, callback){
                                         $filter: {
                                             input: "$chronology",
                                             as: "chrono",
-                                            cond: { $eq: [ "$$chrono.enteredState", this.AWAITING_REVIEW_STATE] }
+                                            cond: { $eq: [ "$$chrono.enteredState", baseModel.AWAITING_REVIEW_STATE] }
                                         }
                                     },
                                     as: "ele",
@@ -179,7 +180,11 @@ model.getAll = function(query, limit, page, user, callback){
             {
                 $limit: limit
             }
-        ]).exec(function(err, results){
+        ];
+
+        logger.verbose("v2 model agg", agg);
+
+        db.Request.aggregate(agg).exec(function(err, results){
             logger.verbose('v2 finished db call', err, results);
             var processed = 0;
             if (results){
