@@ -926,6 +926,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
+            logger.verbose("pickup request", reqErr, reqRes);
             if (reqErr || !reqRes){
                 res.status(500);
                 res.json({error: reqErr.message});
@@ -950,10 +951,12 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
                 reqRes.state = db.Request.IN_REVIEW_STATE;
                 reqRes.reviewers = reviewers;
+                logger.verbose("pickup request reviewers", reviewers);
                 db.Request.setChrono(reqRes, req.user.id);
 
                 db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                     if (!updateErr) {
+                        logger.verbose("pickup request successful");
                         res.json({message: "Request picked up successfully", result: reqRes});
                         return;
                     }
