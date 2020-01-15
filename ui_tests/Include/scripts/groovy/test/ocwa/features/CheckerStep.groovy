@@ -4,6 +4,7 @@ import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.TestObject
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import com.kms.katalon.core.util.KeywordUtil
+import com.kms.katalon.core.model.FailureHandling
 
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
@@ -66,6 +67,14 @@ public class CheckerStep extends Step {
 		WebUI.waitForElementClickable(revisionsButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(revisionsButtonObject)
 		WebUI.comment("found and clicked the needs revisions button")
+		
+		//test if an error alert displays when request is submitted.
+		TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)
+		if (WebUI.waitForElementPresent(errorAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
+			WebUI.takeScreenshot()
+			KeywordUtil.markFailed('An error alert displayed upon assignment.')
+		}
+		WebUI.comment('No error message displayed so assignment looks good.')
 	}
 
 	@When("the output checker marks the code request as approved")
