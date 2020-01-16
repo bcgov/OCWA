@@ -46,7 +46,7 @@ function RequestDetails({
   }, [data]);
 
   React.useEffect(() => {
-    if (!isEditing && !isEmpty(formRef.current)) {
+    if (!isEditing) {
       onSave(id, formRef.current);
     }
   }, [isEditing]);

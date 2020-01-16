@@ -45,6 +45,7 @@ public class CheckerStep extends Step {
 		WebUI.waitForElementNotHasAttribute(assignToMeButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementVisible(assignToMeButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(assignToMeButtonObject, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.ASSIGN_TO_ME_TIMEOUT)
 		WebUI.click(assignToMeButtonObject)
 		WebUI.comment("found and clicked the Assign to Me button")
 		//test if an error alert displays when request is assigned.
@@ -99,6 +100,7 @@ public class CheckerStep extends Step {
 	def checker_should_see_request_is_in_given_status(String statusTxt) {
 		TestObject statusObj = Utils.getTestObjectByIdPart(Constant.Status.CHECKER_UI_REQUEST_STATUS_ID_PART, 'div')
 		WebUI.waitForElementPresent(statusObj, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.STATUS_CHECK_WAIT)
 		String actualStatusTxt = WebUI.getText(statusObj)
 		if (!actualStatusTxt.equals(statusTxt)) {
 			WebUI.takeScreenshot()
