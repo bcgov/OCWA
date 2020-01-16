@@ -186,7 +186,7 @@ function* onFinishEditing(action) {
   };
   const meta = { id };
 
-  if (!isEqual(request, payload)) {
+  if (!isEqual(request, payload) || payload.state === 0) {
     yield put(
       saveRequest(payload, meta, {
         url: `/api/v2/requests/save/${id}`,
