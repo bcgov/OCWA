@@ -50,15 +50,15 @@ var gitops = function(db){
 
                     logger.info("[gitops] Request Success - ", data);
 
-                    this.updateRequest(request, data.location, 200, '');
+                    gitops.updateRequest(request, data.location, 200, '');
 
                 } else {
 
                     logger.error("Errors ", apiErr, apiRes.statusCode, apiRes.statusMessage, apiRes.body);
                     if (apiErr || apiRes.statusCode === 400) {
-                        this.updateRequest(request, null, 400, (apiErr ? apiErr : apiRes.body['message']));
+                        gitops.updateRequest(request, null, 400, (apiErr ? apiErr : apiRes.body['message']));
                     } else {
-                        this.updateRequest(request, null, 400, 'Unexpected error - please try again later.');
+                        gitops.updateRequest(request, null, 400, 'Unexpected error - please try again later.');
                     }
                 }
             });
