@@ -122,7 +122,7 @@ public class Constant {
 	}
 
 	final class Reports {
-		static final def REPORTS_VARIABLE_TXT_ID = 'request-details-variable-text'
+		static final def REPORTS_VARIABLE_TXT_ID = 'request-details-variableDescriptions-text'
 		static final def REQUEST_CHRONOLOGY_ID_PREFIX = 'request-chronology-item-state-'
 		static final def REQUEST_CHRONOLOGY_DRAFT_STATE_NUMBER = '0'
 		static final def REQUEST_CHRONOLOGY_WIP_STATE_NUMBER = '1'
