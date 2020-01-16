@@ -45,6 +45,7 @@ public class CheckerStep extends Step {
 		WebUI.waitForElementNotHasAttribute(assignToMeButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementVisible(assignToMeButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(assignToMeButtonObject, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.ASSIGN_TO_ME_TIMEOUT)
 		WebUI.click(assignToMeButtonObject)
 		WebUI.comment("found and clicked the Assign to Me button")
 		//test if an error alert displays when request is assigned.

@@ -12,6 +12,7 @@ public class Constant {
 	static final def DEFAULT_TIMEOUT = 10
 	static final def FILE_UPLOAD_TIMEOUT = 5
 	static final def DOWNLOAD_INTERFACE_TIMEOUT = 2
+	static final def ASSIGN_TO_ME_TIMEOUT = 2
 
 	final class Alerts {
 		static final def SUCCESS_UPDATED_TEXT = 'Successfully updated'
