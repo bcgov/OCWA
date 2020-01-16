@@ -100,6 +100,7 @@ public class CheckerStep extends Step {
 	def checker_should_see_request_is_in_given_status(String statusTxt) {
 		TestObject statusObj = Utils.getTestObjectByIdPart(Constant.Status.CHECKER_UI_REQUEST_STATUS_ID_PART, 'div')
 		WebUI.waitForElementPresent(statusObj, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.STATUS_CHECK_WAIT)
 		String actualStatusTxt = WebUI.getText(statusObj)
 		if (!actualStatusTxt.equals(statusTxt)) {
 			WebUI.takeScreenshot()
