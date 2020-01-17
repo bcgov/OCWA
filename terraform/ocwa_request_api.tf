@@ -15,7 +15,7 @@ resource "docker_container" "ocwa_request_api" {
     name = docker_network.private_network.name
   }
   env = [
-    "LOG_LEVEL=verbose",
+    "LOG_LEVEL=debug",
     "JWT_SECRET=${random_string.jwtSecret.result}",
     "API_PORT=3002",
     "WS_PORT=2998",

@@ -450,11 +450,6 @@ matrix:
         xvfb-run --auto-servernum --server-args='-screen 0, 1440x900x24' ./katalon -noSplash -runMode=console -projectPath='/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj' -retry=0 -testSuitePath='Test Suites/FullFeatureSuite' -executionProfile='Travis' -browserType='Chrome (headless)'
         xvfb-run --auto-servernum --server-args='-screen 0, 1440x900x24' ./katalon -noSplash -runMode=console -projectPath='/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj' -retry=0 -testSuitePath='Test Suites/AccessSuite' -executionProfile='Travis' -browserType='Chrome (headless)'
       fi
-    - docker logs ocwa_formio
-    - docker logs ocwa_request_api
-    - docker logs ocwaminio
-    - docker logs ocwa_tusd
-    - docker logs ocwa_frontend
 
 
   - name: OCWA Master Helm Chart
