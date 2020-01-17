@@ -65,12 +65,14 @@ describe('request/utils', () => {
         supportingFiles: ['sFile1', 'sFile2'],
       };
       expect(utils.duplicateRequest(original)).toEqual({
-        name: 'Duplicate Me Duplicate',
-        phoneNumber: '5555555555',
-        exportType: 'data',
-        variableDescriptions: 'Description',
-        files: ['file1', 'file2'],
-        supportingFiles: ['sFile1', 'sFile2'],
+        data: {
+          name: 'Duplicate Me Duplicate',
+          phoneNumber: '5555555555',
+          exportType: 'data',
+          variableDescriptions: 'Description',
+          files: ['file1', 'file2'],
+          supportingFiles: ['sFile1', 'sFile2'],
+        },
       });
     });
 
@@ -86,13 +88,15 @@ describe('request/utils', () => {
         codeDescription: 'Code Description',
       };
       expect(utils.duplicateRequest(original)).toEqual({
-        name: 'Duplicate Me Duplicate',
-        phoneNumber: '5555555555',
-        exportType: 'code',
-        repository: 'http://test.com',
-        branch: 'develop',
-        externalRepository: 'http://test.com',
-        codeDescription: 'Code Description',
+        data: {
+          name: 'Duplicate Me Duplicate',
+          phoneNumber: '5555555555',
+          exportType: 'code',
+          repository: 'http://test.com',
+          branch: 'develop',
+          externalRepository: 'http://test.com',
+          codeDescription: 'Code Description',
+        },
       });
     });
 
@@ -109,13 +113,15 @@ describe('request/utils', () => {
         outdatedField: 'asdfasdf',
       };
       expect(utils.duplicateRequest(original)).toEqual({
-        name: 'Duplicate Me Duplicate',
-        phoneNumber: '',
-        exportType: 'code',
-        repository: 'http://test.com',
-        branch: 'develop',
-        externalRepository: 'http://test.com',
-        codeDescription: 'Code Description',
+        data: {
+          name: 'Duplicate Me Duplicate',
+          phoneNumber: '',
+          exportType: 'code',
+          repository: 'http://test.com',
+          branch: 'develop',
+          externalRepository: 'http://test.com',
+          codeDescription: 'Code Description',
+        },
       });
     });
   });
