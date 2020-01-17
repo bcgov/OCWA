@@ -1,7 +1,7 @@
 {
   "name": "ocwa-clients",
   "author": "Jeremy Ho",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
