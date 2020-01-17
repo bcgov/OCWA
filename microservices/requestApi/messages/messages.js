@@ -3,8 +3,6 @@ var logger = require('npmlog');
 
 function checkRequestPermissions(db, user, fileId, sock, cb){
 
-    var db = require('../db/db');
-
     logger.debug('messages / Checking permission for file_id:', fileId);
 
     db.Request.findOne({ files: fileId }, (err, doc) => {
@@ -44,8 +42,8 @@ function sendFileStatusMessage(db, fileStatus){
 }
 
 //wrapper to make async
-messages.sendFileStatusMessage = function(fileStatus){
-    setTimeout(sendFileStatusMessage, 0, fileStatus);
+messages.sendFileStatusMessage = function(db, fileStatus){
+    setTimeout(sendFileStatusMessage, 0, db, fileStatus);
 };
 
 module.exports = messages;
