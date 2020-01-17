@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import SectionMessage from '@atlaskit/section-message';
@@ -19,7 +20,11 @@ function NewRequestForm({
   sendAction,
 }) {
   const submission = location.state || null;
-  const [exportType, setExportType] = React.useState({});
+  // Check the form type of a possibly duplicated request first
+  const submittedExportType = get(submission, 'data.formName');
+  const defaultExportType =
+    data.find(d => d.form === submittedExportType) || {};
+  const [exportType, setExportType] = React.useState(defaultExportType);
   const onSubmit = formData =>
     sendAction(
       'onCreate',

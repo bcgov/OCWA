@@ -15,7 +15,7 @@ export const formText = {
   data: {
     title: _e('{Direction} Package and/or {Direction} Groups Description'),
     description: _e(
-      'Describe the context for this {direction} package. If appropriate, you may choose to create {Direction} Groups, which are a collection of {direction} components that are batched for the purposes of description.',
+      'Describe the context for this {direction} package. If appropriate, you may choose to create {Direction} Groups, which are a collection of {direction} components that are batched for the purposes of description.'
     ),
   },
   code: {
@@ -92,7 +92,7 @@ export const requestFields = type => [
     isRequired: true,
     helperText: _e(
       'Describe any details about the code you wish to {request} here.',
-      type,
+      type
     ),
   },
   {
@@ -101,7 +101,7 @@ export const requestFields = type => [
         internal: 'Internal repository of code to export',
         external: 'Internal repository to send approved results',
       },
-      type,
+      type
     ),
     value: 'repository',
     type: 'repositoryHost',
@@ -126,7 +126,7 @@ export const requestFields = type => [
         internal: 'External repository to send approved results',
         external: 'External repository of code to import',
       },
-      type,
+      type
     ),
     value: 'externalRepository',
     type: 'git',
@@ -181,6 +181,7 @@ export const duplicateRequest = data => {
     ...formConfigKeys,
     'exportType',
     'name',
+    'formName',
     'files',
     'supportingFiles',
   ];
@@ -188,8 +189,14 @@ export const duplicateRequest = data => {
     d => pick(d, keys),
     d => mapValues(d, v => (isNil(v) ? '' : v)),
   ]);
+  const parsedData = cleaner({
+    ...data,
+    name: `${data.name} Duplicate`,
+  });
 
-  return cleaner({ ...data, name: `${data.name} Duplicate` });
+  return {
+    data: parsedData,
+  };
 };
 
 export const getRequestStateText = (value = 0) => {

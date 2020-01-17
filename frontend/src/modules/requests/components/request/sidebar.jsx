@@ -186,7 +186,7 @@ function RequestSidebar({
           id="request-sidebar-duplicate-button"
           iconBefore={<CopyIcon />}
           isDisabled={isSaving}
-          onClick={() => history.push('/new', duplicateRequest({ data }))}
+          onClick={() => history.push('/new', duplicateRequest(data))}
         >
           Duplicate Request
         </Button>
