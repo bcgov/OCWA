@@ -132,6 +132,12 @@ var getRouter = function(db){
                 }
             }
 
+            if (formRes.isJoi && formRes.name === "ValidationError") {
+                res.status(500);
+                res.json({error: "Critical form validation error"});
+                return;
+            }
+
             request.submissionId = formRes._id;
 
             request.save(function(saveErr, result){
@@ -267,6 +273,12 @@ var getRouter = function(db){
                         res.json({error: e});
                         return;
                     }
+                }
+
+                if (formRes.isJoi && formRes.name === "ValidationError") {
+                    res.status(500);
+                    res.json({error: "Critical form validation error"});
+                    return;
                 }
 
                 db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
