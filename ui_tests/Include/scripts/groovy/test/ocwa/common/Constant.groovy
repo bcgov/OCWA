@@ -44,7 +44,9 @@ public class Constant {
 	final class Requester {
 		static final def FORM_LOAD_WAIT = 1
 		static final def CANCEL_CLICK_WAIT = 2
+		static final def EDIT_BTN_WAIT = 2
 		static final def TEST_COMMENT = 'Test Comment'
+		static final def FILE_DISPLAY_WAIT = 2
 		static final def CONFIDENTIALITY_TEXT = 'My results are confidential because... X'
 		static final def EDITED_CONFIDENTIALITY_TEXT = 'Edited the reason my results are confidential'
 

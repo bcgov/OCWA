@@ -390,7 +390,7 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(withdrawBtn, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(withdrawBtn)
 		WebUI.acceptAlert()
-		WebUI.waitForElementNotPresent(withdrawBtn)
+		WebUI.waitForElementNotPresent(withdrawBtn, Constant.DEFAULT_TIMEOUT)
 	}
 
 	@When("requester views (.+) requests")
@@ -473,6 +473,7 @@ public class RequesterStep extends Step {
 	def submitted_request_info_matches_what_was_submitted() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.Requester.FILE_DISPLAY_WAIT)
 		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.verifyTextPresent(Constant.Requester.CONFIDENTIALITY_TEXT, false)
@@ -558,6 +559,12 @@ public class RequesterStep extends Step {
 	def request_should_be_informed_of_warning_rule_violation(String rule) {
 		WebUI.comment("checking that file successfully triggered warning")
 		WebUI.waitForElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.WARNING), Constant.DEFAULT_TIMEOUT)
+		//debugging
+		if (WebUI.waitForElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.ERROR), Constant.DEFAULT_TIMEOUT)) {
+			WebUI.click(Utils.getTestObjectByClass(Constant.FileIcon.ERROR))
+			WebUI.takeScreenshot()
+		}
+		//end debugging
 		WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.WARNING), Constant.DEFAULT_TIMEOUT)
 	}
 
