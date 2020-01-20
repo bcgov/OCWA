@@ -42,6 +42,8 @@ public class Constant {
 	}
 
 	final class Requester {
+		static final def FORM_LOAD_WAIT = 1
+		static final def CANCEL_CLICK_WAIT = 2
 		static final def TEST_COMMENT = 'Test Comment'
 		static final def CONFIDENTIALITY_TEXT = 'My results are confidential because... X'
 		static final def EDITED_CONFIDENTIALITY_TEXT = 'Edited the reason my results are confidential'
@@ -62,7 +64,7 @@ public class Constant {
 		static final def REQUEST_PATH = '/requests/'
 
 		static final def REQUEST_CONFIDENTIALITY_TXT_ID = 'data[confidentiality]'
-		static final def REQUEST_CONFIDENTIALITY_EDT_TXT_ID = 'request-confidentiality-input'
+		static final def REQUEST_CONFIDENTIALITY_EDT_TXT_ID = 'data[confidentiality]'
 		static final def REQUEST_CONFIDENTIALITY_LBL_TXT_ID = 'request-confidentiality-text'
 		static final def REQUEST_PHONE_TXT_ID = 'data[phoneNumber]'
 		static final def REQUEST_VARIABLE_TXT_ID = 'data[variableDescriptions]'
