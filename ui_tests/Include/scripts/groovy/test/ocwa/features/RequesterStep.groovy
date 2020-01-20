@@ -36,14 +36,13 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementVisible(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(newRequestButtonObject)
-		
-		TestObject confidentialityFieldObject = Utils.getTestObjectByName(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID)
-		WebUI.waitForElementVisible(confidentialityFieldObject, Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementNotHasAttribute(confidentialityFieldObject, "disabled", Constant.DEFAULT_TIMEOUT)
-		WebUI.delay(Constant.Requester.FORM_LOAD_WAIT)
 
 		switch (requestType) {
 			case "a":
+				TestObject confidentialityFieldObject = Utils.getTestObjectByName(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID)
+				WebUI.waitForElementPresent(confidentialityFieldObject, Constant.DEFAULT_TIMEOUT)
+				WebUI.waitForElementNotHasAttribute(confidentialityFieldObject, "disabled", Constant.DEFAULT_TIMEOUT)
+				WebUI.delay(Constant.Requester.FORM_LOAD_WAIT)
 				WebUI.setText(confidentialityFieldObject, Constant.Requester.CONFIDENTIALITY_TEXT)
 				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_VARIABLE_TXT_ID), Constant.Requester.REQUEST_VARIABLE_TEXT)
 				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_SUBPOP_TXT_ID), Constant.Requester.REQUEST_SUBPOP_TEXT)
@@ -516,9 +515,10 @@ public class RequesterStep extends Step {
 	@Then("requester should be able to make changes to the request")
 	def requester_should_be_able_to_make_changes_to_the_request() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
+		WebUI.delay(Constant.Requester.EDIT_BTN_WAIT)
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
-		WebUI.waitForElementPresent(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_LBL_TXT_ID), Constant.DEFAULT_TIMEOUT)
-		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_LBL_TXT_ID))
+		//WebUI.waitForElementPresent(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_LBL_TXT_ID), Constant.DEFAULT_TIMEOUT)
+		//WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_LBL_TXT_ID))
 
 		TestObject confidentialityField = Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_EDT_TXT_ID)
 		WebUI.waitForElementPresent(confidentialityField, Constant.DEFAULT_TIMEOUT)
