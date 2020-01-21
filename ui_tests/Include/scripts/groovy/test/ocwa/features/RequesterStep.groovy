@@ -520,13 +520,10 @@ public class RequesterStep extends Step {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.delay(Constant.Requester.EDIT_BTN_WAIT)
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
-		//WebUI.waitForElementPresent(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_LBL_TXT_ID), Constant.DEFAULT_TIMEOUT)
-		//WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_LBL_TXT_ID))
 
 		TestObject confidentialityField = Utils.getTestObjectByName(Constant.Requester.REQUEST_CONFIDENTIALITY_EDT_TXT_ID)
 		WebUI.waitForElementPresent(confidentialityField, Constant.DEFAULT_TIMEOUT)
 		WebUI.setText(confidentialityField, Constant.Requester.EDITED_CONFIDENTIALITY_TEXT)
-		WebUI.sendKeys(confidentialityField, Keys.chord(Keys.TAB, Keys.ENTER))
 
 		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
 		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
