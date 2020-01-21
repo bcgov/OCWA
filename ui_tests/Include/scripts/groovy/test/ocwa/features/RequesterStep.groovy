@@ -27,7 +27,7 @@ public class RequesterStep extends Step {
 	@Given("requester has started (.+) request")
 	def requester_starts_new_request(String requestType) {
 		G_REQUESTNAME = Utils.generateRequestNameDate()
-
+		WebUI.maximizeWindow()
 
 		TestObject newRequestButtonObject = Utils.getTestObjectByText(Constant.Requester.NEW_REQUEST_BTN_TXT)
 
@@ -37,49 +37,54 @@ public class RequesterStep extends Step {
 		WebUI.waitForElementClickable(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(newRequestButtonObject)
 
-
 		switch (requestType) {
 			case "a":
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID, 'textarea'), Constant.Requester.CONFIDENTIALITY_TEXT)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_VARIABLE_TXT_ID, 'textarea'), Constant.Requester.REQUEST_VARIABLE_TEXT)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_SUBPOP_TXT_ID, 'textarea'), Constant.Requester.REQUEST_SUBPOP_TEXT)
+				TestObject confidentialityFieldObject = Utils.getTestObjectByName(Constant.Requester.REQUEST_CONFIDENTIALITY_TXT_ID)
+				WebUI.waitForElementPresent(confidentialityFieldObject, Constant.DEFAULT_TIMEOUT)
+				WebUI.waitForElementNotHasAttribute(confidentialityFieldObject, "disabled", Constant.DEFAULT_TIMEOUT)
+				WebUI.delay(Constant.Requester.FORM_LOAD_WAIT)
+				WebUI.setText(confidentialityFieldObject, Constant.Requester.CONFIDENTIALITY_TEXT)
+				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_VARIABLE_TXT_ID), Constant.Requester.REQUEST_VARIABLE_TEXT)
+				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_SUBPOP_TXT_ID), Constant.Requester.REQUEST_SUBPOP_TEXT)
 				break
 			case "import":
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID, 'textarea'), Constant.Requester.GENERAL_COMMENTS_TEXT)
+				WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_GENERAL_COMMENTS_TXT_ID), Constant.Requester.GENERAL_COMMENTS_TEXT)
 				break
 			case "code import":
 				fillOutCommonCodeRequestFields(false)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			case "code export":
 				fillOutCommonCodeRequestFields(true)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_HAPPY_PATH_TEXT) //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			case "missing repository code import":
 				fillOutCommonCodeRequestFields(false)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_MISSING_REPO_TEXT)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_MISSING_REPO_TEXT)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			case "missing repository code export":
 				fillOutCommonCodeRequestFields(true)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_MISSING_REPO_TEXT)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_MISSING_REPO_TEXT)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			case 'fails scanning code import':
 				fillOutCommonCodeRequestFields(false)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			case 'fails scanning code export':
 				fillOutCommonCodeRequestFields(true)
-				WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
+				WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_BRANCH_TXT_ID), Constant.CodeRequests.MERGE_BRANCH_FAILED_SCAN)  //the branch name is the trigger for the GitLab simulator to return a successful or unsuccessful merge result
 				break
 			default:
 				throw new Exception("Request type $requestType is unknown")
 		}
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.Requester.REQUEST_PHONE_TXT_ID), Constant.Requester.REQUEST_PHONE_TEXT)
+		WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_NAME_TXT_ID), G_REQUESTNAME)
+		WebUI.setText(Utils.getTestObjectByName(Constant.Requester.REQUEST_PHONE_TXT_ID), Constant.Requester.REQUEST_PHONE_TEXT)
 
-		TestObject requestFormSaveFilesButton = Utils.getTestObjectById(Constant.Requester.REQUEST_SAVE_FILES_BTN_ID)
+		TestObject requestFormSaveFilesButton = Utils.getTestObjectByType()
 		WebUI.waitForElementClickable(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestFormSaveFilesButton)
+		WebUI.waitForElementNotPresent(requestFormSaveFilesButton, Constant.DEFAULT_TIMEOUT, FailureHandling.STOP_ON_FAILURE)
+		WebUI.waitForElementPresent(Utils.getTestObjectByXPath(Constant.Requester.REQUEST_SUPPORT_FILES_UPLOAD_BTN_XPATH), Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		G_REQUESTURL = WebUI.getUrl()
 	}
@@ -97,11 +102,15 @@ public class RequesterStep extends Step {
 		else {
 			requestTypeCode = Utils.getTestObjectByText(Constant.CodeRequests.REQUEST_CODE_IMPORT_DD_VALUE, null)
 		}
+		WebUI.waitForElementVisible(requestTypeDropDown, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotHasAttribute(requestTypeDropDown, "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(requestTypeDropDown, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestTypeDropDown)
 		WebUI.click(requestTypeCode)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TXT_ID, 'textarea'), Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TEXT)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_REMOTE_REPO_TXT_ID), Constant.CodeRequests.REQUEST_REMOTE_REPO_TEXT)
-		WebUI.setText(Utils.getTestObjectByIdPart(Constant.CodeRequests.REQUEST_LOCAL_REPO_TXT_ID), Constant.CodeRequests.REQUEST_LOCAL_REPO_TEXT)
+		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TXT_ID), Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TEXT)
+		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_REMOTE_REPO_TXT_ID), Constant.CodeRequests.REQUEST_REMOTE_REPO_TEXT)
+		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_LOCAL_REPO_TXT_ID), Constant.CodeRequests.REQUEST_LOCAL_REPO_TEXT)
 	}
 
 	@Given("has not submitted the request")
@@ -299,6 +308,7 @@ public class RequesterStep extends Step {
 		//			KeywordUtil.markFailed('An error alert displayed upon submission.')
 		//		}
 		//		WebUI.comment('No error message displayed so submission looks good.')
+		//		WebUI.takeScreenshot()
 	}
 
 	@When("requester writes and submits a new comment")
@@ -369,15 +379,19 @@ public class RequesterStep extends Step {
 	@When("the requester cancels the request")
 	def requester_cancels_request() {
 		requester_views_request_they_created(" ")
+		WebUI.delay(Constant.Requester.CANCEL_CLICK_WAIT)
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_CANCEL_BTN_ID))
 	}
 
 	@When("the requester withdraws the request")
 	def requester_withdraws_request() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
-		WebUI.waitForElementClickable(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID), Constant.DEFAULT_TIMEOUT)
-		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID))
+		TestObject withdrawBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID)
+		WebUI.waitForElementClickable(withdrawBtn, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.Requester.WITHDRAW_CLICK_WAIT)
+		WebUI.click(withdrawBtn)
 		WebUI.acceptAlert()
+		WebUI.waitForElementNotPresent(withdrawBtn, Constant.DEFAULT_TIMEOUT)
 	}
 
 	@When("requester views (.+) requests")
@@ -436,6 +450,7 @@ public class RequesterStep extends Step {
 		// We need to stall here to give time for the inline ajax to finish
 		WebUI.waitForElementNotPresent(Utils.getTestObjectByText('', 'circle'), Constant.DEFAULT_TIMEOUT)
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
+		WebUI.delay(Constant.Requester.FILE_DISPLAY_LOAD_WAIT)
 
 		if ((numOutputFiles as Integer) > 0) WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		if ((numOutputFiles as Integer) > 1) WebUI.verifyTextPresent(GlobalVariable.ValidFileName2, false)
@@ -460,6 +475,7 @@ public class RequesterStep extends Step {
 	def submitted_request_info_matches_what_was_submitted() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.Requester.FILE_DISPLAY_WAIT)
 		WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.verifyTextPresent(Constant.Requester.CONFIDENTIALITY_TEXT, false)
@@ -482,7 +498,7 @@ public class RequesterStep extends Step {
 			KeywordUtil.markFailed('Failing scenario because request is unexpected state.')
 		}
 	}
-	
+
 	@Then('requests of status "(.+)" should be displayed')
 	def requests_of_given_status_should_be_displayed(String status) {
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
@@ -502,13 +518,12 @@ public class RequesterStep extends Step {
 	@Then("requester should be able to make changes to the request")
 	def requester_should_be_able_to_make_changes_to_the_request() {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
+		WebUI.delay(Constant.Requester.EDIT_BTN_WAIT)
 		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_EDIT_BTN_ID))
-		WebUI.waitForElementPresent(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_LBL_TXT_ID), Constant.DEFAULT_TIMEOUT)
-		WebUI.click(Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_LBL_TXT_ID))
 
-		TestObject confidentialityField = Utils.getTestObjectById(Constant.Requester.REQUEST_CONFIDENTIALITY_EDT_TXT_ID)
+		TestObject confidentialityField = Utils.getTestObjectByName(Constant.Requester.REQUEST_CONFIDENTIALITY_EDT_TXT_ID)
+		WebUI.waitForElementPresent(confidentialityField, Constant.DEFAULT_TIMEOUT)
 		WebUI.setText(confidentialityField, Constant.Requester.EDITED_CONFIDENTIALITY_TEXT)
-		WebUI.sendKeys(confidentialityField, Keys.chord(Keys.TAB, Keys.ENTER))
 
 		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
 		WebUI.waitForElementPresent(successAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)
@@ -543,6 +558,12 @@ public class RequesterStep extends Step {
 	def request_should_be_informed_of_warning_rule_violation(String rule) {
 		WebUI.comment("checking that file successfully triggered warning")
 		WebUI.waitForElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.WARNING), Constant.DEFAULT_TIMEOUT)
+		//debugging
+		if (WebUI.waitForElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.ERROR), Constant.DEFAULT_TIMEOUT)) {
+			WebUI.click(Utils.getTestObjectByClass(Constant.FileIcon.ERROR))
+			WebUI.takeScreenshot()
+		}
+		//end debugging
 		WebUI.verifyElementPresent(Utils.getTestObjectByClass(Constant.FileIcon.WARNING), Constant.DEFAULT_TIMEOUT)
 	}
 

@@ -164,6 +164,20 @@ spec:
                 secretKeyRef:
                   name: {{ template "ocwaRequestApi.fullname" . }}-secrets
                   key: gitopsSecret
+            - name: DEFAULT_EXPORT_FORM_NAME
+              value: "{{ .Values.defaultExportFormName }}"
+            - name: DEFAULT_IMPORT_FORM_NAME
+              value: "{{ .Values.defaultImportFormName }}"
+            - name: DEFAULT_EXPORT_CODE_FORM_NAME
+              value: "{{ .Values.defaultExportCodeFormName }}"
+            - name: DEFAULT_IMPORT_CODE_FORM_NAME
+              value: "{{ .Values.defaultImportCodeFormName }}"
+            - name: FORMIO_URL
+              value: "{{ .Values.formioUrl }}"
+            - name: FORMIO_USERNAME
+              value: "{{ .Values.formioUsername }}"
+            - name: FORMIO_PASSWORD
+              value: "{{ .Values.formioPassword }}"
 
           ports:
             - name: http

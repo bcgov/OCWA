@@ -291,6 +291,14 @@ project-api:
 request-api:
   replicaCount: 1
 
+  defaultExportFormName: "dataexport"
+  defaultImportFormName: "dataimport"
+  defaultExportCodeFormName: "codeexport"
+  defaultImportCodeFormName: "codeimport"
+  formioUrl: "http://ocwa-formio.ocwa"
+  formioUsername: "admin@example.com"
+  formioPassword: "CHANGEME"
+
   image:
     repository: bcgovimages/ocwa_request_api
     tag: latest
@@ -496,6 +504,69 @@ validate-api:
 
 
   resources: {}
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+formio:
+  replicaCount: 1
+
+  image:
+    repository: h3brandon/formio
+    tag: latest
+    pullPolicy: Always
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ##Configuration for OCWA Forum Api
+  apiPort: 3001
+  logLevel: error
+
+  global:
+    jwtSecret: "ssh this is a secret"
+
+  database:
+    host: ocwa-formio-mongo.ocwa
+    username: forumApi
+    password: password
+    dbName: formioapp
+
+  username: "admin@example.com"
+  password: CHANGEME
+
+  nodeConfig: '{\"mongo\": \"mongodb://forumApi:password@ocwa-formio-mongo.ocwa:27017/formioapp\", \"jwt\": { \"secret\": \"ssh this is a secret\" } }'
+
+  createDatabase: true
+  storageClassName: default
+  dbPod:
+    persistence: /data/db
+    adminEnv: MONGO_INITDB_ROOT_USERNAME
+    admin: root
+    passEnv: MONGO_INITDB_ROOT_PASSWORD
+    pass: root
+    dbEnv: MONGO_INITDB_DATABASE
+    addAdminPassEnv: false
+    adminPassEnv: MONGODB_ADMIN_PASSWORD
+    initDb: true
+
+  mongoImage:
+    repository: mongo
+    tag: 4.1
+
+  resources: {}
+    # If you want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #  cpu: 100m
+    #  memory: 128Mi
+    # requests:
+    #  cpu: 100m
+    #  memory: 128Mi
 
   nodeSelector: {}
 

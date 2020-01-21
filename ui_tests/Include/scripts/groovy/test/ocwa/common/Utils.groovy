@@ -97,4 +97,15 @@ public class Utils {
 		tObject.addProperty('name', ConditionType.EQUALS, nm, true)
 		return tObject
 	}
+	/**
+	 * Returns the TestObject correlating to the tag
+	 * @param tag The tag attribute to filter on
+	 * @return TestObject
+	 */
+	static def getTestObjectByType(String ty = 'submit', String tag = 'input') {
+		TestObject tObject = new TestObject(ty)
+		tObject.addProperty('type', ConditionType.EQUALS, ty, true)
+		//tObject.addProperty('tag', ConditionType.EQUALS, tag, true)
+		return tObject
+	}
 }

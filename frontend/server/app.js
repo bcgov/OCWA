@@ -98,7 +98,7 @@ app.get('/login', passport.authenticate('openidconnect'));
 
 // Set up some proxy action
 app.use('/api/v1/forums', proxy.forum);
-app.use('/api/v1/requests', proxy.request);
+app.use('/api/v2/requests', proxy.request);
 app.use('/api/v1/files', filesRoute);
 app.use('/versions', versionsRoute);
 

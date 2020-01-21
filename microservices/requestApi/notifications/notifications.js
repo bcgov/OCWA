@@ -1,19 +1,22 @@
-const email = require('./email')
-const gitops = require('./gitops')
+var notifications = function(db){
+    const email = require('./email')(db);
+    const gitops = require('./gitops')(db);
 
-var notifications = {};
+    var notifications = {};
 
-notifications.notify = function(request, user, submittedUnclaimed){
-    email.notify(request, user, submittedUnclaimed);
-    gitops.process(request, user);
-};
+    notifications.notify = function(request, user, submittedUnclaimed){
+        email.notify(request, user, submittedUnclaimed);
+        gitops.process(request, user);
+    };
 
-notifications.process = function(request, user){
-    gitops.process(request, user);
-};
+    notifications.process = function(request, user){
+        gitops.process(request, user);
+    };
 
-notifications.gitops = function(){
-    return gitops;
-};
+    notifications.gitops = function(){
+        return gitops;
+    };
+    return notifications;
+}
 
 module.exports = notifications;

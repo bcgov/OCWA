@@ -16,7 +16,7 @@ export default connect(mapStateToProps, {
       {},
       { dataType: 'requestTypes' },
       {
-        url: '/api/v1/requests/request_types',
+        url: '/api/v2/requests/request_types',
       }
     ),
 })(withRequest(RequestTypes));
