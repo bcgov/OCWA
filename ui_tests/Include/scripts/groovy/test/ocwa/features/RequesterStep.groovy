@@ -303,12 +303,12 @@ public class RequesterStep extends Step {
 		WebUI.click(requestSubmitBtn)
 
 		//test if an error alert displays when request is submitted.
-//		if (WebUI.waitForElementPresent(errorAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
-//			WebUI.takeScreenshot()
-//			KeywordUtil.markFailed('An error alert displayed upon submission.')
-//		}
-//		WebUI.comment('No error message displayed so submission looks good.')
-//		WebUI.takeScreenshot()
+		//		if (WebUI.waitForElementPresent(errorAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
+		//			WebUI.takeScreenshot()
+		//			KeywordUtil.markFailed('An error alert displayed upon submission.')
+		//		}
+		//		WebUI.comment('No error message displayed so submission looks good.')
+		//		WebUI.takeScreenshot()
 	}
 
 	@When("requester writes and submits a new comment")
@@ -388,6 +388,7 @@ public class RequesterStep extends Step {
 		WebUI.comment("current page (should be request page): ${WebUI.getUrl()}")
 		TestObject withdrawBtn = Utils.getTestObjectById(Constant.Requester.REQUEST_WITHDRAW_BTN_ID)
 		WebUI.waitForElementClickable(withdrawBtn, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.Requester.WITHDRAW_CLICK_WAIT)
 		WebUI.click(withdrawBtn)
 		WebUI.acceptAlert()
 		WebUI.waitForElementNotPresent(withdrawBtn, Constant.DEFAULT_TIMEOUT)
@@ -449,6 +450,7 @@ public class RequesterStep extends Step {
 		// We need to stall here to give time for the inline ajax to finish
 		WebUI.waitForElementNotPresent(Utils.getTestObjectByText('', 'circle'), Constant.DEFAULT_TIMEOUT)
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
+		WebUI.delay(Constant.Requester.FILE_DISPLAY_LOAD_WAIT)
 
 		if ((numOutputFiles as Integer) > 0) WebUI.verifyTextPresent(GlobalVariable.ValidFileName, false)
 		if ((numOutputFiles as Integer) > 1) WebUI.verifyTextPresent(GlobalVariable.ValidFileName2, false)
