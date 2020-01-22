@@ -512,6 +512,7 @@ validate-api:
   affinity: {}
 
 formio:
+  storageClassName: default
   replicaCount: 1
 
   image:
