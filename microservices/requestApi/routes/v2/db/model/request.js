@@ -137,14 +137,12 @@ model.getAll = function(query, limit, page, user, callback){
                                     }
                                 },
                                 else: {
-                                    then: { 
-                                        $cond: { 
-                                            if: { 
-                                                $eq: [ "$exportType", baseModel.CODE_EXPORT_TYPE ] 
-                                            }, 
-                                            then: DEFAULT_IMPORT_CODE_FORM, 
-                                            else: DEFAULT_IMPORT_FORM 
-                                        }
+                                    $cond: { 
+                                        if: { 
+                                            $eq: [ "$exportType", baseModel.CODE_EXPORT_TYPE ] 
+                                        }, 
+                                        then: DEFAULT_IMPORT_CODE_FORM, 
+                                        else: DEFAULT_IMPORT_FORM 
                                     }
                                 }
                             } 
