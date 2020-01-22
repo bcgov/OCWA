@@ -401,6 +401,8 @@ storage-api:
   access_secret: s3secretkey
 
   storageClassName: default
+  storageAnnotations:
+    - volume.beta.kubernetes.io/storage-provisioner: netapp.io/trident
   storageSize: 1Gi
 
   image:
@@ -513,6 +515,8 @@ validate-api:
 
 formio:
   storageClassName: default
+  storageAnnotations:
+    - volume.beta.kubernetes.io/storage-provisioner: netapp.io/trident
   replicaCount: 1
 
   image:
