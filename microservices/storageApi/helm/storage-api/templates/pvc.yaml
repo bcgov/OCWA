@@ -5,6 +5,7 @@ metadata:
   {{- with .Values.storageAnnotations }}
   annotations:
 {{ toYaml . | indent 4 }}
+  {{ end }}
   labels:
       app: {{ template "ocwaStorageApi.name" . }}-minio
       chart: {{ template "ocwaStorageApi.chart" . }}
