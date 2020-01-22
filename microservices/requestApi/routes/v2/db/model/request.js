@@ -125,7 +125,7 @@ model.getAll = function(query, limit, page, user, callback){
                         $ifNull: ["$formName", { 
                             $cond: {
                                 if: {
-                                    $eq: ["$type", this.EXPORT_TYPE]
+                                    $eq: ["$type", baseModel.EXPORT_TYPE]
                                 },
                                 then: { 
                                     $cond: { 
