@@ -28,6 +28,9 @@ metadata:
       chart: {{ template "formio.chart" . }}
       release: {{ .Release.Name }}
       heritage: {{ .Release.Service }}
+  {{- with .Values.storageAnnotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
 spec:
   accessModes:
     - ReadWriteOnce

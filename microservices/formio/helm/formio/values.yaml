@@ -33,6 +33,8 @@ nodeConfig: '{\"mongo\": \"mongodb://forumApi:password@ocwa-formio-mongo.ocwa:27
 
 createDatabase: true
 storageClassName: default
+storageAnnotations:
+  - volume.beta.kubernetes.io/storage-provisioner: netapp.io/trident
 dbPod:
   persistence: /data/db
   adminEnv: MONGO_INITDB_ROOT_USERNAME
