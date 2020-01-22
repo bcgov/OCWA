@@ -52,7 +52,7 @@ ingress:
 
 storageClassName: default
 storageAnnotations:
-  - volume.beta.kubernetes.io/storage-provisioner: netapp.io/trident
+  volume.beta.kubernetes.io/storage-provisioner: netapp.io/trident
 storageSize: 1Gi
 
 
