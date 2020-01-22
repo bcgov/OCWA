@@ -200,29 +200,37 @@ model.getAll = function(query, limit, page, user, callback){
                     
                     let workingReq = results[i];
                     logger.verbose('v2 about to get formio submissions request model');
-                    formioClient.getSubmission(results[i].formName, workingReq.submissionId, function(formErr, formRes){
-                        logger.verbose('v2 got formio submissions request model', formErr, formRes);
-                        if (formRes && workingReq.submissionId){
-                            try{
-                                var submis = JSON.parse(formRes);
-                                var keys = Object.keys(submis.data);
-                                logger.verbose("adding fields to ", workingReq);
-                                for (var j=0; j<keys.length; j++){
-                                    var key = keys[j];
-                                    //protect schema fields
-                                    if (schemaFields.indexOf(key) === -1){
-                                        var val = submis.data[key];
-                                        workingReq[key] = val;
+                    if (workingReq.submissionId){
+                        formioClient.getSubmission(results[i].formName, workingReq.submissionId, function(formErr, formRes){
+                            logger.verbose('v2 got formio submissions request model', formErr, formRes);
+                            if (formRes && workingReq.submissionId){
+                                try{
+                                    var submis = JSON.parse(formRes);
+                                    var keys = Object.keys(submis.data);
+                                    logger.verbose("adding fields to ", workingReq);
+                                    for (var j=0; j<keys.length; j++){
+                                        var key = keys[j];
+                                        //protect schema fields
+                                        if (schemaFields.indexOf(key) === -1){
+                                            var val = submis.data[key];
+                                            workingReq[key] = val;
+                                        }
                                     }
-                                }
-                            }catch(e){}
-                        }
+                                }catch(e){}
+                            }
+                            v2Results.push(workingReq);
+                            processed += 1;
+                            if (processed === results.length){
+                                callback(null, v2Results);
+                            }
+                        });
+                    }else{
                         v2Results.push(workingReq);
                         processed += 1;
                         if (processed === results.length){
                             callback(null, v2Results);
                         }
-                    });
+                    }
                 }
             }
             
