@@ -228,7 +228,6 @@ model.getAll = function(query, limit, page, user, callback){
                         for (var j=0; j<v1keys.length; j++){
                             if (schemaFields.indexOf(v1keys[j]) === -1){
                                 workingReq['data'][v1keys[j]] = workingReq[v1keys[j]];
-                                delete workingReq[v1keys[j]];
                             }
                         }
                         v2Results.push(workingReq);
