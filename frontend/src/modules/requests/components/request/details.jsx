@@ -25,6 +25,7 @@ function RequestDetails({
   isLoading,
   onSave,
 }) {
+  const editingRef = React.useRef(isEditing);
   const formRef = React.useRef({});
   const files = get(data, 'files', []);
   const supportingFiles = get(data, 'supportingFiles', []);
@@ -46,9 +47,11 @@ function RequestDetails({
   }, [data]);
 
   React.useEffect(() => {
-    if (!isEditing) {
+    if (!isEditing && editingRef.current === true) {
       onSave(id, formRef.current);
     }
+
+    editingRef.current = isEditing;
   }, [isEditing]);
 
   if (isLoading && !data._id) {
