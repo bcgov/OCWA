@@ -256,7 +256,7 @@ var getRouter = function(db){
                 db.Request.setChrono(findRes, req.user.id, objectDelta);
             }
 
-            formioClient.putSubmission(findRes.formName, findRes.submissionId, req.body, function(formErr, formRes){
+            var afterSave = function(formErr, formRes){
                 logger.verbose("formio put resp", formErr, formRes);
     
                 if (formErr){
@@ -317,7 +317,15 @@ var getRouter = function(db){
 
                     res.json({message: "Successfully updated", result: findRes});
                 });
-            });
+            };
+
+            if (findRes.submissionId){
+                formioClient.putSubmission(findRes.formName, findRes.submissionId, req.body, afterSave);
+            }else{
+                //support for upgrading v1 posts
+                formioClient.postSubmission(findRes.formName, req.body, afterSave);
+            }
+            
         });
 
     });
@@ -354,7 +362,8 @@ var getRouter = function(db){
                 }
 
                 formioClient.deleteSubmission(reqRes.formName, reqRes.submissionId, function(formErr, formRes){
-                    if (formErr){
+                    //reqRes.submissionId is checked because a failure for 1 v1 request isn't a failure
+                    if (formErr && reqRes.submissionId){
                         res.status(500);
                         res.json({error: formErr});
                         return;
