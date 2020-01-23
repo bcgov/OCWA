@@ -121,6 +121,23 @@ model.getAll = function(query, limit, page, user, callback){
                     files: 1,
                     author: 1,
                     project: 1,
+                    
+                    //v1 includes, will have no effect on v2 documents
+                    tags: 1,
+                    phoneNumber: 1,
+                    purpose: 1,
+                    variableDescriptions: 1,
+                    subPopulation: 1,
+                    selectionCriteria: 1,
+                    steps: 1,
+                    freq: 1,
+                    confidentiality: 1,
+                    branch: 1,
+                    externalRepository: 1,
+                    repository: 1,
+                    mergeRequestLink: 1,
+                    codeDescription: 1,
+
                     formName: {
                         $ifNull: ["$formName", { 
                             $cond: {
