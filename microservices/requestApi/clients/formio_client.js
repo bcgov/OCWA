@@ -5,10 +5,37 @@
 const config = require('config');
 const httpReq = require('request');
 const logger = require('npmlog');
+let atob = require('atob');
+const NodeCache = require('node-cache');
+//30 minute ttl
+const formioCache = new NodeCache({stdTTL: 1800});
 
 var formio = {};
 
+function isTokenExpired(token){
+    let currDate = new Date();
+
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace('-', '+').replace('_', '/');
+    let jwtObj = JSON.parse(atob(base64));
+    let exp = new Date(0);
+    exp.setUTCSeconds(jwtObj.exp);
+
+    return (currDate > exp);
+}
+
 formio.auth = function(callback){
+    var token = formioCache.get("token");
+    if (token !== undefined){
+        //check if the token is expired
+        if (!isTokenExpired(token)){
+            callback(null, token);
+            return;
+        }
+        
+        //if we're here it is expired
+        formioCache.del("token");
+    }
     var data = {
         data: {
             email: config.get("formio.username"),
@@ -23,6 +50,7 @@ formio.auth = function(callback){
             callback(err);
         }else{
             logger.verbose("formio auth success");
+            formioCache.set("token", res.headers['x-jwt-token'], 300);
             callback(err, res.headers['x-jwt-token']);
         }
     });
@@ -49,6 +77,12 @@ formio.getSubmissions = function(formName, callback) {
 }
 
 formio.getSubmission = function(formName, submissionId, callback) {
+    let cacheKey = formName + "/" + submissionId;
+    if (formioCache.has(cacheKey)){
+        callback(null, formioCache.get(cacheKey));
+        return;
+    }
+
     this.auth(function(err, jwt){
         if (err){
             logger.error("Error getting jwt", err);
@@ -62,6 +96,7 @@ formio.getSubmission = function(formName, submissionId, callback) {
                 callback(err);
             }else{
                 logger.verbose("formio get submission success");
+                formioCache.set(cacheKey, body);
                 callback(null, body);
             }
         });
@@ -140,6 +175,11 @@ formio.putSubmission = function(formName, submissionId, values, callback) {
 };
 
 formio.getForms = function(callback) {
+    let cacheKey = "forms"
+    if (formioCache.has(cacheKey)){
+        callback(null, formioCache.get(cacheKey));
+        return;
+    }
     this.auth(function(err, jwt){
         if (err){
             logger.error("Error getting jwt", err);
@@ -153,6 +193,7 @@ formio.getForms = function(callback) {
                 callback(err);
             }else{
                 logger.verbose("formio get forms success");
+                formioCache.set(cacheKey, body);
                 callback(null, body);
             }
         });
@@ -160,6 +201,11 @@ formio.getForms = function(callback) {
 };
 
 formio.getForm = function(formName, callback) {
+    let cacheKey = formName;
+    if (formioCache.has(cacheKey)){
+        callback(null, formioCache.get(cacheKey));
+        return;
+    }
     this.auth(function(err, jwt){
         if (err){
             logger.error("Error getting jwt", err);
@@ -173,6 +219,7 @@ formio.getForm = function(formName, callback) {
                 callback(err);
             }else{
                 logger.verbose("formio get form success");
+                formioCache.set(cacheKey, body);
                 callback(null, body);
             }
         });

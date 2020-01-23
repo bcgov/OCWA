@@ -223,6 +223,14 @@ model.getAll = function(query, limit, page, user, callback){
                             }
                         });
                     }else{
+                        let v1keys = Object.keys(workingReq);
+                        workingReq['data'] = {};
+                        for (var j=0; j<v1keys.length; j++){
+                            if (schemaFields.indexOf(v1keys[j]) === -1){
+                                workingReq['data'] = workingReq[v1keys[j]];
+                                delete workingReq[v1keys[j]];
+                            }
+                        }
                         v2Results.push(workingReq);
                         processed += 1;
                         if (processed === results.length){
