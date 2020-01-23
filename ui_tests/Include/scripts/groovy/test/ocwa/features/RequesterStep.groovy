@@ -108,7 +108,11 @@ public class RequesterStep extends Step {
 		WebUI.delay(Constant.DEFAULT_TIMEOUT)
 		WebUI.click(requestTypeDropDown)
 		WebUI.click(requestTypeCode)
-		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TXT_ID), Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TEXT)
+		TestObject codeDescription = Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TXT_ID)
+		WebUI.waitForElementPresent(codeDescription, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotHasAttribute(codeDescription, "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.Requester.FORM_LOAD_WAIT)
+		WebUI.setText(Utils.getTestObjectByName(codeDescription), Constant.CodeRequests.REQUEST_CODE_DESCRIPTION_TEXT)
 		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_REMOTE_REPO_TXT_ID), Constant.CodeRequests.REQUEST_REMOTE_REPO_TEXT)
 		WebUI.setText(Utils.getTestObjectByName(Constant.CodeRequests.REQUEST_LOCAL_REPO_TXT_ID), Constant.CodeRequests.REQUEST_LOCAL_REPO_TEXT)
 	}
