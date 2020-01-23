@@ -256,74 +256,119 @@ var getRouter = function(db){
                 db.Request.setChrono(findRes, req.user.id, objectDelta);
             }
 
-            var afterSave = function(formErr, formRes){
-                logger.verbose("formio put resp", formErr, formRes);
-    
-                if (formErr){
-                    res.status(500);
-                    res.json({error: formErr});
-                    return;
-                }
-    
-                if (typeof(formRes) === 'string'){
-                    try{
-                        formRes = JSON.parse(formRes);
-                    }catch(e){
+            if (findRes.submissionId){
+                formioClient.putSubmission(findRes.formName, findRes.submissionId, req.body, function(formErr, formRes){
+                    logger.verbose("formio put resp", formErr, formRes);
+        
+                    if (formErr){
                         res.status(500);
-                        res.json({error: e});
-                        return;
-                    }
-                }
-
-                if (formRes.isJoi && formRes.name === "ValidationError") {
-                    res.status(500);
-                    res.json({error: "Critical form validation error"});
-                    return;
-                }
-
-                db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
-                    if (saveErr) {
-                        res.json({error: saveErr.message});
+                        res.json({error: formErr});
                         return;
                     }
 
-                    var httpReq = require('request');
-
-                    var policy = findRes.type + "-" + findRes.exportType;
-
-                    for (var i=0; i<findRes.files.length; i++) {
-                        var myFile = findRes.files[i];
-                        httpReq.put({
-                            url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
-                            headers: {
-                                'x-api-key': config.get('validationApiSecret')
-                            }
-                        }, function (apiErr, apiRes, body) {
-                            logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
-                            if (apiErr) {
-                                logger.debug("Error validating file: ", apiErr);
-                            }
-                        });
-                    }
-
-                    notify.process(findRes, req.user);
-
-                    var keys = Object.keys(formRes.data);
-                    for (var i=0; i<keys.length; i++){
-                        if (db.Request.schemaFields.indexOf(keys[i]) === -1){
-                            findRes[keys[i]] = formRes.data[keys[i]];
+                    if (typeof(formRes) === 'string'){
+                        try{
+                            formRes = JSON.parse(formRes);
+                        }catch(e){
+                            res.status(500);
+                            res.json({error: e});
+                            return;
                         }
                     }
-
-                    res.json({message: "Successfully updated", result: findRes});
+    
+                    if (formRes.isJoi && formRes.name === "ValidationError") {
+                        res.status(500);
+                        res.json({error: "Critical form validation error"});
+                        return;
+                    }
+    
+                    db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
+                        if (saveErr) {
+                            res.json({error: saveErr.message});
+                            return;
+                        }
+    
+                        var httpReq = require('request');
+    
+                        var policy = findRes.type + "-" + findRes.exportType;
+    
+                        for (var i=0; i<findRes.files.length; i++) {
+                            var myFile = findRes.files[i];
+                            httpReq.put({
+                                url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
+                                headers: {
+                                    'x-api-key': config.get('validationApiSecret')
+                                }
+                            }, function (apiErr, apiRes, body) {
+                                logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
+                                if (apiErr) {
+                                    logger.debug("Error validating file: ", apiErr);
+                                }
+                            });
+                        }
+    
+                        notify.process(findRes, req.user);
+    
+                        var keys = Object.keys(formRes.data);
+                        for (var i=0; i<keys.length; i++){
+                            if (db.Request.schemaFields.indexOf(keys[i]) === -1){
+                                findRes[keys[i]] = formRes.data[keys[i]];
+                            }
+                        }
+    
+                        res.json({message: "Successfully updated", result: findRes});
+                    });
                 });
-            };
-
-            if (findRes.submissionId){
-                formioClient.putSubmission(findRes.formName, findRes.submissionId, req.body, afterSave);
             }else{
                 //support for upgrading v1 posts
-                formioClient.postSubmission(findRes.formName, req.body, afterSave);
+                formioClient.postSubmission(findRes.formName, req.body, function(formErr, formRes){
+                    logger.verbose("formio put resp", formErr, formRes);
+        
+                    if (formErr){
+                        res.status(500);
+                        res.json({error: formErr});
+                        return;
+                    }
+
+                    findRes.submissionId = formRes._id;
+    
+                    db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
+                        if (saveErr) {
+                            res.json({error: saveErr.message});
+                            return;
+                        }
+    
+                        var httpReq = require('request');
+    
+                        var policy = findRes.type + "-" + findRes.exportType;
+    
+                        for (var i=0; i<findRes.files.length; i++) {
+                            var myFile = findRes.files[i];
+                            httpReq.put({
+                                url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
+                                headers: {
+                                    'x-api-key': config.get('validationApiSecret')
+                                }
+                            }, function (apiErr, apiRes, body) {
+                                logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
+                                if (apiErr) {
+                                    logger.debug("Error validating file: ", apiErr);
+                                }
+                            });
+                        }
+    
+                        notify.process(findRes, req.user);
+    
+                        var keys = Object.keys(formRes.data);
+                        for (var i=0; i<keys.length; i++){
+                            if (db.Request.schemaFields.indexOf(keys[i]) === -1){
+                                findRes[keys[i]] = formRes.data[keys[i]];
+                            }
+                        }
+    
+                        res.json({message: "Successfully updated", result: findRes});
+                    });
+                });
             }
             
         });
