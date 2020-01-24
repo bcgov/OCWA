@@ -527,6 +527,8 @@ public class RequesterStep extends Step {
 
 		TestObject confidentialityField = Utils.getTestObjectByName(Constant.Requester.REQUEST_CONFIDENTIALITY_EDT_TXT_ID)
 		WebUI.waitForElementPresent(confidentialityField, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementNotHasAttribute(confidentialityField, "disabled", Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.Requester.EDIT_FIELD_WAIT)
 		WebUI.setText(confidentialityField, Constant.Requester.EDITED_CONFIDENTIALITY_TEXT)
 
 		TestObject successAlert = Utils.getTestObjectByText(Constant.Alerts.SUCCESS_UPDATED_TEXT, null)
