@@ -557,9 +557,8 @@ describe("Forms", function() {
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.should.have.property('forms');
-                    res.body.forms.should.have.property('internal')
-                    res.body.forms.should.have.property('external')
+                    res.body.should.have.property('0');
+                    res.body[0].should.have.property('_id');
                     done();
                 });
         });
@@ -570,9 +569,7 @@ describe("Forms", function() {
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.should.have.property('forms');
-                    res.body.forms.should.have.property('internal')
-                    res.body.forms.should.have.property('external')
+                    res.body.should.have.property('_id');
                     done();
                 });
         });
