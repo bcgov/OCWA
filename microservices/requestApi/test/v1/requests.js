@@ -93,6 +93,29 @@ describe("Requests", function() {
                 });
         });
 
+        it('it should get file_status_codes', function (done) {
+            chai.request(server)
+                .get('/v1/file_status_codes')
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('0');
+                    res.body.should.have.property('1');
+                    res.body.should.have.property('2');
+                    done();
+                });
+        });
+
+        it('it should get request_types', function (done) {
+            chai.request(server)
+                .get('/v1/request_types')
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('import');
+                    res.body.should.have.property('export');
+                    done();
+                });
+        });
+
         it('it should get all status code mappings', function (done) {
             chai.request(server)
                 .get('/v1/status_codes')
@@ -186,7 +209,7 @@ describe("Requests", function() {
     describe('/GET  v1 & v1/requestId', function () {
         it('it should get requests', function (done) {
             chai.request(server)
-                .get('/v1')
+                .get('/v1?limit=1&page=1&name=testName&start_date=2000/01/01/00/00/00&end_date=9999/01/01/00/00/00')
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
