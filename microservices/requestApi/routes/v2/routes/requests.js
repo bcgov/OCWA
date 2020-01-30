@@ -169,22 +169,22 @@ var getRouter = function(db){
                             }
                             //note not returning if an error as it'll force a delete below
                             log.error("Error updating request", e);
-                            db.Request.deleteOne({_id: result._id}, function(e){
-                                if (e) {
-                                    log.error("Error deleting request", result, e);
+                            db.Request.deleteOne({_id: result._id}, function(e2){
+                                if (e2) {
+                                    log.error("Error deleting request", result, e2);
                                 }
                             });
                             res.status(500);
-                            res.json({error: "Error updating request with topic topic: " + e});
+                            res.json({error: "Error updating request with topic topic: " + e2});
                         });
 
                         return;
                     }
 
                     log.error("Error creating topic, deleting request as a result", apiErr, result);
-                    db.Request.deleteOne({_id: result._id}, function(e){
-                        if (e) {
-                            log.error("Error deleting request", result, e);
+                    db.Request.deleteOne({_id: result._id}, function(e3){
+                        if (e3) {
+                            log.error("Error deleting request", result, e3);
                         }
                         formioClient.deleteSubmission(request.formName, request.submissionId, function(fe, fr){
                             if (fe){
@@ -195,7 +195,7 @@ var getRouter = function(db){
                         });
                     });
                     res.status(500);
-                    if (apiErr) {
+                    if (apiErr) { //NOSONAR
                         log.error("Error deleting formio submission", apiErr);
                         res.json({error: "Error creating forum topic: " + apiErr});
                         return;
@@ -292,14 +292,14 @@ var getRouter = function(db){
     
                         var policy = findRes.type + "-" + findRes.exportType;
     
-                        for (var i=0; i<findRes.files.length; i++) {
+                        for (let i=0; i<findRes.files.length; i++) {
                             var myFile = findRes.files[i];
                             httpReq.put({
                                 url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
                                 headers: {
                                     'x-api-key': config.get('validationApiSecret')
                                 }
-                            }, function (apiErr, apiRes, body) {
+                            }, function (apiErr, apiRes, body) { //NOSONAR
                                 logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
                                 if (apiErr) {
                                     logger.debug("Error validating file: ", apiErr);
@@ -310,7 +310,7 @@ var getRouter = function(db){
                         notify.process(findRes, req.user);
     
                         var keys = Object.keys(formRes.data);
-                        for (var i=0; i<keys.length; i++){
+                        for (let i=0; i<keys.length; i++){
                             if (db.Request.schemaFields.indexOf(keys[i]) === -1){
                                 findRes[keys[i]] = formRes.data[keys[i]];
                             }
@@ -342,14 +342,14 @@ var getRouter = function(db){
     
                         var policy = findRes.type + "-" + findRes.exportType;
     
-                        for (var i=0; i<findRes.files.length; i++) {
+                        for (let i=0; i<findRes.files.length; i++) {
                             var myFile = findRes.files[i];
                             httpReq.put({
                                 url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
                                 headers: {
                                     'x-api-key': config.get('validationApiSecret')
                                 }
-                            }, function (apiErr, apiRes, body) {
+                            }, function (apiErr, apiRes, body) { //NOSONAR
                                 logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
                                 if (apiErr) {
                                     logger.debug("Error validating file: ", apiErr);
@@ -360,7 +360,7 @@ var getRouter = function(db){
                         notify.process(findRes, req.user);
     
                         var keys = Object.keys(formRes.data);
-                        for (var i=0; i<keys.length; i++){
+                        for (let i=0; i<keys.length; i++){
                             if (db.Request.schemaFields.indexOf(keys[i]) === -1){
                                 findRes[keys[i]] = formRes.data[keys[i]];
                             }

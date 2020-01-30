@@ -1,5 +1,4 @@
 var buildStatic = function(db, router){
-    var mongoose = require('mongoose');
 
     router.get('/status_codes', function(req, res, next) {
         res.json(db.Request.stateCodeLookup());
@@ -29,7 +28,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     /* GET all requests. */
     router.get('/', function(req, res, next) {
-        var logger = require('npmlog');
+        //var logger = require('npmlog');
 
         var limit = 100;
         if (typeof(req.query.limit) !== "undefined"){
@@ -69,25 +68,24 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         }
 
         if (typeof(req.query.start_date) !== "undefined"){
-            var split = req.query.start_date.split(/[-\/]/);
-            var year = split[0] ? split[0] : 0;
-            var month = split[1] ? split[1]-1 : 0;
-            var day = split[2] ? split[2] : 0;
-            var hour = split[3] ? split[3] : 0;
-            var minute = split[4] ? split[4] : 0;
-            var second = split[5] ? split[5] : 0;
+            let split = req.query.start_date.split(/[-\/]/);
+            let year = split[0] ? split[0] : 0;
+            let month = split[1] ? split[1]-1 : 0;
+            let day = split[2] ? split[2] : 0;
+            let hour = split[3] ? split[3] : 0;
+            let minute = split[4] ? split[4] : 0;
+            let second = split[5] ? split[5] : 0;
             q.submittedDate = {$gte:  new Date(year, month, day, hour, minute, second)};
         }
 
         if (typeof(req.query.end_date) !== "undefined"){
-            var split = req.query.end_date.split(/[-\/]/);
-            var year = split[0] ? split[0] : 0;
-            var month = split[1] ? (split[1]-1) : 0;
-            var day = split[2] ? split[2] : 0;
-            var hour = split[3] ? split[3] : 0;
-            var minute = split[4] ? split[4] : 0;
-            var second = split[5] ? split[5] : 0;
-            var d = new Date(year, month, day, hour, minute, second);
+            let split = req.query.end_date.split(/[-\/]/);
+            let year = split[0] ? split[0] : 0;
+            let month = split[1] ? (split[1]-1) : 0;
+            let day = split[2] ? split[2] : 0;
+            let hour = split[3] ? split[3] : 0;
+            let minute = split[4] ? split[4] : 0;
+            let second = split[5] ? split[5] : 0;
             if (typeof(q.submittedDate) === "undefined"){
                 q.submittedDate = {$lte:  new Date(year, month, day, hour, minute, second)};
             }else{
@@ -232,9 +230,9 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                         }
                         //note not returning if an error as it'll force a delete below
                         log.error("Error updating request", e);
-                        db.Request.deleteOne({_id: result._id}, function(e){
-                            if (e) {
-                                log.error("Error deleting request", result, e);
+                        db.Request.deleteOne({_id: result._id}, function(e2){
+                            if (e2) {
+                                log.error("Error deleting request", result, e2);
                             }
                         });
                         res.status(500);
@@ -269,7 +267,6 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     /* GET specific request. */
     router.get('/:requestId', function(req, res, next) {
-        var logger = require('npmlog');
 
         var includeFileStatus = true;
         if (typeof(req.query.include_file_status) !== "undefined"){
@@ -374,7 +371,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
                 var policy = findRes.type + "-" + findRes.exportType;
 
-                for (var i=0; i<findRes.files.length; i++) {
+                for (let i=0; i<findRes.files.length; i++) {
                     ((myFile) => {
                         httpReq.put({
                             url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
@@ -402,10 +399,8 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     //submit a request
     router.put('/submit/:requestId', function(req, res, next){
-        var config = require('config');
         var logger = require('npmlog');
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
-        var httpReq = require('request');
 
         // Lookup project from user groups
         var project = projectConfig.deriveProjectFromUser(req.user);
@@ -446,18 +441,10 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                     return;
                 }
 
-                var numResults = 0;
-                var allResults = [];
-                var pass = true;
-
 
                 if (reqRes.reviewers.length > 0) {
                     reqRes.state = db.Request.IN_REVIEW_STATE;
-                } else if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
-                    reqRes.state = db.Request.AWAITING_REVIEW_STATE;
-                    db.Request.setChrono(reqRes, req.user.id);
-                    reqRes.state = db.Request.APPROVED_STATE;
-                } else if (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) {
+                } else if ( (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) || (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) ){
                     reqRes.state = db.Request.AWAITING_REVIEW_STATE;
                     db.Request.setChrono(reqRes, req.user.id);
                     reqRes.state = db.Request.APPROVED_STATE;
@@ -476,7 +463,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                     util.getBundleMeta(reqRes.files, function(metadataRes){
 
                         var bundleSize = 0;
-                        for (var i=0; i<metadataRes.length; i++){
+                        for (let i=0; i<metadataRes.length; i++){
                             bundleSize += metadataRes[i].size;
                             //also available: etag, metaData, lastModified: note this is the stuff from minio/s3 not tus.
                         }
@@ -499,18 +486,14 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                                 return;
                             }
 
-                            var pass = true;
+                            let pass = true;
                             var blocked = false;
-                            var pending = false;
-                            for (var i=0; i < reqRes.files.length; i++) {
+                            
+                            for (let i=0; i < reqRes.files.length; i++) {
                                 for (var j=0; j < status[reqRes.files[i]].length; j++) {
 
                                     if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
                                         blocked = true;
-                                    }
-
-                                    if (status[reqRes.files[i]][j].state === 2){
-                                        pending = true;
                                     }
 
                                     if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
@@ -574,15 +557,11 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                             res.json({error: "Not all files were submitted for validation, did you let save finish?"});
                             return;
                         }
-                        var pass = true;
-                        for (var i=0; i < reqRes.files.length; i++){
+                        let pass = true;
+                        for (let i=0; i < reqRes.files.length; i++){
                             for (var j=0; j < status[reqRes.files[i]].length; j++) {
                                 if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
                                     blocked = true;
-                                }
-
-                                if (status[reqRes.files[i]][j].state === 2){
-                                    pending = true;
                                 }
 
                                 if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {

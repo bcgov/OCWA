@@ -5,10 +5,10 @@ mongoose.set('useCreateIndex', true);
 
 const dbProps = config.get('database');
 
-dbHost = dbProps.host;
-dbUser = dbProps.username;
-dbPass = dbProps.password;
-dbName = dbProps.dbName;
+const dbHost = dbProps.host;
+const dbUser = dbProps.username;
+const dbPass = dbProps.password;
+const dbName = dbProps.dbName;
 
 var db = {};
 
@@ -37,9 +37,7 @@ db.init = function(){
     db.Permission = require('./model/permission');
     db.User = require('./model/user');
 
-    var collections = Object.keys(db.db.collections);
-
-};
+}
 
 
 

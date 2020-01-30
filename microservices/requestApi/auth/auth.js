@@ -9,7 +9,7 @@ var auth = function(db){
 
     const isOutputChecker = (user => user.groups.includes(config.get('outputCheckerGroup')))
     const isInReportsGroup = (user => user.groups.includes(config.get('reportsGroup')))
-    const isInGroupToCreateRequest = (user => user.groups.includes(config.get('requiredRoleToCreateRequest')))
+
 
     passport.use(new JWTStrategy({
             jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),

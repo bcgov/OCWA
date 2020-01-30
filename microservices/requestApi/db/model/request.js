@@ -325,7 +325,7 @@ model.getAll = function(query, limit, page, user, callback){
 
     logger.verbose("getAll ", user.supervisor, user.outputchecker);   
 
-    var queryRequests = function(err, topicR, projectR){
+    var queryRequests = function(err2, topicR, projectR){
         logger.verbose("get all topics model get all", topicR);
         if ('_id' in query) {
             query['_id'] = mongoose.Types.ObjectId(query['_id']);
@@ -411,7 +411,7 @@ model.getAll = function(query, limit, page, user, callback){
     }
 
     if ('_id' in query) {
-        db.Request.findById(query['_id'], (err, req) => {
+        db.Request.findById(query['_id'], (err3, req) => {
             getAllTopics(user, { id: req.topic }, queryRequests);
         });
     } else {

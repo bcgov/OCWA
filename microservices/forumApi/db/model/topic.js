@@ -34,7 +34,7 @@ model.getAll = function(query, limit, page, user, callback){
             checkGroups.splice(index,1);
         }
 
-        var index = checkGroups.indexOf('/oc');
+        index = checkGroups.indexOf('/oc');
         if (index !== -1){
             checkGroups.splice(index,1);
         }
@@ -54,7 +54,8 @@ model.getAll = function(query, limit, page, user, callback){
                 from: "permissions",
                 let: { topicId: "$_id", parent: "$parent_id"},
                 pipeline: [
-                    {$match: {
+                    {
+                        $match: {
                             $expr: {
                                 $and: [
                                     {$or: [
@@ -65,7 +66,8 @@ model.getAll = function(query, limit, page, user, callback){
                                     {$eq: ["$allow", true]}
                                 ]
                             }
-                        }},
+                        }
+                    },
                     {
                         $match: {
                             $or: [

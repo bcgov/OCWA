@@ -97,7 +97,7 @@ model.getAll = function(query, limit, page, user, callback){
 
     logger.verbose("v2 getAll ", user.supervisor, user.outputchecker);
 
-    var queryRequests = function(err, topicR, projectR){
+    var queryRequests = function(err1, topicR, projectR){
         logger.verbose("V2 get all topics model get all", topicR);
         var agg = [
             {
@@ -216,14 +216,14 @@ model.getAll = function(query, limit, page, user, callback){
                     let workingReq = results[i];
                     logger.verbose('v2 about to get formio submissions request model');
                     if (workingReq.submissionId){
-                        formioClient.getSubmission(results[i].formName, workingReq.submissionId, function(formErr, formRes){
+                        formioClient.getSubmission(results[i].formName, workingReq.submissionId, function(formErr, formRes){ //NOSONAR
                             logger.verbose('v2 got formio submissions request model', formErr, formRes);
                             if (formRes && workingReq.submissionId){
                                 try{
                                     var submis = JSON.parse(formRes);
                                     var keys = Object.keys(submis.data);
                                     logger.verbose("adding fields to ", workingReq);
-                                    for (var j=0; j<keys.length; j++){
+                                    for (let j=0; j<keys.length; j++){
                                         var key = keys[j];
                                         //protect schema fields
                                         if (schemaFields.indexOf(key) === -1){
@@ -242,7 +242,7 @@ model.getAll = function(query, limit, page, user, callback){
                     }else{
                         let v1keys = Object.keys(workingReq);
                         workingReq['data'] = {};
-                        for (var j=0; j<v1keys.length; j++){
+                        for (let j=0; j<v1keys.length; j++){
                             if (schemaFields.indexOf(v1keys[j]) === -1){
                                 workingReq['data'][v1keys[j]] = workingReq[v1keys[j]];
                             }
