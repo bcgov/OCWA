@@ -1,0 +1,70 @@
+{{- if .Values.createDatabase -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "formio.fullname" . }}-mongo
+  labels:
+    app: {{ template "formio.name" . }}-mongo
+    chart: {{ template "formio.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "formio.name" . }}-mongo
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "formio.name" . }}-mongo
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+      - name: init
+        persistentVolumeClaim:
+          claimName: {{ template "formio.fullname" . }}-mongo-pvc
+      - name: data
+        persistentVolumeClaim:
+          claimName: {{ template "formio.fullname" . }}-mongo-data-pvc
+      containers:
+        - name: "mongo"
+          image: {{.Values.mongoImage.repository}}:{{.Values.mongoImage.tag}}
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: {{.Values.dbPod.adminEnv}}
+              value: {{.Values.dbPod.admin}}
+            - name: {{.Values.dbPod.passEnv}}
+              value: {{.Values.dbPod.pass}}
+            - name: {{.Values.dbPod.dbEnv}}
+              value: {{.Values.database.dbName}}
+            {{if eq .Values.dbPod.addAdminPassEnv true}}
+            - name: {{.Values.dbPod.adminPassEnv}}
+              value: root
+            {{end}}
+          volumeMounts:
+            - name: init
+              mountPath: /docker-entrypoint-initdb.d
+            - name: data
+              mountPath: {{.Values.dbPod.persistence}}
+          ports:
+            - name: mongo
+              containerPort: 27017
+              protocol: TCP
+      initContainers:
+        {{if eq .Values.dbPod.initDb true}}
+        - name: "init-mongo"
+          image: {{.Values.mongoImage.repository}}:{{.Values.mongoImage.tag}}
+          command: ['sh', '-c', 'echo ''db.createUser({user:"{{.Values.database.username}}", pwd:"{{.Values.database.password}}", roles:["dbAdmin", "readWrite"]});'' > /docker-entrypoint-initdb.d/init.js']
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              value: root
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              value: root
+            - name: MONGO_INITDB_DATABASE
+              value: {{.Values.database.dbName}}
+          volumeMounts:
+            - name: init
+              mountPath: /docker-entrypoint-initdb.d
+        {{end}}
+{{- end}}

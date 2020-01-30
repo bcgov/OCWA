@@ -1,7 +1,7 @@
 const config = require('config');
 const path = require('path');
 
-const pathRewrite = path => path.replace(/\/api\/v1\/\w+/, '');
+const pathRewrite = path => path.replace(/\/api\/v\d\/\w+/, '');
 
 const parseApiHost = url => {
   if (!/https?:\/\//.test(url)) {
@@ -36,6 +36,7 @@ const storeUrl = (req, res, done) => {
 
 const getZone = () => {
   const exporterMode = config.get('exporterMode');
+  // mode can be export(internal) or download(external)
   const zone = exporterMode === 'download' ? 'external' : 'internal';
 
   return zone;

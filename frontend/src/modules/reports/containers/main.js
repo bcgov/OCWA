@@ -94,38 +94,35 @@ const mapStateToProps = state => {
 };
 
 const makeQuery = (startDate, endDate) =>
-  `/api/v1/requests?page=1&start_date=${format(
+  `/api/v2/requests?page=1&start_date=${format(
     startDate,
     'YYYY-M-D'
   )}&end_date=${format(endDate, 'YYYY-M-D')}&limit=500`;
 
-export default connect(
-  mapStateToProps,
-  {
-    initialRequest: params =>
-      fetchRequests(
-        {},
-        {
-          url: makeQuery(params.startDate, params.endDate),
-          schema: requestsListSchema,
-        }
-      ),
-    fetchRequests: ({ startDate, endDate }) =>
-      fetchRequests(
-        {
-          startDate,
-          endDate,
-        },
-        {
-          url: makeQuery(startDate, endDate),
-          schema: requestsListSchema,
-        }
-      ),
-    onSelectProject: setProject,
-    onSort: sortReports,
-    onSelectRequester: setRequester,
-    onDateChange: setDateFilter,
-    onDateRangeChange: setDateRange,
-    onRequestStateChange: setRequestFilter,
-  }
-)(withRequest(Reports));
+export default connect(mapStateToProps, {
+  initialRequest: params =>
+    fetchRequests(
+      {},
+      {
+        url: makeQuery(params.startDate, params.endDate),
+        schema: requestsListSchema,
+      }
+    ),
+  fetchRequests: ({ startDate, endDate }) =>
+    fetchRequests(
+      {
+        startDate,
+        endDate,
+      },
+      {
+        url: makeQuery(startDate, endDate),
+        schema: requestsListSchema,
+      }
+    ),
+  onSelectProject: setProject,
+  onSort: sortReports,
+  onSelectRequester: setRequester,
+  onDateChange: setDateFilter,
+  onDateRangeChange: setDateRange,
+  onRequestStateChange: setRequestFilter,
+})(withRequest(Reports));

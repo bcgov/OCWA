@@ -1,4 +1,5 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const getLocalIdent = require('css-loader/lib/getLocalIdent');
 const path = require('path');
 const webpack = require('webpack');
 
@@ -20,8 +21,40 @@ module.exports = {
         include: /src/,
         use: ['babel-loader'],
       },
+      {
+        test: /\.s?css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 2,
+              getLocalIdent: (context, localIdentName, localName, options) => {
+                // Turn off ident parsing for bootstrap related content
+                // so the Form.io layout works.
+                if (context.resourcePath.includes('form.scss')) {
+                  return localName;
+                }
+
+                return getLocalIdent(
+                  context,
+                  localIdentName,
+                  localName,
+                  options
+                );
+              },
+              localIdentName: '[path][name]_[local]--[hash:base64:8]',
+            },
+          },
+          {
+            loader: 'sass-loader',
+          },
+        ],
+      },
     ],
   },
+
   plugins: [
     new webpack.NamedModulesPlugin(),
     new CleanWebpackPlugin(['dist']),

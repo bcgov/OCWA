@@ -48,7 +48,7 @@ function RequestSidebar({
   // };
   const withdrawHandler = () => {
     const c = confirm(
-      'Editing a submitted request automatically withdraws it. Do you still wish to proceed?',
+      'Editing a submitted request automatically withdraws it. Do you still wish to proceed?'
     );
 
     if (c) {
@@ -58,7 +58,7 @@ function RequestSidebar({
   const mergeRequestStatusCode = get(
     data,
     'mergeRequestStatus.code',
-    invalidCode,
+    invalidCode
   );
   const validateEditButton = () => {
     if (!isEditing && data.exportType === 'code') {

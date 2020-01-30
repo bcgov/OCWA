@@ -1,5 +1,7 @@
 import { createDataAction } from '@src/modules/data/actions';
 
+export const fetchForm = createDataAction('request-form/get');
+export const fetchForms = createDataAction('request-forms/get');
 export const fetchRequests = createDataAction('requests/get');
 export const fetchRequest = createDataAction('request/get');
 export const createRequest = createDataAction('request/post');
@@ -55,9 +57,10 @@ export const closeDraftRequest = () => ({
 
 export const reset = () => ({ type: 'request/reset' });
 
-export const finishEditing = id => ({
+export const finishEditing = (id, payload) => ({
   type: 'request/finish-editing',
-  payload: id,
+  meta: { id },
+  payload,
 });
 
 export const removeFile = (id, filesKey) => ({

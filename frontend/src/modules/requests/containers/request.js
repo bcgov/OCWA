@@ -49,7 +49,7 @@ export default connect(
   {
     initialRequest: ({ requestId }) =>
       fetchRequest({
-        url: `/api/v1/requests/${requestId}`,
+        url: `/api/v2/requests/${requestId}`,
         schema: requestSchema,
         id: requestId,
       }),
@@ -57,7 +57,7 @@ export default connect(
     onFinishEditing: finishEditing,
     onSave: (payload, meta) =>
       saveRequest(payload, meta, {
-        url: `/api/v1/requests/save/${meta.id}`,
+        url: `/api/v2/requests/save/${meta.id}`,
         schema: { result: requestSchema },
       }),
   }

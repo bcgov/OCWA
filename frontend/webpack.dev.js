@@ -22,25 +22,6 @@ module.exports = merge(common, {
     host: '0.0.0.0',
     publicPath: '/',
   },
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 2,
-              localIdentName: '[path][name]_[local]--[hash:base64:8]',
-            },
-          },
-        ],
-      },
-    ],
-  },
-
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),

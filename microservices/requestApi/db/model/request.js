@@ -93,7 +93,7 @@ var requestSchema = new Schema({
     }
 });
 
-var model = mongoose.model('request', requestSchema);
+var model = mongoose.model('request', requestSchema, 'requests');
 
 model.setChrono = function(doc, userId, objectDelta){
     if (typeof(doc.chronology) === "undefined"){
@@ -121,6 +121,9 @@ model.IN_REVIEW_STATE = IN_REVIEW_STATE;
 model.APPROVED_STATE = APPROVED_STATE;
 model.DENIED_STATE = DENIED_STATE;
 model.CANCELLED_STATE = CANCELLED_STATE;
+
+model.DATA_EXPORT_TYPE = DATA_EXPORT_TYPE;
+model.CODE_EXPORT_TYPE = CODE_EXPORT_TYPE;
 
 model.INPUT_TYPE = INPUT_TYPE;
 model.EXPORT_TYPE = EXPORT_TYPE;
@@ -243,17 +246,10 @@ var getAllTopics = function(user, filter, callback, page){
     });
 };
 
+model.getAllTopics = getAllTopics;
 
-model.getAll = function(query, limit, page, user, callback){
-    var logger = require('npmlog');
-    var db = require('../db');
-    var skip = limit * (page - 1);
-    logger.verbose("request get all, skip, limit", skip, limit);
-
+model.getZoneRestrict = function(user){
     var zoneRestrict;
-
-    logger.verbose("getAll ", user.supervisor, user.outputchecker);
-    
     if (user.outputchecker) {
         if (user.zone === user.INTERNAL_ZONE){
             zoneRestrict = {
@@ -311,21 +307,35 @@ model.getAll = function(query, limit, page, user, callback){
                         }
                     ]
                 }
-            }
+            };
         }
     }
+    return zoneRestrict;
+};
 
-    function queryRequests(err, topicR, projectR){
+
+model.getAll = function(query, limit, page, user, callback){
+    var logger = require('npmlog');
+    var getVersionedDb = require('../db');
+    var db = new getVersionedDb.db();
+    var skip = limit * (page - 1);
+    logger.verbose("request get all, skip, limit", skip, limit);
+
+    var zoneRestrict = model.getZoneRestrict(user);
+
+    logger.verbose("getAll ", user.supervisor, user.outputchecker);   
+
+    var queryRequests = function(err, topicR, projectR){
         logger.verbose("get all topics model get all", topicR);
-
         if ('_id' in query) {
             query['_id'] = mongoose.Types.ObjectId(query['_id']);
         }
 
-        db.Request.aggregate([
+        var q = [
             {
                 $match: {
-                    topic: {$in: topicR}
+                    topic: {$in: topicR},
+                    phoneNumber: { $exists: true }
                 }
             },
             {
@@ -386,7 +396,10 @@ model.getAll = function(query, limit, page, user, callback){
             {
                 $limit: limit
             }
-        ]).exec(function(err, results){
+        ];
+        
+        db.Request.aggregate(q).exec(function(err, results){
+            logger.verbose("in topic bind");
             if (results){
                 for (var i=0; i<results.length; i++){
                     let topicId = results[i].topic;
@@ -398,7 +411,6 @@ model.getAll = function(query, limit, page, user, callback){
     }
 
     if ('_id' in query) {
-
         db.Request.findById(query['_id'], (err, req) => {
             getAllTopics(user, { id: req.topic }, queryRequests);
         });

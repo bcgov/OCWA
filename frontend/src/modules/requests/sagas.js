@@ -4,6 +4,7 @@ import { delay, eventChannel } from 'redux-saga';
 import forIn from 'lodash/forIn';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
+import isEqual from 'lodash/isEqual';
 import { normalize } from 'normalizr';
 import union from 'lodash/union';
 import { requestSocketHost } from '@src/services/config';
@@ -132,7 +133,7 @@ function* onCreateRequest(action) {
       yield call(delay, 30000);
       yield put(
         fetchRequest({
-          url: `/api/v1/requests/${id}`,
+          url: `/api/v2/requests/${id}`,
           schema: requestSchema,
           id,
         })
@@ -149,7 +150,7 @@ function* checkMergeRequestStatus(action) {
     yield call(delay, 30000);
     yield put(
       fetchRequest({
-        url: `/api/v1/requests/${id}`,
+        url: `/api/v2/requests/${id}`,
         schema: requestSchema,
         id,
       })
@@ -160,7 +161,7 @@ function* checkMergeRequestStatus(action) {
 // After a request is finished being edited normalize the added/removed files
 function* onFinishEditing(action) {
   // Grab the uploaded files to add to the request
-  const id = action.payload;
+  const { id } = action.meta;
   const { files, supportingFiles } = yield select(
     state => state.files.fileTypes
   );
@@ -173,6 +174,7 @@ function* onFinishEditing(action) {
   const deletedFilesHandler = fileId => !filesToDelete.includes(fileId);
   const payload = {
     ...request,
+    ...action.payload,
     files: union(request.files, files, filesToDuplicate.files).filter(
       deletedFilesHandler
     ),
@@ -184,12 +186,14 @@ function* onFinishEditing(action) {
   };
   const meta = { id };
 
-  yield put(
-    saveRequest(payload, meta, {
-      url: `/api/v1/requests/save/${id}`,
-      schema: { result: requestSchema },
-    })
-  );
+  if (!isEqual(request, payload) || payload.state === 0) {
+    yield put(
+      saveRequest(payload, meta, {
+        url: `/api/v2/requests/save/${id}`,
+        schema: { result: requestSchema },
+      })
+    );
+  }
 }
 
 export default function* root() {

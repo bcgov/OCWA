@@ -2,6 +2,10 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ template "ocwaStorageApi.fullname" . }}-minio-pvc
+  {{- with .Values.storageAnnotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+  {{ end }}
   labels:
       app: {{ template "ocwaStorageApi.name" . }}-minio
       chart: {{ template "ocwaStorageApi.chart" . }}

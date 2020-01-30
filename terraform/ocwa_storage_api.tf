@@ -27,6 +27,13 @@ resource "docker_container" "minio" {
     "MINIO_ACCESS_KEY=${random_id.accessKey.hex}",
     "MINIO_SECRET_KEY=${random_string.secretKey.result}",
   ]
+  healthcheck {
+    test         = ["CMD", "curl", "-f", "http://localhost:9000/minio/health/ready"]
+    interval     = "5s"
+    timeout      = "5s"
+    start_period = "10s"
+    retries      = 20
+  }  
 }
 
 data "local_file" "pre_create_py" {

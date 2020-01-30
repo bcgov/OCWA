@@ -37,7 +37,7 @@ resource "docker_container" "ocwa_validate_api" {
     "REQUEST_WEBHOOK_SECRET=${random_string.webhookSecret.result}",
     "POLICY_URL=http://ocwa_policy_api:3004",
     "ALWAYS_SCAN_FILES=false",
-    "WORKING_LIMIT=5242880",
+    "WORKING_LIMIT=22020096",
     "FAIL_OVER_WORKING_LIMIT=true",
     "MD5_BLACKLIST=/data/md5_blacklist.txt",
   ]

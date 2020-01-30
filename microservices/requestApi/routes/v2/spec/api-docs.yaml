@@ -1,0 +1,331 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Request API
+  description: |
+    This is a request api that provides access to requests, for the OCWA it manages comments ands files as well.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  contact:
+    name: Brandon Sharratt
+servers:
+  - url: /v2
+    description: This Server
+paths:
+  /:
+    get:
+      summary: List all requests
+      operationId: listRequests
+      tags:
+        - Requests
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: page
+          in: query
+          description: Which page to start on (relative to limit)
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: A paged array of requests that the user has access to
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Requests"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a request
+      operationId: createRequest
+      tags:
+        - Requests
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RequestPost"
+      responses:
+        '200':
+          description: Success Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Success"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /forms:
+    get:
+      summary: List all forms
+      tags:
+        - Forms
+      # parameters:
+      #   - name: limit
+      #     in: query
+      #     description: How many items to return at one time (max 100)
+      #     required: false
+      #     schema:
+      #       type: integer
+      #       format: int32
+      responses:
+        '200':
+          description: An array of forms
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Forms"
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a form. Requires admin group.
+      tags:
+        - Forms
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FormPost"
+      responses:
+        '200':
+          description: Success Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Success"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /forms/default:
+    summary: Get the default form. See /forms/{name} for more information
+    tags:
+      - Forms
+    responses:
+        '200':
+          description: Success Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Success"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  
+  /forms/code_default:
+    summary: Get the default code form. See /forms/{name} for more information
+    tags:
+      - Forms
+    responses:
+        '200':
+          description: Success Message
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Success"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /forms/{name}:
+    get:
+      summary: Get the form for the given name. See https://apidocs.form.io/ for more information
+      tags:
+        - Forms
+      responses:
+          '200':
+            description: Success Message
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Success"
+          default:
+            description: unexpected error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+    put:
+      summary: Updates the form for the given name. See https://apidocs.form.io/ for more information. Requires admin group
+      tags:
+        - Forms
+      responses:
+          '200':
+            description: Success Message
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Success"
+          default:
+            description: unexpected error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+    
+    delete:
+      summary: Deletes the form for the given name. See https://apidocs.form.io/ for more information. Requires admin group
+      tags:
+        - Forms
+      responses:
+          '200':
+            description: Success Message
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Success"
+          default:
+            description: unexpected error
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+                
+
+
+components:
+  schemas:
+    Forms:
+      type: array
+      items:
+        $ref: "#/components/schemas/Form"
+
+    Form:
+      type: object
+      properties:
+        note: 
+          type: none
+          description: "See the formio docs for the fields returned https://apidocs.form.io/"
+
+
+    FormPost:
+      type: object
+      properties:
+        note: 
+          type: object
+          description: "See the formio docs for the fields returned https://apidocs.form.io/"
+        
+
+
+    Request:
+      required:
+        - _id
+        - name
+        - state
+        - files
+        - __v
+      properties:
+        _id:
+          type: string
+          description: Object id
+        name:
+          type: string
+          description: Name of the request for user convinience (not required to be unique)
+        state:
+          type: number
+          description: Number reflecting the state of the request, 0 is draft, 1 is wip, 2 is awaiting review, 3 is in review, 4 is approved, 5 is denied, 6 is cancelled
+        tags:
+          type: array
+          items:
+            type: string
+          description: Array of strings containing the tags currently applied to the request.
+        files:
+          type: array
+          items:
+            type: string
+          description: Array of file ids that the request knows about
+        supportingFiles:
+          type: array
+          items:
+            type: string
+          description: Array of file ids that the request knows about as supporting files
+        purpose:
+          type: string
+          description: Purpose of the request
+        variableDescriptions:
+          type: string
+          description: Description of variables in the request
+        selectionCriteria:
+          type: string
+          description: Selection criteria and sample size description for the request
+        steps:
+          type: string
+          description: Annotation of steps taken
+        freq:
+          type: string
+          description: Weighted results and unweighted frequencies
+        confidentiality:
+          type: string
+          description: Confidentiality disclosure to describe how it's upheld when criteria isn't met
+        author:
+          type: string
+          description: Author of the request
+        __v:
+          type: string
+          description: version of the request (increments with changes)
+    Requests:
+      type: array
+      items:
+        $ref: "#/components/schemas/Request"
+
+    RequestPost:
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          description: Name of the request for user convinience
+        files:
+          type: array
+          description: An array of file ids attached to the request
+        supportingFiles:
+          type: array
+          description: An array of file ids for supporting files attached to the request
+        other:
+          type: any
+          description: Any other fields passed along to the post will be passed on to formio, which should be configured to save the fields you want to keep
+
+    Success:
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Contains message about the success, normally "Written successfully"
+    Error:
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: contains a message about the failure
