@@ -132,6 +132,23 @@ describe("Requests", function() {
                 });
         });
 
+        it('it should fail without a name', function (done) {
+            chai.request(server)
+                .post('/v2/')
+                .set("Authorization", "Bearer " + jwt)
+                .send({
+                    text: "text",
+                    number: 9
+                })
+                .end(function (err, res) {
+                    res.should.have.status(500);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    res.body.error.should.be.a('string');
+                    done();
+                });
+        });
+
         it('it should create a request', function (done) {
             chai.request(server)
                 .post('/v2/')
@@ -198,6 +215,19 @@ describe("Requests", function() {
                     done();
                 });
         });
+
+        it('it should get a specific request but without file statuses', function (done) {
+            chai.request(server)
+                .get('/v2/' + activeRequestId + "?include_file_status=false")
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('_id');
+                    res.body.should.not.have.property('fileStatus')
+                    done();
+                });
+        });
+
     });
 
     describe('/DELETE /v2/requestId', function() {
@@ -496,5 +526,60 @@ describe("Requests", function() {
                 });
         });
     });
+
+});
+
+describe("Forms", function() {
+    describe('/GET v2/forms', function () {
+        it('it should get unauthorized', function (done) {
+            chai.request(server)
+            .get('/v2/forms')
+            .end(function (err, res) {
+                res.should.have.status(401);
+                done();
+            });
+        });
+
+        it('it should get all forms', function (done) {
+            chai.request(server)
+                .get('/v2/forms')
+                .set("Authorization", "Bearer "+jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('data');
+                    done();
+                });
+        });
+
+        it('it should get default forms', function (done) {
+            chai.request(server)
+                .get('/v2/forms/defaults')
+                .set("Authorization", "Bearer "+jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('forms');
+                    res.body.forms.should.have.property('internal')
+                    res.body.forms.should.have.property('external')
+                    done();
+                });
+        });
+
+        it('it should get a specific form', function (done) {
+            chai.request(server)
+                .get('/v2/forms/test')
+                .set("Authorization", "Bearer "+jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('forms');
+                    res.body.forms.should.have.property('internal')
+                    res.body.forms.should.have.property('external')
+                    done();
+                });
+        });
+
+
+        
+    });
+
 
 });
