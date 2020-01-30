@@ -45,7 +45,7 @@ function versionedDB(version){
     db.init();
 
     return db;
-};
+}
 
 
 
