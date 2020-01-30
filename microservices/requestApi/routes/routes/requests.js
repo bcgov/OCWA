@@ -487,7 +487,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                             }
 
                             let pass = true;
-                            var blocked = false;
+                            let blocked = false;
                             
                             for (let i=0; i < reqRes.files.length; i++) {
                                 for (var j=0; j < status[reqRes.files[i]].length; j++) {
@@ -558,6 +558,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                             return;
                         }
                         let pass = true;
+                        let blocked = false;
                         for (let i=0; i < reqRes.files.length; i++){
                             for (var j=0; j < status[reqRes.files[i]].length; j++) {
                                 if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
