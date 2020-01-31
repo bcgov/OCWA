@@ -314,9 +314,11 @@ describe("Requests", function() {
         });
 
         var incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"1";
+        console.log("D", activeRequestId, incorrectId);
         if (incorrectId === activeRequestId){
             incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"2";
         }
+        console.log("D", activeRequestId, incorrectId);
 
         it('it should fail to save a request', function (done) {
             chai.request(server)
