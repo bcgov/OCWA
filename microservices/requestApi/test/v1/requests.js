@@ -96,6 +96,7 @@ describe("Requests", function() {
         it('it should get file_status_codes', function (done) {
             chai.request(server)
                 .get('/v1/file_status_codes')
+                .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.have.property('0');
@@ -108,6 +109,7 @@ describe("Requests", function() {
         it('it should get request_types', function (done) {
             chai.request(server)
                 .get('/v1/request_types')
+                .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.have.property('import');
@@ -212,6 +214,7 @@ describe("Requests", function() {
                 .get('/v1?limit=1&page=1&name=testName&start_date=2000/01/01/00/00/00&end_date=9999/01/01/00/00/00')
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
+                    console.log("SHOULD GET REQUEST body". res.body);
                     res.should.have.status(200);
                     res.body.length.should.be.eql(1);
                     done();
