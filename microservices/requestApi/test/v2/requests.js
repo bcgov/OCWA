@@ -199,7 +199,7 @@ describe("Requests", function() {
     describe('/GET  v2 & v2/requestId', function () {
         it('it should get requests', function (done) {
             chai.request(server)
-                .get('/v2?limit=1&page=1&state=0')
+                .get('/v2?limit=101&page=0&state=0&name=*')
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);

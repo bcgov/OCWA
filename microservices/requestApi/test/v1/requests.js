@@ -211,7 +211,7 @@ describe("Requests", function() {
     describe('/GET  v1 & v1/requestId', function () {
         it('it should get requests', function (done) {
             chai.request(server)
-                .get('/v1?limit=1&page=1&name=testName')
+                .get('/v1?limit=1&page=1&name=testName&start_date=2000-01-01-01-01-01&end_date=9999-01-01-01-01-01')
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -313,6 +313,18 @@ describe("Requests", function() {
                 });
         });
 
+        it('it should fail to save a request', function (done) {
+            chai.request(server)
+                .put('/v1/save/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                });
+        });
+
         it('it should save a request', function (done) {
             chai.request(server)
                 .put('/v1/save/' + activeRequestId)
@@ -364,6 +376,17 @@ describe("Requests", function() {
                     done();
                 });
         });
+
+        it('it should fail to save a request that is in wrong state', function (done) {
+            chai.request(server)
+                .put('/v1/save/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                });
+        });
     });
 
     describe('/PUT /v1/pickup/requestId', function() {
@@ -406,7 +429,6 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({
                     name: "testName3",
-                    tags: ["test"],
                     purpose: "purpose",
                     phoneNumber: "555-555-5555",
                     subPopulation: "sub-population",
@@ -483,6 +505,19 @@ describe("Requests", function() {
                     setTimeout(done, 2000);
                 });
         });
+        
+        it('it should fail to submit an invalid request', function (done) {
+            chai.request(server)
+                .put('/v1/submit/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
 
         it('it should submit a request', function (done) {
             chai.request(server)
@@ -494,6 +529,19 @@ describe("Requests", function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
+                    done();
+                });
+        });
+
+        it('it should fail to submit an already submitted request', function (done) {
+            chai.request(server)
+                .put('/v1/submit/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
                     done();
                 });
         });
