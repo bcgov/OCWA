@@ -313,13 +313,18 @@ describe("Requests", function() {
                 });
         });
 
+        var incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"1";
+        if (incorrectId === activeRequestId){
+            incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"2";
+        }
+
         it('it should fail to save a request', function (done) {
             chai.request(server)
-                .put('/v1/save/' + activeRequestId.substring(0, activeRequestId.length-1)+"1")
+                .put('/v1/save/' + incorrectId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-                    console.log("it should fail to save a request", res.body);
+                    console.log("it should fail to save a request", incorrectId, res.body);
                     res.should.have.status(400);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
