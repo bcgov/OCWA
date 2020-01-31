@@ -11,6 +11,7 @@ import { Prompt } from 'react-router-dom';
 import { uid } from 'react-uid';
 import { _e } from '@src/utils';
 
+import DetailsRow from './details-row';
 import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
@@ -78,14 +79,7 @@ function RequestDetails({
           {fields
             .filter(d => d.key !== 'name')
             .map(d => (
-              <div
-                key={uid(d)}
-                id={`request-${d.key}-field`}
-                className={styles.fieldRow}
-              >
-                <h6>{d.label}</h6>
-                <p id={`request-${d.key}-text`}>{data[d.key] || '-'}</p>
-              </div>
+              <DetailsRow key={uid(d)} data={d} request={data} />
             ))}
         </div>
       )}
