@@ -199,9 +199,10 @@ describe("Requests", function() {
     describe('/GET  v2 & v2/requestId', function () {
         it('it should get requests', function (done) {
             chai.request(server)
-                .get('/v2?limit=1&page=1&name=testName&start_date=2000/01/01/00/00/00&end_date=9999/01/01/00/00/00')
+                .get('/v2?limit=1&page=1')
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
+                    console.log("v2 should get requests body", res.body);
                     res.should.have.status(200);
                     res.body.length.should.be.eql(1);
                     done();
