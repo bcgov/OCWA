@@ -399,6 +399,9 @@ model.getAll = function(query, limit, page, user, callback){
         ];
         
         db.Request.aggregate(q).exec(function(err, results){
+            if (err){
+                return callback(err, []);
+            }
             logger.verbose("in topic bind");
             if (results){
                 for (var i=0; i<results.length; i++){
