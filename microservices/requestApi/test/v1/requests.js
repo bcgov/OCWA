@@ -211,7 +211,7 @@ describe("Requests", function() {
     describe('/GET  v1 & v1/requestId', function () {
         it('it should get requests', function (done) {
             chai.request(server)
-                .get('/v1?limit=1&page=1&name=testName&start_date=2000-01-01-01-01-01&end_date=9999-01-01-01-01-01')
+                .get('/v1?limit=1&page=1&name=testName')
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -319,6 +319,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
+                    console.log("it should fail to save a request", res.body);
                     res.should.have.status(400);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
@@ -512,6 +513,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
+                    console.log("IT SHOULD FAIL TO SUBMIT AN INVALID REQUEST", res.body);
                     res.should.have.status(400);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
