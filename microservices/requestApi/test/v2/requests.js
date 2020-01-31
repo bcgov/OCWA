@@ -95,7 +95,8 @@ describe("Requests", function() {
 
         it('it should get file_status_codes', function (done) {
             chai.request(server)
-                .get('/v1/file_status_codes')
+                .get('/v2/file_status_codes')
+                .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.have.property('0');
@@ -107,7 +108,8 @@ describe("Requests", function() {
 
         it('it should get request_types', function (done) {
             chai.request(server)
-                .get('/v1/request_types')
+                .get('/v2/request_types')
+                .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.have.property('import');

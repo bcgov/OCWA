@@ -214,7 +214,7 @@ describe("Requests", function() {
                 .get('/v1?limit=1&page=1&name=testName&start_date=2000/01/01/00/00/00&end_date=9999/01/01/00/00/00')
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
-                    console.log("SHOULD GET REQUEST body". res.body);
+                    console.log("SHOULD GET REQUEST body", res.body);
                     res.should.have.status(200);
                     res.body.length.should.be.eql(1);
                     done();
