@@ -315,7 +315,7 @@ describe("Requests", function() {
 
         it('it should fail to save a request', function (done) {
             chai.request(server)
-                .put('/v1/save/1')
+                .put('/v1/save/' + activeRequestId.substring(0, activeRequestId.length-1)+"1")
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
