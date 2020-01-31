@@ -17,6 +17,7 @@ chai.use(chaiHttp);
 
 describe("Requests", function() {
     var activeRequestId = '';
+    var incorrectId = '';
     var fileId = 'test_' + Math.random().toString(36) + '.jpeg';
     after(function(done){
         db.Request.deleteMany({}, function(err){
@@ -309,16 +310,15 @@ describe("Requests", function() {
                     res.body.should.have.property('result');
                     res.body.result.should.have.property('_id');
                     activeRequestId = res.body.result._id;
+                    incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"1";
+                    if (incorrectId === activeRequestId){
+                        incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"2";
+                    }
+                    console.log("D", activeRequestId, incorrectId);
                     done();
                 });
         });
 
-        var incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"1";
-        console.log("D", activeRequestId, incorrectId);
-        if (incorrectId === activeRequestId){
-            incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"2";
-        }
-        console.log("D", activeRequestId, incorrectId);
 
         it('it should fail to save a request', function (done) {
             chai.request(server)
