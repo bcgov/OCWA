@@ -309,6 +309,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     //save a request
     router.put("/save/:requestId", function(req, res, next){
+        console.log("req.params.requestId", req.params.requestId);
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
         var config = require('config');
         var logger = require('npmlog');
