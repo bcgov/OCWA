@@ -214,7 +214,7 @@ describe("Requests", function() {
     describe('/GET  v1 & v1/requestId', function () {
         it('it should get requests', function (done) {
             chai.request(server)
-                .get('/v1?limit=1&page=1&name=testName&topic_id=' + validTopicId )
+                .get('/v1?limit=1&page=1&name=testName' )
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     console.log('GET REQUESTS ', res.body);
@@ -477,17 +477,24 @@ describe("Requests", function() {
                 .end(function (err, res) {
 
                     let intermId = res.body.result._id;
-
+                    
                     chai.request(server)
-                        .put('/v1/submit/' + intermId)
+                        .put('/v1/save/' + activeRequestId)
                         .set("Authorization", "Bearer " + jwt)
                         .send({})
-                        .end(function (err2, res) {
-                            console.log("EXPECTED FAIL", res.body);
-                            res.should.have.status(403);
-                            res.body.should.be.a('object');
-                            res.body.should.have.property('error');
-                            done();
+                        .end(function(e, r){
+
+                            chai.request(server)
+                                .put('/v1/submit/' + intermId)
+                                .set("Authorization", "Bearer " + jwt)
+                                .send({})
+                                .end(function (err2, res2) {
+                                    console.log("EXPECTED FAIL", res2.body);
+                                    res2.should.have.status(403);
+                                    res2.body.should.be.a('object');
+                                    res2.body.should.have.property('error');
+                                    done();
+                            });
                     });
                 });
         });
