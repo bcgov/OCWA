@@ -309,11 +309,11 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     //save a request
     router.put("/save/:requestId", function(req, res, next){
-        console.log("req.params.requestId", req.params.requestId);
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
         var config = require('config');
         var logger = require('npmlog');
 
+        console.log("req.params.requestId", req.params.requestId, requestId);
         console.log("Saving");
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, findRes){
             console.log("Inside get all", requestId, findErr, findRes);
