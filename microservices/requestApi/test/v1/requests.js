@@ -517,11 +517,10 @@ describe("Requests", function() {
         
         it('it should fail to submit an invalid request', function (done) {
             chai.request(server)
-                .put('/v1/submit/1')
+                .put('/v1/submit/' + incorrectId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-                    console.log("IT SHOULD FAIL TO SUBMIT AN INVALID REQUEST", res.body);
                     res.should.have.status(400);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
