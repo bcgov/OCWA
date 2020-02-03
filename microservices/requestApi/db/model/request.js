@@ -417,6 +417,7 @@ model.getAll = function(query, limit, page, user, callback){
     }
 
     if ('_id' in query) {
+        console.log("id in query");
         db.Request.findById(query['_id'], (err3, req) => {
             if ( (typeof(req) !== "undefined") && (typeof(req.topic) !== "undefined") ){
                 console.log("TOPIC ID", req.topic);
@@ -424,6 +425,7 @@ model.getAll = function(query, limit, page, user, callback){
             }
         });
     } else {
+        console.log("id NOT in query");
         getAllTopics(user, {}, queryRequests);
     }
 };
