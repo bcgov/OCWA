@@ -193,6 +193,7 @@ matrix:
       export MINIO_SECRET_KEY="secretkey"
       ./minio server /tmp &
     - |-
+      alias python=python3.5
       cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       sudo pip3 install -U setuptools
       sudo pip3 install -r requirements.txt
@@ -200,6 +201,7 @@ matrix:
       sudo pip3 install -e .
       python3 wsgi.py &
     - |-
+      alias python=python3.5
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
       sudo pip3 install -U setuptools
       sudo pip3 install -r requirements.txt

@@ -19,6 +19,9 @@ describe("Requests", function() {
     var activeRequestId = '';
     var incorrectId = '';
     var validTopicId = '';
+    var approvedRequestId = '';
+    var deniedRequestId = '';
+    var cancelledRequestId = '';
     var fileId = 'test_' + Math.random().toString(36) + '.jpeg';
     after(function(done){
         db.Request.deleteMany({}, function(err){
@@ -205,6 +208,10 @@ describe("Requests", function() {
                     res.body.result.should.have.property('_id');
                     activeRequestId = res.body.result._id;
                     validTopicId = res.body.result.topic;
+                    incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"1";
+                    if (incorrectId === activeRequestId){
+                        incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"2";
+                    }
                     done();
                 });
         });
@@ -230,6 +237,18 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail with an incorrect id', function (done) {
+            chai.request(server)
+                .get('/v1/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
+                    res.should.have.status(500);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
                     done();
@@ -286,6 +305,34 @@ describe("Requests", function() {
 
     describe('/DELETE /v1/requestId', function() {
 
+        it('it should fail to delete an invalid id', function (done) {
+            chai.request(server)
+                .delete('/v1/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to delete an incorrect id', function (done) {
+            chai.request(server)
+                .delete('/v1/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(500);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        
+
         it('it should delete a request', function (done) {
             chai.request(server)
                 .delete('/v1/' + activeRequestId)
@@ -325,10 +372,6 @@ describe("Requests", function() {
                     res.body.should.have.property('result');
                     res.body.result.should.have.property('_id');
                     activeRequestId = res.body.result._id;
-                    incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"1";
-                    if (incorrectId === activeRequestId){
-                        incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"2";
-                    }
                     done();
                 });
         });
@@ -376,7 +419,11 @@ describe("Requests", function() {
                     selectionCriteria: "selection criteria changed",
                     steps: "steps changed",
                     freq: "freq changed",
-                    confidentiality: "none changed"
+                    confidentiality: "none changed",
+                    branch: "master",
+                    externalRepository: "http://github.com/bcgov/OCWA",
+                    repository: "http://github.com/bcgov/OCWA",
+                    codeDescription: "This repository"
                 })
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -409,6 +456,19 @@ describe("Requests", function() {
 
     describe('/PUT /v1/submit/requestId', function() {
 
+        it('it should fail to submit an invalid request', function (done) {
+            chai.request(server)
+                .put('/v1/submit/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
         it('it should submit a request', function (done) {
             chai.request(server)
                 .put('/v1/submit/' + activeRequestId)
@@ -419,6 +479,32 @@ describe("Requests", function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
+                    done();
+                });
+        });
+
+        it('it should fail to delete a request in a non WIP state', function (done) {
+            chai.request(server)
+                .delete('/v1/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(403);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to submit an already submitted request', function (done) {
+            chai.request(server)
+                .put('/v1/submit/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
                     done();
                 });
         });
@@ -500,6 +586,33 @@ describe("Requests", function() {
     });
 
     describe('/PUT /v1/pickup/requestId', function() {
+
+        it('it should fail to pickup an invalid id', function (done) {
+            chai.request(server)
+                .put('/v1/pickup/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to pickup an incorrect id', function (done) {
+            chai.request(server)
+                .put('/v1/pickup/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(500);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
         it('it should pickup a request', function (done) {
             chai.request(server)
                 .put('/v1/pickup/' + activeRequestId)
@@ -527,6 +640,59 @@ describe("Requests", function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
+                    approvedRequestId = activeRequestId;
+                    done();
+                });
+        });
+
+        it('it should fail to pickup a request that is in an incorrect state', function (done) {
+            chai.request(server)
+                .put('/v1/pickup/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to approve an invalid id', function (done) {
+            chai.request(server)
+                .put('/v1/approve/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to approve an incorrect id', function (done) {
+            chai.request(server)
+                .put('/v1/approve/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(500);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to approve an request thats in a non review state', function (done) {
+            chai.request(server)
+                .put('/v1/approve/' + approvedRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
                     done();
                 });
         });
@@ -559,6 +725,32 @@ describe("Requests", function() {
                 });
         });
 
+        it('it should fail to cancel an invalid id', function (done) {
+            chai.request(server)
+                .put('/v1/cancel/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to cancel an incorrect id', function (done) {
+            chai.request(server)
+                .put('/v1/cancel/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(500);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
         it('it should cancel a request', function (done) {
             chai.request(server)
                 .put('/v1/cancel/' + activeRequestId)
@@ -568,6 +760,20 @@ describe("Requests", function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
+                    cancelledRequestId = activeRequestId;
+                    done();
+                });
+        });
+
+        it('it should fail to cancel an already cancelled request', function (done) {
+            chai.request(server)
+                .put('/v1/cancel/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
                     done();
                 });
         });
@@ -615,19 +821,6 @@ describe("Requests", function() {
                     setTimeout(done, 2000);
                 });
         });
-        
-        it('it should fail to submit an invalid request', function (done) {
-            chai.request(server)
-                .put('/v1/submit/' + incorrectId)
-                .set("Authorization", "Bearer " + jwt)
-                .send({})
-                .end(function (err, res) {
-                    res.should.have.status(400);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('error');
-                    done();
-                });
-        });
 
         it('it should submit a request', function (done) {
             chai.request(server)
@@ -639,19 +832,6 @@ describe("Requests", function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
-                    done();
-                });
-        });
-
-        it('it should fail to submit an already submitted request', function (done) {
-            chai.request(server)
-                .put('/v1/submit/' + activeRequestId)
-                .set("Authorization", "Bearer " + jwt)
-                .send({})
-                .end(function (err, res) {
-                    res.should.have.status(400);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('error');
                     done();
                 });
         });
@@ -670,6 +850,32 @@ describe("Requests", function() {
                 });
         });
 
+        it('it should fail to deny an invalid id', function (done) {
+            chai.request(server)
+                .put('/v1/deny/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to deny an incorrect id', function (done) {
+            chai.request(server)
+                .put('/v1/deny/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(500);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
         it('it should deny a request', function (done) {
             chai.request(server)
                 .put('/v1/deny/' + activeRequestId)
@@ -681,6 +887,326 @@ describe("Requests", function() {
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
                     res.body.should.have.property('result');
+                    deniedRequestId = activeRequestId;
+                    
+                    done();
+                });
+        });
+
+        it('it should fail to deny an already denied request', function (done) {
+            chai.request(server)
+                .put('/v1/deny/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to cancel an already denied request', function (done) {
+            chai.request(server)
+                .put('/v1/cancel/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+    });
+
+    describe('/PUT /v1/withdraw/requestId', function() {
+        it('it should create a request', function (done) {
+            chai.request(server)
+                .post('/v1/')
+                .set("Authorization", "Bearer " + jwt)
+                .send({
+                    name: "testName7",
+                    tags: ["test"],
+                    purpose: "purpose",
+                    phoneNumber: "555-555-5555",
+                    subPopulation: "sub-population",
+                    variableDescriptions: "variable descriptions",
+                    selectionCriteria: "selection criteria",
+                    steps: "steps",
+                    freq: "freq",
+                    confidentiality: "none"
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('result');
+                    res.body.result.should.have.property('_id');
+                    activeRequestId = res.body.result._id;
+                    done();
+                });
+        });
+
+        it('it should fail to withdraw an incorrect id', function (done) {
+            chai.request(server)
+                .put('/v1/withdraw/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(500);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to withdraw a request with an invalid id', function (done) {
+            chai.request(server)
+                .put('/v1/withdraw/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to withdraw a request that hasn\'t been submitted', function (done) {
+            chai.request(server)
+                .put('/v1/withdraw/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should save a request', function (done) {
+            chai.request(server)
+                .put('/v1/save/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({
+                    files: [fileId]
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    setTimeout(done, 2000);
+                });
+        });
+
+        it('it should submit a request', function (done) {
+            chai.request(server)
+                .put('/v1/submit/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    expect(res.body.error).to.equal(undefined);
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    done();
+                });
+        });
+
+        it('it should withdraw a submitted request', function (done) {
+            chai.request(server)
+                .put('/v1/withdraw/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    done();
+                });
+        });
+
+
+        it('it should fail to withdraw an approved request', function (done) {
+            chai.request(server)
+                .put('/v1/withdraw/' + approvedRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to withdraw a denied request', function (done) {
+            chai.request(server)
+                .put('/v1/withdraw/' + deniedRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to withdraw a cancelled request', function (done) {
+            chai.request(server)
+                .put('/v1/withdraw/' + cancelledRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+
+        it('it should fail to delete a request that has ever been submitted', function (done) {
+            chai.request(server)
+                .delete('/v1/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(403);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+    });
+
+    describe('/PUT /v1/requestRevisions/requestId', function() {
+        it('it should create a request', function (done) {
+            chai.request(server)
+                .post('/v1/')
+                .set("Authorization", "Bearer " + jwt)
+                .send({
+                    name: "testName8",
+                    tags: ["test"],
+                    purpose: "purpose",
+                    phoneNumber: "555-555-5555",
+                    subPopulation: "sub-population",
+                    variableDescriptions: "variable descriptions",
+                    selectionCriteria: "selection criteria",
+                    steps: "steps",
+                    freq: "freq",
+                    confidentiality: "none"
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    res.body.should.have.property('result');
+                    res.body.result.should.have.property('_id');
+                    activeRequestId = res.body.result._id;
+                    done();
+                });
+        });
+
+        it('it should save a request', function (done) {
+            chai.request(server)
+                .put('/v1/save/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({
+                    files: [fileId]
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    setTimeout(done, 2000);
+                });
+        });
+
+
+        it('it should submit a request', function (done) {
+            chai.request(server)
+                .put('/v1/submit/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    expect(res.body.error).to.equal(undefined);
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    done();
+                });
+        });
+        
+        it('it should pickup a request', function (done) {
+            chai.request(server)
+                .put('/v1/pickup/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    expect(res.body.error).to.equal(undefined);
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    done();
+                });
+        });
+
+        it('it should fail to request revisions on an invalid id', function (done) {
+            chai.request(server)
+                .put('/v1/requestRevisions/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should fail to request revisions on an incorrect id', function (done) {
+            chai.request(server)
+                .put('/v1/requestRevisions/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(500);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+
+        it('it should request revisions', function (done) {
+            chai.request(server)
+                .put('/v1/requestRevisions/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('message');
+                    done();
+                });
+        });
+
+        it('it should fail to request revisions on an non review state', function (done) {
+            chai.request(server)
+                .put('/v1/requestRevisions/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
                     done();
                 });
         });
