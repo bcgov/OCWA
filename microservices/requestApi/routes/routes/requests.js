@@ -402,6 +402,8 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         var logger = require('npmlog');
         var requestId = mongoose.Types.ObjectId(req.params.requestId);
 
+        console.log("Submitting", req.params.requestId, requestId);
+
         // Lookup project from user groups
         var project = projectConfig.deriveProjectFromUser(req.user);
 

@@ -326,10 +326,10 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
-                    console.log("it should fail to save a request", incorrectId, res.body);
                     res.should.have.status(400);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
+                    done();
                 });
         });
 
@@ -393,6 +393,7 @@ describe("Requests", function() {
                     res.should.have.status(400);
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
+                    done();
                 });
         });
     });
