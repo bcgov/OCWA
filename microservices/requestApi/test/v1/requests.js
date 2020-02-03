@@ -18,6 +18,7 @@ chai.use(chaiHttp);
 describe("Requests", function() {
     var activeRequestId = '';
     var incorrectId = '';
+    var validTopicId = '';
     var fileId = 'test_' + Math.random().toString(36) + '.jpeg';
     after(function(done){
         db.Request.deleteMany({}, function(err){
@@ -203,6 +204,7 @@ describe("Requests", function() {
                     res.body.should.have.property('result');
                     res.body.result.should.have.property('_id');
                     activeRequestId = res.body.result._id;
+                    validTopicId = res.body.result.topic_id;
                     done();
                 });
         });
@@ -212,11 +214,23 @@ describe("Requests", function() {
     describe('/GET  v1 & v1/requestId', function () {
         it('it should get requests', function (done) {
             chai.request(server)
-                .get('/v1?limit=1&page=1&name=testName')
+                .get('/v1?limit=1&page=1&name=testName&topic_id=' + validTopicId + '&type=export')
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.length.should.be.eql(1);
+                    done();
+                });
+        });
+
+        it('it should fail with an invalid id', function (done) {
+            chai.request(server)
+                .get('/v1/1')
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
                     done();
                 });
         });
@@ -314,7 +328,19 @@ describe("Requests", function() {
                     if (incorrectId === activeRequestId){
                         incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"2";
                     }
-                    console.log("D", activeRequestId, incorrectId);
+                    done();
+                });
+        });
+
+        it('it should fail to save a with an invalid id', function (done) {
+            chai.request(server)
+                .put('/v1/save/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
                     done();
                 });
         });
@@ -338,7 +364,18 @@ describe("Requests", function() {
                 .put('/v1/save/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({
-                    files: [fileId]
+                    files: [fileId],
+                    supportingFiles: [fileId],
+                    name: "testNameChanged",
+                    tags: ["testChanged"],
+                    purpose: "purposeChanged",
+                    phoneNumber: "555-555-5554",
+                    subPopulation: "sub-populationChanged",
+                    variableDescriptions: "variable descriptions changed",
+                    selectionCriteria: "selection criteria changed",
+                    steps: "steps changed",
+                    freq: "freq changed",
+                    confidentiality: "none changed"
                 })
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -385,6 +422,18 @@ describe("Requests", function() {
                 });
         });
 
+        it('it should fail to submit a request with an invalid id', function (done) {
+            chai.request(server)
+                .put('/v1/submit/1')
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
         it('it should fail to save a request that is in wrong state', function (done) {
             chai.request(server)
                 .put('/v1/save/' + activeRequestId)
@@ -394,6 +443,51 @@ describe("Requests", function() {
                     res.body.should.be.a('object');
                     res.body.should.have.property('error');
                     done();
+                });
+        });
+
+        it('it should get (submitted) requests by date', function (done) {
+            chai.request(server)
+                .get('/v1?start_date=2000-01-01-01-01-01&end_date=9999-12-31-23-59-59')
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.length.should.be.eql(1);
+                    done();
+                });
+        });
+
+        it('it should fail to submit a request without files', function (done) {
+            chai.request(server)
+                .post('/v1/')
+                .set("Authorization", "Bearer " + jwt)
+                .send({
+                    name: "testNameX",
+                    tags: ["test"],
+                    purpose: "purpose",
+                    phoneNumber: "555-555-5555",
+                    subPopulation: "sub-population",
+                    variableDescriptions: "variable descriptions",
+                    selectionCriteria: "selection criteria",
+                    steps: "steps",
+                    freq: "freq",
+                    confidentiality: "none"
+                })
+                .end(function (err, res) {
+
+                    let intermId = res.body.result._id;
+
+                    chai.request(server)
+                        .put('/v1/submit/' + intermId)
+                        .set("Authorization", "Bearer " + jwt)
+                        .send({})
+                        .end(function (err2, res) {
+
+                            res.should.have.status(403);
+                            res.body.should.be.a('object');
+                            res.body.should.have.property('error');
+                            done();
+                    });
                 });
         });
     });
