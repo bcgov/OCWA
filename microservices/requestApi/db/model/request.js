@@ -405,7 +405,7 @@ model.getAll = function(query, limit, page, user, callback){
             logger.verbose("in topic bind");
             if (results){
                 for (var i=0; i<results.length; i++){
-                    if (typeof(results[i]) !== "undefined"){
+                    if ( (typeof(results[i]) !== "undefined") && (typeof(results[i].topic) !== "undefined") ){
                         let topicId = results[i].topic;
                         results[i].projects = projectR.get(topicId);
                     }
@@ -417,7 +417,9 @@ model.getAll = function(query, limit, page, user, callback){
 
     if ('_id' in query) {
         db.Request.findById(query['_id'], (err3, req) => {
-            getAllTopics(user, { id: req.topic }, queryRequests);
+            if ( (typeof(req) !== "undefined") && (typeof(req.topic) !== "undefined") ){
+                getAllTopics(user, { id: req.topic }, queryRequests);
+            }
         });
     } else {
         getAllTopics(user, {}, queryRequests);
