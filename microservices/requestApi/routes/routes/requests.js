@@ -313,10 +313,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         var config = require('config');
         var logger = require('npmlog');
 
-        console.log("req.params.requestId", req.params.requestId, requestId);
-        console.log("Saving");
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, findRes){
-            console.log("Inside get all", requestId, findErr, findRes);
             if (findErr || !findRes || findRes.length <= 0){
                 res.status(400);
                 res.json({error: "No such request"});
