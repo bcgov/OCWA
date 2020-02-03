@@ -766,7 +766,7 @@ describe("Requests", function() {
 
         it('it should fail to cancel an already cancelled request', function (done) {
             chai.request(server)
-                .put('/v1/cancel/' + incorrectId)
+                .put('/v1/cancel/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
@@ -907,7 +907,7 @@ describe("Requests", function() {
 
         it('it should fail to cancel an already denied request', function (done) {
             chai.request(server)
-                .put('/v1/cancel/' + incorrectId)
+                .put('/v1/cancel/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
