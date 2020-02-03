@@ -424,15 +424,17 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
             return;
         }
 
-        console.log("Submitting", req.params.requestId, requestId);
-
         // Lookup project from user groups
         var project = projectConfig.deriveProjectFromUser(req.user);
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function (reqErr, reqRes) {
             if (reqErr || !reqRes || reqRes.length == 0) {
                 res.status(400);
-                res.json({error: reqErr.message});
+                if (reqErr){
+                    res.json({error: reqErr.message});
+                }else{
+                    res.json({error: "No Results"});
+                }
                 return;
             }
 
