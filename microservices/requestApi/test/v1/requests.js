@@ -224,7 +224,6 @@ describe("Requests", function() {
                 .get('/v1?limit=1&page=1&name=testName&topic_id=' + validTopicId + '&type=export' )
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
-                    console.log('GET REQUESTS ', res.body);
                     res.should.have.status(200);
                     res.body.length.should.be.eql(1);
                     done();

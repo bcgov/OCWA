@@ -430,11 +430,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function (reqErr, reqRes) {
             if (reqErr || !reqRes || reqRes.length == 0) {
                 res.status(400);
-                if (reqErr){
-                    res.json({error: reqErr.message});
-                }else{
-                    res.json({error: "No Results"});
-                }
+                res.json({error: "No Results"});
                 return;
             }
 
@@ -660,9 +656,9 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         var logger = require('npmlog');
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
-            if (reqErr || !reqRes){
+            if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -722,7 +718,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
             if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -781,9 +777,9 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         var logger = require('npmlog');
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
-            if (reqErr || !reqRes){
+            if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -861,9 +857,9 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         }
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
-            if (reqErr || !reqRes){
+            if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -922,9 +918,9 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         var logger = require('npmlog');
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
-            if (reqErr || !reqRes){
+            if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -981,9 +977,9 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
             logger.verbose("pickup request", reqErr, reqRes);
-            if (reqErr || !reqRes){
+            if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -1043,7 +1039,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
             if (reqErr || !reqRes || reqRes.length <= 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
