@@ -479,7 +479,7 @@ describe("Requests", function() {
                     let intermId = res.body.result._id;
                     
                     chai.request(server)
-                        .put('/v1/save/' + activeRequestId)
+                        .put('/v1/save/' + intermId)
                         .set("Authorization", "Bearer " + jwt)
                         .send({})
                         .end(function(e, r){
@@ -489,7 +489,6 @@ describe("Requests", function() {
                                 .set("Authorization", "Bearer " + jwt)
                                 .send({})
                                 .end(function (err2, res2) {
-                                    console.log("EXPECTED FAIL", r, res2.body);
                                     res2.should.have.status(403);
                                     res2.body.should.be.a('object');
                                     res2.body.should.have.property('error');
