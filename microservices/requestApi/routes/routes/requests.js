@@ -309,7 +309,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                 res.json(findRes)
             }
 
-        });4
+        });
 
 
     });
