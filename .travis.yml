@@ -141,6 +141,7 @@ matrix:
         packages:
         - g++-4.8
         - python3-pip
+        - python3.5
     before_script:
     - |-
       wget -q ${HELM_URL}/${HELM_TGZ}

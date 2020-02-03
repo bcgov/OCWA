@@ -204,7 +204,7 @@ describe("Requests", function() {
                     res.body.should.have.property('result');
                     res.body.result.should.have.property('_id');
                     activeRequestId = res.body.result._id;
-                    validTopicId = res.body.result.topic_id;
+                    validTopicId = res.body.result.topic;
                     done();
                 });
         });
@@ -214,7 +214,7 @@ describe("Requests", function() {
     describe('/GET  v1 & v1/requestId', function () {
         it('it should get requests', function (done) {
             chai.request(server)
-                .get('/v1?limit=1&page=1&name=testName' )
+                .get('/v1?limit=1&page=1&name=testName&topic_id=' + validTopicId + '&type=export' )
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     console.log('GET REQUESTS ', res.body);
@@ -463,7 +463,7 @@ describe("Requests", function() {
                 .post('/v1/')
                 .set("Authorization", "Bearer " + jwt)
                 .send({
-                    name: "testNameX",
+                    name: "testNameX234",
                     tags: ["test"],
                     purpose: "purpose",
                     phoneNumber: "555-555-5555",
@@ -489,7 +489,7 @@ describe("Requests", function() {
                                 .set("Authorization", "Bearer " + jwt)
                                 .send({})
                                 .end(function (err2, res2) {
-                                    console.log("EXPECTED FAIL", res2.body);
+                                    console.log("EXPECTED FAIL", r, res2.body);
                                     res2.should.have.status(403);
                                     res2.body.should.be.a('object');
                                     res2.body.should.have.property('error');
