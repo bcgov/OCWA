@@ -214,9 +214,10 @@ describe("Requests", function() {
     describe('/GET  v1 & v1/requestId', function () {
         it('it should get requests', function (done) {
             chai.request(server)
-                .get('/v1?limit=1&page=1&name=testName&topic_id=' + validTopicId + '&type=export')
+                .get('/v1?limit=1&page=1&name=testName&topic_id=' + validTopicId )
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
+                    console.log('GET REQUESTS ', res.body);
                     res.should.have.status(200);
                     res.body.length.should.be.eql(1);
                     done();
@@ -482,7 +483,7 @@ describe("Requests", function() {
                         .set("Authorization", "Bearer " + jwt)
                         .send({})
                         .end(function (err2, res) {
-
+                            console.log("EXPECTED FAIL", res.body);
                             res.should.have.status(403);
                             res.body.should.be.a('object');
                             res.body.should.have.property('error');
