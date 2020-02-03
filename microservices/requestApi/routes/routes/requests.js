@@ -273,7 +273,14 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
             includeFileStatus = req.query.include_file_status == "true";
         }
 
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, findRes){
             if (findErr || !findRes || findRes.length === 0){
@@ -302,14 +309,21 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                 res.json(findRes)
             }
 
-        });
+        });4
 
 
     });
 
     //save a request
     router.put("/save/:requestId", function(req, res, next){
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var config = require('config');
         var logger = require('npmlog');
 
@@ -400,7 +414,15 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
     //submit a request
     router.put('/submit/:requestId', function(req, res, next){
         var logger = require('npmlog');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
 
         console.log("Submitting", req.params.requestId, requestId);
 
@@ -624,7 +646,15 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
     });
 
     router.put('/cancel/:requestId', function(req, res){
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var logger = require('npmlog');
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
@@ -675,7 +705,15 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
     });
 
     router.put('/withdraw/:requestId', function(req, res){
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var logger = require('npmlog');
 
 
@@ -729,7 +767,15 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     router.put('/approve/:requestId', function(req, res){
         var config = require('config');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var logger = require('npmlog');
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
@@ -795,7 +841,15 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     router.put('/deny/:requestId', function(req, res){
         var config = require('config');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var logger = require('npmlog');
 
         if (config.has('allowDenyRequest') && !config.get('allowDenyRequest')){
@@ -854,7 +908,15 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     router.put('/requestRevisions/:requestId', function(req, res){
         var config = require('config');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var logger = require('npmlog');
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
@@ -905,7 +967,15 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
     router.put('/pickup/:requestId', function(req, res){
         var config = require('config');
         var logger = require('npmlog');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
             logger.verbose("pickup request", reqErr, reqRes);
@@ -958,7 +1028,15 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
     router.delete('/:requestId', function(req, res){
         var config = require('config');
         var logger = require('npmlog');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
             if (reqErr || !reqRes || reqRes.length <= 0){
