@@ -405,7 +405,7 @@ model.getAll = function(query, limit, page, user, callback){
             logger.verbose("in topic bind");
             if (results){
                 for (var i=0; i<results.length; i++){
-                    if (results[i]){
+                    if (typeof(results[i]) !== "undefined"){
                         let topicId = results[i].topic;
                         results[i].projects = projectR.get(topicId);
                     }
