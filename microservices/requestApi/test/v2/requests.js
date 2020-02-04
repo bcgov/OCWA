@@ -18,6 +18,7 @@ chai.use(chaiHttp);
 
 describe("Requests", function() {
     var activeRequestId = '';
+    var firstId = '';
     var incorrectId = '';
     var v1Id = '';
     var fileId = 'test_' + Math.random().toString(36) + '.jpeg';
@@ -193,6 +194,7 @@ describe("Requests", function() {
                     res.body.should.have.property('result');
                     res.body.result.should.have.property('_id');
                     activeRequestId = res.body.result._id;
+                    firstId = res.body.result._id;
                     incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"1";
                     if (incorrectId === activeRequestId){
                         incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"2";
@@ -390,46 +392,45 @@ describe("Requests", function() {
                 });
         });
 
-        // it('it should update a v1 request', function (done) {
-        //         chai.request(server)
-        //             .post('/v1/')
-        //             .set("Authorization", "Bearer " + jwt)
-        //             .send({
-        //                 name: "testName",
-        //                 tags: ["test"],
-        //                 purpose: "purpose",
-        //                 phoneNumber: "555-555-5555",
-        //                 subPopulation: "sub-population",
-        //                 variableDescriptions: "variable descriptions",
-        //                 selectionCriteria: "selection criteria",
-        //                 steps: "steps",
-        //                 freq: "freq",
-        //                 confidentiality: "none"
-        //             })
-        //             .end(function (err, res) {
+        it('it should update a v1 request', function (done) {
+                chai.request(server)
+                    .post('/v1/')
+                    .set("Authorization", "Bearer " + jwt)
+                    .send({
+                        name: "testName",
+                        tags: ["test"],
+                        purpose: "purpose",
+                        phoneNumber: "555-555-5555",
+                        subPopulation: "sub-population",
+                        variableDescriptions: "variable descriptions",
+                        selectionCriteria: "selection criteria",
+                        steps: "steps",
+                        freq: "freq",
+                        confidentiality: "none"
+                    })
+                    .end(function (err, res) {
                         
-        //                 var intermId = res.body.result._id;
+                        var intermId = res.body.result._id;
                         
-        //                 chai.request(server)
-        //                     .put('/v2/save/' + intermId)
-        //                     .set("Authorization", "Bearer " + jwt)
-        //                     .send({})
-        //                     .end(function (err, res) {
-        //                         res.should.have.status(200);
-        //                         res.body.should.be.a('object');
-        //                         res.body.should.have.property('message');
-        //                         done();
-        //                 });
-        //             });
-        //     });
+                        chai.request(server)
+                            .put('/v2/save/' + intermId)
+                            .set("Authorization", "Bearer " + jwt)
+                            .send({})
+                            .end(function (err, res) {
+                                res.should.have.status(200);
+                                res.body.should.be.a('object');
+                                res.body.should.have.property('message');
+                                done();
+                        });
+                    });
+            });
         });
-    });
 
     describe('/PUT /v2/submit/requestId', function() {
 
         it('it should submit a request', function (done) {
             chai.request(server)
-                .put('/v2/submit/' + activeRequestId)
+                .put('/v2/submit/' + firstId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
@@ -661,6 +662,7 @@ describe("Requests", function() {
                 });
         });
     });
+});
 
 
 describe("Forms", function() {
