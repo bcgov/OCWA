@@ -199,7 +199,7 @@ matrix:
       sudo pip3 install -r requirements.txt
       cp config/default.json.template config/default.json
       sudo pip3 install -e .
-      python3 wsgi.py &
+      python3.5 wsgi.py &
     - |-
       alias python3=python3.5
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
@@ -207,7 +207,7 @@ matrix:
       sudo pip3 install -r requirements.txt
       cp config/default.json.template config/default.json
       sudo pip3 install -e .
-      python3 wsgi.py &
+      python3.5 wsgi.py &
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/requestApi
       NODE_ENV=test npm start &

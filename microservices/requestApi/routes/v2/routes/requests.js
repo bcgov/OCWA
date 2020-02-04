@@ -217,7 +217,14 @@ var getRouter = function(db){
     //save a request
     router.put("/save/:requestId", function(req, res, next){
         var mongoose = require('mongoose');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var config = require('config');
         var logger = require('npmlog');
 
@@ -379,7 +386,15 @@ var getRouter = function(db){
         var mongoose = require('mongoose');
         var config = require('config');
         var logger = require('npmlog');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
             if (reqErr || !reqRes || reqRes.length <= 0){

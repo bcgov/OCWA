@@ -23,30 +23,6 @@ describe("Requests", function() {
     var deniedRequestId = '';
     var cancelledRequestId = '';
     var fileId = 'test_' + Math.random().toString(36) + '.jpeg';
-    after(function(done){
-        db.Request.deleteMany({}, function(err){
-            var minio = require('minio');
-            var config = require('config');
-            var storageConfig = config.get('storageApi');
-            var Minio = require('minio');
-            var minioClient = new Minio.Client({
-                endPoint: storageConfig['uri'],
-                port: storageConfig['port'],
-                useSSL: storageConfig['useSSL'],
-                accessKey: storageConfig['key'],
-                secretKey: storageConfig['secret']
-            });
-            minioClient.removeObject(storageConfig.bucket, fileId, function(err) {
-                if (err) {
-                    console.log('Unable to remove object', err);
-                    done();
-                    return;
-                }
-                done();
-            })
-        });
-        
-    });
 
     before(function(done){
         var minio = require('minio');
