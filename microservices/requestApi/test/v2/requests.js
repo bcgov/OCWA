@@ -20,7 +20,6 @@ describe("Requests", function() {
     var activeRequestId = '';
     var firstId = '';
     var incorrectId = '';
-    var v1Id = '';
     var fileId = 'test_' + Math.random().toString(36) + '.jpeg';
     after(function(done){
         db.Request.deleteMany({}, function(err){
@@ -430,7 +429,7 @@ describe("Requests", function() {
 
         it('it should submit a request', function (done) {
             chai.request(server)
-                .put('/v2/submit/' + firstId)
+                .put('/v2/submit/' + activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
