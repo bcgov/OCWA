@@ -433,6 +433,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + jwt)
                 .send({})
                 .end(function (err, res) {
+                    console.log("SHOULD SUBMIT", activeRequestId);
                     expect(res.body.error).to.equal(undefined);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
