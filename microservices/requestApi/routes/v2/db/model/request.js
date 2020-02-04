@@ -275,4 +275,6 @@ model.getAll = function(query, limit, page, user, callback){
 
 };
 
+model.VERSION = 2;
+
 module.exports = model;

@@ -428,4 +428,6 @@ model.getAll = function(query, limit, page, user, callback){
     }
 };
 
+model.VERSION = 1;
+
 module.exports = model;
