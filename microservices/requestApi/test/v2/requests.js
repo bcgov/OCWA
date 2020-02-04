@@ -422,7 +422,7 @@ describe("Requests", function() {
         //                 });
         //             });
         //     });
-        // });
+        });
     });
 
     describe('/PUT /v2/submit/requestId', function() {
