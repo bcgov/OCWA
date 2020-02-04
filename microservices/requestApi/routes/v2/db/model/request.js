@@ -262,7 +262,8 @@ model.getAll = function(query, limit, page, user, callback){
 
 
     if ('_id' in query) {
-        db.Request.findById(query['_id'], (err, req) => {
+        db.Request.findById(query['_id'], (err3, req) => {
+            console.log("ID Query?", err3, req);
             if ( (req !== null) && (typeof(req) !== "undefined") && (typeof(req.topic) !== "undefined") ){
                 getAllTopics(user, { id: req.topic }, queryRequests);
             }else{
