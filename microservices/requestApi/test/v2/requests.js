@@ -390,39 +390,39 @@ describe("Requests", function() {
                 });
         });
 
-        it('it should update a v1 request', function (done) {
-                chai.request(server)
-                    .post('/v1/')
-                    .set("Authorization", "Bearer " + jwt)
-                    .send({
-                        name: "testName",
-                        tags: ["test"],
-                        purpose: "purpose",
-                        phoneNumber: "555-555-5555",
-                        subPopulation: "sub-population",
-                        variableDescriptions: "variable descriptions",
-                        selectionCriteria: "selection criteria",
-                        steps: "steps",
-                        freq: "freq",
-                        confidentiality: "none"
-                    })
-                    .end(function (err, res) {
+        // it('it should update a v1 request', function (done) {
+        //         chai.request(server)
+        //             .post('/v1/')
+        //             .set("Authorization", "Bearer " + jwt)
+        //             .send({
+        //                 name: "testName",
+        //                 tags: ["test"],
+        //                 purpose: "purpose",
+        //                 phoneNumber: "555-555-5555",
+        //                 subPopulation: "sub-population",
+        //                 variableDescriptions: "variable descriptions",
+        //                 selectionCriteria: "selection criteria",
+        //                 steps: "steps",
+        //                 freq: "freq",
+        //                 confidentiality: "none"
+        //             })
+        //             .end(function (err, res) {
                         
-                        var intermId = res.body.result._id;
+        //                 var intermId = res.body.result._id;
                         
-                        chai.request(server)
-                            .put('/v2/save/' + intermId)
-                            .set("Authorization", "Bearer " + jwt)
-                            .send({})
-                            .end(function (err, res) {
-                                res.should.have.status(200);
-                                res.body.should.be.a('object');
-                                res.body.should.have.property('message');
-                                done();
-                        });
-                    });
-            });
-        });
+        //                 chai.request(server)
+        //                     .put('/v2/save/' + intermId)
+        //                     .set("Authorization", "Bearer " + jwt)
+        //                     .send({})
+        //                     .end(function (err, res) {
+        //                         res.should.have.status(200);
+        //                         res.body.should.be.a('object');
+        //                         res.body.should.have.property('message');
+        //                         done();
+        //                 });
+        //             });
+        //     });
+        // });
     });
 
     describe('/PUT /v2/submit/requestId', function() {
