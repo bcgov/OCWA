@@ -661,7 +661,6 @@ describe("Requests", function() {
         });
     });
 
-});
 
 describe("Forms", function() {
     describe('/GET v2/forms', function () {
