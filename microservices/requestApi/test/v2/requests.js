@@ -144,7 +144,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(6);
+                    res.body.length.should.be.eql(0);
                     done();
                 });
         });
@@ -221,7 +221,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + config.get('testSupervisorInternalJWT'))
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(7);
+                    res.body.length.should.be.eql(1);
                     done();
                 });
         });
@@ -232,7 +232,7 @@ describe("Requests", function() {
                 .set("Authorization", "Bearer " + config.get('testSupervisorExternalJWT'))
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.length.should.be.eql(7);
+                    res.body.length.should.be.eql(1);
                     done();
                 });
         });
@@ -391,22 +391,37 @@ describe("Requests", function() {
         });
 
         it('it should update a v1 request', function (done) {
-            chai.request(server)
-                .get('/v1?state=1')
-                .set("Authorization", "Bearer "+jwt)
-                .end(function (err, res) {
-                    var intermId = res.body.result._id;
-                    chai.request(server)
-                        .put('/v2/save/' + intermId)
-                        .set("Authorization", "Bearer " + jwt)
-                        .send({})
-                        .end(function (err, res) {
-                            res.should.have.status(200);
-                            res.body.should.be.a('object');
-                            res.body.should.have.property('message');
-                            done();
+                chai.request(server)
+                    .post('/v1/')
+                    .set("Authorization", "Bearer " + jwt)
+                    .send({
+                        name: "testName",
+                        tags: ["test"],
+                        purpose: "purpose",
+                        phoneNumber: "555-555-5555",
+                        subPopulation: "sub-population",
+                        variableDescriptions: "variable descriptions",
+                        selectionCriteria: "selection criteria",
+                        steps: "steps",
+                        freq: "freq",
+                        confidentiality: "none"
+                    })
+                    .end(function (err, res) {
+                        
+                        var intermId = res.body.result._id;
+                        
+                        chai.request(server)
+                            .put('/v2/save/' + intermId)
+                            .set("Authorization", "Bearer " + jwt)
+                            .send({})
+                            .end(function (err, res) {
+                                res.should.have.status(200);
+                                res.body.should.be.a('object');
+                                res.body.should.have.property('message');
+                                done();
+                        });
                     });
-                });
+            });
         });
     });
 
@@ -700,6 +715,7 @@ describe("Forms", function() {
                 .post('/v2/forms')
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
+                    console.log("FORM ADMIN", res.status. res.body);
                     res.should.have.status(403);
                     res.body.should.have.property('error');
                     done();
@@ -713,6 +729,7 @@ describe("Forms", function() {
                 .set("Authorization", "Bearer "+adminJwt)
                 .send({})
                 .end(function (err, res) {
+                    console.log("FORM ADMIN", res.status, res.body);
                     res.should.have.status(500);
                     res.body.should.have.property('error');
                     done();
@@ -911,7 +928,5 @@ describe("Forms", function() {
                     done();
                 });
         });
-
-
     });
 });
