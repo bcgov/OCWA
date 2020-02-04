@@ -44,19 +44,23 @@ var getRouter = function(db){
     });
 
     router.post(FORMS_SUB_ROUTE, function(req, res, next){
-        let adminGroup = config.get("adminGroup");
-        if (req.user.groups.indexOf(adminGroup) === -1){
-            res.status(403);
-            res.json({error: "Forbidden"});
-        }
-        formioClient.postForm(req.body, function(formErr, formRes){
-            if (formErr){
-                res.status(500);
-                res.json({error: formErr});
-                return;
+        try{
+            let adminGroup = config.get("adminGroup");
+            if (req.user.groups.indexOf(adminGroup) === -1){
+                res.status(403);
+                res.json({error: "Forbidden"});
             }
-            res.json(JSON.parse(formRes));
-        });
+            formioClient.postForm(req.body, function(formErr, formRes){
+                if (formErr){
+                    res.status(500);
+                    res.json({error: formErr});
+                    return;
+                }
+                res.json(JSON.parse(formRes));
+            });
+        }catch(ex){
+            console.log("EXCEPTION WHILE POSTING FORM", ex);
+        }
     });
 
     router = routes.buildStatic(db, router);
