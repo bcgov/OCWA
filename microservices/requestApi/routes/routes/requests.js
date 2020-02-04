@@ -424,6 +424,8 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
             return;
         }
 
+        console.log("TRYING TO SUBMIT", requestId);
+
         // Lookup project from user groups
         var project = projectConfig.deriveProjectFromUser(req.user);
 
