@@ -716,7 +716,6 @@ describe("Forms", function() {
                 .post('/v2/forms')
                 .set("Authorization", "Bearer "+jwt)
                 .end(function (err, res) {
-                    console.log("FORM ADMIN", res.status, res.body);
                     res.should.have.status(403);
                     res.body.should.have.property('error');
                     done();
@@ -730,7 +729,6 @@ describe("Forms", function() {
                 .set("Authorization", "Bearer "+adminJwt)
                 .send({})
                 .end(function (err, res) {
-                    console.log("FORM ADMIN", res.status, res.body);
                     res.should.have.status(500);
                     res.body.should.have.property('error');
                     done();

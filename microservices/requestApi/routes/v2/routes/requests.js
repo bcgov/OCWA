@@ -39,7 +39,13 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(JSON.parse(formRes));
+            var r = formRes
+            try{
+                r = JSON.parse(formRes);
+            }catch(ex){}
+
+            res.status(r.status)
+            res.json(r);
         });
     });
 
@@ -62,6 +68,7 @@ var getRouter = function(db){
                 r = JSON.parse(formRes);
             }catch(ex){}
 
+            res.status(r.status)
             res.json(r);
         });
     });
@@ -480,7 +487,12 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(JSON.parse(formRes));
+            try{
+                r = JSON.parse(formRes);
+            }catch(ex){}
+
+            res.status(r.status)
+            res.json(r);
         });
     });
 
@@ -503,6 +515,7 @@ var getRouter = function(db){
                 r = JSON.parse(formRes);
             }catch(ex){}
 
+            res.status(r.status)
             res.json(r);
         });
     });
@@ -527,6 +540,7 @@ var getRouter = function(db){
                 r = JSON.parse(formRes);
             }catch(ex){}
 
+            res.status(r.status)
             res.json(r);
         });
     });
