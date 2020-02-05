@@ -276,6 +276,46 @@ var getRouter = function(db){
                 db.Request.setChrono(findRes, req.user.id, objectDelta);
             }
 
+            var update = function(findRes){
+                db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
+                    if (saveErr) {
+                        res.json({error: saveErr.message});
+                        return;
+                    }
+
+                    var httpReq = require('request');
+
+                    var policy = findRes.type + "-" + findRes.exportType;
+
+                    for (let i=0; i<findRes.files.length; i++) {
+                        var myFile = findRes.files[i];
+                        httpReq.put({
+                            url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
+                            headers: {
+                                'x-api-key': config.get('validationApiSecret')
+                            }
+                        }, function (apiErr, apiRes, body) { //NOSONAR
+                            logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
+                            if (apiErr) {
+                                logger.debug("Error validating file: ", apiErr);
+                            }
+                        });
+                    }
+
+                    notify.process(findRes, req.user);
+
+                    var keys = Object.keys(formRes.data);
+                    for (let i=0; i<keys.length; i++){
+                        if (db.Request.schemaFields.indexOf(keys[i]) === -1){
+                            findRes[keys[i]] = formRes.data[keys[i]];
+                        }
+                    }
+
+                    res.json({message: "Successfully updated", result: findRes});
+                });
+
+            }
+
             if (findRes.submissionId){
                 formioClient.putSubmission(findRes.formName, findRes.submissionId, req.body, function(formErr, formRes){
                     logger.verbose("formio put resp", formErr, formRes);
@@ -301,44 +341,10 @@ var getRouter = function(db){
                         res.json({error: "Critical form validation error"});
                         return;
                     }
-    
-                    db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
-                        if (saveErr) {
-                            res.json({error: saveErr.message});
-                            return;
-                        }
-    
-                        var httpReq = require('request');
-    
-                        var policy = findRes.type + "-" + findRes.exportType;
-    
-                        for (let i=0; i<findRes.files.length; i++) {
-                            var myFile = findRes.files[i];
-                            httpReq.put({
-                                url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
-                                headers: {
-                                    'x-api-key': config.get('validationApiSecret')
-                                }
-                            }, function (apiErr, apiRes, body) { //NOSONAR
-                                logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
-                                if (apiErr) {
-                                    logger.debug("Error validating file: ", apiErr);
-                                }
-                            });
-                        }
-    
-                        notify.process(findRes, req.user);
-    
-                        var keys = Object.keys(formRes.data);
-                        for (let i=0; i<keys.length; i++){
-                            if (db.Request.schemaFields.indexOf(keys[i]) === -1){
-                                findRes[keys[i]] = formRes.data[keys[i]];
-                            }
-                        }
-    
-                        res.json({message: "Successfully updated", result: findRes});
-                    });
+
+                    update(findRes);
                 });
+                    
             }else{
                 //support for upgrading v1 posts
                 formioClient.postSubmission(findRes.formName, req.body, function(formErr, formRes){
@@ -352,42 +358,7 @@ var getRouter = function(db){
 
                     findRes.submissionId = formRes._id;
     
-                    db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
-                        if (saveErr) {
-                            res.json({error: saveErr.message});
-                            return;
-                        }
-    
-                        var httpReq = require('request');
-    
-                        var policy = findRes.type + "-" + findRes.exportType;
-    
-                        for (let i=0; i<findRes.files.length; i++) {
-                            var myFile = findRes.files[i];
-                            httpReq.put({
-                                url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
-                                headers: {
-                                    'x-api-key': config.get('validationApiSecret')
-                                }
-                            }, function (apiErr, apiRes, body) { //NOSONAR
-                                logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
-                                if (apiErr) {
-                                    logger.debug("Error validating file: ", apiErr);
-                                }
-                            });
-                        }
-    
-                        notify.process(findRes, req.user);
-    
-                        var keys = Object.keys(formRes.data);
-                        for (let i=0; i<keys.length; i++){
-                            if (db.Request.schemaFields.indexOf(keys[i]) === -1){
-                                findRes[keys[i]] = formRes.data[keys[i]];
-                            }
-                        }
-    
-                        res.json({message: "Successfully updated", result: findRes});
-                    });
+                    update(findRes);
                 });
             }
             
@@ -486,6 +457,8 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
+
+            var r = formRes;
             try{
                 r = JSON.parse(formRes);
             }catch(ex){}
@@ -533,7 +506,7 @@ var getRouter = function(db){
             return;
         }
         var formName = req.params.formName;
-        formioClient.putForm(formName, req.body, function(formErr, formRes){
+        formioClient.deleteForm(formName, req.body, function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});

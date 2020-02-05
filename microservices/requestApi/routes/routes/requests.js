@@ -481,6 +481,81 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                 var storageApi = config.get('storageApi');
                 var warnSize =  reqRes.type === db.Request.EXPORT_TYPE ? storageApi.warnRequestBundlesize : storageApi.warnImportRequestBundlesize;
                 var maxSize = reqRes.type === db.Request.EXPORT_TYPE ? storageApi.maxRequestBundlesize : storageApi.maxImportRequestBundlesize;
+
+
+                var getFileStatusAndUpdate = function(reqRes){
+                    util.getFileStatus(reqRes.files, function(status) {
+                        if (Object.keys(status).length !== reqRes.files.length){
+                            res.status(403);
+                            res.json({error: "Not all files were submitted for validation, did you let save finish?"});
+                            return;
+                        }
+
+                        let pass = true;
+                        let blocked = false;
+                        
+                        for (let i=0; i < reqRes.files.length; i++) {
+                            for (var j=0; j < status[reqRes.files[i]].length; j++) {
+
+                                if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
+                                    blocked = true;
+                                }
+
+                                if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
+                                    pass = false;
+                                }
+                            }
+                        }
+
+                        if (pass) {
+                            db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
+                                if (!updateErr) {
+                                    //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
+                                    reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
+                                    reqRes.fileStatus = status;
+                                    notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
+                                    
+                                    if ((reqRes.type === db.Request.INPUT_TYPE && autoAccept.import)
+                                        || (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export)) {
+                                        notify.gitops().approve(reqRes).then((arg) => {
+                                            logRequestFinalState(reqRes, req.user);
+                                            res.json({message: "Request approved", result: reqRes});
+                                        }).catch(err => {
+                                            reqRes.state = db.Request.WIP_STATE;
+                                            reqRes.chronology.splice(-1,1);
+                                            db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
+                                                if (uerr) {
+                                                    logger.error("Unable to revert changes after failed code merge.", uerr);
+                                                }
+                                            });
+                                            res.status(400);
+                                            res.json({error: "Error - " + err});
+                                            return;
+                                        });
+                                    } else {
+                                        res.json({message: "Request submitted", result: reqRes});
+                                    }
+                                    return;
+                                    
+                                }else{
+                                    res.status(403);
+                                    res.json({error: updateErr.message});
+                                    return;
+                                }
+                            });
+
+                            return;
+                        }
+                        res.status(403);
+                        if (blocked){
+                            res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
+                            return;
+                        }
+                        res.json({error: "Request submission failed, validation pending, please wait", fileStatus: status});
+                        return;
+                    });
+                }
+
                 if ( (warnSize > 0) || (maxSize > 0)){
                     util.getBundleMeta(reqRes.files, function(metadataRes){
 
@@ -501,143 +576,10 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                             return;
                         }
 
-                        util.getFileStatus(reqRes.files, function(status) {
-                            if (Object.keys(status).length !== reqRes.files.length){
-                                res.status(403);
-                                res.json({error: "Not all files were submitted for validation, did you let save finish?"});
-                                return;
-                            }
-
-                            let pass = true;
-                            let blocked = false;
-                            
-                            for (let i=0; i < reqRes.files.length; i++) {
-                                for (var j=0; j < status[reqRes.files[i]].length; j++) {
-
-                                    if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
-                                        blocked = true;
-                                    }
-
-                                    if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
-                                        pass = false;
-                                    }
-                                }
-                            }
-
-                            if (pass) {
-                                db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
-                                    if (!updateErr) {
-                                        //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
-                                        reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
-                                        reqRes.fileStatus = status;
-                                        notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
-                                        
-                                        if ((reqRes.type === db.Request.INPUT_TYPE && autoAccept.import)
-                                            || (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export)) {
-                                            notify.gitops().approve(reqRes).then((arg) => {
-                                                logRequestFinalState(reqRes, req.user);
-                                                res.json({message: "Request approved", result: reqRes});
-                                            }).catch(err => {
-                                                reqRes.state = db.Request.WIP_STATE;
-                                                reqRes.chronology.splice(-1,1);
-                                                db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
-                                                    if (uerr) {
-                                                        logger.error("Unable to revert changes after failed code merge.", uerr);
-                                                    }
-                                                });
-                                                res.status(400);
-                                                res.json({error: "Error - " + err});
-                                                return;
-                                            });
-                                        } else {
-                                            res.json({message: "Request submitted", result: reqRes});
-                                        }
-                                        return;
-                                        
-                                    }else{
-                                        res.status(403);
-                                        res.json({error: updateErr.message});
-                                        return;
-                                    }
-                                });
-
-                                return;
-                            }
-                            res.status(403);
-                            if (blocked){
-                                res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
-                                return;
-                            }
-                            res.json({error: "Request submission failed, validation pending, please wait", fileStatus: status});
-                            return;
-                        });
+                        getFileStatusAndUpdate(reqRes);
                     });
                 }else{
-                    util.getFileStatus(reqRes.files, function(status) {
-                        if (Object.keys(status).length !== reqRes.files.length){
-                            res.status(403);
-                            res.json({error: "Not all files were submitted for validation, did you let save finish?"});
-                            return;
-                        }
-                        let pass = true;
-                        let blocked = false;
-                        for (let i=0; i < reqRes.files.length; i++){
-                            for (var j=0; j < status[reqRes.files[i]].length; j++) {
-                                if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
-                                    blocked = true;
-                                }
-
-                                if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
-                                    pass = false;
-                                }
-                            }
-                        }
-                        if (pass) {
-                            db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
-                                if (!updateErr) {
-                                    //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
-                                    reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
-                                    reqRes.fileStatus = status;
-                                    notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
-                                    if ((reqRes.type === db.Request.INPUT_TYPE && autoAccept.import)
-                                            || (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export)) {
-                                        notify.gitops().approve(reqRes).then((arg) => {
-                                            logRequestFinalState(reqRes, req.user);
-                                            res.json({message: "Request approved", result: reqRes});
-                                        }).catch(err => {
-                                            reqRes.state = db.Request.WIP_STATE;
-                                            reqRes.chronology.splice(-1,1);
-                                            db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
-                                                if (uerr) {
-                                                    logger.error("Unable to revert changes after failed code merge.", uerr);
-                                                }
-                                            });
-                                            res.status(400);
-                                            res.json({error: "Error - " + err});
-                                            return;
-                                        });
-        
-                                    }else{
-                                        res.json({message: "Request submitted", result: reqRes});
-                                    }
-                                    return;
-                                }else{
-                                    res.status(403);
-                                    res.json({error: updateErr.message});
-                                    return;
-                                }
-                            });
-
-                            return;
-                        }
-                        res.status(403);
-                        if (blocked){
-                            res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
-                            return;
-                        }
-                        res.json({error: "Request submission failed, validation pending, please wait", fileStatus: status});
-                        return;
-                    });
+                    getFileStatusAndUpdate(reqRes);
                 }
             });
         });
