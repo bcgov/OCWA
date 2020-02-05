@@ -905,7 +905,7 @@ describe("Forms", function() {
 
         it('it should delete a form', function (done) {
             chai.request(server)
-                .delete('/v2/forms/'+activeFormId)
+                .delete('/v2/forms/testform')
                 .set("Authorization", "Bearer "+adminJwt)
                 .send({})
                 .end(function (err, res) {
