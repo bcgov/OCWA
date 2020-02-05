@@ -910,7 +910,7 @@ describe("Forms", function() {
                 .send({})
                 .end(function (err, res) {
                     res.should.have.status(200);
-                    res.body.should.have.property('_id');
+                    expect(res.body).to.equal("OK");
                     done();
                 });
         });
