@@ -155,7 +155,7 @@ var getRouter = function(db){
 
             request.save(function(saveErr, result){
                 if (saveErr || !result) {
-                    log.error("Error saving request", saveErr, result);
+                    log.debug("Error saving request", saveErr, result);
                     res.status(500);
                     res.json({error: saveErr.message});
                     return;

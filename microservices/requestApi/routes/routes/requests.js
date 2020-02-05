@@ -396,7 +396,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                             logger.debug("file", myFile, "put up for validation");
                             logger.verbose("put file", myFile, " up for validation", apiErr, apiRes, body);
                             if (apiErr) {
-                                logger.error("Error validating file: ", apiErr);
+                                logger.debug("Error validating file: ", apiErr);
                             }
                         });
                     })(findRes.files[i])
