@@ -276,7 +276,7 @@ var getRouter = function(db){
                 db.Request.setChrono(findRes, req.user.id, objectDelta);
             }
 
-            var update = function(findRes){
+            var update = function(findRes, formRes){
                 db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
                     if (saveErr) {
                         res.json({error: saveErr.message});
@@ -342,7 +342,7 @@ var getRouter = function(db){
                         return;
                     }
 
-                    update(findRes);
+                    update(findRes, formRes);
                 });
                     
             }else{
@@ -358,7 +358,7 @@ var getRouter = function(db){
 
                     findRes.submissionId = formRes._id;
     
-                    update(findRes);
+                    update(findRes, formRes);
                 });
             }
             
@@ -506,7 +506,7 @@ var getRouter = function(db){
             return;
         }
         var formName = req.params.formName;
-        formioClient.deleteForm(formName, req.body, function(formErr, formRes){
+        formioClient.deleteForm(formName, function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});
