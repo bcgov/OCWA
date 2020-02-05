@@ -68,7 +68,6 @@ var getRouter = function(db){
                 r = JSON.parse(formRes);
             }catch(ex){}
 
-            res.status(r.status)
             res.json(r);
         });
     });
@@ -499,10 +498,12 @@ var getRouter = function(db){
         var config = require('config');
         let adminGroup = config.get("adminGroup");
         if (req.user.groups.indexOf(adminGroup) === -1){
+            console.log("FORMIO FORBIDDEN");
             res.status(403);
             res.json({error: "Forbidden"});
             return;
         }
+        console.log("FORMIO ALLOWED");
         var formName = req.params.formName;
         formioClient.putForm(formName, req.body, function(formErr, formRes){
             if (formErr){
@@ -525,10 +526,12 @@ var getRouter = function(db){
         var adminGroup = config.get("adminGroup");
 
         if (req.user.groups.indexOf(adminGroup) === -1){
+            console.log("FORMIO FORBIDDEN");
             res.status(403);
             res.json({error: "Forbidden"});
             return;
         }
+        console.log("FORMIO ALLOWED");
         var formName = req.params.formName;
         formioClient.putForm(formName, req.body, function(formErr, formRes){
             if (formErr){
@@ -544,7 +547,7 @@ var getRouter = function(db){
             try{
                 res.status(r.status)
             }catch(ex){}
-            
+
             res.json(r);
         });
     });
