@@ -865,7 +865,7 @@ describe("Forms", function() {
 
         it('it should fail to update a form with no admin', function (done) {
             chai.request(server)
-                .put('/v2/forms/testform')
+                .put('/v2/forms/'+activeFormId)
                 .set("Authorization", "Bearer "+jwt)
                 .send({
                     "title": "testform2",
@@ -879,10 +879,9 @@ describe("Forms", function() {
 
         it('it should update a form', function (done) {
             chai.request(server)
-                .put('/v2/forms/testform')
+                .put('/v2/forms/'+activeFormId)
                 .set("Authorization", "Bearer "+adminJwt)
                 .send({
-                    "_id": activeFormId,
                     "title": "testform2",
                 })
                 .end(function (err, res) {
@@ -894,11 +893,9 @@ describe("Forms", function() {
 
         it('it should fail to delete a form with no admin', function (done) {
             chai.request(server)
-                .delete('/v2/forms/testform')
+                .delete('/v2/forms/'+activeFormId)
                 .set("Authorization", "Bearer "+jwt)
-                .send({
-                    "_id": activeFormId,
-                })
+                .send({})
                 .end(function (err, res) {
                     res.should.have.status(403);
                     res.body.should.have.property('error');
@@ -908,11 +905,9 @@ describe("Forms", function() {
 
         it('it should delete a form', function (done) {
             chai.request(server)
-                .delete('/v2/forms/testform')
+                .delete('/v2/forms/'+activeFormId)
                 .set("Authorization", "Bearer "+adminJwt)
-                .send({
-                    "_id": activeFormId,
-                })
+                .send({})
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.have.property('_id');
