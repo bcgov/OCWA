@@ -721,19 +721,6 @@ describe("Forms", function() {
                 });
         });
 
-
-        it('it should fail to create a form with no information', function (done) {
-            chai.request(server)
-                .post('/v2/forms')
-                .set("Authorization", "Bearer "+adminJwt)
-                .send({})
-                .end(function (err, res) {
-                    res.should.have.status(500);
-                    res.body.should.have.property('error');
-                    done();
-                });
-        });
-
         it('it should create a form', function (done) {
             chai.request(server)
                 .post('/v2/forms')
@@ -869,7 +856,7 @@ describe("Forms", function() {
                     }]
                 })
                 .end(function (err, res) {
-                    console.log("should create form", res.status, res.body);
+                    console.log("SHOULD CREATE A FORM", res.status, res.body);
                     res.should.have.status(200);
                     res.body.should.have.property('_id');
                     done();

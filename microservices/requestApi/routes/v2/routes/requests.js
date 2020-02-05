@@ -516,12 +516,16 @@ var getRouter = function(db){
                 r = JSON.parse(formRes);
             }catch(ex){}
 
-            res.status(r.status)
+            try{
+                res.status(r.status)
+            }catch(ex){}
+
             res.json(r);
         });
     });
 
     router.delete('/formio/:formName', function(req, res, next){
+        console.log("IN DELETE FORM ROUTE");
         var config = require('config');
         var adminGroup = config.get("adminGroup");
 
