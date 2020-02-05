@@ -56,7 +56,13 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(JSON.parse(formRes));
+
+            var r = formRes
+            try{
+                r = JSON.parse(formRes);
+            }catch(ex){}
+
+            res.json(r);
         });
     });
 
@@ -492,7 +498,12 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(JSON.parse(formRes));
+            var r = formRes
+            try{
+                r = JSON.parse(formRes);
+            }catch(ex){}
+
+            res.json(r);
         });
     });
 
@@ -511,7 +522,12 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(JSON.parse(formRes));
+            var r = formRes
+            try{
+                r = JSON.parse(formRes);
+            }catch(ex){}
+
+            res.json(r);
         });
     });
 
