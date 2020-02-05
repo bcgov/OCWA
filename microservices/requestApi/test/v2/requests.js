@@ -18,9 +18,9 @@ chai.use(chaiHttp);
 
 describe("Requests", function() {
     var activeRequestId = '';
-    var firstId = '';
     var incorrectId = '';
     var fileId = 'test_' + Math.random().toString(36) + '.jpeg';
+    var activeFormId = '';
     after(function(done){
         db.Request.deleteMany({}, function(err){
             var minio = require('minio');
@@ -856,9 +856,9 @@ describe("Forms", function() {
                     }]
                 })
                 .end(function (err, res) {
-                    console.log("SHOULD CREATE A FORM", res.status, res.body);
                     res.should.have.status(200);
                     res.body.should.have.property('_id');
+                    activeFormId = res.body._id;
                     done();
                 });
         });
@@ -882,6 +882,7 @@ describe("Forms", function() {
                 .put('/v2/forms/testform')
                 .set("Authorization", "Bearer "+adminJwt)
                 .send({
+                    "_id": activeFormId,
                     "title": "testform2",
                 })
                 .end(function (err, res) {
@@ -895,7 +896,9 @@ describe("Forms", function() {
             chai.request(server)
                 .delete('/v2/forms/testform')
                 .set("Authorization", "Bearer "+jwt)
-                .send({})
+                .send({
+                    "_id": activeFormId,
+                })
                 .end(function (err, res) {
                     res.should.have.status(403);
                     res.body.should.have.property('error');
@@ -907,7 +910,9 @@ describe("Forms", function() {
             chai.request(server)
                 .delete('/v2/forms/testform')
                 .set("Authorization", "Bearer "+adminJwt)
-                .send({})
+                .send({
+                    "_id": activeFormId,
+                })
                 .end(function (err, res) {
                     res.should.have.status(200);
                     res.body.should.have.property('_id');
