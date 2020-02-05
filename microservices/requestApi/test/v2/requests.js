@@ -870,6 +870,7 @@ describe("Forms", function() {
                     }]
                 })
                 .end(function (err, res) {
+                    console.log("should create form", res.status, res.body);
                     res.should.have.status(200);
                     res.body.should.have.property('_id');
                     done();

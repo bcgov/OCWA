@@ -44,7 +44,6 @@ var getRouter = function(db){
                 r = JSON.parse(formRes);
             }catch(ex){}
 
-            res.status(r.status)
             res.json(r);
         });
     });
@@ -55,6 +54,7 @@ var getRouter = function(db){
         if (req.user.groups.indexOf(adminGroup) === -1){
             res.status(403);
             res.json({error: "Forbidden"});
+            return;
         }
         formioClient.postForm(req.body, function(formErr, formRes){
             if (formErr){
@@ -491,7 +491,6 @@ var getRouter = function(db){
                 r = JSON.parse(formRes);
             }catch(ex){}
 
-            res.status(r.status)
             res.json(r);
         });
     });
@@ -502,6 +501,7 @@ var getRouter = function(db){
         if (req.user.groups.indexOf(adminGroup) === -1){
             res.status(403);
             res.json({error: "Forbidden"});
+            return;
         }
         var formName = req.params.formName;
         formioClient.putForm(formName, req.body, function(formErr, formRes){
@@ -527,6 +527,7 @@ var getRouter = function(db){
         if (req.user.groups.indexOf(adminGroup) === -1){
             res.status(403);
             res.json({error: "Forbidden"});
+            return;
         }
         var formName = req.params.formName;
         formioClient.putForm(formName, req.body, function(formErr, formRes){
@@ -540,7 +541,10 @@ var getRouter = function(db){
                 r = JSON.parse(formRes);
             }catch(ex){}
 
-            res.status(r.status)
+            try{
+                res.status(r.status)
+            }catch(ex){}
+            
             res.json(r);
         });
     });
