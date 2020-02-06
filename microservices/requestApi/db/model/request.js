@@ -325,7 +325,7 @@ model.getAll = function(query, limit, page, user, callback){
 
     logger.verbose("getAll ", user.supervisor, user.outputchecker);   
 
-    var queryRequests = function(err, topicR, projectR){
+    var queryRequests = function(err2, topicR, projectR){
         logger.verbose("get all topics model get all", topicR);
         if ('_id' in query) {
             query['_id'] = mongoose.Types.ObjectId(query['_id']);
@@ -399,11 +399,16 @@ model.getAll = function(query, limit, page, user, callback){
         ];
         
         db.Request.aggregate(q).exec(function(err, results){
+            if (err){
+                return callback(err, []);
+            }
             logger.verbose("in topic bind");
             if (results){
                 for (var i=0; i<results.length; i++){
-                    let topicId = results[i].topic;
-                    results[i].projects = projectR.get(topicId);
+                    if ( (typeof(results[i]) !== "undefined") && (typeof(results[i].topic) !== "undefined") ){
+                        let topicId = results[i].topic;
+                        results[i].projects = projectR.get(topicId);
+                    }
                 }
             }
             callback(err, results);
@@ -411,12 +416,18 @@ model.getAll = function(query, limit, page, user, callback){
     }
 
     if ('_id' in query) {
-        db.Request.findById(query['_id'], (err, req) => {
-            getAllTopics(user, { id: req.topic }, queryRequests);
+        db.Request.findById(query['_id'], (err3, req) => {
+            if ( (req !== null) && (typeof(req) !== "undefined") && (typeof(req.topic) !== "undefined") ){
+                getAllTopics(user, { id: req.topic }, queryRequests);
+            }else{
+                callback(null, []);
+            }
         });
     } else {
         getAllTopics(user, {}, queryRequests);
     }
 };
+
+model.VERSION = 1;
 
 module.exports = model;

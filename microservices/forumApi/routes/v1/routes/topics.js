@@ -142,9 +142,7 @@ router.post("/", function(req, res, next){
 
 router.delete('/:topicId', function(req, res){
     var db = require('../db/db');
-    var config = require('config');
     var logger = require('npmlog');
-    var mongoose = require('mongoose');
     var topicId = mongoose.Types.ObjectId(req.params.topicId);
 
     db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(topicErr, topicRes) {
@@ -188,7 +186,6 @@ router.delete('/:topicId', function(req, res){
 
 router.put('/:topicId/subscribe', function(req, res){
     var db = require('../db/db');
-    var mongoose = require('mongoose');
     var subscribers = require('../subscribers/subscribers');
     var topicId = mongoose.Types.ObjectId(req.params.topicId);
 
@@ -215,7 +212,6 @@ router.put('/:topicId/subscribe', function(req, res){
 
 router.put('/:topicId/unsubscribe', function(req, res){
     var db = require('../db/db');
-    var mongoose = require('mongoose');
     var subscribers = require('../subscribers/subscribers');
     var topicId = mongoose.Types.ObjectId(req.params.topicId);
 
