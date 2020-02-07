@@ -108,6 +108,7 @@ router.post("/", function(req, res, next){
 
 
     if (topic.parent_id !== null){
+        console.log("Inside parent id not null");
         db.Topic.getAll({_id: topic.parent_id}, 1, 1, req.user, function(err, resList){
             log.debug("Topic find one", resList, err);
             if (err || resList==null || resList.length === 0){
@@ -116,6 +117,7 @@ router.post("/", function(req, res, next){
                 return;
             }
             var result = resList[0];
+            console.log("Inside parent id not null 2", result, typeof(result.parent_id), result.parent_id);
 
             if ((typeof(result.parent_id) !== "undefined") && (result.parent_id !== null)){
                 res.status(400);
@@ -126,7 +128,7 @@ router.post("/", function(req, res, next){
             topic.save(function(saveErr, saveRes){
                 if (saveErr){
                     res.status(500);
-                    res.json({error: saveErr.message});
+                    res.json({error: saveErr});
                     return;
                 }
                 var messages = require('../messages/messages');
@@ -135,11 +137,12 @@ router.post("/", function(req, res, next){
             });
         });
     }else{
+        console.log("Inside parent id is null");
         topic.save(function(saveErr, saveRes){
             if (saveErr){
                 res.status(500);
                 res.json({error: saveErr});
-                return
+                return;
             }
             var messages = require('../messages/messages');
             messages.sendTopicMessage(topic);
