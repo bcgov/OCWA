@@ -67,7 +67,7 @@ model.getAll = function(query, limit, page, user, callback){
                             $expr: {
                                 $and: [
                                     {$or: [
-                                            {$eq: [{$toObjectId: "$topic_id"}, "$$topicId"] },
+                                            {$eq: [ { if: {$eq: ["$topic_id", "*"] }, then: "*", else: {$toObjectId: "$topic_id"} }, "$$topicId"] },
                                             {$eq: [{$toObjectId: "$topic_id"}, "$$parent"] },
                                             {$eq: ["$topic_id", "*"] }
                                         ]},
