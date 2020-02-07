@@ -199,7 +199,7 @@ model.getAll = function(query, limit, page, user, callback){
         // var util = require('util');
 
         // console.log("v2 model agg", util.inspect(agg, {showHidden: false, depth: null}));
-        logger.verbose("v2 model agg", agg));
+        logger.verbose("v2 model agg", agg);
 
         db.Request.aggregate(agg).exec(function(err, results){
             logger.verbose('v2 finished db call', err, results);
