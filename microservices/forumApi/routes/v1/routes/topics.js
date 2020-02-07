@@ -106,18 +106,18 @@ router.post("/", function(req, res, next){
 
     log.debug("Creating topic: ", topic);
 
-
     if (topic.parent_id !== null){
         console.log("Inside parent id not null");
         db.Topic.getAll({_id: topic.parent_id}, 1, 1, req.user, function(err, resList){
             log.debug("Topic find one", resList, err);
+            console.log("Inside parent id not null2", resList, err);
             if (err || resList==null || resList.length === 0){
                 res.status(400);
                 res.json({error: "No such parent topic"});
                 return;
             }
             var result = resList[0];
-            console.log("Inside parent id not null 2", result, typeof(result.parent_id), result.parent_id);
+            console.log("Inside parent id not null 3", result, typeof(result.parent_id), result.parent_id);
 
             if ((typeof(result.parent_id) !== "undefined") && (result.parent_id !== null)){
                 res.status(400);
