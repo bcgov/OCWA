@@ -36,6 +36,9 @@ docker run -e CREATE_ROLE="exporter" -e OC_GROUP="oc" -e REPORTS_GROUP="reports"
            -e EMAIL_SERVICE=smtp.gmail.com -e EMAIL_PORT=465 =e EMAIL_SECURE=true \
            -e OCWA_IMPORT_URL=http://localhost:8000 \
            -e STORAGE_IMP_WARN_SIZE=1024 -e STORAGE_IMP_MAX_SIZE=0 \
+           -e DEFAULT_EXPORT_FORM_NAME=export -e DEFAULT_IMPORT_FORM_NAME=import -e DEFAULT_EXPORT_CODE_FORM_NAME=exportcode -e DEFAULT_IMPORT_CODE_FORM_NAME=importcode \
+           -e FORMIO_URL=http://localhost:3006 -e FORMIO_USERNAME=admin@example.com -e FORMIO_PASSWORD=CHANGEME \
+           -e ORG_ATTRIBUTE=businessCategory \
            -e STORAGE_WARN_SIZE=1024 -e STORAGE_MAX_SIZE=0 -e STORAGE_BUCKET=data -e AUTO_APPROVE=false --add-host=docker:$hostip \
            -e EMAIL_ON_SUBMIT="[{\"name\": \"noone\", \"email\": \"noone@nowhere.ca\"}]" -p $apiport:$apiport ocwa_request_api
 ```

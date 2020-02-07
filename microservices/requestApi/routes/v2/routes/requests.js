@@ -11,6 +11,77 @@ var getRouter = function(db){
 
     var routes = require('../../routes/requests');
 
+    var modifyJWTGroups = function(token, newGroups){
+        var config = require('config');
+        var jwt = require('jsonwebtoken');
+        var secret = config.get("jwtSecret")
+        var decoded = jwt.verify(token, secret);
+        decoded.groups = newGroups;
+        var tempToken = jwt.sign(decoded, secret);
+        return tempToken;
+
+    };
+
+    var createTopic = async function(topicName, parent, user, callback){
+        var httpReq = require('request');
+        var config = require('config');
+
+        var topic = {
+            name: topicName
+        };
+
+        if (parent){
+            topic.parent_id = parent;
+        }
+
+        httpReq.post({
+            url: config.get('forumApi')+'/v1/',
+            headers: {
+                'Authorization': "Bearer "+user.jwt
+            },
+            json: topic
+        }, function(apiErr, apiRes, body){
+            callback(apiErr, apiRes, body);
+        });
+    }
+
+    var createTopicIfDoesNotExist = async function(topicName, user, callback){
+        var httpReq = require('request');
+        var config = require('config');
+        
+        var newG = user.groups.slice();
+        newG.push("admin");
+
+        httpReq.get({
+            url: config.get('forumApi')+'/v1?name='+topicName,
+            headers: {
+                'Authorization': "Bearer "+modifyJWTGroups(user.jwt, newG)
+            }
+        }, function(apiErr, apiRes, body){
+            try{
+                body = JSON.parse(body);
+            }catch(ex){}
+            if (body.length === 0){
+                var origGroups = user.groups.slice();
+                var origJwt = user.jwt;
+                user.groups = [user.organization, config.get('requiredRoleToCreateRequest')];
+                user.jwt = modifyJWTGroups(user.jwt, user.groups);
+                createTopic(topicName, null, user, function(e, r, b){
+                    user.groups = origGroups;
+                    user.jwt = origJwt;
+                    
+                    var response = []
+                    if (typeof(b.result) !== "undefined"){
+                        response = [b.result];
+                    }
+                    callback(e, r, response);
+                });
+            }else{
+                callback(null, apiRes, body);
+            }
+        });
+    }
+
     router.get(FORMS_SUB_ROUTE+'/defaults', async function(req, res, next){
         var project = req.user.getProject();
         var exportFormName = await projectConfig.get(project, 'formio.defaultExportFormName');
@@ -161,17 +232,7 @@ var getRouter = function(db){
                     return;
                 }
 
-                var httpReq = require('request');
-
-                httpReq.post({
-                    url: config.get('forumApi')+'/v1/',
-                    headers: {
-                        'Authorization': "Bearer "+req.user.jwt
-                    },
-                    json: {
-                        name: request.name
-                    }
-                }, function(apiErr, apiRes, body){
+                var postCreateTopic = function(apiErr, apiRes, body){
                     if (!apiErr){
                         result.topic = body._id;
                         result.save(function(e, r){
@@ -218,10 +279,29 @@ var getRouter = function(db){
                         return;
                     }
                     res.json({error: "Unknown Error creating forum topic"})
-                });
+                }
 
+                if (req.user.organization){
+                    createTopicIfDoesNotExist(req.user.organization, req.user, function(parentErr, parentRes, parentBody){
+                        if ( (parentErr) || (parentBody.length <= 0) ){
+                            res.status(500);
+                            res.json({error: "Error creating/fetching parent topic"});
+                            return;
+                        }
 
+                        parentId = parentBody[0]._id;
+                        createTopic(request.name, parentId, req.user, function(e, r, b){
+                            postCreateTopic(e,r,b,result)
+                            return;
+                        });
 
+                    })
+                }else{
+                    createTopic(request.name, null, req.user, function(e, r, b){
+                        postCreateTopic(e,r,b,result)
+                        return;
+                    });
+                }
             });
         });
 

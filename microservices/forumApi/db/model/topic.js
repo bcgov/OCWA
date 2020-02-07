@@ -39,10 +39,18 @@ model.getAll = function(query, limit, page, user, callback){
             checkGroups.splice(index,1);
         }
     }
+
     if (defaultPermIsGroup) {
         defaultPermOverride = {
             author_groups: {$in: checkGroups}
         };
+    }
+
+    var adminGroup = config.has('adminGroup') ? config.get('adminGroup') : false;
+
+    //user is in admin group so they can see everything
+    if ( (adminGroup) && (user.groups.indexOf(adminGroup) !== -1) ){
+        defaultPermOverride = {"permissions.0": {$exists: false}};
     }
 
     var agg = [
@@ -59,8 +67,8 @@ model.getAll = function(query, limit, page, user, callback){
                             $expr: {
                                 $and: [
                                     {$or: [
-                                            {$eq: ["$topic_id", "$$topicId"] },
-                                            {$eq: ["$topic_id", "$$parent"] },
+                                            {$eq: [{$toObjectId: "$topic_id"}, "$$topicId"] },
+                                            {$eq: [{$toObjectId: "$topic_id"}, "$$parent"] },
                                             {$eq: ["$topic_id", "*"] }
                                         ]},
                                     {$eq: ["$allow", true]}
@@ -108,9 +116,9 @@ model.getAll = function(query, limit, page, user, callback){
     //note skip MUST be before limit or this will not work
     //note because this is an aggregate query the skip and limit must be in the aggregate not the inline functions
 
-    //var util = require('util');
+    // var util = require('util');
 
-    //console.log("get topic ", util.inspect(agg, {showHidden: false, depth: null}));
+    // console.log("get topic ", util.inspect(agg, {showHidden: false, depth: null}));
 
     //console.log("l", limit, "s", skip);
     db.Topic.aggregate(agg).exec(callback);

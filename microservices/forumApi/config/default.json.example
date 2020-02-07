@@ -17,6 +17,7 @@
   "defaultAccessIsGroup": true,
   "requiredRoleToCreateTopic": "exporter",
   "ignoreGroupsFromConsideration": [],
+  "adminGroup": "admin",
 
   "user":{
     "idField": "Email",

@@ -36,6 +36,11 @@ router.get('/', function(req, res, next) {
         q['parent_id'] = pid;
     }
 
+    if (typeof(req.query.name) !== "undefined"){
+        var name = req.query.name;
+        q['name'] = name;
+    }
+
     if (typeof(req.query.id) !== "undefined"){
         q['_id'] = mongoose.Types.ObjectId(req.query.id);
     }
@@ -69,8 +74,11 @@ router.post("/", function(req, res, next){
 
     var groups = req.user.groups.slice();
 
-    var typeParentId = typeof(req.body.parent_id);
-    topic.parent_id = ( (typeParentId === "string") || (typeParentId === "number") ) ? req.body.parent_id : null;
+    if (typeof(req.body.parent_id) !== "undefined"){
+        try{
+            topic.parent_id = mongoose.Types.ObjectId(req.body.parent_id);
+        }catch(ex){}
+    }
 
     if (config.has('requiredRoleToCreateTopic')){
         var reqRole = config.get('requiredRoleToCreateTopic');
