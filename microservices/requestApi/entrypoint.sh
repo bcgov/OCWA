@@ -66,7 +66,7 @@ printf "\"projectApiSecret\": \"${PROJECT_API_KEY}\",\n" >> ./config/default.jso
 printf "\"webhookSecret\": \"${WEBHOOK_API_KEY}\",\n" >> ./config/default.json
 
 printf "\"emailOnInitialSubmit\": ${EMAIL_ON_SUBMIT},\n" >> ./config/default.json
-printf "\"orgAttribute\": ${ORG_ATTRIBUTE},\n" >> ./config/default.json
+printf "\"orgAttribute\": \"${ORG_ATTRIBUTE}\",\n" >> ./config/default.json
 
 printf "\"user\": {\n" >> ./config/default.json
 printf "\"idField\": \"${USER_ID_FIELD}\",\n" >> ./config/default.json
