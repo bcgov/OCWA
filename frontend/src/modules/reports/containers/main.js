@@ -44,7 +44,7 @@ const mapStateToProps = state => {
       }
 
       return (
-        d.chronology.some(c => c.enteredState > 2) &&
+        d.chronology.some(c => c.enteredState > 1) &&
         (requestState === 'all' || d.state === requestState)
       );
     })
