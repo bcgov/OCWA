@@ -23,6 +23,7 @@ resource "docker_container" "ocwa_download_frontend" {
   env = [
     "COOKIE_SECRET=${random_string.cookie.result}",
     "JWT_SECRET=${random_string.jwtSecret.result}",
+    "LOG_LEVEL=debug",
     "AUTH_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/auth",
     "TOKEN_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/token",
     "USER_INFO_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/userinfo",

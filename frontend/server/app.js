@@ -39,8 +39,10 @@ const requestSocket = config.get('requestSocket');
 const exporterMode = config.get('exporterMode');
 const codeExportEnabled = config.get('codeExportEnabled');
 const repositoryHost = config.get('repositoryHost');
+const logLevel = config.get('logLevel');
+const morganLogLevel = config.get('morganLogLevel');
 
-log.level = 'debug'; // config.get('logLevel');
+log.level = logLevel;
 log.addLevel('debug', 2900, { fg: 'green' });
 
 const memoryStore = new MemoryStore({
@@ -54,7 +56,7 @@ if (process.env.NODE_ENV !== 'test') {
     }),
   });
   app.use(logger);
-  app.use(morgan('dev'));
+  app.use(morgan(morganLogLevel));
 }
 
 if (isDevelopment) {
@@ -70,9 +72,6 @@ if (isDevelopment) {
   );
   app.use(webpackHotMiddleware(compiler));
 }
-
-log.level = 'debug'; // config.get('logLevel');
-log.addLevel('debug', 2900, { fg: 'green' });
 
 // Express config
 app.set('view engine', 'pug');

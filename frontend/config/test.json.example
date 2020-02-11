@@ -1,6 +1,8 @@
 {
   "port": 8000,
   "wsPort": 3001,
+  "logLevel": "error",
+  "morganLogLevel": "dev",
   "cookieSecret": "COOKIE_SECRET_HERE",
   "jwtSecret": "JWT_SECRET_HERE",
   "helpURL": "EXTERNAL DOCUMENTATION URL (optional)",
