@@ -36,7 +36,7 @@ resource "docker_container" "ocwa_nginx" {
     container_path = "/www/"
   }
 
-  labels = {
+  labels {
     NGINX_CONFIG_MD5 = md5(local_file.proxy.content)
   }
 
