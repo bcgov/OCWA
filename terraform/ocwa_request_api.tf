@@ -71,7 +71,8 @@ resource "docker_container" "ocwa_request_api" {
     "DEFAULT_IMPORT_CODE_FORM_NAME=codeimport",
     "FORMIO_URL=http://ocwa_formio:3001",
     "FORMIO_USERNAME=admin@example.com",
-    "FORMIO_PASSWORD=CHANGEME"
+    "FORMIO_PASSWORD=CHANGEME",
+    "ORG_ATTRIBUTE=businessCategory"
   ]
 }
 

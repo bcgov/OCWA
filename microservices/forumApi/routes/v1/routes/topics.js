@@ -36,6 +36,11 @@ router.get('/', function(req, res, next) {
         q['parent_id'] = pid;
     }
 
+    if (typeof(req.query.name) !== "undefined"){
+        var name = req.query.name;
+        q['name'] = name;
+    }
+
     if (typeof(req.query.id) !== "undefined"){
         q['_id'] = mongoose.Types.ObjectId(req.query.id);
     }
@@ -69,8 +74,11 @@ router.post("/", function(req, res, next){
 
     var groups = req.user.groups.slice();
 
-    var typeParentId = typeof(req.body.parent_id);
-    topic.parent_id = ( (typeParentId === "string") || (typeParentId === "number") ) ? req.body.parent_id : null;
+    if (typeof(req.body.parent_id) !== "undefined"){
+        try{
+            topic.parent_id = mongoose.Types.ObjectId(req.body.parent_id);
+        }catch(ex){}
+    }
 
     if (config.has('requiredRoleToCreateTopic')){
         var reqRole = config.get('requiredRoleToCreateTopic');
@@ -98,7 +106,6 @@ router.post("/", function(req, res, next){
 
     log.debug("Creating topic: ", topic);
 
-
     if (topic.parent_id !== null){
         db.Topic.getAll({_id: topic.parent_id}, 1, 1, req.user, function(err, resList){
             log.debug("Topic find one", resList, err);
@@ -118,7 +125,7 @@ router.post("/", function(req, res, next){
             topic.save(function(saveErr, saveRes){
                 if (saveErr){
                     res.status(500);
-                    res.json({error: saveErr.message});
+                    res.json({error: saveErr});
                     return;
                 }
                 var messages = require('../messages/messages');
@@ -131,7 +138,7 @@ router.post("/", function(req, res, next){
             if (saveErr){
                 res.status(500);
                 res.json({error: saveErr});
-                return
+                return;
             }
             var messages = require('../messages/messages');
             messages.sendTopicMessage(topic);
@@ -142,9 +149,7 @@ router.post("/", function(req, res, next){
 
 router.delete('/:topicId', function(req, res){
     var db = require('../db/db');
-    var config = require('config');
     var logger = require('npmlog');
-    var mongoose = require('mongoose');
     var topicId = mongoose.Types.ObjectId(req.params.topicId);
 
     db.Topic.getAll({_id: topicId}, 1, 1, req.user, function(topicErr, topicRes) {
@@ -188,7 +193,6 @@ router.delete('/:topicId', function(req, res){
 
 router.put('/:topicId/subscribe', function(req, res){
     var db = require('../db/db');
-    var mongoose = require('mongoose');
     var subscribers = require('../subscribers/subscribers');
     var topicId = mongoose.Types.ObjectId(req.params.topicId);
 
@@ -215,7 +219,6 @@ router.put('/:topicId/subscribe', function(req, res){
 
 router.put('/:topicId/unsubscribe', function(req, res){
     var db = require('../db/db');
-    var mongoose = require('mongoose');
     var subscribers = require('../subscribers/subscribers');
     var topicId = mongoose.Types.ObjectId(req.params.topicId);
 

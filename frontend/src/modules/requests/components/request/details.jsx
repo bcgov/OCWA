@@ -11,6 +11,7 @@ import { Prompt } from 'react-router-dom';
 import { uid } from 'react-uid';
 import { _e } from '@src/utils';
 
+import DetailsRow from './details-row';
 import { RequestSchema } from '../../types';
 import * as styles from './styles.css';
 
@@ -25,6 +26,7 @@ function RequestDetails({
   isLoading,
   onSave,
 }) {
+  const editingRef = React.useRef(isEditing);
   const formRef = React.useRef({});
   const files = get(data, 'files', []);
   const supportingFiles = get(data, 'supportingFiles', []);
@@ -46,9 +48,11 @@ function RequestDetails({
   }, [data]);
 
   React.useEffect(() => {
-    if (!isEditing) {
+    if (!isEditing && editingRef.current === true) {
       onSave(id, formRef.current);
     }
+
+    editingRef.current = isEditing;
   }, [isEditing]);
 
   if (isLoading && !data._id) {
@@ -75,14 +79,7 @@ function RequestDetails({
           {fields
             .filter(d => d.key !== 'name')
             .map(d => (
-              <div
-                key={uid(d)}
-                id={`request-${d.key}-field`}
-                className={styles.fieldRow}
-              >
-                <h6>{d.label}</h6>
-                <p id={`request-${d.key}-text`}>{data[d.key] || '-'}</p>
-              </div>
+              <DetailsRow key={uid(d)} data={d} request={data} />
             ))}
         </div>
       )}

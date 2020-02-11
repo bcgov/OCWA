@@ -1,4 +1,4 @@
-var notifications = function(db){
+var notification = function(db){
     const email = require('./email')(db);
     const gitops = require('./gitops')(db);
 
@@ -19,4 +19,4 @@ var notifications = function(db){
     return notifications;
 }
 
-module.exports = notifications;
+module.exports = notification;

@@ -1,8 +1,8 @@
 var db = require('../db/db');
 
-var subscribers = {};
+var s = {};
 
-subscribers.subscribe = function(topicId, userId, contributed, callback){
+s.subscribe = function(topicId, userId, contributed, callback){
     db.Topic.findById(topicId).exec((err, topic) => {
         if (err || topic == null) {
             callback({error:'topic not found'});
@@ -30,7 +30,7 @@ subscribers.subscribe = function(topicId, userId, contributed, callback){
     });
 };
 
-subscribers.unsubscribe = function(topicId, userId, callback){
+s.unsubscribe = function(topicId, userId, callback){
     db.Topic.findById(topicId).exec((err, topic) => {
         if (err || topic == null) {
             callback({error:'topic not found'});
@@ -51,4 +51,4 @@ subscribers.unsubscribe = function(topicId, userId, callback){
 };
 
 
-module.exports = subscribers;
+module.exports = s;

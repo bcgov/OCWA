@@ -133,6 +133,8 @@ forum-api:
 
   defaultAccessIsGroup: true
   requiredRoleToCreateTopic: "exporter"
+  ignoreGroups: "\"oc\""
+  adminGroup: "admin"
   user:
     idField: Email
     emailField: Email
@@ -368,8 +370,10 @@ request-api:
   ocwaImportUrl: http://ocwadl-ui.ocwa
   emailTemplateEnabled: false
   emailTemplate: |-
+    
   emailSubmitTemplateEnabled: false
   emailSubmitTemplate: |-
+    
   emailEnabled: false
   emailService: smtp.gmail.com
   emailSecure: true
@@ -382,7 +386,14 @@ request-api:
   gitopsUrl: http://gitops.ocwa
   gitopsSecret: s3cr3t
 
-  createDatabase: false
+  defaultExportFormName: "dataexport"
+  defaultImportFormName: "dataimport"
+  defaultExportCodeFormName: "codeexport"
+  defaultImportCodeFormName: "codeimport"
+  formioUrl: "http://ocwa-formio.ocwa"
+  formioUsername: "admin@example.com"
+  formioPassword: "CHANGEME"
+  orgAttribute: "businessCategory"
 
 
   resources: {}
