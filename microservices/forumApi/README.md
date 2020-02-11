@@ -25,7 +25,7 @@ hostip=$(ifconfig en0 | awk '$1 == "inet" {print $2}')
 docker run -e EMAIL_FIELD=Email -e GIVENNAME_FIELD=GivenName -e SURNAME_FIELD=Surname -e GROUP_FIELD=Groups -e JWT_SECRET=MySecret\
            -e DEFAULT_ACCESS_IS_GROUP=true -e REQUIRED_CREATE_ROLE=exporter -e LOG_LEVEL=info -e DB_USERNAME=mongoUser \
            -e DB_PASSWORD=mongoPassword -e DB_NAME=mongoDbName -e USER_ID_FIELD=Email  -e DB_HOST=docker \
-           -e IGNORE_GROUPS="\"group1\", \"group2\"" \
+           -e IGNORE_GROUPS="\"group1\", \"group2\"" -e ADMIN_GROUP=\"admin\"" \
            -e EMAIL_SUBJECT=forumApi -e EMAIL_ENABLED=false -e EMAIL_USER=forum@ocwa.com -e EMAIL_PASSWORD=MYPASS -e EMAIL_FROM=forum@ocwa.com \
            -e EMAIL_SERVICE=smtp.gmail.com -e EMAIL_PORT=465 -e EMAIL_SECURE=true \
            --add-host=docker:$hostip -p $apiport:3000 -p $wsport:2999 ocwa_forum_api

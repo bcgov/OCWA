@@ -163,7 +163,7 @@ var getAllTopics = function(user, filter, callback, page){
     var limit = 100;
     var topics = [];
     var projects = new Map();
-    var url = config.get('forumApi') + '/v1?limit='+limit+'&page='+page+'&parent_id=-1';
+    var url = config.get('forumApi') + '/v1?limit='+limit+'&page='+page;
 
     if ('id' in filter) {
         url += "&id=" + filter['id']

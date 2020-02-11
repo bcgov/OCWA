@@ -108,6 +108,7 @@ defaultImportCodeFormName: "codeimport"
 formioUrl: "http://ocwa-formio.ocwa"
 formioUsername: "admin@example.com"
 formioPassword: "CHANGEME"
+orgAttribute: "businessCategory"
 
 resources: {}
   # If you want to specify resources, uncomment the following

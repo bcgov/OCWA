@@ -178,6 +178,9 @@ spec:
               value: "{{ .Values.formioUsername }}"
             - name: FORMIO_PASSWORD
               value: "{{ .Values.formioPassword }}"
+            
+            - name: ORG_ATTRIBUTE
+              value: "{{ .Values.orgAttribute }}"
 
           ports:
             - name: http
