@@ -1,7 +1,7 @@
 {
   "name": "project-api",
   "author": "Jeremy Ho",
-  "version": "2.1.1",
+  "version": "3.1.0",
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
@@ -14,7 +14,7 @@
   "dependencies": {
     "config": "^3.0.1",
     "express": "^4.16.4",
-    "mongoose": "^5.6.9",
+    "mongoose": "^5.7.5",
     "morgan": "^1.9.1",
     "npmlog": "^4.1.2",
     "passport": "^0.4.0",

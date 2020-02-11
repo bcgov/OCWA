@@ -32,11 +32,13 @@ const mapStateToProps = state => {
   const ids = keys(entities);
   const regex = new RegExp(escapeRegExp(search), 'i');
   const sliceStartIndex = Math.max((page - 1) * limit, 0);
-  const dataEntities = ids.map(id => get(entities, id, {})).filter(d => {
-    if (isNull(filter)) return true;
-    if (isArray(filter)) return filter.includes(d.state);
-    return d.state === filter;
-  });
+  const dataEntities = ids
+    .map(id => get(entities, id, {}))
+    .filter(d => {
+      if (isNull(filter)) return true;
+      if (isArray(filter)) return filter.includes(d.state);
+      return d.state === filter;
+    });
 
   const data = dataEntities
     .filter(d => {
@@ -62,26 +64,29 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {
-  onChangeFilter: changeFilter,
-  onSearch: searchResults,
-  onSelect: viewDraftRequest,
-  onShowMyRequests: toggleMyRequests,
-  onSort: sortRequests,
-  initialRequest: () =>
-    fetchRequests(
-      { page: 1 },
-      {
-        url: '/api/v1/requests?page=1',
-        schema: requestsListSchema,
-      }
-    ),
-  fetchRequests: page =>
-    fetchRequests(
-      { page },
-      {
-        url: `/api/v1/requests?page=${page}`,
-        schema: requestsListSchema,
-      }
-    ),
-})(withRequest(RequestsList));
+export default connect(
+  mapStateToProps,
+  {
+    onChangeFilter: changeFilter,
+    onSearch: searchResults,
+    onSelect: viewDraftRequest,
+    onShowMyRequests: toggleMyRequests,
+    onSort: sortRequests,
+    initialRequest: () =>
+      fetchRequests(
+        { page: 1 },
+        {
+          url: '/api/v2/requests?page=1',
+          schema: requestsListSchema,
+        }
+      ),
+    fetchRequests: page =>
+      fetchRequests(
+        { page },
+        {
+          url: `/api/v2/requests?page=${page}`,
+          schema: requestsListSchema,
+        }
+      ),
+  }
+)(withRequest(RequestsList));

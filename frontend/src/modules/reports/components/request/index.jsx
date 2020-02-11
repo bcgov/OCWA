@@ -13,6 +13,7 @@ import RequestType from '@src/modules/requests/components/request/request-type';
 import { RequestSchema } from '@src/modules/requests/types';
 import { colors } from '@atlaskit/theme';
 
+import Details from '../../containers/details';
 import * as styles from './styles.css';
 
 const getChronologyText = state => {
@@ -99,49 +100,7 @@ function Request({ data }) {
               <h6>Submissions Total</h6>
             </div>
           </div>
-          <header className={styles.chronologyHeader}>
-            <h4>Request Details</h4>
-          </header>
-          {data.exportType === 'code' && (
-            <div className={styles.details}>
-              <dl>
-                <dt>External Repository</dt>
-                <dd id="request-details-external-repo-text">
-                  {data.externalRepository}
-                </dd>
-                <dt>Branch Name</dt>
-                <dd id="request-details-branch-text">{data.branch}</dd>
-                <dt>Repository</dt>
-                <dd id="request-details-repository-text">{data.repository}</dd>
-              </dl>
-            </div>
-          )}
-          {data.exportType !== 'code' && (
-            <div className={styles.details}>
-              <dl>
-                {data.type === 'import' && (
-                  <React.Fragment>
-                    <dt>General Comments</dt>
-                    <dd id="request-details-purpose-text">{data.purpose}</dd>
-                  </React.Fragment>
-                )}
-                {data.type === 'export' && (
-                  <React.Fragment>
-                    <dt>Variable Descriptions</dt>
-                    <dd id="request-details-variable-text">
-                      {data.variableDescriptions}
-                    </dd>
-                    <dt>
-                      Relationship to previous or future (planned) outputs
-                    </dt>
-                    <dd id="request-details-selection-text">
-                      {data.selectionCriteria}
-                    </dd>
-                  </React.Fragment>
-                )}
-              </dl>
-            </div>
-          )}
+          <Details data={data} />
           {data.exportType !== 'code' && (
             <React.Fragment>
               <header className={styles.chronologyHeader}>

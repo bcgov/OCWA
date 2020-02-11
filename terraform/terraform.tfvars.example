@@ -3,6 +3,10 @@ mongodb = {
     username = "appuser"
 }
 
+formio = {
+    username = "admin@example.com"
+}
+
 postgres = {
     username = "kcuser"
 }
@@ -34,6 +38,7 @@ images = {
     validate_api = ":edge"
     project_api = ":edge"
     forum_api = ":edge"
+    formio = "h3brandon/formio:latest"
     policy_api = ":edge"
     frontend = ":edge"
     minio = ":latest"

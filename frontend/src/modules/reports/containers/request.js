@@ -32,7 +32,7 @@ const mapStateToProps = (state, props) => {
 export default connect(mapStateToProps, {
   initialRequest: ({ requestId }) =>
     fetchRequest({
-      url: `/api/v1/requests/${requestId}`,
+      url: `/api/v2/requests/${requestId}`,
       schema: requestSchema,
       id: requestId,
     }),

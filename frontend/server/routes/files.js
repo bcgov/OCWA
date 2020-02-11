@@ -45,7 +45,7 @@ const validateFileRequest = async (req, requestId) => {
 
   try {
     const r = await request.get({
-      url: `${requestApiHost}/v1/${requestId}?include_file_status=false`,
+      url: `${requestApiHost}/v2/${requestId}?include_file_status=false`,
       headers: {
         Authorization: token,
       },

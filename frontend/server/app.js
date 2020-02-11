@@ -39,6 +39,11 @@ const requestSocket = config.get('requestSocket');
 const exporterMode = config.get('exporterMode');
 const codeExportEnabled = config.get('codeExportEnabled');
 const repositoryHost = config.get('repositoryHost');
+const logLevel = config.get('logLevel');
+const morganLogLevel = config.get('morganLogLevel');
+
+log.level = logLevel;
+log.addLevel('debug', 2900, { fg: 'green' });
 
 log.level = 'debug'; // config.get('logLevel');
 log.addLevel('debug', 2900, { fg: 'green' });
@@ -54,7 +59,11 @@ if (process.env.NODE_ENV !== 'test') {
     }),
   });
   app.use(logger);
+<<<<<<< HEAD
   app.use(morgan('dev'));
+=======
+  app.use(morgan(morganLogLevel));
+>>>>>>> 796e183d87d1bd4ff424b5ca4cee2991311977ba
 }
 
 if (isDevelopment) {
@@ -71,9 +80,12 @@ if (isDevelopment) {
   app.use(webpackHotMiddleware(compiler));
 }
 
+<<<<<<< HEAD
 log.level = 'debug'; // config.get('logLevel');
 log.addLevel('debug', 2900, { fg: 'green' });
 
+=======
+>>>>>>> 796e183d87d1bd4ff424b5ca4cee2991311977ba
 // Express config
 app.set('view engine', 'pug');
 app.set('views', `${__dirname}/views`);
@@ -107,7 +119,7 @@ app.get('/login', passport.authenticate('openidconnect'));
 
 // Set up some proxy action
 app.use('/api/v1/forums', proxy.forum);
-app.use('/api/v1/requests', proxy.request);
+app.use('/api/v2/requests', proxy.request);
 app.use('/api/v1/files', filesRoute);
 app.use('/versions', versionsRoute);
 

@@ -58,7 +58,10 @@
     "requiredRoleToCreateRequest": "exporter",
     "outputCheckerGroup": "oc",
     "reportsGroup": "reports",
+    "adminGroup": "admin",
     "allowDenyRequest": true,
+
+    "orgAttribute": "businessCategory",
 
     "projectApi": "http://localhost:2005/",
     "projectApiSecret": "apiKeySecret",
@@ -74,5 +77,14 @@
         "givenNameField": "GivenName",
         "surNameField": "Surname",
         "groupField": "Groups"
+  },
+  "formio": {
+    "defaultExportFormName": "test",
+    "defaultImportFormName": "test",
+    "defaultExportCodeFormName": "test",
+    "defaultImportCodeFormName": "test",
+    "url": "http://localhost:3006",
+    "username": "admin@example.com",
+    "password": "CHANGEME"
   }
 }

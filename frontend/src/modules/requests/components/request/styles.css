@@ -84,6 +84,19 @@
   justify-content: center;
 }
 
+.fieldRow {
+  margin-bottom: 30px;
+}
+
+.fieldRow p {
+  margin-top: 5px;
+}
+
+.fieldRow h6 {
+  text-transform: none;
+  color: #a5adba;
+}
+
 .mergeRequestStatus {
   margin-bottom: 20px;
 }

@@ -66,6 +66,7 @@ printf "\"projectApiSecret\": \"${PROJECT_API_KEY}\",\n" >> ./config/default.jso
 printf "\"webhookSecret\": \"${WEBHOOK_API_KEY}\",\n" >> ./config/default.json
 
 printf "\"emailOnInitialSubmit\": ${EMAIL_ON_SUBMIT},\n" >> ./config/default.json
+printf "\"orgAttribute\": \"${ORG_ATTRIBUTE}\",\n" >> ./config/default.json
 
 printf "\"user\": {\n" >> ./config/default.json
 printf "\"idField\": \"${USER_ID_FIELD}\",\n" >> ./config/default.json
@@ -73,7 +74,18 @@ printf "\"emailField\": \"${EMAIL_FIELD}\",\n" >> ./config/default.json
 printf "\"givenNameField\": \"${GIVENNAME_FIELD}\",\n" >> ./config/default.json
 printf "\"surNameField\": \"${SURNAME_FIELD}\",\n" >> ./config/default.json
 printf "\"groupField\": \"${GROUP_FIELD}\"\n" >> ./config/default.json
+printf "},\n" >> ./config/default.json
+
+printf "\"formio\": {\n" >> ./config/default.json
+printf "\"defaultExportFormName\": \"${DEFAULT_EXPORT_FORM_NAME}\",\n" >> ./config/default.json
+printf "\"defaultImportFormName\": \"${DEFAULT_IMPORT_FORM_NAME}\",\n" >> ./config/default.json
+printf "\"defaultExportCodeFormName\": \"${DEFAULT_EXPORT_CODE_FORM_NAME}\",\n" >> ./config/default.json
+printf "\"defaultImportCodeFormName\": \"${DEFAULT_IMPORT_CODE_FORM_NAME}\",\n" >> ./config/default.json
+printf "\"url\": \"${FORMIO_URL}\",\n" >> ./config/default.json
+printf "\"username\": \"${FORMIO_USERNAME}\",\n" >> ./config/default.json
+printf "\"password\": \"${FORMIO_PASSWORD}\"\n" >> ./config/default.json
 printf "}\n" >> ./config/default.json
+
 printf "}" >> ./config/default.json
 
 npm start

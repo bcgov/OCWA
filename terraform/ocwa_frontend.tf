@@ -23,6 +23,7 @@ resource "docker_container" "ocwa_download_frontend" {
   env = [
     "COOKIE_SECRET=${random_string.cookie.result}",
     "JWT_SECRET=${random_string.jwtSecret.result}",
+    "LOG_LEVEL=debug",
     "AUTH_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/auth",
     "TOKEN_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/token",
     "USER_INFO_ENDPOINT=${var.authHost}/auth/realms/ocwa/protocol/openid-connect/userinfo",
@@ -51,6 +52,10 @@ resource "docker_container" "ocwa_download_frontend" {
     "OC_GROUP=/oc",
     "REPORTS_GROUP=/reports",
     "EXPORTER_MODE=download",
+    "DATA_EXPORT_REQUEST_FORM=dataexport",
+    "DATA_IMPORT_REQUEST_FORM=datimport",
+    "CODE_EXPORT_REQUEST_FORM=codeexport",
+    "CODE_IMPORT_REQUEST_FORM=codeimport",
     "CODE_EXPORT_ENABLED=true",
   ]
 }
@@ -99,6 +104,11 @@ resource "docker_container" "ocwa_frontend" {
     "OC_GROUP=/oc",
     "REPORTS_GROUP=/reports",
     "EXPORTER_MODE=export",
+    "CODE_EXPORT_ENABLED=true",
+    "DATA_EXPORT_REQUEST_FORM=dataexport",
+    "DATA_IMPORT_REQUEST_FORM=datimport",
+    "CODE_EXPORT_REQUEST_FORM=codeexport",
+    "CODE_IMPORT_REQUEST_FORM=codeimport",
     "CODE_EXPORT_ENABLED=true",
   ]
 }

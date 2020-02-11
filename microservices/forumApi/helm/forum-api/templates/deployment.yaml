@@ -94,6 +94,8 @@ spec:
               value: "{{ .Values.emailFrom }}"
             - name: EMAIL_SUBJECT
               value: "{{ .Values.emailSubject }}"
+            - name: ADMIN_GROUP
+              value: "{{ .Values.adminGroup }}"
 
           ports:
             - name: http

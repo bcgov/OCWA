@@ -19,7 +19,7 @@ import StateLabel from '@src/modules/requests/components/state-label';
 import Title from '@src/components/title';
 import { colors } from '@atlaskit/theme';
 
-import Details from './details';
+import Details from '../../containers/request-details';
 import Files from './files';
 import RequestsNav from '../../containers/requests-nav';
 import Sidebar from '../../containers/sidebar';
