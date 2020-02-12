@@ -72,7 +72,8 @@ class App extends React.Component {
         zone,
       };
 
-      if (!hasValidGroupAccess) {
+      // Don't let OC's to download or invalid group access
+      if ((hasOcRole && exporterMode === 'download') || !hasValidGroupAccess) {
         return <Unauthorized />;
       }
 
@@ -81,7 +82,7 @@ class App extends React.Component {
         el = <Reports />;
       } else if (hasOcRole && !hasExporterRole) {
         el = <OutputChecker {...props} />;
-      } else {
+      } else if (hasExporterRole) {
         el = <Exporter {...props} />;
       }
     } else if (authFetchStatus === 'loaded') {
@@ -118,6 +119,7 @@ App.propTypes = {
   initSockets: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   user: PropTypes.shape({
+    groups: PropTypes.arrayOf(PropTypes.string),
     displayName: PropTypes.string,
   }).isRequired,
   zone: PropTypes.string.isRequired,
