@@ -1,4 +1,4 @@
-var gitops = function(db){
+var gitop = function(db){
 
     var gitops = {};
 
@@ -26,9 +26,9 @@ var gitops = function(db){
 
         let transition = this.getTransition(request);
 
-        if (transition == "1-2" /* WIP to Awaiting Review */|| transition == "1-3" /* WIP to In Review */ ) {
-        } else if (transition == "-0" /* Created */ ) {
-        } else if (transition == "0-1" /* Draft to WIP */ && request.mergeRequestStatus.code == 0) {
+        //if (transition == "1-2" /* WIP to Awaiting Review */|| transition == "1-3" /* WIP to In Review */ ) {
+        //} else if (transition == "-0" /* Created */ ) {
+        /*} else */if (transition == "0-1" /* Draft to WIP */ && request.mergeRequestStatus.code == 0) {
             let payload = {
                 direction: request.type,
                 repository: request.repository,
@@ -179,7 +179,7 @@ var gitops = function(db){
     gitops.updateRequest = function(request, link, code, message) {
         let id = request._id;
         return new Promise(function(resolve, reject) {    
-            db.Request.findById(id, (err, requestForUpdate) => {
+            db.Request.findById(id, (err2, requestForUpdate) => {
                 requestForUpdate.mergeRequestLink = link;
                 requestForUpdate.mergeRequestStatus = {
                     code: code,
@@ -201,4 +201,4 @@ var gitops = function(db){
     return gitops;
 }
 
-module.exports = gitops;
+module.exports = gitop;

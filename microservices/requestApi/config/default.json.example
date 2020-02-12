@@ -61,6 +61,8 @@
     "adminGroup": "admin",
     "allowDenyRequest": true,
 
+    "orgAttribute": "businessCategory",
+
     "projectApi": "http://localhost:2005/",
     "projectApiSecret": "apiKeySecret",
 

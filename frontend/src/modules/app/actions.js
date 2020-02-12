@@ -2,6 +2,19 @@ export const fetchToken = () => ({
   type: 'app/get/token',
 });
 
+export const toggleReportError = () => ({
+  type: 'app/report-error/toggle',
+});
+
+export const reportError = (payload, componentStack) => ({
+  type: 'user/report-error',
+  error: true,
+  meta: {
+    componentStack,
+  },
+  payload,
+});
+
 export const toggleAbout = () => ({
   type: 'app/about/toggle',
 });

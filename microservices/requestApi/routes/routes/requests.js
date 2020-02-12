@@ -1,5 +1,4 @@
 var buildStatic = function(db, router){
-    var mongoose = require('mongoose');
 
     router.get('/status_codes', function(req, res, next) {
         res.json(db.Request.stateCodeLookup());
@@ -29,7 +28,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     /* GET all requests. */
     router.get('/', function(req, res, next) {
-        var logger = require('npmlog');
+        //var logger = require('npmlog');
 
         var limit = 100;
         if (typeof(req.query.limit) !== "undefined"){
@@ -69,25 +68,24 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         }
 
         if (typeof(req.query.start_date) !== "undefined"){
-            var split = req.query.start_date.split(/[-\/]/);
-            var year = split[0] ? split[0] : 0;
-            var month = split[1] ? split[1]-1 : 0;
-            var day = split[2] ? split[2] : 0;
-            var hour = split[3] ? split[3] : 0;
-            var minute = split[4] ? split[4] : 0;
-            var second = split[5] ? split[5] : 0;
+            let split = req.query.start_date.split(/[-\/]/);
+            let year = split[0] ? split[0] : 0;
+            let month = split[1] ? split[1]-1 : 0;
+            let day = split[2] ? split[2] : 0;
+            let hour = split[3] ? split[3] : 0;
+            let minute = split[4] ? split[4] : 0;
+            let second = split[5] ? split[5] : 0;
             q.submittedDate = {$gte:  new Date(year, month, day, hour, minute, second)};
         }
 
         if (typeof(req.query.end_date) !== "undefined"){
-            var split = req.query.end_date.split(/[-\/]/);
-            var year = split[0] ? split[0] : 0;
-            var month = split[1] ? (split[1]-1) : 0;
-            var day = split[2] ? split[2] : 0;
-            var hour = split[3] ? split[3] : 0;
-            var minute = split[4] ? split[4] : 0;
-            var second = split[5] ? split[5] : 0;
-            var d = new Date(year, month, day, hour, minute, second);
+            let split = req.query.end_date.split(/[-\/]/);
+            let year = split[0] ? split[0] : 0;
+            let month = split[1] ? (split[1]-1) : 0;
+            let day = split[2] ? split[2] : 0;
+            let hour = split[3] ? split[3] : 0;
+            let minute = split[4] ? split[4] : 0;
+            let second = split[5] ? split[5] : 0;
             if (typeof(q.submittedDate) === "undefined"){
                 q.submittedDate = {$lte:  new Date(year, month, day, hour, minute, second)};
             }else{
@@ -232,9 +230,9 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                         }
                         //note not returning if an error as it'll force a delete below
                         log.error("Error updating request", e);
-                        db.Request.deleteOne({_id: result._id}, function(e){
-                            if (e) {
-                                log.error("Error deleting request", result, e);
+                        db.Request.deleteOne({_id: result._id}, function(e2){
+                            if (e2) {
+                                log.error("Error deleting request", result, e2);
                             }
                         });
                         res.status(500);
@@ -269,14 +267,20 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     /* GET specific request. */
     router.get('/:requestId', function(req, res, next) {
-        var logger = require('npmlog');
 
         var includeFileStatus = true;
         if (typeof(req.query.include_file_status) !== "undefined"){
             includeFileStatus = req.query.include_file_status == "true";
         }
 
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(findErr, findRes){
             if (findErr || !findRes || findRes.length === 0){
@@ -312,7 +316,14 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     //save a request
     router.put("/save/:requestId", function(req, res, next){
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var config = require('config');
         var logger = require('npmlog');
 
@@ -374,7 +385,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
                 var policy = findRes.type + "-" + findRes.exportType;
 
-                for (var i=0; i<findRes.files.length; i++) {
+                for (let i=0; i<findRes.files.length; i++) {
                     ((myFile) => {
                         httpReq.put({
                             url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
@@ -385,7 +396,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                             logger.debug("file", myFile, "put up for validation");
                             logger.verbose("put file", myFile, " up for validation", apiErr, apiRes, body);
                             if (apiErr) {
-                                logger.error("Error validating file: ", apiErr);
+                                logger.debug("Error validating file: ", apiErr);
                             }
                         });
                     })(findRes.files[i])
@@ -402,10 +413,16 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     //submit a request
     router.put('/submit/:requestId', function(req, res, next){
-        var config = require('config');
         var logger = require('npmlog');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
-        var httpReq = require('request');
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
 
         // Lookup project from user groups
         var project = projectConfig.deriveProjectFromUser(req.user);
@@ -413,7 +430,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function (reqErr, reqRes) {
             if (reqErr || !reqRes || reqRes.length == 0) {
                 res.status(400);
-                res.json({error: reqErr.message});
+                res.json({error: "No Results"});
                 return;
             }
 
@@ -446,18 +463,10 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                     return;
                 }
 
-                var numResults = 0;
-                var allResults = [];
-                var pass = true;
-
 
                 if (reqRes.reviewers.length > 0) {
                     reqRes.state = db.Request.IN_REVIEW_STATE;
-                } else if (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) {
-                    reqRes.state = db.Request.AWAITING_REVIEW_STATE;
-                    db.Request.setChrono(reqRes, req.user.id);
-                    reqRes.state = db.Request.APPROVED_STATE;
-                } else if (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) {
+                } else if ( (reqRes.type === db.Request.INPUT_TYPE && autoAccept.import) || (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export) ){
                     reqRes.state = db.Request.AWAITING_REVIEW_STATE;
                     db.Request.setChrono(reqRes, req.user.id);
                     reqRes.state = db.Request.APPROVED_STATE;
@@ -472,117 +481,24 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                 var storageApi = config.get('storageApi');
                 var warnSize =  reqRes.type === db.Request.EXPORT_TYPE ? storageApi.warnRequestBundlesize : storageApi.warnImportRequestBundlesize;
                 var maxSize = reqRes.type === db.Request.EXPORT_TYPE ? storageApi.maxRequestBundlesize : storageApi.maxImportRequestBundlesize;
-                if ( (warnSize > 0) || (maxSize > 0)){
-                    util.getBundleMeta(reqRes.files, function(metadataRes){
 
-                        var bundleSize = 0;
-                        for (var i=0; i<metadataRes.length; i++){
-                            bundleSize += metadataRes[i].size;
-                            //also available: etag, metaData, lastModified: note this is the stuff from minio/s3 not tus.
-                        }
 
-                        if ( (warnSize > 0) && (bundleSize >= warnSize) && (bundleSize < maxSize)){
-                            logger.warn("Bundle exceeds warn size but not max size");
-                        }
-
-                        if ( (maxSize > 0) && (bundleSize >= maxSize)){
-                            logger.error("Bundle exceeds max size");
-                            res.status(403);
-                            res.json({error: "Request submission failed, total request filesize exceeds maximum", info: maxSize});
-                            return;
-                        }
-
-                        util.getFileStatus(reqRes.files, function(status) {
-                            if (Object.keys(status).length !== reqRes.files.length){
-                                res.status(403);
-                                res.json({error: "Not all files were submitted for validation, did you let save finish?"});
-                                return;
-                            }
-
-                            var pass = true;
-                            var blocked = false;
-                            var pending = false;
-                            for (var i=0; i < reqRes.files.length; i++) {
-                                for (var j=0; j < status[reqRes.files[i]].length; j++) {
-
-                                    if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
-                                        blocked = true;
-                                    }
-
-                                    if (status[reqRes.files[i]][j].state === 2){
-                                        pending = true;
-                                    }
-
-                                    if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
-                                        pass = false;
-                                    }
-                                }
-                            }
-
-                            if (pass) {
-                                db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
-                                    if (!updateErr) {
-                                        //works around a bug where the date isn't coming back from findOneAndUpdate so just hard casting it properly
-                                        reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
-                                        reqRes.fileStatus = status;
-                                        notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
-                                        
-                                        if ((reqRes.type === db.Request.INPUT_TYPE && autoAccept.import)
-                                            || (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export)) {
-                                            notify.gitops().approve(reqRes).then((arg) => {
-                                                logRequestFinalState(reqRes, req.user);
-                                                res.json({message: "Request approved", result: reqRes});
-                                            }).catch(err => {
-                                                reqRes.state = db.Request.WIP_STATE;
-                                                reqRes.chronology.splice(-1,1);
-                                                db.Request.updateOne({_id: reqRes._id}, reqRes, function (uerr) {
-                                                    if (uerr) {
-                                                        logger.error("Unable to revert changes after failed code merge.", uerr);
-                                                    }
-                                                });
-                                                res.status(400);
-                                                res.json({error: "Error - " + err});
-                                                return;
-                                            });
-                                        } else {
-                                            res.json({message: "Request submitted", result: reqRes});
-                                        }
-                                        return;
-                                        
-                                    }else{
-                                        res.status(403);
-                                        res.json({error: updateErr.message});
-                                        return;
-                                    }
-                                });
-
-                                return;
-                            }
-                            res.status(403);
-                            if (blocked){
-                                res.json({error: "Request submission failed, one or more files is blocked", fileStatus: status});
-                                return;
-                            }
-                            res.json({error: "Request submission failed, validation pending, please wait", fileStatus: status});
-                            return;
-                        });
-                    });
-                }else{
+                var getFileStatusAndUpdate = function(reqRes){
                     util.getFileStatus(reqRes.files, function(status) {
                         if (Object.keys(status).length !== reqRes.files.length){
                             res.status(403);
                             res.json({error: "Not all files were submitted for validation, did you let save finish?"});
                             return;
                         }
-                        var pass = true;
-                        for (var i=0; i < reqRes.files.length; i++){
+
+                        let pass = true;
+                        let blocked = false;
+                        
+                        for (let i=0; i < reqRes.files.length; i++) {
                             for (var j=0; j < status[reqRes.files[i]].length; j++) {
+
                                 if ((status[reqRes.files[i]][j].state === 1) && (status[reqRes.files[i]][j].mandatory === true)) {
                                     blocked = true;
-                                }
-
-                                if (status[reqRes.files[i]][j].state === 2){
-                                    pending = true;
                                 }
 
                                 if ((status[reqRes.files[i]][j].pass === false) && (status[reqRes.files[i]][j].mandatory === true)) {
@@ -590,6 +506,7 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                                 }
                             }
                         }
+
                         if (pass) {
                             db.Request.updateOne({_id: reqRes._id}, reqRes, function (updateErr) {
                                 if (!updateErr) {
@@ -597,8 +514,9 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                                     reqRes.chronology[reqRes.chronology.length-1].timestamp = new Date(reqRes.chronology[reqRes.chronology.length-1].timestamp);
                                     reqRes.fileStatus = status;
                                     notify.notify(reqRes, req.user, (reqRes.state===db.Request.AWAITING_REVIEW_STATE));
+                                    
                                     if ((reqRes.type === db.Request.INPUT_TYPE && autoAccept.import)
-                                            || (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export)) {
+                                        || (reqRes.type === db.Request.EXPORT_TYPE && autoAccept.export)) {
                                         notify.gitops().approve(reqRes).then((arg) => {
                                             logRequestFinalState(reqRes, req.user);
                                             res.json({message: "Request approved", result: reqRes});
@@ -614,11 +532,11 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                                             res.json({error: "Error - " + err});
                                             return;
                                         });
-        
-                                    }else{
+                                    } else {
                                         res.json({message: "Request submitted", result: reqRes});
                                     }
                                     return;
+                                    
                                 }else{
                                     res.status(403);
                                     res.json({error: updateErr.message});
@@ -637,18 +555,52 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
                         return;
                     });
                 }
+
+                if ( (warnSize > 0) || (maxSize > 0)){
+                    util.getBundleMeta(reqRes.files, function(metadataRes){
+
+                        var bundleSize = 0;
+                        for (let i=0; i<metadataRes.length; i++){
+                            bundleSize += metadataRes[i].size;
+                            //also available: etag, metaData, lastModified: note this is the stuff from minio/s3 not tus.
+                        }
+
+                        if ( (warnSize > 0) && (bundleSize >= warnSize) && (bundleSize < maxSize)){
+                            logger.warn("Bundle exceeds warn size but not max size");
+                        }
+
+                        if ( (maxSize > 0) && (bundleSize >= maxSize)){
+                            logger.error("Bundle exceeds max size");
+                            res.status(403);
+                            res.json({error: "Request submission failed, total request filesize exceeds maximum", info: maxSize});
+                            return;
+                        }
+
+                        getFileStatusAndUpdate(reqRes);
+                    });
+                }else{
+                    getFileStatusAndUpdate(reqRes);
+                }
             });
         });
     });
 
     router.put('/cancel/:requestId', function(req, res){
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var logger = require('npmlog');
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
-            if (reqErr || !reqRes){
+            if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -693,14 +645,22 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
     });
 
     router.put('/withdraw/:requestId', function(req, res){
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var logger = require('npmlog');
 
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
             if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -747,13 +707,21 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     router.put('/approve/:requestId', function(req, res){
         var config = require('config');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var logger = require('npmlog');
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
-            if (reqErr || !reqRes){
+            if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -813,7 +781,15 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     router.put('/deny/:requestId', function(req, res){
         var config = require('config');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var logger = require('npmlog');
 
         if (config.has('allowDenyRequest') && !config.get('allowDenyRequest')){
@@ -823,9 +799,9 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
         }
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
-            if (reqErr || !reqRes){
+            if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -872,13 +848,21 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
 
     router.put('/requestRevisions/:requestId', function(req, res){
         var config = require('config');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var logger = require('npmlog');
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
-            if (reqErr || !reqRes){
+            if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -923,13 +907,21 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
     router.put('/pickup/:requestId', function(req, res){
         var config = require('config');
         var logger = require('npmlog');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
             logger.verbose("pickup request", reqErr, reqRes);
-            if (reqErr || !reqRes){
+            if (reqErr || !reqRes || reqRes.length === 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 
@@ -976,12 +968,20 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
     router.delete('/:requestId', function(req, res){
         var config = require('config');
         var logger = require('npmlog');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
             if (reqErr || !reqRes || reqRes.length <= 0){
                 res.status(500);
-                res.json({error: reqErr.message});
+                res.json({error: "No such request"});
                 return;
             }
 

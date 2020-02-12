@@ -30,9 +30,8 @@ function* handleDataRequest(method, action) {
       ...rest,
       payload: action.payload,
     });
-    const data = camelizeKeys(
-      response,
-      (key, convert) => (/^(_id|_v)$/.test(key) ? key : convert(key))
+    const data = camelizeKeys(response, (key, convert) =>
+      /^(_id|_v)$/.test(key) ? key : convert(key)
     );
     const payload =
       schema && !has(data, 'error') ? normalize(data, schema) : data;
@@ -46,8 +45,12 @@ function* handleDataRequest(method, action) {
     yield put({
       type: `${action.type}/failed`,
       error: true,
-      meta,
-      payload: err,
+      meta: {
+        ...meta,
+        timestamp: new Date(),
+        status: err.status,
+      },
+      payload: err.message,
     });
   }
 

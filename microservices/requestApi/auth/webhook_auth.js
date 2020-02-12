@@ -1,10 +1,10 @@
 var auth = function(){
     const passport = require('passport');
-    const passJwt = require('passport-jwt');
+    
     const passApiKey = require('passport-headerapikey');
     const HeaderAPIKeyStrategy = passApiKey.HeaderAPIKeyStrategy;
     const config = require('config');
-    const logger = require('npmlog');
+    
 
     passport.use(new HeaderAPIKeyStrategy(
         { header: 'Authorization', prefix: 'Api-Key ' },

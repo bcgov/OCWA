@@ -14,8 +14,9 @@ resource "docker_container" "gitops_simulator" {
     host_path      = "${abspath(path.module)}/scripts"
     container_path = "/app"
   }
-  labels = {
-    script = md5(file("${path.module}/scripts/gitops_simulator.js"))
+  labels {
+    label = "script"
+    value = md5(file("${path.module}/scripts/gitops_simulator.js"))
   }
 }
 

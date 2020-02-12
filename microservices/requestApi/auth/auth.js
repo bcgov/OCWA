@@ -9,7 +9,7 @@ var auth = function(db){
 
     const isOutputChecker = (user => user.groups.includes(config.get('outputCheckerGroup')))
     const isInReportsGroup = (user => user.groups.includes(config.get('reportsGroup')))
-    const isInGroupToCreateRequest = (user => user.groups.includes(config.get('requiredRoleToCreateRequest')))
+
 
     passport.use(new JWTStrategy({
             jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
@@ -19,6 +19,7 @@ var auth = function(db){
             try{
                 var encodedJWT = req.headers['authorization'].substring("Bearer ".length);
                 var userConf = config.get('user');
+                var orgAttribute = config.has('orgAttribute') ? config.get('orgAttribute') : false;
                 var user = {
                     jwt: encodedJWT,
                     email: jwtPayload[userConf.emailField],
@@ -39,6 +40,10 @@ var auth = function(db){
                 
                 user.outputchecker = isOutputChecker(user);
                 user.supervisor = isInReportsGroup(user); // && !isInGroupToCreateRequest(user);
+
+                if (orgAttribute){
+                    user.organization = jwtPayload[orgAttribute] ? jwtPayload[orgAttribute] : false;
+                }
 
                 logger.verbose('user ' + user.id + ' authenticated successfully ', user.groups, user.supervisor, user.outputchecker);
 

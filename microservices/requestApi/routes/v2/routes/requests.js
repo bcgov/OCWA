@@ -11,6 +11,77 @@ var getRouter = function(db){
 
     var routes = require('../../routes/requests');
 
+    var modifyJWTGroups = function(token, newGroups){
+        var config = require('config');
+        var jwt = require('jsonwebtoken');
+        var secret = config.get("jwtSecret")
+        var decoded = jwt.verify(token, secret);
+        decoded.groups = newGroups;
+        var tempToken = jwt.sign(decoded, secret);
+        return tempToken;
+
+    };
+
+    var createTopic = async function(topicName, parent, user, callback){
+        var httpReq = require('request');
+        var config = require('config');
+
+        var topic = {
+            name: topicName
+        };
+
+        if (parent){
+            topic.parent_id = parent;
+        }
+
+        httpReq.post({
+            url: config.get('forumApi')+'/v1/',
+            headers: {
+                'Authorization': "Bearer "+user.jwt
+            },
+            json: topic
+        }, function(apiErr, apiRes, body){
+            callback(apiErr, apiRes, body);
+        });
+    }
+
+    var createTopicIfDoesNotExist = async function(topicName, user, callback){
+        var httpReq = require('request');
+        var config = require('config');
+        
+        var newG = user.groups.slice();
+        newG.push("admin");
+
+        httpReq.get({
+            url: config.get('forumApi')+'/v1?name='+topicName,
+            headers: {
+                'Authorization': "Bearer "+modifyJWTGroups(user.jwt, newG)
+            }
+        }, function(apiErr, apiRes, body){
+            try{
+                body = JSON.parse(body);
+            }catch(ex){}
+            if (body.length === 0){
+                var origGroups = user.groups.slice();
+                var origJwt = user.jwt;
+                user.groups = [user.organization, config.get('requiredRoleToCreateRequest')];
+                user.jwt = modifyJWTGroups(user.jwt, user.groups);
+                createTopic(topicName, null, user, function(e, r, b){
+                    user.groups = origGroups;
+                    user.jwt = origJwt;
+                    
+                    var response = []
+                    if (typeof(b.result) !== "undefined"){
+                        response = [b.result];
+                    }
+                    callback(e, r, response);
+                });
+            }else{
+                callback(null, apiRes, body);
+            }
+        });
+    }
+
     router.get(FORMS_SUB_ROUTE+'/defaults', async function(req, res, next){
         var project = req.user.getProject();
         var exportFormName = await projectConfig.get(project, 'formio.defaultExportFormName');
@@ -39,15 +110,22 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(JSON.parse(formRes));
+            var r = formRes
+            try{
+                r = JSON.parse(formRes);
+            }catch(ex){}
+
+            res.json(r);
         });
     });
 
     router.post(FORMS_SUB_ROUTE, function(req, res, next){
+        var config = require('config');
         let adminGroup = config.get("adminGroup");
         if (req.user.groups.indexOf(adminGroup) === -1){
             res.status(403);
             res.json({error: "Forbidden"});
+            return;
         }
         formioClient.postForm(req.body, function(formErr, formRes){
             if (formErr){
@@ -55,7 +133,13 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(JSON.parse(formRes));
+
+            var r = formRes
+            try{
+                r = JSON.parse(formRes);
+            }catch(ex){}
+
+            res.json(r);
         });
     });
 
@@ -142,23 +226,13 @@ var getRouter = function(db){
 
             request.save(function(saveErr, result){
                 if (saveErr || !result) {
-                    log.error("Error saving request", saveErr, result);
+                    log.debug("Error saving request", saveErr, result);
                     res.status(500);
                     res.json({error: saveErr.message});
                     return;
                 }
 
-                var httpReq = require('request');
-
-                httpReq.post({
-                    url: config.get('forumApi')+'/v1/',
-                    headers: {
-                        'Authorization': "Bearer "+req.user.jwt
-                    },
-                    json: {
-                        name: request.name
-                    }
-                }, function(apiErr, apiRes, body){
+                var postCreateTopic = function(apiErr, apiRes, body, result){
                     if (!apiErr){
                         result.topic = body._id;
                         result.save(function(e, r){
@@ -169,22 +243,22 @@ var getRouter = function(db){
                             }
                             //note not returning if an error as it'll force a delete below
                             log.error("Error updating request", e);
-                            db.Request.deleteOne({_id: result._id}, function(e){
-                                if (e) {
-                                    log.error("Error deleting request", result, e);
+                            db.Request.deleteOne({_id: result._id}, function(e2){
+                                if (e2) {
+                                    log.error("Error deleting request", result, e2);
                                 }
                             });
                             res.status(500);
-                            res.json({error: "Error updating request with topic topic: " + e});
+                            res.json({error: "Error updating request with topic topic: " + e2});
                         });
 
                         return;
                     }
 
                     log.error("Error creating topic, deleting request as a result", apiErr, result);
-                    db.Request.deleteOne({_id: result._id}, function(e){
-                        if (e) {
-                            log.error("Error deleting request", result, e);
+                    db.Request.deleteOne({_id: result._id}, function(e3){
+                        if (e3) {
+                            log.error("Error deleting request", result, e3);
                         }
                         formioClient.deleteSubmission(request.formName, request.submissionId, function(fe, fr){
                             if (fe){
@@ -195,7 +269,7 @@ var getRouter = function(db){
                         });
                     });
                     res.status(500);
-                    if (apiErr) {
+                    if (apiErr) { //NOSONAR
                         log.error("Error deleting formio submission", apiErr);
                         res.json({error: "Error creating forum topic: " + apiErr});
                         return;
@@ -205,10 +279,29 @@ var getRouter = function(db){
                         return;
                     }
                     res.json({error: "Unknown Error creating forum topic"})
-                });
+                }
 
+                if (req.user.organization){
+                    createTopicIfDoesNotExist(req.user.organization, req.user, function(parentErr, parentRes, parentBody){
+                        if ( (parentErr) || (parentBody.length <= 0) ){
+                            res.status(500);
+                            res.json({error: "Error creating/fetching parent topic"});
+                            return;
+                        }
 
+                        parentId = parentBody[0]._id;
+                        createTopic(request.name, parentId, req.user, function(e, r, b){
+                            postCreateTopic(e,r,b,result);
+                            return;
+                        });
 
+                    })
+                }else{
+                    createTopic(request.name, null, req.user, function(e, r, b){
+                        postCreateTopic(e,r,b,result);
+                        return;
+                    });
+                }
             });
         });
 
@@ -217,7 +310,14 @@ var getRouter = function(db){
     //save a request
     router.put("/save/:requestId", function(req, res, next){
         var mongoose = require('mongoose');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
         var config = require('config');
         var logger = require('npmlog');
 
@@ -256,6 +356,46 @@ var getRouter = function(db){
                 db.Request.setChrono(findRes, req.user.id, objectDelta);
             }
 
+            var update = function(findRes, formRes){
+                db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
+                    if (saveErr) {
+                        res.json({error: saveErr.message});
+                        return;
+                    }
+
+                    var httpReq = require('request');
+
+                    var policy = findRes.type + "-" + findRes.exportType;
+
+                    for (let i=0; i<findRes.files.length; i++) {
+                        var myFile = findRes.files[i];
+                        httpReq.put({
+                            url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
+                            headers: {
+                                'x-api-key': config.get('validationApiSecret')
+                            }
+                        }, function (apiErr, apiRes, body) { //NOSONAR
+                            logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
+                            if (apiErr) {
+                                logger.debug("Error validating file: ", apiErr);
+                            }
+                        });
+                    }
+
+                    notify.process(findRes, req.user);
+
+                    var keys = Object.keys(formRes.data);
+                    for (let i=0; i<keys.length; i++){
+                        if (db.Request.schemaFields.indexOf(keys[i]) === -1){
+                            findRes[keys[i]] = formRes.data[keys[i]];
+                        }
+                    }
+
+                    res.json({message: "Successfully updated", result: findRes});
+                });
+
+            }
+
             if (findRes.submissionId){
                 formioClient.putSubmission(findRes.formName, findRes.submissionId, req.body, function(formErr, formRes){
                     logger.verbose("formio put resp", formErr, formRes);
@@ -281,44 +421,10 @@ var getRouter = function(db){
                         res.json({error: "Critical form validation error"});
                         return;
                     }
-    
-                    db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
-                        if (saveErr) {
-                            res.json({error: saveErr.message});
-                            return;
-                        }
-    
-                        var httpReq = require('request');
-    
-                        var policy = findRes.type + "-" + findRes.exportType;
-    
-                        for (var i=0; i<findRes.files.length; i++) {
-                            var myFile = findRes.files[i];
-                            httpReq.put({
-                                url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
-                                headers: {
-                                    'x-api-key': config.get('validationApiSecret')
-                                }
-                            }, function (apiErr, apiRes, body) {
-                                logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
-                                if (apiErr) {
-                                    logger.debug("Error validating file: ", apiErr);
-                                }
-                            });
-                        }
-    
-                        notify.process(findRes, req.user);
-    
-                        var keys = Object.keys(formRes.data);
-                        for (var i=0; i<keys.length; i++){
-                            if (db.Request.schemaFields.indexOf(keys[i]) === -1){
-                                findRes[keys[i]] = formRes.data[keys[i]];
-                            }
-                        }
-    
-                        res.json({message: "Successfully updated", result: findRes});
-                    });
+
+                    update(findRes, formRes);
                 });
+                    
             }else{
                 //support for upgrading v1 posts
                 formioClient.postSubmission(findRes.formName, req.body, function(formErr, formRes){
@@ -332,42 +438,7 @@ var getRouter = function(db){
 
                     findRes.submissionId = formRes._id;
     
-                    db.Request.updateOne({_id: requestId}, findRes, function(saveErr){
-                        if (saveErr) {
-                            res.json({error: saveErr.message});
-                            return;
-                        }
-    
-                        var httpReq = require('request');
-    
-                        var policy = findRes.type + "-" + findRes.exportType;
-    
-                        for (var i=0; i<findRes.files.length; i++) {
-                            var myFile = findRes.files[i];
-                            httpReq.put({
-                                url: config.get('validationApi') + '/v1/validate/' + myFile + '/' + policy,
-                                headers: {
-                                    'x-api-key': config.get('validationApiSecret')
-                                }
-                            }, function (apiErr, apiRes, body) {
-                                logger.debug("put file " + myFile + " up for validation", apiErr, apiRes, body);
-                                if (apiErr) {
-                                    logger.debug("Error validating file: ", apiErr);
-                                }
-                            });
-                        }
-    
-                        notify.process(findRes, req.user);
-    
-                        var keys = Object.keys(formRes.data);
-                        for (var i=0; i<keys.length; i++){
-                            if (db.Request.schemaFields.indexOf(keys[i]) === -1){
-                                findRes[keys[i]] = formRes.data[keys[i]];
-                            }
-                        }
-    
-                        res.json({message: "Successfully updated", result: findRes});
-                    });
+                    update(findRes, formRes);
                 });
             }
             
@@ -379,7 +450,15 @@ var getRouter = function(db){
         var mongoose = require('mongoose');
         var config = require('config');
         var logger = require('npmlog');
-        var requestId = mongoose.Types.ObjectId(req.params.requestId);
+        
+        var requestId = null;
+        try{
+            requestId = mongoose.Types.ObjectId(req.params.requestId);
+        }catch(ex){
+            res.status(400);
+            res.json({error: "Invalid Request ID" });
+            return;
+        }
 
         db.Request.getAll({_id: requestId}, 1, 1, req.user, function(reqErr, reqRes) {
             if (reqErr || !reqRes || reqRes.length <= 0){
@@ -458,16 +537,25 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(JSON.parse(formRes));
+
+            var r = formRes;
+            try{
+                r = JSON.parse(formRes);
+            }catch(ex){}
+
+            res.json(r);
         });
     });
 
     router.put(FORMS_SUB_ROUTE+'/:formName', function(req, res, next){
+        var config = require('config');
         let adminGroup = config.get("adminGroup");
         if (req.user.groups.indexOf(adminGroup) === -1){
             res.status(403);
             res.json({error: "Forbidden"});
+            return;
         }
+
         var formName = req.params.formName;
         formioClient.putForm(formName, req.body, function(formErr, formRes){
             if (formErr){
@@ -475,25 +563,45 @@ var getRouter = function(db){
                 res.json({error: formErr});
                 return;
             }
-            res.json(JSON.parse(formRes));
+            var r = formRes
+            try{
+                r = JSON.parse(formRes);
+            }catch(ex){}
+
+            if (typeof(r.status) === "Number"){
+                res.status(r.status)
+            }
+
+            res.json(r);
         });
     });
 
-    router.delete('/formio/:formName', function(req, res, next){
+    router.delete(FORMS_SUB_ROUTE+'/:formName', function(req, res, next){
+        var config = require('config');
         var adminGroup = config.get("adminGroup");
 
         if (req.user.groups.indexOf(adminGroup) === -1){
             res.status(403);
             res.json({error: "Forbidden"});
+            return;
         }
         var formName = req.params.formName;
-        formioClient.putForm(formName, req.body, function(formErr, formRes){
+        formioClient.deleteForm(formName, function(formErr, formRes){
             if (formErr){
                 res.status(500);
                 res.json({error: formErr});
                 return;
             }
-            res.json(JSON.parse(formRes));
+            var r = formRes
+            try{
+                r = JSON.parse(formRes);
+            }catch(ex){}
+
+            if (typeof(r.status) === "Number"){
+                res.status(r.status)
+            }
+
+            res.json(r);
         });
     });
 
