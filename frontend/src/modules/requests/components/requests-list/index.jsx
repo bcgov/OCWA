@@ -241,7 +241,7 @@ RequestsList.propTypes = {
       _id: PropTypes.string,
       name: PropTypes.string,
       state: PropTypes.number,
-    }),
+    })
   ),
   fetchRequests: PropTypes.func.isRequired,
   filter: PropTypes.oneOfType([

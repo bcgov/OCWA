@@ -6,6 +6,7 @@ import compact from 'lodash/compact';
 import get from 'lodash/get';
 import isArray from 'lodash/isArray';
 import isEmpty from 'lodash/isEmpty';
+import { reportError } from '@src/modules/app/actions';
 
 import ErrorComponent from '../error';
 
@@ -30,12 +31,18 @@ function withRequest(Component) {
     }
 
     componentDidCatch(error, info) {
+      const { onError } = this.props;
+      const { message } = error;
+      const { componentStack } = info;
+
       this.setState({
         error: {
-          message: error.message,
-          info: info.componentStack,
+          message,
+          info: componentStack,
         },
       });
+
+      onError(message, componentStack);
     }
 
     getParams = () => {
@@ -100,7 +107,9 @@ const mapStateToProps = () => ({});
 const composedWithRequest = compose(
   connect(
     mapStateToProps,
-    null
+    {
+      onError: reportError,
+    }
   ),
   withRequest
 );

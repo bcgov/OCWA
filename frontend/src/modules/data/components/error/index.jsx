@@ -1,10 +1,17 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import Button from '@atlaskit/button';
+import Button, { ButtonGroup } from '@atlaskit/button';
 import ErrorIcon from '@atlaskit/icon/glyph/error';
 import { colors } from '@atlaskit/theme';
+import reportErrorButton from '@src/modules/app/containers/report-error-button';
 
 import * as styles from './styles.css';
+
+const ReportErrorButton = reportErrorButton(props => (
+  <Button {...props} appearance="danger">
+    Report this Error
+  </Button>
+));
 
 function ErrorComponent({ data }) {
   return (
@@ -14,19 +21,23 @@ function ErrorComponent({ data }) {
           <ErrorIcon size="xlarge" primaryColor={colors.R500} />
         </div>
         <h3>Something broke!</h3>
-        <p>Send the following to a developer to report</p>
+        <p>
+          This error has been logged. Please report this error if you would like
+          to add any additional details.
+        </p>
         <pre style={{ color: colors.R500 }}>{data.message}</pre>
         <br />
-        {window.__REDUX_DEVTOOLS_EXTENSION__ && (
-          <Button
-            appearance="danger"
-            onClick={() => window.__REDUX_DEVTOOLS_EXTENSION__.open()}
-          >
-            Show Redux DevTool
-          </Button>
-        )}
-        <h5>Stack trace:</h5>
-        <pre style={{ borderColor: colors.R500 }}>{data.info}</pre>
+        <ButtonGroup>
+          <ReportErrorButton />
+          {window.__REDUX_DEVTOOLS_EXTENSION__ && (
+            <Button
+              appearance="danger"
+              onClick={() => window.__REDUX_DEVTOOLS_EXTENSION__.open()}
+            >
+              Show Redux DevTool
+            </Button>
+          )}
+        </ButtonGroup>
       </div>
     </div>
   );
