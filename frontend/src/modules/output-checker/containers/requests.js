@@ -35,16 +35,13 @@ const mapStateToProps = (state, { params }) => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  {
-    initialRequest: ({ state }) =>
-      fetchRequests(
-        { page: 1 },
-        {
-          url: `/api/v1/requests?page=1&state=${state}`,
-          schema: requestsListSchema,
-        },
-      ),
-  },
-)(withRequest(RequestsList));
+export default connect(mapStateToProps, {
+  initialRequest: ({ state }) =>
+    fetchRequests(
+      { page: 1 },
+      {
+        url: `/api/v2/requests?page=1&state=${state}`,
+        schema: requestsListSchema,
+      }
+    ),
+})(withRequest(RequestsList));

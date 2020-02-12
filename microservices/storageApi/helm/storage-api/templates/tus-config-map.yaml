@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "ocwaForumApi.fullname" . }}-tusd-configmap
+  name: {{ template "ocwaStorageApi.fullname" . }}-tusd-configmap
 data:
   pre-create: |-
 {{ .Files.Get "files/pre-create.py" | indent 4 }}

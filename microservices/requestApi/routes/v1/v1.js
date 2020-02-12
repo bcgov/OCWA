@@ -2,9 +2,13 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 
-var requestRouter = require('./routes/requests');
+var db = require('./db/db');
 
-var auth = require('./auth/auth');
+var requestRouter = require('./routes/requests')(db);
+var webhookRouter = require('./routes/webhook')(db);
+
+var auth = require('./auth/auth')(db);
+var webhookAuth = require('./auth/webhook_auth')();
 
 //api spec
 router.use('/spec', express.static(path.join(__dirname, 'spec')));
@@ -16,7 +20,7 @@ router.use('/api-docs', function(req, res){
 });
 
 // webhook to receive file status updates from validate API
-router.use('/webhook', require('./auth/webhook_auth').authenticate('headerapikey', {session: false}), require('./routes/webhook'));
+router.use('/webhook', webhookAuth.authenticate('headerapikey', {session: false}), webhookRouter);
 
 //requests
 router.use('/', auth.authenticate('jwt', {session: false}), requestRouter);

@@ -19,43 +19,46 @@ const mapStateToProps = (state, props) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  onCancel: id =>
-    saveRequest(
-      null,
-      { id, dataType: 'requests', schema: { result: requestSchema } },
-      {
-        url: `/api/v1/requests/cancel/${id}`,
-      }
-    ),
-  onDelete: id =>
-    deleteRequest(
-      id,
-      { dataType: 'requests' },
-      {
-        url: `/api/v1/requests/${id}`,
-      }
-    ),
-  onDuplicate: duplicateRequest,
-  onWithdraw: id =>
-    saveRequest(
-      null,
-      {
+export default connect(
+  mapStateToProps,
+  {
+    onCancel: id =>
+      saveRequest(
+        null,
+        { id, dataType: 'requests', schema: { result: requestSchema } },
+        {
+          url: `/api/v2/requests/cancel/${id}`,
+        }
+      ),
+    onDelete: id =>
+      deleteRequest(
         id,
-        dataType: 'requests',
-        schema: { result: requestSchema },
-        isWithdrawing: true,
-      },
-      {
-        url: `/api/v1/requests/withdraw/${id}`,
-      }
-    ),
-  onSubmit: id =>
-    saveRequest(
-      null,
-      { id, dataType: 'requests', schema: { result: requestSchema } },
-      {
-        url: `/api/v1/requests/submit/${id}`,
-      }
-    ),
-})(Sidebar);
+        { dataType: 'requests' },
+        {
+          url: `/api/v2/requests/${id}`,
+        }
+      ),
+    onDuplicate: duplicateRequest,
+    onWithdraw: id =>
+      saveRequest(
+        null,
+        {
+          id,
+          dataType: 'requests',
+          schema: { result: requestSchema },
+          isWithdrawing: true,
+        },
+        {
+          url: `/api/v2/requests/withdraw/${id}`,
+        }
+      ),
+    onSubmit: id =>
+      saveRequest(
+        null,
+        { id, dataType: 'requests', schema: { result: requestSchema } },
+        {
+          url: `/api/v2/requests/submit/${id}`,
+        }
+      ),
+  }
+)(Sidebar);

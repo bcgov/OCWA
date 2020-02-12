@@ -51,7 +51,7 @@ import test.ocwa.common.Step
 import test.ocwa.common.Utils
 
 class ReportStep extends Step {
-	
+
 	@When("operational manager views the request in the reporting interface")
 	def view_request_milestones() {
 		//find the request in the reporting interface UI
@@ -67,7 +67,7 @@ class ReportStep extends Step {
 	@Then("the approved request should have a milestones for each status change")
 	def check_milestones_present() {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
-		
+
 		//check that all status changes are present (assume it's an approved request)
 		TestObject statusObj = Utils.getTestObjectByIdPart(Constant.Status.REPORTS_UI_REQUEST_STATUS_ID_PART, 'div')
 		String statusTxt = Constant.Status.APPROVED
@@ -79,7 +79,9 @@ class ReportStep extends Step {
 			KeywordUtil.markFailed('Failing scenario because request is unexpected state.')
 		}
 		//check that the variable description field is populated
-		String varDesc = WebUI.getText(Utils.getTestObjectById(Constant.Reports.REPORTS_VARIABLE_TXT_ID))
+		TestObject varTextObj = Utils.getTestObjectById(Constant.Reports.REPORTS_VARIABLE_TXT_ID)
+		WebUI.waitForElementPresent(varTextObj, Constant.DEFAULT_TIMEOUT)
+		String varDesc = WebUI.getText(varTextObj)		
 		String expectedVariableDesc = Constant.Requester.REQUEST_VARIABLE_TEXT
 		if (!varDesc.equals(expectedVariableDesc )) {
 			WebUI.takeScreenshot()

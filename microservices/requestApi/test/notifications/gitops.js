@@ -15,7 +15,7 @@ var db = require('../../routes/v1/db/db');
 
 var logger = require('npmlog');
 
-var gitops = require('../../notifications/gitops');
+var gitops = require('../../notifications/gitops')(db);
 
 chai.use(chaiHttp);
 

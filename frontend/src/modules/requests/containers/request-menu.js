@@ -6,38 +6,41 @@ import RequestMenu from '../components/request-menu';
 import { requestSchema } from '../schemas';
 
 export default withRouter(
-  connect(null, {
-    onCancel: id =>
-      saveRequest(
-        null,
-        { id, dataType: 'requests', schema: { result: requestSchema } },
-        {
-          url: `/api/v1/requests/cancel/${id}`,
-        }
-      ),
-    onDelete: id =>
-      deleteRequest(
-        id,
-        { dataType: 'requests' },
-        {
-          url: `/api/v1/requests/${id}`,
-        }
-      ),
-    onWithdraw: id =>
-      saveRequest(
-        null,
-        { id, dataType: 'requests', schema: { result: requestSchema } },
-        {
-          url: `/api/v1/requests/withdraw/${id}`,
-        }
-      ),
-    onSubmit: id =>
-      saveRequest(
-        null,
-        { id, dataType: 'requests', schema: { result: requestSchema } },
-        {
-          url: `/api/v1/requests/submit/${id}`,
-        }
-      ),
-  })(RequestMenu)
+  connect(
+    null,
+    {
+      onCancel: id =>
+        saveRequest(
+          null,
+          { id, dataType: 'requests', schema: { result: requestSchema } },
+          {
+            url: `/api/v2/requests/cancel/${id}`,
+          }
+        ),
+      onDelete: id =>
+        deleteRequest(
+          id,
+          { dataType: 'requests' },
+          {
+            url: `/api/v2/requests/${id}`,
+          }
+        ),
+      onWithdraw: id =>
+        saveRequest(
+          null,
+          { id, dataType: 'requests', schema: { result: requestSchema } },
+          {
+            url: `/api/v2/requests/withdraw/${id}`,
+          }
+        ),
+      onSubmit: id =>
+        saveRequest(
+          null,
+          { id, dataType: 'requests', schema: { result: requestSchema } },
+          {
+            url: `/api/v2/requests/submit/${id}`,
+          }
+        ),
+    }
+  )(RequestMenu)
 );

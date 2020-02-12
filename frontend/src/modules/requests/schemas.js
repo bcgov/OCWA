@@ -10,6 +10,14 @@ export const requestSchema = new schema.Entity(
 
 export const requestsListSchema = new schema.Array(requestSchema);
 
+export const formSchema = new schema.Entity(
+  'forms',
+  {},
+  {
+    idAttribute: '_id',
+  }
+);
+
 export default {
   requestSchema,
   requestsListSchema,

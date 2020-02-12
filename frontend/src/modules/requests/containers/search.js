@@ -8,15 +8,18 @@ const mapStateToProps = state => ({
   value: state.requests.viewState.search,
 });
 
-export default connect(mapStateToProps, {
-  onClear: clearSearch,
-  onSearch: name =>
-    fetchRequests(
-      { name },
-      {
-        url: `/api/v1/requests?name=${name}*`,
-        schema: requestsListSchema,
-        search: name,
-      }
-    ),
-})(Search);
+export default connect(
+  mapStateToProps,
+  {
+    onClear: clearSearch,
+    onSearch: name =>
+      fetchRequests(
+        { name },
+        {
+          url: `/api/v2/requests?name=${name}*`,
+          schema: requestsListSchema,
+          search: name,
+        }
+      ),
+  }
+)(Search);

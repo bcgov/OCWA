@@ -1,0 +1,79 @@
+{
+  "port": 3006,
+  "appPort": 8080,
+  "host": "localhost:3006",
+  "protocol": "http",
+  "allowedOrigins": ["*"],
+  "domain": "http://localhost:3006",
+  "basePath": "",
+  "mongo": "mongodb://forumUser:forumPass@localhost:27017/forumDb",
+  "mongoConfig": "",
+  "mongoSA": "",
+  "mongoSecret": "root",
+  "reservedForms": [
+    "submission",
+    "exists",
+    "export",
+    "role",
+    "current",
+    "logout",
+    "import",
+    "form",
+    "access",
+    "token",
+    "recaptcha"
+  ],
+  "jwt": {
+    "secret": "--- change me now ---",
+    "expireTime": 240
+  },
+  "email": {
+    "type": "sendgrid",
+    "username": "sendgrid-user",
+    "password": "sendgrid-pass"
+  },
+  "settings": {
+    "office365": {
+      "tenant": "",
+      "clientId": "",
+      "email": "",
+      "cert": "",
+      "thumbprint": ""
+    },
+    "databases": {
+      "mysql": {
+        "host": "",
+        "port": "",
+        "database": "",
+        "user": "",
+        "password": ""
+      },
+      "mssql": {
+        "host": "",
+        "port": "",
+        "database": "",
+        "user": "",
+        "password": ""
+      }
+    },
+    "email": {
+      "gmail": {
+        "auth": {
+          "user": "",
+          "pass": ""
+        }
+      },
+      "sendgrid": {
+        "auth": {
+          "api_user": "",
+          "api_key": ""
+        }
+      },
+      "mandrill": {
+        "auth": {
+          "apiKey": ""
+        }
+      }
+    }
+  }
+}
