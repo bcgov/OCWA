@@ -1,4 +1,4 @@
-var router = function(db){
+var r = function(db){
     
     var messages = require('../messages/messages');
 
@@ -12,4 +12,4 @@ var router = function(db){
     return router;
 }
 
-module.exports = router;
+module.exports = r;

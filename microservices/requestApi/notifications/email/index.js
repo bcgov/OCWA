@@ -1,4 +1,4 @@
-var notifications = function(db){
+var notification = function(db){
 
     var notifications = {};
     var fs = require('fs');
@@ -80,14 +80,14 @@ var notifications = function(db){
 
         if ( (submittedUnclaimed) && (config.has('emailOnInitialSubmit')) ){
             var emailList = config.get('emailOnInitialSubmit');
-            for (var i=0; i<emailList.length; i++){
+            for (let i=0; i<emailList.length; i++){
                 sendEmail(request, {name: emailList[i].name, email: emailList[i].email}, user, "emailSubmitTemplate.html");
             }
         }
 
         logger.verbose("Notification[email] triggered", user);
 
-        for (var i=0; i<notifyWho.length; i++){
+        for (let i=0; i<notifyWho.length; i++){
 
             var who = notifyWho[i];
 
@@ -160,4 +160,4 @@ var notifications = function(db){
     return notifications;
 }
 
-module.exports = notifications;
+module.exports = notification;

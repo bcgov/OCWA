@@ -125,10 +125,8 @@ util.deleteRouterRoute = function(router, routePath){
     var routes = router.stack;
     routes.forEach(removeMiddlewares);
     function removeMiddlewares(route, i, routes) {
-        console.log(route.route.path);
         switch (route.route.path) {
             case routePath:
-                console.log("++++++++REMOVING route", routePath);
                 routes.splice(i, 1);
         }
     }

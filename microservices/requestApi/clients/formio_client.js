@@ -59,7 +59,7 @@ formio.auth = function(callback){
 formio.getSubmissions = function(formName, callback) {
     this.auth(function(err, jwt){
         if (err){
-            logger.error("Error getting jwt", err);
+            logger.debug("Error getting jwt", err);
         }
         var url = config.get('formio.url') + "/"+formName+"/submission";
         
@@ -85,7 +85,7 @@ formio.getSubmission = function(formName, submissionId, callback) {
 
     this.auth(function(err, jwt){
         if (err){
-            logger.error("Error getting jwt", err);
+            logger.debug("Error getting jwt", err);
         }
         var url = config.get('formio.url') + "/"+formName+"/submission/"+submissionId;
         logger.verbose("formio get submission", url);
@@ -106,7 +106,7 @@ formio.getSubmission = function(formName, submissionId, callback) {
 formio.postSubmission = function(formName, values, callback) {
     this.auth(function(err, jwt){
         if (err){
-            logger.error("Error getting jwt", err);
+            logger.debug("Error getting jwt", err);
         }
         var url = config.get('formio.url') + "/"+formName+"/submission";
 
@@ -139,7 +139,7 @@ formio.postSubmission = function(formName, values, callback) {
 formio.deleteSubmission = function(formName, submissionId, callback) {
     this.auth(function(err, jwt){
         if (err){
-            logger.error("Error getting jwt", err);
+            logger.debug("Error getting jwt", err);
         }
         var url = config.get('formio.url') + "/"+formName+"/submission/"+submissionId;
         
@@ -156,7 +156,7 @@ formio.deleteSubmission = function(formName, submissionId, callback) {
 formio.putSubmission = function(formName, submissionId, values, callback) {
     this.auth(function(err, jwt){
         if (err){
-            logger.error("Error getting jwt", err);
+            logger.debug("Error getting jwt", err);
         }
         var url = config.get('formio.url') + "/"+formName+"/submission/"+submissionId;
 
@@ -182,7 +182,7 @@ formio.getForms = function(callback) {
     }
     this.auth(function(err, jwt){
         if (err){
-            logger.error("Error getting jwt", err);
+            logger.debug("Error getting jwt", err);
         }
         var url = config.get('formio.url') + "/form";
         
@@ -208,7 +208,7 @@ formio.getForm = function(formName, callback) {
     }
     this.auth(function(err, jwt){
         if (err){
-            logger.error("Error getting jwt", err);
+            logger.debug("Error getting jwt", err);
         }
         var url = config.get('formio.url') + "/"+formName;
         
@@ -229,7 +229,7 @@ formio.getForm = function(formName, callback) {
 formio.postForm = function(data, callback) {
     this.auth(function(err, jwt){
         if (err){
-            logger.error("Error getting jwt", err);
+            logger.debug("Error getting jwt", err);
         }
         var url = config.get('formio.url') + "/form";
         
@@ -246,7 +246,7 @@ formio.postForm = function(data, callback) {
 formio.putForm = function(formName, data, callback) {
     this.auth(function(err, jwt){
         if (err){
-            logger.error("Error getting jwt", err);
+            logger.debug("Error getting jwt", err);
         }
         var url = config.get('formio.url') + "/form/" + formName;
         
@@ -263,7 +263,7 @@ formio.putForm = function(formName, data, callback) {
 formio.deleteForm = function(formName, callback) {
     this.auth(function(err, jwt){
         if (err){
-            logger.error("Error getting jwt", err);
+            logger.debug("Error getting jwt", err);
         }
         var url = config.get('formio.url') + "/" + formName;
         

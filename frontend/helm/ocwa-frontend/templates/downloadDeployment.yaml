@@ -28,6 +28,8 @@ spec:
               value: "{{ .Values.port }}"
             - name: HOST
               value: {{ .Values.downloadHost }}
+            - name: LOG_LEVEL
+              value: {{ .Values.logLevel }}
             - name: HELP_URL
               value: "{{ .Values.helpURL }}"
             - name: FORUM_API_HOST
