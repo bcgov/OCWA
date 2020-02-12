@@ -1,4 +1,4 @@
-var router = function(db){
+var r = function(db){
     var notify = require('../notifications/notifications')(db);
     var projectConfig = require('../clients/project_config_client');
     var util = require('../util/util');
@@ -13,4 +13,4 @@ var router = function(db){
     return router;
 }
 
-module.exports = router;
+module.exports = r;

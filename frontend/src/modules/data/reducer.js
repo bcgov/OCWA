@@ -170,7 +170,7 @@ const fetchStatus = (state = initialFetchStatusState, action) => {
 
 const messages = (state = [], action) => {
   const actionMessages = action.error
-    ? [action.payload.message]
+    ? [action.payload]
     : compact(
         at(action, [
           'payload.result.message',

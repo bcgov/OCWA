@@ -2,19 +2,19 @@ const bodyParser = require('body-parser');
 const config = require('config');
 const cookieParser = require('cookie-parser');
 const express = require('express');
+const fs = require('fs');
 const isFunction = require('lodash/isFunction');
 const get = require('lodash/get');
+const log = require('npmlog');
 const path = require('path');
 const passport = require('passport');
 const session = require('express-session');
 const manifestHelpers = require('express-manifest-helpers-upgraded');
 const MemoryStore = require('memorystore')(session);
+const morgan = require('morgan');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
-
-const logger = require('morgan');
-const log = require ('npmlog');
 
 const { checkAuth } = require('./auth');
 const { getZone, parseApiHost, parseWsHost, storeUrl } = require('./utils');
@@ -39,10 +39,28 @@ const requestSocket = config.get('requestSocket');
 const exporterMode = config.get('exporterMode');
 const codeExportEnabled = config.get('codeExportEnabled');
 const repositoryHost = config.get('repositoryHost');
+const logLevel = config.get('logLevel');
+const morganLogLevel = config.get('morganLogLevel');
+
+log.level = logLevel;
+log.addLevel('debug', 2900, { fg: 'green' });
+
+log.level = 'debug'; // config.get('logLevel');
+log.addLevel('debug', 2900, { fg: 'green' });
 
 const memoryStore = new MemoryStore({
   checkPeriod: 86400000, // prune expired entries every 24h
 });
+
+if (process.env.NODE_ENV !== 'test') {
+  const logger = morgan('common', {
+    stream: fs.createWriteStream(path.join(__dirname, 'logs', 'frontend.log'), {
+      flags: 'a',
+    }),
+  });
+  app.use(logger);
+  app.use(morgan(morganLogLevel));
+}
 
 if (isDevelopment) {
   const compiler = webpack(webpackConfig);
@@ -56,13 +74,6 @@ if (isDevelopment) {
     })
   );
   app.use(webpackHotMiddleware(compiler));
-}
-
-log.level = 'debug'; // config.get('logLevel');
-log.addLevel('debug', 2900, { fg: 'green' });
-
-if (process.env.NODE_ENV !== 'test') {
-    app.use(logger('dev'));
 }
 
 // Express config
@@ -106,6 +117,20 @@ app.get('/hello', (req, res) => {
   res.status(200).send('hi');
 });
 
+app.post('/log', (req, res) => {
+  const { state, action } = req.body;
+  const date = new Date().toString();
+
+  fs.writeFile(
+    path.join(__dirname, 'logs', `state-${date}.log`),
+    JSON.stringify({
+      state,
+      action,
+    }),
+    () => res.send('Log Received')
+  );
+});
+
 app.get('*', checkAuth, storeUrl, (req, res) => {
   res.render('index', {
     isDevelopment,
@@ -128,11 +153,13 @@ app.get('*', checkAuth, storeUrl, (req, res) => {
 
 app.use((err, req, res) => {
   // set locals, only providing error in development
+  /* eslint-disable no-param-reassign */
   res.locals = res.locals || {};
   res.locals.message = err.message;
   res.locals.error = isDevelopment ? err : {};
+  /* eslint-enable no-param-reassign */
 
-  console.log('app error', err);
+  log.error('app error', err);
   // render the error page
   if (isFunction(res.status)) {
     res.status(err.status || 500);

@@ -8,6 +8,7 @@ var expect = chai.expect;
 
 var config = require('config');
 var jwt = config.get('testJWT');
+var adminJwt = config.get('testAdminJWT');
 
 var db = require('../../routes/v2/db/db');
 
@@ -17,7 +18,9 @@ chai.use(chaiHttp);
 
 describe("Requests", function() {
     var activeRequestId = '';
+    var incorrectId = '';
     var fileId = 'test_' + Math.random().toString(36) + '.jpeg';
+    var activeFormId = '';
     after(function(done){
         db.Request.deleteMany({}, function(err){
             var minio = require('minio');
@@ -93,6 +96,31 @@ describe("Requests", function() {
                 });
         });
 
+        it('it should get file_status_codes', function (done) {
+            chai.request(server)
+                .get('/v2/file_status_codes')
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('0');
+                    res.body.should.have.property('1');
+                    res.body.should.have.property('2');
+                    done();
+                });
+        });
+
+        it('it should get request_types', function (done) {
+            chai.request(server)
+                .get('/v2/request_types')
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('import');
+                    res.body.should.have.property('export');
+                    done();
+                });
+        });
+
         it('it should get all status code mappings', function (done) {
             chai.request(server)
                 .get('/v2/status_codes')
@@ -110,7 +138,7 @@ describe("Requests", function() {
                 });
         });
 
-        it('it should get all records (max 100) (currently 0)', function (done) {
+        it('it should get all records (max 100) (currently 6)', function (done) {
             chai.request(server)
                 .get('/v2/')
                 .set("Authorization", "Bearer "+jwt)
@@ -132,6 +160,23 @@ describe("Requests", function() {
                 });
         });
 
+        it('it should fail without a name', function (done) {
+            chai.request(server)
+                .post('/v2/')
+                .set("Authorization", "Bearer " + jwt)
+                .send({
+                    text: "text",
+                    number: 9
+                })
+                .end(function (err, res) {
+                    res.should.have.status(500);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    res.body.error.should.be.a('string');
+                    done();
+                });
+        });
+
         it('it should create a request', function (done) {
             chai.request(server)
                 .post('/v2/')
@@ -148,6 +193,11 @@ describe("Requests", function() {
                     res.body.should.have.property('result');
                     res.body.result.should.have.property('_id');
                     activeRequestId = res.body.result._id;
+                    firstId = res.body.result._id;
+                    incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"1";
+                    if (incorrectId === activeRequestId){
+                        incorrectId = activeRequestId.substring(0, activeRequestId.length-1)+"2";
+                    }
                     done();
                 });
         });
@@ -157,7 +207,7 @@ describe("Requests", function() {
     describe('/GET  v2 & v2/requestId', function () {
         it('it should get requests', function (done) {
             chai.request(server)
-                .get('/v2')
+                .get('/v2?limit=101&page=0&state=0&name=*&id='+activeRequestId)
                 .set("Authorization", "Bearer " + jwt)
                 .end(function (err, res) {
                     res.should.have.status(200);
@@ -198,6 +248,19 @@ describe("Requests", function() {
                     done();
                 });
         });
+
+        it('it should get a specific request but without file statuses', function (done) {
+            chai.request(server)
+                .get('/v2/' + activeRequestId + "?include_file_status=false")
+                .set("Authorization", "Bearer " + jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('_id');
+                    res.body.should.not.have.property('fileStatus')
+                    done();
+                });
+        });
+
     });
 
     describe('/DELETE /v2/requestId', function() {
@@ -211,6 +274,34 @@ describe("Requests", function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
+                    done();
+                });
+        });
+
+        it('it should fail to delete an incorrect id', function (done) {
+            chai.request(server)
+                .delete('/v2/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(500);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        
+
+        it('it should fail to delete an invalid id', function (done) {
+            chai.request(server)
+                .delete('/v2/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
                     done();
                 });
         });
@@ -234,6 +325,33 @@ describe("Requests", function() {
                     res.body.should.have.property('result');
                     res.body.result.should.have.property('_id');
                     activeRequestId = res.body.result._id;
+                    done();
+                });
+        });
+
+        it('it should fail to save a with an invalid id', function (done) {
+            chai.request(server)
+                .put('/v2/save/1')
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+
+        it('it should fail to save a request', function (done) {
+            chai.request(server)
+                .put('/v2/save/' + incorrectId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(400);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
                     done();
                 });
         });
@@ -272,7 +390,40 @@ describe("Requests", function() {
                     done();
                 });
         });
-    });
+
+        it('it should update a v1 request', function (done) {
+                chai.request(server)
+                    .post('/v1/')
+                    .set("Authorization", "Bearer " + jwt)
+                    .send({
+                        name: "testName",
+                        tags: ["test"],
+                        purpose: "purpose",
+                        phoneNumber: "555-555-5555",
+                        subPopulation: "sub-population",
+                        variableDescriptions: "variable descriptions",
+                        selectionCriteria: "selection criteria",
+                        steps: "steps",
+                        freq: "freq",
+                        confidentiality: "none"
+                    })
+                    .end(function (err, res) {
+                        
+                        var intermId = res.body.result._id;
+                        
+                        chai.request(server)
+                            .put('/v2/save/' + intermId)
+                            .set("Authorization", "Bearer " + jwt)
+                            .send({})
+                            .end(function (err, res) {
+                                res.should.have.status(200);
+                                res.body.should.be.a('object');
+                                res.body.should.have.property('message');
+                                done();
+                        });
+                    });
+            });
+        });
 
     describe('/PUT /v2/submit/requestId', function() {
 
@@ -286,6 +437,19 @@ describe("Requests", function() {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
+                    done();
+                });
+        });
+
+        it('it should fail to delete a request that is submitted', function (done) {
+            chai.request(server)
+                .delete('/v2/' + activeRequestId)
+                .set("Authorization", "Bearer " + jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(403);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('error');
                     done();
                 });
         });
@@ -496,5 +660,259 @@ describe("Requests", function() {
                 });
         });
     });
+});
 
+
+describe("Forms", function() {
+    describe('/GET v2/forms', function () {
+        it('it should get unauthorized', function (done) {
+            chai.request(server)
+            .get('/v2/forms')
+            .end(function (err, res) {
+                res.should.have.status(401);
+                done();
+            });
+        });
+
+        it('it should get all forms', function (done) {
+            chai.request(server)
+                .get('/v2/forms')
+                .set("Authorization", "Bearer "+jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('0');
+                    res.body[0].should.have.property('_id');
+                    done();
+                });
+        });
+
+        it('it should get default forms', function (done) {
+            chai.request(server)
+                .get('/v2/forms/defaults')
+                .set("Authorization", "Bearer "+jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('forms');
+                    res.body.forms.should.have.property('internal')
+                    res.body.forms.should.have.property('external')
+                    done();
+                });
+        });
+
+        it('it should get a specific form', function (done) {
+            chai.request(server)
+                .get('/v2/forms/test')
+                .set("Authorization", "Bearer "+jwt)
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('_id');
+                    done();
+                });
+        });
+
+        it('it should fail to create a form without admin', function (done) {
+            chai.request(server)
+                .post('/v2/forms')
+                .set("Authorization", "Bearer "+jwt)
+                .end(function (err, res) {
+                    res.should.have.status(403);
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should create a form', function (done) {
+            chai.request(server)
+                .post('/v2/forms')
+                .set("Authorization", "Bearer "+adminJwt)
+                .send({
+                    "title": "testform",
+                    "display": "form",
+                    "type": "form",
+                    "name": "testform",
+                    "path": "testform",
+                    "components": [{
+                        "input": true,
+                        "tableView": true,
+                        "inputType": "text",
+                        "inputMask": "",
+                        "label": "First Name",
+                        "key": "firstName",
+                        "placeholder": "",
+                        "prefix": "",
+                        "suffix": "",
+                        "multiple": false,
+                        "defaultValue": "",
+                        "protected": false,
+                        "unique": false,
+                        "persistent": true,
+                        "validate": {
+                            "required": false,
+                            "minLength": "",
+                            "maxLength": "",
+                            "pattern": "",
+                            "custom": "",
+                            "customPrivate": false
+                        },
+                        "conditional": {
+                            "show": "",
+                            "when": null,
+                            "eq": ""
+                        },
+                        "type": "textfield",
+                        "tags": [],
+                        "lockKey": true,
+                        "isNew": false
+                    }, {
+                        "input": true,
+                        "tableView": true,
+                        "inputType": "text",
+                        "inputMask": "",
+                        "label": "Last Name",
+                        "key": "lastName",
+                        "placeholder": "",
+                        "prefix": "",
+                        "suffix": "",
+                        "multiple": false,
+                        "defaultValue": "",
+                        "protected": false,
+                        "unique": false,
+                        "persistent": true,
+                        "validate": {
+                            "required": false,
+                            "minLength": "",
+                            "maxLength": "",
+                            "pattern": "",
+                            "custom": "",
+                            "customPrivate": false
+                        },
+                        "conditional": {
+                            "show": "",
+                            "when": null,
+                            "eq": ""
+                        },
+                        "type": "textfield",
+                        "tags": [],
+                        "lockKey": true,
+                        "isNew": false
+                    }, {
+                        "input": true,
+                        "tableView": true,
+                        "inputType": "email",
+                        "label": "Email",
+                        "key": "email",
+                        "placeholder": "Enter your email address",
+                        "prefix": "",
+                        "suffix": "",
+                        "defaultValue": "",
+                        "protected": false,
+                        "unique": false,
+                        "persistent": true,
+                        "kickbox": {
+                            "enabled": false
+                        },
+                        "type": "email",
+                        "lockKey": true,
+                        "isNew": false
+                    }, {
+                        "input": true,
+                        "tableView": true,
+                        "inputMask": "(999) 999-9999",
+                        "label": "Phone Number",
+                        "key": "phoneNumber",
+                        "placeholder": "",
+                        "prefix": "",
+                        "suffix": "",
+                        "multiple": false,
+                        "protected": false,
+                        "unique": false,
+                        "persistent": true,
+                        "defaultValue": "",
+                        "validate": {
+                            "required": false
+                        },
+                        "type": "phoneNumber",
+                        "conditional": {
+                            "eq": "",
+                            "when": null,
+                            "show": ""
+                        },
+                        "tags": [],
+                        "lockKey": true,
+                        "isNew": false
+                    }, {
+                        "input": true,
+                        "label": "Submit",
+                        "tableView": false,
+                        "key": "submit",
+                        "size": "md",
+                        "leftIcon": "",
+                        "rightIcon": "",
+                        "block": false,
+                        "action": "submit",
+                        "disableOnInvalid": false,
+                        "theme": "primary",
+                        "type": "button"
+                    }]
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('_id');
+                    activeFormId = res.body._id;
+                    done();
+                });
+        });
+
+        it('it should fail to update a form with no admin', function (done) {
+            chai.request(server)
+                .put('/v2/forms/'+activeFormId)
+                .set("Authorization", "Bearer "+jwt)
+                .send({
+                    "title": "testform2",
+                })
+                .end(function (err, res) {
+                    res.should.have.status(403);
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should update a form', function (done) {
+            chai.request(server)
+                .put('/v2/forms/'+activeFormId)
+                .set("Authorization", "Bearer "+adminJwt)
+                .send({
+                    "title": "testform2",
+                })
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    res.body.should.have.property('_id');
+                    done();
+                });
+        });
+
+        it('it should fail to delete a form with no admin', function (done) {
+            chai.request(server)
+                .delete('/v2/forms/'+activeFormId)
+                .set("Authorization", "Bearer "+jwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(403);
+                    res.body.should.have.property('error');
+                    done();
+                });
+        });
+
+        it('it should delete a form', function (done) {
+            chai.request(server)
+                .delete('/v2/forms/testform')
+                .set("Authorization", "Bearer "+adminJwt)
+                .send({})
+                .end(function (err, res) {
+                    res.should.have.status(200);
+                    expect(res.body).to.equal("OK");
+                    done();
+                });
+        });
+    });
 });
