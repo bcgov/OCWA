@@ -232,7 +232,7 @@ var getRouter = function(db){
                     return;
                 }
 
-                var postCreateTopic = function(apiErr, apiRes, body){
+                var postCreateTopic = function(apiErr, apiRes, body, result){
                     if (!apiErr){
                         result.topic = body._id;
                         result.save(function(e, r){
@@ -291,14 +291,14 @@ var getRouter = function(db){
 
                         parentId = parentBody[0]._id;
                         createTopic(request.name, parentId, req.user, function(e, r, b){
-                            postCreateTopic(e,r,b,result)
+                            postCreateTopic(e,r,b,result);
                             return;
                         });
 
                     })
                 }else{
                     createTopic(request.name, null, req.user, function(e, r, b){
-                        postCreateTopic(e,r,b,result)
+                        postCreateTopic(e,r,b,result);
                         return;
                     });
                 }
