@@ -59,11 +59,7 @@ if (process.env.NODE_ENV !== 'test') {
     }),
   });
   app.use(logger);
-<<<<<<< HEAD
-  app.use(morgan('dev'));
-=======
   app.use(morgan(morganLogLevel));
->>>>>>> 796e183d87d1bd4ff424b5ca4cee2991311977ba
 }
 
 if (isDevelopment) {
@@ -80,12 +76,6 @@ if (isDevelopment) {
   app.use(webpackHotMiddleware(compiler));
 }
 
-<<<<<<< HEAD
-log.level = 'debug'; // config.get('logLevel');
-log.addLevel('debug', 2900, { fg: 'green' });
-
-=======
->>>>>>> 796e183d87d1bd4ff424b5ca4cee2991311977ba
 // Express config
 app.set('view engine', 'pug');
 app.set('views', `${__dirname}/views`);
