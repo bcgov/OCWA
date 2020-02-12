@@ -37,7 +37,7 @@ matrix:
       tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
       mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
       ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
-      ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
+      ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["dbAdmin", "readWrite"]});'
     - |-
       wget -q ${HELM_URL}/${HELM_TGZ}
       tar xzfv ${HELM_TGZ}
@@ -158,7 +158,7 @@ matrix:
       tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
       mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
       ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
-      ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["readWrite"]});'
+      ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["dbAdmin", "readWrite"]});'
     script:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/requestApi
@@ -169,6 +169,16 @@ matrix:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/shared/js
       npm ci
+    - |-
+      cd /home/travis/build/bcgov/OCWA/microservices/formio
+      mongorestore -u forumUser -p forumPass -d forumDb db
+      git clone https://github.com/formio/formio.git
+      cd formio
+      npm ci
+      cp ../default.json ./config/default.json
+      cp ../prompt.txt ./prompt.txt
+      npm start < prompt.txt &
+      
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/forumApi
       npm ci
@@ -250,8 +260,8 @@ matrix:
       cp config/default.json.template config/default.json
       pip3 install --upgrade -r requirements.txt
       pip3 install -e .
-    - coverage run --branch --source=db,v1 -m pytest --cov
-    - coverage xml
+      coverage run --branch --source=db,v1 -m pytest
+      coverage xml
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/policyApi
       helm lint helm/policy-api
@@ -308,8 +318,8 @@ matrix:
       cp config/default.json.template config/default.json
       pip3 install -r requirements.txt
       pip3 install -e .
-    - coverage run --branch --source=db,v1,validator -m pytest --cov
-    - coverage xml
+      coverage run --branch --source=db,v1,validator -m pytest
+      coverage xml
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/validateApi
       helm lint helm/validate-api
@@ -357,6 +367,7 @@ matrix:
       cd /home/travis/build/bcgov/OCWA/frontend
       cp config/test.json.example config/test.json
     - |-
+      cd /home/travis/build/bcgov/OCWA/frontend
       npm ci
       if [ "$TRAVIS_TAG" = "" ]; then npm audit; fi
       npm test
@@ -375,14 +386,11 @@ matrix:
       on:
         all_branches: true
         condition: "$TRAVIS_BRANCH =~ ^master|develop$ || -n $TRAVIS_TAG"
+
   - name: Integration Tests
     stage: Tests
     language: java
     addons:
-      apt:
-        packages:
-          - dpkg
-          - google-chrome-stable
       hosts:
       - auth.example.demo
       - ocwa.example.demo
@@ -393,6 +401,7 @@ matrix:
       - "/tmp/traviscache"
     before_install:
     - |-
+      sudo -E apt-get -yq --no-install-suggests --no-install-recommends --allow-unauthenticated install dpkg google-chrome-stable
       if [ ! -d "/tmp/traviscache" ]; then
         mkdir -p /tmp/traviscache
       fi
@@ -434,13 +443,14 @@ matrix:
     - cd /usr/local/bin/Katalon_Studio
     - |-
       if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
-        xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/HappyPathSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+        xvfb-run --auto-servernum --server-args='-screen 0, 1920x1280x24' ./katalon -noSplash -runMode=console -projectPath='/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj' -retry=0 -testSuitePath='Test Suites/HappyPathSuite' -executionProfile='Travis' -browserType='Chrome (headless)'
       fi
     - |-
       if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-        xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/FullFeatureSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
-        xvfb-run --server-args="-screen 0 1440x900x24" ./katalon -noSplash -runMode=console -projectPath="/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj" -retry=0 -testSuitePath="Test Suites/AccessSuite" -executionProfile="Travis" -browserType="Chrome (headless)"
+        xvfb-run --auto-servernum --server-args='-screen 0, 1440x900x24' ./katalon -noSplash -runMode=console -projectPath='/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj' -retry=0 -testSuitePath='Test Suites/FullFeatureSuite' -executionProfile='Travis' -browserType='Chrome (headless)' && xvfb-run --auto-servernum --server-args='-screen 0, 1440x900x24' ./katalon -noSplash -runMode=console -projectPath='/home/travis/build/bcgov/OCWA/ui_tests/OCWA.prj' -retry=0 -testSuitePath='Test Suites/AccessSuite' -executionProfile='Travis' -browserType='Chrome (headless)'
       fi
+
+
   - name: OCWA Master Helm Chart
     stage: Tests
     language: python
@@ -460,6 +470,7 @@ matrix:
     - helm lint helm/ocwa
 env:
   global:
+  - DOCKER_COMPOSE_VERSION=1.4.2
   - CXX=g++-4.8
   - HELM_TGZ=helm-v2.4.1-linux-amd64.tar.gz
   - HELM_URL=https://storage.googleapis.com/kubernetes-helm

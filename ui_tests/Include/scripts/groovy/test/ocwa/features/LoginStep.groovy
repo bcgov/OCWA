@@ -28,6 +28,7 @@ public class LoginStep extends Step {
 	def user_login(String user) {
 		def username = ''
 		def password = ''
+		
 
 		switch (user.toLowerCase()) {
 			case 'requester':
@@ -72,7 +73,7 @@ public class LoginStep extends Step {
 	def import_download_login() {
 		user_login('requester in auto approve project')
 	}
-	
+
 	@When("operations manager logs in")
 	def operational_manager_logs_in() {
 		login(GlobalVariable.OCWA_USER_REPORTS, GlobalVariable.OCWA_USER_REPORTS_PSWD)
@@ -93,7 +94,6 @@ public class LoginStep extends Step {
 		WebUI.openBrowser(null)
 		WebUI.navigateToUrl(url)
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
-
 		TestObject kcLoginButton = Utils.getTestObjectById('kc-login')
 		WebUI.setText(Utils.getTestObjectById('username'), username)
 		WebUI.setText(Utils.getTestObjectById('password'), password)

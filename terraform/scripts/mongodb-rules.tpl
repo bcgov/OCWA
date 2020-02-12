@@ -9,7 +9,7 @@ db.rules.insert({name:"Not on blacklist", source:"print(not(md5_is_match(hashlib
 
 /* Extra rules specific to import */
 db.rules.insert({name:"Import file size is under 10Mb", source:"print($${file.size}<10485760)",mandatory:false });
-db.rules.insert({name:"Import file size is under 20Mb", source:"print($${file.size}<20971520)",mandatory:true });
+db.rules.insert({name:"Import file size is under 20Mb", source:"print($${file.size}<21000000)",mandatory:true });
 
 db.policies.remove({});
 db.policies.insert({name:"export-data", rules:['Not a warning file type','Not a blocked file type','File size is under 3.5Mb','File size is under 5Mb','No study ids are present in the content']})

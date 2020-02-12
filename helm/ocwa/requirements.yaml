@@ -7,6 +7,10 @@ dependencies:
     version: 0.1.0
     repository: file://../../microservices/forumApi/helm/forum-api
 
+  - name: formio
+    version: 0.1.0
+    repository: file://../../microservices/formio/helm/formio
+
 
   - name: policy-api
     version: 0.1.0

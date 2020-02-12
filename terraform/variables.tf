@@ -2,6 +2,10 @@ variable "mongodb" {
   type = map(string)
 }
 
+variable "formio" {
+  type = map(string)
+}
+
 variable "postgres" {
   type = map(string)
 }

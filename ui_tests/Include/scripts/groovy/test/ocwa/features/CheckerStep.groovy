@@ -4,6 +4,7 @@ import com.kms.katalon.core.testobject.ConditionType
 import com.kms.katalon.core.testobject.TestObject
 import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import com.kms.katalon.core.util.KeywordUtil
+import com.kms.katalon.core.model.FailureHandling
 
 import cucumber.api.java.en.Then
 import cucumber.api.java.en.When
@@ -28,31 +29,40 @@ public class CheckerStep extends Step {
 		WebUI.click(showAll)
 
 		TestObject linkToRequest = Utils.getTestObjectByText(G_REQUESTNAME)
-		WebUI.waitForElementVisible(linkToRequest, 20)
-		WebUI.waitForElementClickable(linkToRequest, 20)
+		WebUI.waitForElementPresent(linkToRequest, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementVisible(linkToRequest, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(linkToRequest, Constant.DEFAULT_TIMEOUT)
 
 		WebUI.click(linkToRequest)
 		WebUI.comment("found and clicked the request link")
-		WebUI.waitForPageLoad(20)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.comment("should be on the individual request page.")
 
 		TestObject assignToMeButtonObject = Utils.getTestObjectById(Constant.Checker.ASSIGN_REQUEST_TO_ME_ID)
 
-		WebUI.waitForPageLoad(30)
+		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementPresent(assignToMeButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementNotHasAttribute(assignToMeButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementVisible(assignToMeButtonObject, 20)
-		WebUI.waitForElementClickable(assignToMeButtonObject, 30)
+		WebUI.waitForElementVisible(assignToMeButtonObject, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(assignToMeButtonObject, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.ASSIGN_TO_ME_TIMEOUT)
 		WebUI.click(assignToMeButtonObject)
 		WebUI.comment("found and clicked the Assign to Me button")
+		//test if an error alert displays when request is assigned.
+		TestObject errorAlert = Utils.getTestObjectByText(Constant.Alerts.ERROR_TEXT, null)
+		if (WebUI.waitForElementPresent(errorAlert, Constant.DEFAULT_TIMEOUT, FailureHandling.OPTIONAL)) {
+			WebUI.takeScreenshot()
+			KeywordUtil.markFailed('An error alert displayed upon assignment.')
+		}
+		WebUI.comment('No error message displayed so assignment looks good.')
 	}
 
 	@When("the output checker marks the request as approved")
 	def checker_marks_request_as_approved() {
 		TestObject approveButtonObject = Utils.getTestObjectById(Constant.Checker.APPROVE_REQUEST_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(approveButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementVisible(approveButtonObject, 20)
-		WebUI.waitForElementClickable(approveButtonObject, 30)
+		WebUI.waitForElementVisible(approveButtonObject, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(approveButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(approveButtonObject)
 		WebUI.comment("found and clicked the approve button")
 	}
@@ -61,8 +71,8 @@ public class CheckerStep extends Step {
 	def checker_marks_request_as_needs_revisions() {
 		TestObject revisionsButtonObject = Utils.getTestObjectById(Constant.Checker.REVISIONS_NEEDED_REQUEST_BTN_ID)
 		WebUI.waitForElementNotHasAttribute(revisionsButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
-		WebUI.waitForElementVisible(revisionsButtonObject, 20)
-		WebUI.waitForElementClickable(revisionsButtonObject, 30)
+		WebUI.waitForElementVisible(revisionsButtonObject, Constant.DEFAULT_TIMEOUT)
+		WebUI.waitForElementClickable(revisionsButtonObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(revisionsButtonObject)
 		WebUI.comment("found and clicked the needs revisions button")
 	}
@@ -70,7 +80,7 @@ public class CheckerStep extends Step {
 	@When("the output checker marks the code request as approved")
 	def output_checker_approves_code_request() {
 		TestObject hasReviewedObject = Utils.getTestObjectByName(Constant.CodeRequests.HAVE_REVIEWED_CODE_CB_ID)
-		WebUI.waitForElementClickable(hasReviewedObject, 30)
+		WebUI.waitForElementClickable(hasReviewedObject, Constant.DEFAULT_TIMEOUT)
 		WebUI.click(hasReviewedObject)
 		checker_marks_request_as_approved()
 		TestObject isApprovingObject = Utils.getTestObjectByText(Constant.CodeRequests.MERGE_REQUEST_APPROVING_TEXT, null)
@@ -90,6 +100,7 @@ public class CheckerStep extends Step {
 	def checker_should_see_request_is_in_given_status(String statusTxt) {
 		TestObject statusObj = Utils.getTestObjectByIdPart(Constant.Status.CHECKER_UI_REQUEST_STATUS_ID_PART, 'div')
 		WebUI.waitForElementPresent(statusObj, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.STATUS_CHECK_WAIT)
 		String actualStatusTxt = WebUI.getText(statusObj)
 		if (!actualStatusTxt.equals(statusTxt)) {
 			WebUI.takeScreenshot()
@@ -122,7 +133,7 @@ public class CheckerStep extends Step {
 		WebUI.waitForPageLoad(Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementNotHasAttribute(newRequestButtonObject, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementVisible(newRequestButtonObject, Constant.DEFAULT_TIMEOUT)
-
+		WebUI.delay(Constant.DOWNLOAD_INTERFACE_TIMEOUT)
 		WebUI.verifyTextPresent(G_REQUESTNAME, false)
 		WebUI.closeBrowser()
 	}

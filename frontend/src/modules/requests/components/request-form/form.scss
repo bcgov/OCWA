@@ -1,0 +1,52 @@
+$theme-colors: (
+  "primary": #003366,
+  "danger": #BF2600
+);
+$input-border-color: rgb(223, 225, 230);
+$input-border-radius: 3px;
+$input-border-width: 2px;
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap/scss/utilities";
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/buttons";
+
+.formio-component {
+  & * {
+    box-sizing: border-box;
+  }
+
+  & h2 {
+    margin-bottom: 1rem;
+  }
+
+  & legend,
+  & p {
+    margin-bottom: 1rem;
+  }
+
+  & label {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 0.857143em;
+    font-weight: 600;
+    color: rgb(107, 119, 140);
+  }
+
+  & .form-control {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  & .field-required:after {
+    content: '*';
+    color: red;
+  }
+}
+
+legend {
+  font-size: 1rem;
+  font-weight: 600;
+}

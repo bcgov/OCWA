@@ -24,7 +24,7 @@ export default connect(mapStateToProps, {
   onCloseDownloads: closeDownloads,
   fetchFiles: ({ id, ids = [] }) =>
     fetchFiles({
-      url: `/api/v1/files?request_id=${id}&ids=${ids.join(',')}`,
+      url: `/api/v2/files?request_id=${id}&ids=${ids.join(',')}`,
       schema: filesListSchema,
     }),
 })(withRequest(Downloads));

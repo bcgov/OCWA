@@ -31,7 +31,7 @@ export default connect(mapStateToProps, {
     fetchRequests(
       { page: 1 },
       {
-        url: '/api/v1/requests?page=1&state=3',
+        url: '/api/v2/requests?page=1&state=3',
         schema: requestsListSchema,
       }
     ),
@@ -42,7 +42,7 @@ export default connect(mapStateToProps, {
         state,
       },
       {
-        url: `/api/v1/requests?page=1&state=${state}`,
+        url: `/api/v2/requests?page=1&state=${state}`,
         schema: requestsListSchema,
       }
     ),

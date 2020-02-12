@@ -28,7 +28,7 @@ setup(
     name='validate',
     author='Brandon Sharratt',
     author_email='',
-    version='2.1.1',
+    version='3.0.0',
     description="OCWA Validate API",
     long_description=read('README.md'),
     license='Apache 2.0',
