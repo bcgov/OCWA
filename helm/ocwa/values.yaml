@@ -394,6 +394,7 @@ request-api:
   formioUsername: "admin@example.com"
   formioPassword: "CHANGEME"
   orgAttribute: "businessCategory"
+  adminGroup: "admin"
 
 
   resources: {}
