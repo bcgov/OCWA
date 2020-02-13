@@ -181,6 +181,9 @@ spec:
             
             - name: ORG_ATTRIBUTE
               value: "{{ .Values.orgAttribute }}"
+            
+            - name: ADMIN_GROUP
+              value: "{{ .Values.adminGroup }}"
 
           ports:
             - name: http
