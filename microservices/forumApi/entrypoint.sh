@@ -16,7 +16,7 @@ printf "\"jwtSecret\": \"${JWT_SECRET}\",\n" >> ./config/default.json
 printf "\"defaultAccessIsGroup\": ${DEFAULT_ACCESS_IS_GROUP},\n" >> ./config/default.json
 printf "\"requiredRoleToCreateTopic\": \"${REQUIRED_CREATE_ROLE}\",\n" >> ./config/default.json
 printf "\"ignoreGroupsFromConsideration\": [${IGNORE_GROUPS}],\n" >> ./config/default.json
-printf "\"adminGroup\": [${ADMIN_GROUP}],\n" >> ./config/default.json
+printf "\"adminGroup\": \"${ADMIN_GROUP}\",\n" >> ./config/default.json
 
 printf "\"user\": {\n" >> ./config/default.json
 printf "\"idField\": \"${USER_ID_FIELD}\",\n" >> ./config/default.json
