@@ -107,7 +107,7 @@ router.post("/", function(req, res, next){
     log.debug("Creating topic: ", topic);
 
     if (topic.parent_id !== null){
-        db.Topic.getAll({_id: topic.parent_id}, 1, 1, req.user, function(err, resList){
+        db.Topic.find({_id: topic.parent_id}, function(err, resList){
             log.debug("Topic find one", resList, err);
             if (err || resList==null || resList.length === 0){
                 res.status(400);

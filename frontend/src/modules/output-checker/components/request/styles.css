@@ -97,8 +97,16 @@
   margin: 20px 300px 20px 20px;
 }
 
-.detailsRow {
+.fieldRow {
   margin-bottom: 30px;
+}
+
+.fieldRow h6 {
+  color: #a5adba;
+}
+
+.fieldRow p {
+  margin-top: 5px;
 }
 
 .sidebar {
