@@ -105,7 +105,7 @@ jobs:
       cp config/test.json.example config/test.json
       cp config/default.json.example config/default.json
       npm ci
-      if [ "$TRAVIS_TAG" = "" ]; then npm audit; fi
+      if [ "$TRAVIS_TAG" = "" ]; then npm audit || echo ""; fi
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/shared/js
       npm ci
