@@ -25,7 +25,7 @@ jobs:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/projectApi
       npm ci
-      if [ "$TRAVIS_TAG" = "" ]; then npm audit; fi
+      if [ "$TRAVIS_TAG" = "" ]; then npm audit || echo ""; fi
     before_script:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/projectApi
@@ -122,7 +122,7 @@ jobs:
     - |-
       cd /home/travis/build/bcgov/OCWA/microservices/
       git clone https://github.com/bcgov/forum-api.git
-      cd /home/travis/build/bcgov/OCWA/microservices/forumApi
+      cd /home/travis/build/bcgov/OCWA/microservices/forum-api
       npm ci
       cp config/default.json.example config/default.json
       cp config/test.json.example config/test.json
