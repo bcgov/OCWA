@@ -11,22 +11,29 @@ import RequestForm from '@src/modules/requests/containers/request-form';
 import Requests from '@src/modules/requests/containers/requests-list';
 import RequestTypes from '@src/modules/download/containers/request-types';
 import Request from '@src/modules/requests/containers/request';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 import { Switch, Route } from 'react-router-dom';
 import Title from '@src/components/title';
 
 import DownloadsLink from './downloads-link';
 import * as styles from './styles.css';
 
-function App({ helpURL, user, zone }) {
+function App({ helpURL, onToggleOnboarding, user, zone }) {
   return (
     <React.Fragment>
       <Title>Exporter</Title>
       <AppBar icon={<Changes24Icon />} title="OCWA">
         <ButtonGroup>
-          <DownloadsLink zone={zone} />
+          <SpotlightTarget name="home-approved-requests">
+            <DownloadsLink zone={zone} />
+          </SpotlightTarget>
           <NewRequest />
         </ButtonGroup>
-        <AppBarMenu helpURL={helpURL} user={user} />
+        <AppBarMenu
+          helpURL={helpURL}
+          onToggleOnboarding={onToggleOnboarding}
+          user={user}
+        />
       </AppBar>
       <div id="app-content" className={styles.container}>
         <Switch>
@@ -50,6 +57,7 @@ function App({ helpURL, user, zone }) {
 
 App.propTypes = {
   helpURL: PropTypes.string,
+  onToggleOnboarding: PropTypes.func.isRequired,
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,
   }).isRequired,

@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 
 const initialViewState = {
   isAboutOpen: false,
+  isOnboardingEnabled: false,
   isReportErrorOpen: false,
 };
 
@@ -11,6 +12,12 @@ function viewState(state = initialViewState, action) {
       return {
         ...state,
         isAboutOpen: !state.isAboutOpen,
+      };
+
+    case 'app/onboarding/toggle':
+      return {
+        ...state,
+        isOnboardingEnabled: !state.isOnboardingEnabled,
       };
 
     case 'app/report-error/toggle':

@@ -27,6 +27,7 @@ const webpackConfig = require('../webpack.dev');
 // Main constants and setup
 const app = express();
 const cookieSecret = config.get('cookieSecret');
+const help = config.has('help') ? config.get('help') : {};
 const helpURL = config.has('helpURL') ? config.get('helpURL') : null;
 const isDevelopment = process.env.NODE_ENV === 'development';
 const filesApiHost = config.get('filesApiHost');
@@ -139,6 +140,7 @@ app.get('*', checkAuth, storeUrl, (req, res) => {
     socketHost: parseWsHost(forumSocket),
     requestSocketHost: parseWsHost(requestSocket),
     commit: get(process, 'env.GITHASH', ''),
+    help,
     helpURL,
     codeExportEnabled,
     idField,

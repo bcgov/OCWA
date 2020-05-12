@@ -5,6 +5,7 @@ import Loadable from 'react-loadable';
 import includes from 'lodash/includes';
 import Messages from '@src/modules/data/containers/messages';
 import some from 'lodash/some';
+import { SpotlightManager, SpotlightTransition } from '@atlaskit/onboarding';
 import {
   exporterGroup,
   ocGroup,
@@ -17,6 +18,7 @@ import '@atlaskit/css-reset';
 import About from '../../containers/about';
 import Auth from '../auth';
 import Loading from './loading';
+import Onboarding from '../../containers/onboarding';
 import Unauthorized from './unauthorized';
 import * as styles from './styles.css';
 
@@ -52,6 +54,7 @@ class App extends React.Component {
       authFetchStatus,
       helpURL,
       isAuthenticated,
+      onToggleOnboarding,
       user,
       zone,
     } = this.props;
@@ -71,6 +74,7 @@ class App extends React.Component {
         user,
         helpURL,
         zone,
+        onToggleOnboarding,
       };
 
       // Don't let OC's to download or invalid group access
@@ -94,21 +98,34 @@ class App extends React.Component {
   };
 
   render() {
-    const { authFetchStatus, isAuthenticated } = this.props;
+    const {
+      authFetchStatus,
+      isAuthenticated,
+      isOnboardingEnabled,
+      onToggleOnboarding,
+    } = this.props;
     const mainElement = this.renderMain();
 
     return (
       <LayerManager>
-        <main id="app-main" className={styles.main}>
-          <ReportError />
-          <About />
-          <Messages />
-          <Auth
-            fetchStatus={authFetchStatus}
-            isAuthenticated={isAuthenticated}
-          />
-          {mainElement}
-        </main>
+        <SpotlightManager>
+          <main id="app-main" className={styles.main}>
+            <ReportError />
+            <About />
+            <Messages />
+            <Auth
+              fetchStatus={authFetchStatus}
+              isAuthenticated={isAuthenticated}
+            />
+            {mainElement}
+          </main>
+          <SpotlightTransition>
+            <Onboarding
+              enabled={isOnboardingEnabled}
+              onComplete={onToggleOnboarding}
+            />
+          </SpotlightTransition>
+        </SpotlightManager>
       </LayerManager>
     );
   }
@@ -120,6 +137,8 @@ App.propTypes = {
   helpURL: PropTypes.string,
   initSockets: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
+  isOnboardingEnabled: PropTypes.bool.isRequired,
+  onToggleOnboarding: PropTypes.func.isRequired,
   user: PropTypes.shape({
     groups: PropTypes.arrayOf(PropTypes.string),
     displayName: PropTypes.string,
