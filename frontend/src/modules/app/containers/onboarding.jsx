@@ -46,7 +46,7 @@ function Onboarding({ enabled, onComplete }) {
   const renderActions = () => {
     const actions = [];
 
-    if (index + 1 < data.length) {
+    if (index + 1 < pageContent.length) {
       actions.push({ onClick: () => setIndex(s => s + 1), text: 'Next' });
     } else {
       actions.push({ onClick: handleComplete, text: 'Finish' });
@@ -60,9 +60,13 @@ function Onboarding({ enabled, onComplete }) {
   };
 
   if (!isNil(index) && section) {
-    console.log(target, section);
     return (
-      <Spotlight actions={renderActions()} target={target} testId="onboarding">
+      <Spotlight
+        actions={renderActions()}
+        target={target}
+        targetBgColor="#fff"
+        testId="onboarding"
+      >
         <div
           dangerouslySetInnerHTML={{ __html: sanitize(section.page.body) }}
         />

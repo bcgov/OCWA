@@ -14,6 +14,7 @@ import LoadingDialog from '@src/components/loading-dialog';
 import Lozenge from '@atlaskit/lozenge';
 import Discussion from '@src/modules/discussion/containers/discussion';
 import Spinner from '@atlaskit/spinner';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 import Title from '@src/components/title';
 import { colors } from '@atlaskit/theme';
 
@@ -105,7 +106,9 @@ function Request({
                 <span>{title}</span>
               </h1>
               <p id="request-header-details">
-                <RequestType type={data.type} />
+                <SpotlightTarget name="requests-import-export">
+                  <RequestType type={data.type} />
+                </SpotlightTarget>
                 <span>
                   <CalendarIcon size="small" primaryColor={colors.DN300} />
                 </span>
@@ -117,9 +120,11 @@ function Request({
               </p>
             </GridColumn>
             <GridColumn medium={3}>
-              <div id="request-status" style={{ textAlign: 'right' }}>
-                <StateLabel value={data.state} />
-              </div>
+              <SpotlightTarget name="requests-state">
+                <div id="request-status" style={{ textAlign: 'right' }}>
+                  <StateLabel value={data.state} />
+                </div>
+              </SpotlightTarget>
             </GridColumn>
           </Grid>
           {isDiscussionEnabled && (

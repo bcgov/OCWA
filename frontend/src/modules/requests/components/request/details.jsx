@@ -8,6 +8,7 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 import merge from 'lodash/merge';
 import { Prompt } from 'react-router-dom';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 import { uid } from 'react-uid';
 import { _e } from '@src/utils';
 
@@ -85,49 +86,53 @@ function RequestDetails({
       )}
       {(data.exportType === 'data' || !data.exportType) && (
         <React.Fragment>
-          <div id="request-export-files" className={styles.section}>
-            <div className={styles.sectionHeader}>
-              {_e('{Files} Files', data.type)}
-              {isEditing && ' (Drop files here to upload)'}
+          <SpotlightTarget name="requests-files">
+            <div id="request-export-files" className={styles.section}>
+              <div className={styles.sectionHeader}>
+                {_e('{Files} Files', data.type)}
+                {isEditing && ' (Drop files here to upload)'}
+              </div>
+              <div className={styles.sectionContent}>
+                {!isEditing && (
+                  <Files
+                    showDownloadButton
+                    id={id}
+                    ids={files}
+                    fileStatus={data.fileStatus}
+                  />
+                )}
+                {isEditing && (
+                  <FileUploader
+                    data={uploadData}
+                    filesKey="files"
+                    id={id}
+                    uploadText="Upload files you wish to request for output"
+                  />
+                )}
+              </div>
             </div>
-            <div className={styles.sectionContent}>
-              {!isEditing && (
-                <Files
-                  showDownloadButton
-                  id={id}
-                  ids={files}
-                  fileStatus={data.fileStatus}
-                />
-              )}
-              {isEditing && (
-                <FileUploader
-                  data={uploadData}
-                  filesKey="files"
-                  id={id}
-                  uploadText="Upload files you wish to request for output"
-                />
-              )}
+          </SpotlightTarget>
+          <SpotlightTarget name="requests-support-files">
+            <div id="request-support-files" className={styles.section}>
+              <div className={styles.sectionHeader}>
+                Support Files
+                {isEditing && ' (Drop files here to upload)'}
+              </div>
+              <div className={styles.sectionContent}>
+                {!isEditing && (
+                  <Files showDownloadButton id={id} ids={supportingFiles} />
+                )}
+                {isEditing && (
+                  <FileUploader
+                    data={uploadData}
+                    id={id}
+                    filesKey="supportingFiles"
+                    uploadText="Upload any files to help support your request"
+                  />
+                )}
+              </div>
             </div>
-          </div>
-          <div id="request-support-files" className={styles.section}>
-            <div className={styles.sectionHeader}>
-              Support Files
-              {isEditing && ' (Drop files here to upload)'}
-            </div>
-            <div className={styles.sectionContent}>
-              {!isEditing && (
-                <Files showDownloadButton id={id} ids={supportingFiles} />
-              )}
-              {isEditing && (
-                <FileUploader
-                  data={uploadData}
-                  id={id}
-                  filesKey="supportingFiles"
-                  uploadText="Upload any files to help support your request"
-                />
-              )}
-            </div>
-          </div>
+          </SpotlightTarget>
         </React.Fragment>
       )}
     </React.Fragment>

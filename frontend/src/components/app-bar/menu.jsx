@@ -34,9 +34,7 @@ function AppBarMenu({ children, helpURL, onToggleOnboarding, user }) {
           Signed in as <strong>{displayName}</strong>
         </DropdownItem>
       )}
-      <DropdownItem onClick={onToggleOnboarding}>
-        Take Walkthrough Tour
-      </DropdownItem>
+      <DropdownItem onClick={onToggleOnboarding}>Show Page Tips</DropdownItem>
       {helpURL && (
         <DropdownItem href={helpURL} target="_blank">
           View Help Documentation
