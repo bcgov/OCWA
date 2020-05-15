@@ -16,7 +16,7 @@ const ReportErrorDropdownItem = props => (
 const AboutButton = aboutButton(AboutDropdownItem);
 const ReportErrorButton = reportErrorButton(ReportErrorDropdownItem);
 
-function AppBarMenu({ children, helpURL, onToggleOnboarding, user }) {
+function AppBarMenu({ children, onOpenHelp, onToggleOnboarding, user }) {
   const possibleDisplayNameValues = at(user, [
     'displayName',
     'username',
@@ -35,11 +35,7 @@ function AppBarMenu({ children, helpURL, onToggleOnboarding, user }) {
         </DropdownItem>
       )}
       <DropdownItem onClick={onToggleOnboarding}>Show Page Tips</DropdownItem>
-      {helpURL && (
-        <DropdownItem href={helpURL} target="_blank">
-          View Help Documentation
-        </DropdownItem>
-      )}
+      <DropdownItem onClick={onOpenHelp}>View Help Documentation</DropdownItem>
       {children}
       <ReportErrorButton />
       <AboutButton />
@@ -50,7 +46,7 @@ function AppBarMenu({ children, helpURL, onToggleOnboarding, user }) {
 
 AppBarMenu.propTypes = {
   children: PropTypes.arrayOf(PropTypes.instanceOf(DropdownItem)),
-  helpURL: PropTypes.string,
+  onOpenHelp: PropTypes.func.isRequired,
   onToggleOnboarding: PropTypes.func.isRequired,
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,
@@ -59,7 +55,6 @@ AppBarMenu.propTypes = {
 
 AppBarMenu.defaultProps = {
   children: null,
-  helpURL: null,
 };
 
 export default AppBarMenu;

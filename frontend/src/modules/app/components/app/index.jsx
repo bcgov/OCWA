@@ -54,6 +54,7 @@ class App extends React.Component {
       authFetchStatus,
       helpURL,
       isAuthenticated,
+      onOpenHelp,
       onToggleOnboarding,
       user,
       zone,
@@ -75,6 +76,7 @@ class App extends React.Component {
         helpURL,
         zone,
         onToggleOnboarding,
+        onOpenHelp,
       };
 
       // Don't let OC's to download or invalid group access
@@ -139,6 +141,7 @@ App.propTypes = {
   isAuthenticated: PropTypes.bool.isRequired,
   isOnboardingEnabled: PropTypes.bool.isRequired,
   onToggleOnboarding: PropTypes.func.isRequired,
+  onOpenHelp: PropTypes.func.isRequired,
   user: PropTypes.shape({
     groups: PropTypes.arrayOf(PropTypes.string),
     displayName: PropTypes.string,

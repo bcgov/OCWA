@@ -5,6 +5,7 @@ import AppBarMenu from '@src/components/app-bar/menu';
 import { ButtonGroup } from '@atlaskit/button';
 import Changes24Icon from '@atlaskit/icon-object/glyph/changes/24';
 import Downloads from '@src/modules/download/containers/requests';
+import HelpDialog from '@src/modules/help/containers/help-dialog';
 import NewRequest from '@src/modules/requests/containers/new-request';
 import NotFound from '@src/components/not-found';
 import RequestForm from '@src/modules/requests/containers/request-form';
@@ -18,10 +19,11 @@ import Title from '@src/components/title';
 import DownloadsLink from './downloads-link';
 import * as styles from './styles.css';
 
-function App({ helpURL, onToggleOnboarding, user, zone }) {
+function App({ onOpenHelp, onToggleOnboarding, user, zone }) {
   return (
     <React.Fragment>
       <Title>Exporter</Title>
+      <HelpDialog type="exporter" />
       <AppBar icon={<Changes24Icon />} title="OCWA">
         <ButtonGroup>
           <SpotlightTarget name="home-approved-requests">
@@ -30,8 +32,8 @@ function App({ helpURL, onToggleOnboarding, user, zone }) {
           <NewRequest />
         </ButtonGroup>
         <AppBarMenu
-          helpURL={helpURL}
           onToggleOnboarding={onToggleOnboarding}
+          onOpenHelp={onOpenHelp}
           user={user}
         />
       </AppBar>
@@ -56,7 +58,7 @@ function App({ helpURL, onToggleOnboarding, user, zone }) {
 }
 
 App.propTypes = {
-  helpURL: PropTypes.string,
+  onOpenHelp: PropTypes.func.isRequired,
   onToggleOnboarding: PropTypes.func.isRequired,
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,

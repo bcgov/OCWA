@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import { withRouter } from 'react-router-dom';
 import { helpURL, zone } from '@src/services/config';
+import { toggleHelp } from '@src/modules/help/actions';
 
 import App from '../components/app';
 import { fetchToken, initSockets, toggleOnboarding } from '../actions';
@@ -18,6 +19,7 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(mapStateToProps, {
     fetchToken,
+    onOpenHelp: toggleHelp,
     onToggleOnboarding: toggleOnboarding,
     initSockets,
   })(App)
