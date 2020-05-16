@@ -17,8 +17,8 @@ import {
   Section,
 } from './styles';
 
-function HelpDialog({ onClose, open }) {
-  const { data, request, status } = useHelp(help.main);
+function HelpDialog({ onClose, open, type }) {
+  const { data, request, status } = useHelp(help.main, type);
 
   return (
     <ModalTransition>
@@ -86,6 +86,7 @@ function HelpDialog({ onClose, open }) {
 HelpDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default HelpDialog;

@@ -105,6 +105,7 @@ class App extends React.Component {
       isAuthenticated,
       isOnboardingEnabled,
       onToggleOnboarding,
+      user,
     } = this.props;
     const mainElement = this.renderMain();
 
@@ -125,6 +126,7 @@ class App extends React.Component {
             <Onboarding
               enabled={isOnboardingEnabled}
               onComplete={onToggleOnboarding}
+              user={user}
             />
           </SpotlightTransition>
         </SpotlightManager>

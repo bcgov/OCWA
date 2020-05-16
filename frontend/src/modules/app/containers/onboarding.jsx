@@ -1,17 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import isNil from 'lodash/isNil';
+import includes from 'lodash/includes';
 import nth from 'lodash/nth';
 import sanitize from 'sanitize-html';
 import split from 'lodash/split';
 import { Spotlight } from '@atlaskit/onboarding';
 import useHelp from '@src/services/use-help';
 import { useLocation } from 'react-router-dom';
+import {
+  exporterGroup,
+  help,
+  ocGroup,
+  reportsGroup,
+} from '@src/services/config';
 
-function Onboarding({ enabled, onComplete }) {
+function getGroupType(groups) {
+  const hasExporterRole = includes(groups, exporterGroup);
+  const hasOcRole = includes(groups, ocGroup);
+  const hasReportsRole = includes(groups, reportsGroup);
+
+  if (hasExporterRole) {
+    return exporterGroup;
+  } else if (hasOcRole) {
+    return ocGroup;
+  } else if (hasReportsRole) {
+    return reportsGroup;
+  }
+
+  return '';
+}
+
+function Onboarding({ enabled, onComplete, user }) {
   const { pathname } = useLocation();
   const [index, setIndex] = useState(null);
-  const { data, request } = useHelp('onboarding');
+  const { data, request } = useHelp(help.onboarding, getGroupType(user.groups));
   const pageContent = data.filter(d => {
     const [page] = split(d.page.title, '-');
     if (pathname === '/') {
@@ -80,6 +103,9 @@ function Onboarding({ enabled, onComplete }) {
 Onboarding.propTypes = {
   enabled: PropTypes.bool.isRequired,
   onComplete: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    groups: PropTypes.arrayOf(PropTypes.string),
+  }).isRequired,
 };
 
 export default Onboarding;

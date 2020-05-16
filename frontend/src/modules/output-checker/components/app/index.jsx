@@ -7,6 +7,7 @@ import Issue24Icon from '@atlaskit/icon-object/glyph/issue/24';
 import { Switch, Route } from 'react-router-dom';
 import NotFound from '@src/components/not-found';
 import Title from '@src/components/title';
+import { ocGroup } from '@src/services/config';
 
 import Dashboard from '../../containers/dashboard';
 import Request from '../../containers/request';
@@ -16,7 +17,7 @@ function App({ onOpenHelp, user }) {
   return (
     <React.Fragment>
       <Title>Output Checker</Title>
-      <HelpDialog type="exporter" />
+      <HelpDialog type={ocGroup} />
       <AppBar icon={<Issue24Icon />} title="OCWA Output Checker">
         <AppBarMenu onOpenHelp={onOpenHelp} user={user} />
       </AppBar>

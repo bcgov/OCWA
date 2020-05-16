@@ -28,7 +28,7 @@ export function reducer(state, action) {
   }
 }
 
-function useHelp(id) {
+function useHelp(id, type) {
   const [state, dispatch] = useReducer(reducer, {
     data: [],
     status: 'idle',
@@ -39,7 +39,7 @@ function useHelp(id) {
     dispatch({ type: 'LOADING' });
 
     try {
-      const url = `${help.url}/api/v1/article/ocwa/${id}`;
+      const url = `${help.url}/api/v1/article/ocwa/${id}?type=${type}`;
       const res = await fetch(url, {
         method: 'GET',
       });

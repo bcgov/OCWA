@@ -15,6 +15,7 @@ import Request from '@src/modules/requests/containers/request';
 import { SpotlightTarget } from '@atlaskit/onboarding';
 import { Switch, Route } from 'react-router-dom';
 import Title from '@src/components/title';
+import { exporterGroup } from '@src/services/config';
 
 import DownloadsLink from './downloads-link';
 import * as styles from './styles.css';
@@ -23,7 +24,7 @@ function App({ onOpenHelp, onToggleOnboarding, user, zone }) {
   return (
     <React.Fragment>
       <Title>Exporter</Title>
-      <HelpDialog type="exporter" />
+      <HelpDialog type={exporterGroup} />
       <AppBar icon={<Changes24Icon />} title="OCWA">
         <ButtonGroup>
           <SpotlightTarget name="home-approved-requests">
