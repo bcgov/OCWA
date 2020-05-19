@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { CreatableSelect } from '@atlaskit/select';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 import TextField from '@atlaskit/field-text';
 import Title from '@src/components/title';
 
@@ -26,32 +27,45 @@ function Dashboard({ filter, onFilterChange, onSearchChange, search }) {
       <Title>Dashboard</Title>
       <div className={styles.toolbar}>
         <div>
-          <CreatableSelect
-            id="oc-dashboard-filters-select"
-            options={filterOptions}
-            placeholder="Filter Requests"
-            onChange={({ value }) => onFilterChange(value)}
-            value={filterOptions.find(d => d.value === filter)}
-          />
+          <SpotlightTarget name="home-filters">
+            <CreatableSelect
+              id="oc-dashboard-filters-select"
+              options={filterOptions}
+              placeholder="Filter Requests"
+              onChange={({ value }) => onFilterChange(value)}
+              value={filterOptions.find(d => d.value === filter)}
+            />
+          </SpotlightTarget>
         </div>
         <div>
-          <TextField
-            shouldFitContainer
-            isLabelHidden
-            id="oc-dashboard-search-input"
-            onChange={event => onSearchChange(event.target.value)}
-            placeholder="Search export requests..."
-            value={search}
-          />
+          <SpotlightTarget name="home-search">
+            <TextField
+              shouldFitContainer
+              isLabelHidden
+              id="oc-dashboard-search-input"
+              onChange={event => onSearchChange(event.target.value)}
+              placeholder="Search export requests..."
+              value={search}
+            />
+          </SpotlightTarget>
         </div>
       </div>
       <div className={styles.board}>
         <div>
-          {columns.map(c => (
+          {columns.map((c, index) => (
             <div key={c.state} className={styles.column}>
-              <header>
-                <h4>{c.title}</h4>
-              </header>
+              {index === 0 && (
+                <SpotlightTarget name="home-columns">
+                  <header>
+                    <h4>{c.title}</h4>
+                  </header>
+                </SpotlightTarget>
+              )}
+              {index > 0 && (
+                <header>
+                  <h4>{c.title}</h4>
+                </header>
+              )}
               <div className={styles.list}>
                 <RequestsList params={{ state: c.state }} />
               </div>

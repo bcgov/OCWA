@@ -11,6 +11,7 @@ import get from 'lodash/get';
 import LoadingDialog from '@src/components/loading-dialog';
 import startCase from 'lodash/startCase';
 import SelectClearIcon from '@atlaskit/icon/glyph/select-clear';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 import { RequestSchema } from '@src/modules/requests/types';
 import { _e } from '@src/utils';
 import { uid } from 'react-uid';
@@ -50,94 +51,96 @@ function Sidebar({
           text="This can take some time, please wait for the merge request to complete"
         />
       )}
-      <aside className={styles.sidebar}>
-        <h6>Requester</h6>
-        <p id="request-author-text">{data.author}</p>
-        <h6>{_e('{Request} Type', data.type)}</h6>
-        <div id="request-exportType">
-          <ExportTypeIcon exportType={data.exportType} />
-          <span id="request-exportTypeText" className={styles.exportTypeText}>
-            {startCase(get(data, 'exportType', 'data'))}
-          </span>
-        </div>
-        <h6>Projects</h6>
-        <div id="request-projects">
-          {data.projects &&
-            data.projects.map(p => (
-              <p key={uid(p)} className="request-project-text">
-                {p}
-              </p>
-            ))}
-        </div>
-        <h6>Reviewers</h6>
-        {data.reviewers.length > 0 && (
-          <p id="request-assigned-oc">{assignedUser}</p>
-        )}
-        {data.reviewers.length <= 0 && data.state < 3 && (
-          <Button
-            appearance="link"
-            id="request-sidebar-pickup-button"
-            iconBefore={<AddCircleIcon primaryColor="green" />}
-            onClick={() => onPickupRequest(id)}
-          >
-            Assign to Me
-          </Button>
-        )}
-        {data.state === 3 && (
-          <React.Fragment>
-            <h6>Actions</h6>
-            {isCodeExport && (
-              <React.Fragment>
-                <Button
-                  appearance="link"
-                  id="request-sidebar-mergeRequestButton"
-                  iconBefore={<MergeRequestsIcon primaryColor="green" />}
-                  href={isCodeExport && data.mergeRequestLink}
-                  target="_blank"
-                >
-                  {mergeButtonText}
-                </Button>
-                <div className={styles.checkbox}>
-                  <Checkbox
-                    value="viewed"
-                    label="I have viewed the merge request"
-                    onChange={event => setViewed(event.currentTarget.checked)}
-                    name="viewed-mr"
-                  />
-                </div>
-              </React.Fragment>
-            )}
+      <SpotlightTarget name="requests-actions">
+        <aside className={styles.sidebar}>
+          <h6>Requester</h6>
+          <p id="request-author-text">{data.author}</p>
+          <h6>{_e('{Request} Type', data.type)}</h6>
+          <div id="request-exportType">
+            <ExportTypeIcon exportType={data.exportType} />
+            <span id="request-exportTypeText" className={styles.exportTypeText}>
+              {startCase(get(data, 'exportType', 'data'))}
+            </span>
+          </div>
+          <h6>Projects</h6>
+          <div id="request-projects">
+            {data.projects &&
+              data.projects.map(p => (
+                <p key={uid(p)} className="request-project-text">
+                  {p}
+                </p>
+              ))}
+          </div>
+          <h6>Reviewers</h6>
+          {data.reviewers.length > 0 && (
+            <p id="request-assigned-oc">{assignedUser}</p>
+          )}
+          {data.reviewers.length <= 0 && data.state < 3 && (
             <Button
               appearance="link"
-              id="request-sidebar-approve-button"
-              iconBefore={<CheckCircleIcon primaryColor="green" />}
-              isDisabled={isDisabledActionButton}
-              onClick={() => onApproveRequest(id)}
+              id="request-sidebar-pickup-button"
+              iconBefore={<AddCircleIcon primaryColor="green" />}
+              onClick={() => onPickupRequest(id)}
             >
-              Approve Request
+              Assign to Me
             </Button>
-            <Button
-              appearance="link"
-              id="request-sidebar-deny-button"
-              iconBefore={<SelectClearIcon primaryColor="red" />}
-              isDisabled={isDisabledActionButton}
-              onClick={() => onDenyRequest(id)}
-            >
-              Deny Request
-            </Button>
-            {!isCodeExport && (
+          )}
+          {data.state === 3 && (
+            <React.Fragment>
+              <h6>Actions</h6>
+              {isCodeExport && (
+                <React.Fragment>
+                  <Button
+                    appearance="link"
+                    id="request-sidebar-mergeRequestButton"
+                    iconBefore={<MergeRequestsIcon primaryColor="green" />}
+                    href={isCodeExport && data.mergeRequestLink}
+                    target="_blank"
+                  >
+                    {mergeButtonText}
+                  </Button>
+                  <div className={styles.checkbox}>
+                    <Checkbox
+                      value="viewed"
+                      label="I have viewed the merge request"
+                      onChange={event => setViewed(event.currentTarget.checked)}
+                      name="viewed-mr"
+                    />
+                  </div>
+                </React.Fragment>
+              )}
               <Button
                 appearance="link"
-                id="request-sidebar-request-revisions-button"
-                iconBefore={<FlagFilledIcon primaryColor="orange" />}
-                onClick={() => onRequestRevisions(id)}
+                id="request-sidebar-approve-button"
+                iconBefore={<CheckCircleIcon primaryColor="green" />}
+                isDisabled={isDisabledActionButton}
+                onClick={() => onApproveRequest(id)}
               >
-                Request Revisions
+                Approve Request
               </Button>
-            )}
-          </React.Fragment>
-        )}
-      </aside>
+              <Button
+                appearance="link"
+                id="request-sidebar-deny-button"
+                iconBefore={<SelectClearIcon primaryColor="red" />}
+                isDisabled={isDisabledActionButton}
+                onClick={() => onDenyRequest(id)}
+              >
+                Deny Request
+              </Button>
+              {!isCodeExport && (
+                <Button
+                  appearance="link"
+                  id="request-sidebar-request-revisions-button"
+                  iconBefore={<FlagFilledIcon primaryColor="orange" />}
+                  onClick={() => onRequestRevisions(id)}
+                >
+                  Request Revisions
+                </Button>
+              )}
+            </React.Fragment>
+          )}
+        </aside>
+      </SpotlightTarget>
     </React.Fragment>
   );
 }

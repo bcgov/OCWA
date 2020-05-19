@@ -13,13 +13,17 @@ import Dashboard from '../../containers/dashboard';
 import Request from '../../containers/request';
 import * as styles from './styles.css';
 
-function App({ onOpenHelp, user }) {
+function App({ onOpenHelp, onToggleOnboarding, user }) {
   return (
     <React.Fragment>
       <Title>Output Checker</Title>
       <HelpDialog type={ocGroup} />
       <AppBar icon={<Issue24Icon />} title="OCWA Output Checker">
-        <AppBarMenu onOpenHelp={onOpenHelp} user={user} />
+        <AppBarMenu
+          onToggleOnboarding={onToggleOnboarding}
+          onOpenHelp={onOpenHelp}
+          user={user}
+        />
       </AppBar>
       <div id="app-content" className={styles.container}>
         <Switch>
@@ -34,6 +38,7 @@ function App({ onOpenHelp, user }) {
 
 App.propTypes = {
   onOpenHelp: PropTypes.func.isRequired,
+  onToggleOnboarding: PropTypes.func.isRequired,
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,
   }).isRequired,

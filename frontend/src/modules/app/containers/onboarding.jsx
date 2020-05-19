@@ -52,8 +52,10 @@ function Onboarding({ enabled, onComplete, user }) {
   }
 
   useEffect(() => {
-    request();
-  }, [request]);
+    if (user.groups) {
+      request();
+    }
+  }, [user.groups, request]);
 
   useEffect(() => {
     if (enabled) {

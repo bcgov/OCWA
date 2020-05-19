@@ -56,7 +56,7 @@ function useHelp(id, type) {
     } catch (err) {
       dispatch({ type: 'FAILED', payload: err.message });
     }
-  }, [dispatch, help, id]);
+  }, [dispatch, help, id, type]);
 
   return { ...state, request };
 }
