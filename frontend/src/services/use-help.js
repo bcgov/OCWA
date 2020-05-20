@@ -39,7 +39,7 @@ function useHelp(id, type) {
     dispatch({ type: 'LOADING' });
 
     try {
-      const url = `${help.url}/api/v1/article/ocwa/${id}?type=${type}`;
+      const url = `${help.url}/api/v1/article/ocwa/${id}?role=${type}`;
       const res = await fetch(url, {
         method: 'GET',
       });

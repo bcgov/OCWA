@@ -20,12 +20,17 @@ import {
 function HelpDialog({ onClose, open, type }) {
   const { data, request, status } = useHelp(help.main, type);
 
+  React.useEffect(() => {
+    if (data.length <= 0 && open) {
+      request();
+    }
+  }, [data.length, open, request]);
+
   return (
     <ModalTransition>
       {open && (
         <ModalDialog
           actions={[{ onClick: onClose, text: 'Done' }]}
-          onOpenComplete={request}
           heading={status !== 'error' && 'BBSAE Help'}
           width="large"
           testId="help-dialog"
