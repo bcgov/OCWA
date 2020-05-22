@@ -6,6 +6,7 @@ import Dropdown, { DropdownItem } from '@atlaskit/dropdown-menu';
 import isEmpty from 'lodash/isEmpty';
 import aboutButton from '@src/modules/app/containers/about-button';
 import reportErrorButton from '@src/modules/app/containers/report-error-button';
+import { help } from '@src/services/config';
 
 const AboutDropdownItem = props => (
   <DropdownItem {...props}>About this App</DropdownItem>
@@ -34,8 +35,16 @@ function AppBarMenu({ children, onOpenHelp, onToggleOnboarding, user }) {
           Signed in as <strong>{displayName}</strong>
         </DropdownItem>
       )}
-      <DropdownItem onClick={onToggleOnboarding}>Show Page Tips</DropdownItem>
-      <DropdownItem onClick={onOpenHelp}>View Help Documentation</DropdownItem>
+      {!isEmpty(help) && (
+        <React.Fragment>
+          <DropdownItem onClick={onToggleOnboarding}>
+            Show Page Tips
+          </DropdownItem>
+          <DropdownItem onClick={onOpenHelp}>
+            View Help Documentation
+          </DropdownItem>
+        </React.Fragment>
+      )}
       {children}
       <ReportErrorButton />
       <AboutButton />

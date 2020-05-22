@@ -52,10 +52,10 @@ function Onboarding({ enabled, onComplete, user }) {
   }
 
   useEffect(() => {
-    if (user.groups) {
+    if (user.groups && help.onboarding) {
       request();
     }
-  }, [user.groups, request]);
+  }, [help.onboarding, user.groups, request]);
 
   useEffect(() => {
     if (enabled) {
