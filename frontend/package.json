@@ -44,7 +44,7 @@
     "jest-websocket-mock": "^2.0.0",
     "mini-css-extract-plugin": "^0.4.4",
     "mock-socket": "^9.0.2",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "nodemon": "^1.18.11",
     "prettier": "^1.18.2",
     "redux-logger": "^3.0.6",
@@ -57,7 +57,7 @@
     "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.6.2",
-    "webpack-dev-server": "^3.3.1",
+    "webpack-dev-server": "^3.11.0",
     "webpack-hot-middleware": "^2.24.0",
     "webpack-manifest-plugin": "^2.0.4",
     "webpack-merge": "^4.1.4"
