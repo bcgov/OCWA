@@ -32,6 +32,12 @@ spec:
               value: {{ .Values.logLevel }}
             - name: HELP_URL
               value: "{{ .Values.helpURL }}"
+            - name: HELP_API_HOST
+              value: "{{ .Values.help.url }}"
+            - name: HELP_ONBOARDING
+              value: "{{ .Values.help.onboarding }}"
+            - name: HELP_MAIN_DOCS
+              value: "{{ .Values.help.main }}"
             - name: FORUM_API_HOST
               {{ if .Values.tls.enabled }}
               value: "https://none"

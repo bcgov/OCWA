@@ -45,7 +45,7 @@ downloadHost: "downloadServerHostedOnHere"
 cookieSecret: "COOKIE_SECRET_HERE"
 helpURL: "ocwaHelpURL"
 help:
-  url: "ocwa-help-api"
+  url: "ocwa-help-api.ocwa"
   onboarding: "onboarding"
   main: "documentation"
 forumApiHost: "ocwa-forum-api.ocwa"
