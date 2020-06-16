@@ -13,6 +13,7 @@ export const codeExportEnabled = CODE_EXPORT_ENABLED; // Can be (undefined || 'e
 export const repositoryHost = REPOSITORY_HOST; // Can be (undefined || 'export') or 'download'
 export const zone = ZONE;
 export const helpURL = HELP_URL;
+export const help = HELP;
 export const getZone = () => ZONE;
 
 export default {
@@ -31,4 +32,5 @@ export default {
   requestSocketHost,
   zone,
   getZone,
+  help,
 };

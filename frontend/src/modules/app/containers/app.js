@@ -2,25 +2,25 @@ import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import { withRouter } from 'react-router-dom';
 import { helpURL, zone } from '@src/services/config';
+import { toggleHelp } from '@src/modules/help/actions';
 
 import App from '../components/app';
-import { fetchToken } from '../actions';
-import { initSockets } from '../actions';
+import { fetchToken, initSockets, toggleOnboarding } from '../actions';
 
 const mapStateToProps = state => ({
   authFetchStatus: state.app.auth.fetchStatus,
   isAuthenticated: !isEmpty(state.app.auth.user),
+  isOnboardingEnabled: state.app.viewState.isOnboardingEnabled,
   helpURL,
   user: state.app.auth.user,
   zone,
 });
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    {
-      fetchToken,
-      initSockets,
-    }
-  )(App)
+  connect(mapStateToProps, {
+    fetchToken,
+    onOpenHelp: toggleHelp,
+    onToggleOnboarding: toggleOnboarding,
+    initSockets,
+  })(App)
 );

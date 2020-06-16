@@ -5,6 +5,11 @@ printf "{\n" > ./config/default.json
 printf "\"port\": \"${PORT}\",\n" >> ./config/default.json
 printf "\"host\": \"${HOST}\",\n" >> ./config/default.json
 printf "\"helpURL\": \"${HELP_URL}\",\n" >> ./config/default.json
+printf "\"help\": {\n" >> ./config/default.json
+printf "\"url\": \"${HELP_API_HOST}\",\n" >> ./config/default.json
+printf "\"onboarding\": \"${HELP_ONBOARDING}\",\n" >> ./config/default.json
+printf "\"main\": \"${HELP_MAIN_DOCS}\"\n" >> ./config/default.json
+printf "},\n" >> ./config/default.json
 printf "\"logLevel\": \"${LOG_LEVEL}\",\n" >> ./config/default.json
 printf "\"morganLogLevel\": \"dev\",\n" >> ./config/default.json
 printf "\"forumApiHost\": \"${FORUM_API_HOST}\",\n" >> ./config/default.json

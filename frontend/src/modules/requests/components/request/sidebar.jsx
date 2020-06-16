@@ -5,6 +5,7 @@ import ExportTypeIcon from '@src/components/export-type-icon';
 import get from 'lodash/get';
 import inRange from 'lodash/inRange';
 import startCase from 'lodash/startCase';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 import { withRouter } from 'react-router-dom';
 import { uid } from 'react-uid';
 import { _e } from '@src/utils';
@@ -85,14 +86,18 @@ function RequestSidebar({
   return (
     <aside id="request-sidebar">
       <h6>Requester</h6>
-      <div id="request-author">{data.author}</div>
+      <SpotlightTarget name="requests-sidebar-details">
+        <div id="request-author">{data.author}</div>
+      </SpotlightTarget>
       <h6>{_e('{Request} Type', data.type)}</h6>
-      <div id="request-exportType">
-        <ExportTypeIcon exportType={data.exportType} />
-        <span id="request-exportTypeText" className={styles.exportTypeText}>
-          {startCase(get(data, 'exportType', 'data'))}
-        </span>
-      </div>
+      <SpotlightTarget name="requests-sidebar-types">
+        <div id="request-exportType">
+          <ExportTypeIcon exportType={data.exportType} />
+          <span id="request-exportTypeText" className={styles.exportTypeText}>
+            {startCase(get(data, 'exportType', 'data'))}
+          </span>
+        </div>
+      </SpotlightTarget>
       <h6>Projects</h6>
       <div id="request-projects">
         {data.projects &&
@@ -111,86 +116,90 @@ function RequestSidebar({
       {data.reviewers.length <= 0 && (
         <p id="request-reviewers-empty">No reviewer has been assigned</p>
       )}
-      <h6>Actions</h6>
-      {data.state >= 2 && data.state < 4 && (
-        <React.Fragment>
-          {data.exportType !== 'code' && (
-            <div>
-              <Button
-                appearance="link"
-                id="request-sidebar-withdraw-button"
-                isDisabled={isSaving}
-                iconBefore={<SignOutIcon />}
-                onClick={withdrawHandler}
-              >
-                Edit Request
-              </Button>
-            </div>
+      <SpotlightTarget name="requests-sidebar-actions">
+        <div className={styles.actions}>
+          <h6>Actions</h6>
+          {data.state >= 2 && data.state < 4 && (
+            <React.Fragment>
+              {data.exportType !== 'code' && (
+                <div>
+                  <Button
+                    appearance="link"
+                    id="request-sidebar-withdraw-button"
+                    isDisabled={isSaving}
+                    iconBefore={<SignOutIcon />}
+                    onClick={withdrawHandler}
+                  >
+                    Edit Request
+                  </Button>
+                </div>
+              )}
+              <div>
+                <Button
+                  appearance="link"
+                  id="request-sidebar-cancel-button"
+                  iconBefore={<CrossIcon />}
+                  isDisabled={isSaving}
+                  onClick={() => onCancel(data._id)}
+                >
+                  Cancel Request
+                </Button>
+              </div>
+            </React.Fragment>
           )}
-          <div>
+          {data.state < 2 && (
+            <React.Fragment>
+              <div>
+                <Button
+                  appearance="link"
+                  id="request-sidebar-submit-button"
+                  isDisabled={validate()}
+                  iconBefore={<SignInIcon />}
+                  onClick={() => onSubmit(data._id)}
+                >
+                  Submit Request
+                </Button>
+              </div>
+              <div>
+                <Button
+                  appearance="link"
+                  id="request-sidebar-edit-button"
+                  iconBefore={<EditFilledIcon />}
+                  isDisabled={validateEditButton()}
+                  onClick={() => onEdit(data._id)}
+                >
+                  {isEditing ? 'Done Editing' : 'Edit Request'}
+                </Button>
+              </div>
+              <div>
+                <Button
+                  appearance="link"
+                  id="request-sidebar-delete-button"
+                  iconBefore={<TrashIcon />}
+                  isDisabled={isEditing || isSaving}
+                  onClick={() => {
+                    history.push('/');
+                    onDelete(data._id);
+                  }}
+                >
+                  Delete Request
+                </Button>
+              </div>
+            </React.Fragment>
+          )}
+          {data.state >= 4 && (
             <Button
               appearance="link"
-              id="request-sidebar-cancel-button"
-              iconBefore={<CrossIcon />}
+              id="request-sidebar-duplicate-button"
+              iconBefore={<CopyIcon />}
               isDisabled={isSaving}
-              onClick={() => onCancel(data._id)}
+              onClick={() => history.push('/new', duplicateRequest(data))}
             >
-              Cancel Request
+              Duplicate Request
             </Button>
-          </div>
-        </React.Fragment>
-      )}
-      {data.state < 2 && (
-        <React.Fragment>
-          <div>
-            <Button
-              appearance="link"
-              id="request-sidebar-submit-button"
-              isDisabled={validate()}
-              iconBefore={<SignInIcon />}
-              onClick={() => onSubmit(data._id)}
-            >
-              Submit Request
-            </Button>
-          </div>
-          <div>
-            <Button
-              appearance="link"
-              id="request-sidebar-edit-button"
-              iconBefore={<EditFilledIcon />}
-              isDisabled={validateEditButton()}
-              onClick={() => onEdit(data._id)}
-            >
-              {isEditing ? 'Done Editing' : 'Edit Request'}
-            </Button>
-          </div>
-          <div>
-            <Button
-              appearance="link"
-              id="request-sidebar-delete-button"
-              iconBefore={<TrashIcon />}
-              isDisabled={isEditing || isSaving}
-              onClick={() => {
-                history.push('/');
-                onDelete(data._id);
-              }}
-            >
-              Delete Request
-            </Button>
-          </div>
-        </React.Fragment>
-      )}
-      {data.state >= 4 && (
-        <Button
-          appearance="link"
-          id="request-sidebar-duplicate-button"
-          iconBefore={<CopyIcon />}
-          isDisabled={isSaving}
-          onClick={() => history.push('/new', duplicateRequest(data))}
-        >
-          Duplicate Request
-        </Button>
-      )}
+          )}
+        </div>
+      </SpotlightTarget>
     </aside>
   );
 }

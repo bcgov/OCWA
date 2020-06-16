@@ -5,28 +5,38 @@ import AppBarMenu from '@src/components/app-bar/menu';
 import { ButtonGroup } from '@atlaskit/button';
 import Changes24Icon from '@atlaskit/icon-object/glyph/changes/24';
 import Downloads from '@src/modules/download/containers/requests';
+import HelpDialog from '@src/modules/help/containers/help-dialog';
 import NewRequest from '@src/modules/requests/containers/new-request';
 import NotFound from '@src/components/not-found';
 import RequestForm from '@src/modules/requests/containers/request-form';
 import Requests from '@src/modules/requests/containers/requests-list';
 import RequestTypes from '@src/modules/download/containers/request-types';
 import Request from '@src/modules/requests/containers/request';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 import { Switch, Route } from 'react-router-dom';
 import Title from '@src/components/title';
+import { exporterGroup } from '@src/services/config';
 
 import DownloadsLink from './downloads-link';
 import * as styles from './styles.css';
 
-function App({ helpURL, user, zone }) {
+function App({ onOpenHelp, onToggleOnboarding, user, zone }) {
   return (
     <React.Fragment>
       <Title>Exporter</Title>
+      <HelpDialog type={exporterGroup} />
       <AppBar icon={<Changes24Icon />} title="OCWA">
         <ButtonGroup>
-          <DownloadsLink zone={zone} />
+          <SpotlightTarget name="home-approved-requests">
+            <DownloadsLink zone={zone} />
+          </SpotlightTarget>
           <NewRequest />
         </ButtonGroup>
-        <AppBarMenu helpURL={helpURL} user={user} />
+        <AppBarMenu
+          onToggleOnboarding={onToggleOnboarding}
+          onOpenHelp={onOpenHelp}
+          user={user}
+        />
       </AppBar>
       <div id="app-content" className={styles.container}>
         <Switch>
@@ -49,7 +59,8 @@ function App({ helpURL, user, zone }) {
 }
 
 App.propTypes = {
-  helpURL: PropTypes.string,
+  onOpenHelp: PropTypes.func.isRequired,
+  onToggleOnboarding: PropTypes.func.isRequired,
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,
   }).isRequired,

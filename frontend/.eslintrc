@@ -30,7 +30,8 @@
     "CODE_EXPORT_ENABLED": true,
     "REPOSITORY_HOST": true,
     "ZONE": true,
-    "HELP_URL": true
+    "HELP_URL": true,
+    "HELP": true
   },
   "parser": "babel-eslint",
   "rules": {

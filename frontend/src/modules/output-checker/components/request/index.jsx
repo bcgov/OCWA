@@ -15,6 +15,7 @@ import Tabs from '@src/components/tabs';
 import { RequestSchema } from '@src/modules/requests/types';
 import RequestType from '@src/modules/requests/components/request/request-type';
 import Spinner from '@atlaskit/spinner';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 import StateLabel from '@src/modules/requests/components/state-label';
 import Title from '@src/components/title';
 import { colors } from '@atlaskit/theme';
@@ -46,7 +47,9 @@ function Request({ data, isSaving, match, submittedAt }) {
                 id="request-header-details"
                 className={styles.requestDetailsText}
               >
-                <RequestType type={data.type} />
+                <SpotlightTarget name="requests-request-type">
+                  <RequestType type={data.type} />
+                </SpotlightTarget>
                 <span>
                   <CalendarIcon size="small" primaryColor={colors.DN300} />
                 </span>
@@ -54,23 +57,27 @@ function Request({ data, isSaving, match, submittedAt }) {
                 <Date value={submittedAt} format="HH:MMa on MMMM Do, YYYY" />
               </p>
             </div>
-            <StateLabel id={data._id} value={data.state} />
+            <SpotlightTarget name="requests-request-state">
+              <StateLabel id={data._id} value={data.state} />
+            </SpotlightTarget>
           </hgroup>
-          <Tabs>
-            <Tab icon={<InfoIcon />} text="Details" url={match.url} />
-            {data.exportType !== 'code' && (
+          <SpotlightTarget name="requests-tab">
+            <Tabs>
+              <Tab icon={<InfoIcon />} text="Details" url={match.url} />
+              {data.exportType !== 'code' && (
+                <Tab
+                  icon={<DocumentsIcon />}
+                  text="Files"
+                  url={`${match.url}/files`}
+                />
+              )}
               <Tab
-                icon={<DocumentsIcon />}
-                text="Files"
-                url={`${match.url}/files`}
+                icon={<CommentIcon />}
+                text="Discussion"
+                url={`${match.url}/discussion`}
               />
-            )}
-            <Tab
-              icon={<CommentIcon />}
-              text="Discussion"
-              url={`${match.url}/discussion`}
-            />
-          </Tabs>
+            </Tabs>
+          </SpotlightTarget>
         </header>
         {isEmpty(data) && (
           <div id="request-loading" className={styles.empty}>
