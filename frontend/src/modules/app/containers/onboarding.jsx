@@ -71,14 +71,14 @@ function Onboarding({ enabled, onComplete, user }) {
   const renderActions = () => {
     const actions = [];
 
+    if (index > 0) {
+      actions.push({ onClick: () => setIndex(s => s - 1), text: 'Prev' });
+    }
+
     if (index + 1 < pageContent.length) {
       actions.push({ onClick: () => setIndex(s => s + 1), text: 'Next' });
     } else {
       actions.push({ onClick: handleComplete, text: 'Finish' });
-    }
-
-    if (index > 0) {
-      actions.push({ onClick: () => setIndex(s => s - 1), text: 'Prev' });
     }
 
     return actions;
