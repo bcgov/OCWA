@@ -6,7 +6,7 @@ const initialViewState = {
   isReportErrorOpen: false,
 };
 
-function viewState(state = initialViewState, action) {
+function viewState(state = initialViewState, action = {}) {
   switch (action.type) {
     case 'app/about/toggle':
       return {
@@ -43,7 +43,7 @@ const initialAuthState = {
   user: {},
 };
 
-function auth(state = initialAuthState, action) {
+function auth(state = initialAuthState, action = {}) {
   switch (action.type) {
     case 'app/get/token/requested':
       return {
@@ -75,7 +75,7 @@ const initialVersionsState = {
   entities: [],
 };
 
-function versions(state = initialVersionsState, action) {
+function versions(state = initialVersionsState, action = {}) {
   switch (action.type) {
     case 'app/versions/requested':
       return {

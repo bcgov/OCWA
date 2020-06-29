@@ -26,7 +26,7 @@ function mergeFileStatusStrategy(objValue, srcValue) {
 }
 /* eslint-enable consistent-return */
 
-function handleFetchStatus(state, action, fetchStatus) {
+function handleFetchStatus(state, action, status) {
   let entityFetchStatus = {};
   let dataTypesFetchStatus = {};
 
@@ -40,7 +40,7 @@ function handleFetchStatus(state, action, fetchStatus) {
         const ids = action.payload.result.reduce(
           (prev, id) => ({
             ...prev,
-            [id]: fetchStatus,
+            [id]: status,
           }),
           {}
         );
@@ -56,7 +56,7 @@ function handleFetchStatus(state, action, fetchStatus) {
         if (resultId) {
           entityFetchStatus = {
             [action.meta.dataType]: {
-              [resultId]: fetchStatus,
+              [resultId]: status,
             },
           };
         }
@@ -65,13 +65,13 @@ function handleFetchStatus(state, action, fetchStatus) {
 
     // Assign the updated fetch status for the array of data types
     dataTypesFetchStatus = {
-      [action.meta.dataType]: fetchStatus,
+      [action.meta.dataType]: status,
     };
   } else {
     // If there is an ID in the meta, use that.
     entityFetchStatus = {
       [action.meta.dataType]: {
-        [action.meta.id]: fetchStatus,
+        [action.meta.id]: status,
       },
     };
   }
@@ -91,13 +91,13 @@ const handlePostStatus = (state, action) => {
   const postRequests = {
     [action.meta.dataType]: {},
   };
-  const entities = { [action.meta.dataType]: {} };
+  const nextEntities = { [action.meta.dataType]: {} };
 
   if (/\w+\/post\/requested$/.test(action.type)) {
     postRequests[action.meta.dataType] = 'creating';
   } else if (/\w+\/post\/success$/.test(action.type)) {
     postRequests[action.meta.dataType] = 'loaded';
-    entities[action.meta.dataType] = 'loaded';
+    nextEntities[action.meta.dataType] = 'loaded';
   } else if (/\w+\/post\/failed$/.test(action.type)) {
     postRequests[action.meta.dataType] = 'failed';
   } else if (/\w+\/post\/reset$/.test(action.type)) {
@@ -106,11 +106,11 @@ const handlePostStatus = (state, action) => {
 
   return merge({}, state, {
     postRequests,
-    entities,
+    entities: nextEntities,
   });
 };
 
-export const entities = (state = {}, action) => {
+export const entities = (state = {}, action = {}) => {
   if (/\w+\/(get|post|put)\/success$/.test(action.type)) {
     return mergeWith(
       {},
@@ -145,7 +145,7 @@ const initialFetchStatusState = {
   postRequests: {},
 };
 
-const fetchStatus = (state = initialFetchStatusState, action) => {
+const fetchStatus = (state = initialFetchStatusState, action = {}) => {
   let nextState = state;
 
   if (/\w+\/(post)\/(requested|success|failed|reset)$/.test(action.type)) {
@@ -168,7 +168,7 @@ const fetchStatus = (state = initialFetchStatusState, action) => {
   return nextState;
 };
 
-const messages = (state = [], action) => {
+const messages = (state = [], action = {}) => {
   const actionMessages = action.error
     ? [action.payload]
     : compact(

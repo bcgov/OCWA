@@ -11,7 +11,6 @@ import { uid } from 'react-uid';
 import { getRequestStateColor } from '@src/modules/requests/utils';
 import RequestType from '@src/modules/requests/components/request/request-type';
 import { RequestSchema } from '@src/modules/requests/types';
-import { colors } from '@atlaskit/theme';
 
 import Details from '../../containers/details';
 import * as styles from './styles.css';

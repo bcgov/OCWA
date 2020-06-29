@@ -1,7 +1,7 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@atlaskit/button';
 import ky from 'ky';
-import Form, { Field, FieldText, FormHeader } from '@atlaskit/form';
 import ModalDialog, { ModalTransition } from '@atlaskit/modal-dialog';
 
 class Register extends React.Component {
@@ -20,9 +20,8 @@ class Register extends React.Component {
         password: this.password.current.value,
       },
     };
-    const login = await ky.post('/auth/register', credentials);
-    const { user, token } = await ky.post('/auth', credentials).json();
-    console.log(user, token);
+    await ky.post('/auth/register', credentials);
+    await ky.post('/auth', credentials).json();
   };
 
   render() {
@@ -62,5 +61,10 @@ class Register extends React.Component {
     );
   }
 }
+
+Register.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
+};
 
 export default Register;

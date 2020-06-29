@@ -5,7 +5,6 @@ import ExportTypeIcon from '@src/components/export-type-icon';
 import { Link } from 'react-router-dom';
 import RequestType from '@src/modules/requests/components/request/request-type';
 import RequestIcon from '@src/modules/requests/components/request-icon';
-import { getRequestStateText } from '@src/modules/requests/utils';
 import { uid } from 'react-uid';
 
 export default ({ data, onSelectProject, onSelectRequester }) =>

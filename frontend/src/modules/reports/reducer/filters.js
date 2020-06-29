@@ -14,12 +14,8 @@ const initialState = {
 
 function filters(state = initialState, action = {}) {
   switch (action.type) {
+    case 'reports/filter-date-range':
     case 'reports/sort':
-      return {
-        ...state,
-        ...action.payload,
-      };
-
     case 'requests/get':
       return {
         ...state,
@@ -30,12 +26,6 @@ function filters(state = initialState, action = {}) {
       return {
         ...state,
         requestIds: action.payload.result,
-      };
-
-    case 'reports/filter-date-range':
-      return {
-        ...state,
-        ...action.payload,
       };
 
     case 'reports/filter-requester':
