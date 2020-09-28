@@ -15,6 +15,7 @@ function Dashboard({ filter, onFilterChange, onSearchChange, search }) {
     { label: 'Show Unassigned', value: 'unassigned' },
   ];
   const columns = [
+    { state: 1, title: 'In Progress' },
     { state: 2, title: 'Available For Review' },
     { state: 3, title: 'In Review' },
     { state: 4, title: 'Approved' },

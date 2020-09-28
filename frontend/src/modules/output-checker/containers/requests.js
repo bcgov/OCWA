@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import escapeRegExp from 'lodash/escapeRegExp';
+import format from 'date-fns/format';
 import get from 'lodash/get';
 import head from 'lodash/head';
 import last from 'lodash/last';
@@ -12,7 +13,13 @@ import { requestsListSchema } from '@src/modules/requests/schemas';
 import RequestsList from '../components/requests-list';
 
 const mapStateToProps = (state, { params }) => {
-  const { filter, search } = state.outputChecker.viewState;
+  const {
+    filter,
+    search,
+    startDate,
+    endDate,
+    page,
+  } = state.outputChecker.viewState;
   const username = get(state, 'app.auth.user.id');
   const requests = values(state.data.entities.requests);
   const data = requests
@@ -30,17 +37,37 @@ const mapStateToProps = (state, { params }) => {
     .filter(d => (search ? d.name.search(escapeRegExp(search)) >= 0 : true));
 
   return {
+    params: {
+      startDate,
+      endDate,
+      state: params.state,
+    },
     data: sortBy(data, d => last(d.chronology).timestamp).reverse(),
+    page: page[params.state],
     fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests'),
   };
 };
 
+const makeQuery = ({ startDate, endDate, page = 1, state = 2 }) =>
+  `/api/v2/requests?page=${page}&start_date=${format(
+    startDate,
+    'YYYY-M-D'
+  )}&end_date=${format(endDate, 'YYYY-M-D')}&state=${state}&limit=100`;
+
 export default connect(mapStateToProps, {
-  initialRequest: ({ state }) =>
+  initialRequest: params =>
     fetchRequests(
       { page: 1 },
       {
-        url: `/api/v2/requests?page=1&state=${state}`,
+        url: makeQuery(params),
+        schema: requestsListSchema,
+      }
+    ),
+  fetchRequests: params =>
+    fetchRequests(
+      { page: params.page },
+      {
+        url: makeQuery(params),
         schema: requestsListSchema,
       }
     ),

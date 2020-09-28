@@ -1,11 +1,11 @@
 import ky from 'ky';
+import has from 'lodash/has';
 
 import { getToken } from './auth';
 
 async function handleError(err) {
   const { response } = err;
-  const { statusText } = response;
-  let errorMessage = statusText;
+  let errorMessage = has(response, 'statusText') ? response.statusText : '';
 
   try {
     const { error, message } = await response.json();
