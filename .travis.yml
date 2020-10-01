@@ -366,7 +366,7 @@ jobs:
     - |-
       cd /home/travis/build/bcgov/OCWA/frontend
       npm ci
-      if [ "$TRAVIS_TAG" = "" ]; then npm audit; fi
+      # if [ "$TRAVIS_TAG" = "" ]; then npm audit; fi
       npm test
     - |-
       cd /home/travis/build/bcgov/OCWA/frontend
