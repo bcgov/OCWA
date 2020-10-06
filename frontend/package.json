@@ -6,6 +6,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development nodemon server/index.js",
     "start:prod": "cross-env NODE_ENV=production node server/index.js",
+    "start:api": "json-server mock-api/requests.js --routes mock-api/routes.json",
     "build": "cross-env NODE_ENV=production webpack --config webpack.prod.js",
     "lint": "eslint src/index.js",
     "test": "jest --coverage",
@@ -42,6 +43,7 @@
     "jest": "^24.8.0",
     "jest-transform-css": "^2.0.0",
     "jest-websocket-mock": "^2.0.0",
+    "json-server": "^0.16.2",
     "mini-css-extract-plugin": "^0.4.4",
     "mock-socket": "^9.0.2",
     "node-sass": "^4.14.1",

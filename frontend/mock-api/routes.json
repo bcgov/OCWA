@@ -1,0 +1,4 @@
+{
+  "/v2": "/requests",
+  "/*": "/requests?_page=1&_limit=100"
+}
