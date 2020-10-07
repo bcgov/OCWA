@@ -1,4 +1,4 @@
 {
   "/v2": "/requests",
-  "/*": "/requests?_page=1&_limit=100"
+  "/*?page=:page&state=:state&limit=:limit": "/requests?_page=:page&state=:state&_limit=:limit"
 }

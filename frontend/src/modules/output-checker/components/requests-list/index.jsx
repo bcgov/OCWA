@@ -1,6 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import Button from '@atlaskit/button'
+import isAfter from 'date-fns/is_after'
 import { RequestSchema } from '@src/modules/requests/types';
 
 import * as styles from './styles.css';
@@ -9,7 +10,9 @@ import Card from '../request-card';
 function RequestsList({ data, fetchRequests,page, params }) {
   return (
     <div className={styles.container}>
-      <div>{data.map(d => <Card key={d._id} data={d} />)}</div>
+      <div>{data.sort((a, b) => {
+        return isAfter(a.submittedDate, b.submittedDate);
+      }).map(d => <Card key={d._id} data={d} />)}</div>
       {data.length > 0 && data.length % 100 === 0 && (
         <footer className={styles.footer}>
           <Button 

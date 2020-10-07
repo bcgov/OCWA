@@ -1,13 +1,15 @@
+const random = require('lodash/random');
+const sample = require('lodash/sample');
+
 module.exports = () => {
   const requests = [];
-  // Create 1000 users
-  for (let i = 0; i < 300; i++) {
+  for (let i = 0; i < 1000; i++) {
     requests.push({
       _id: i,
-      state: 2,
+      state: random(1, 3),
       tags: [],
       supportingFiles: [],
-      reviewers: ['josh-oc'],
+      reviewers: [sample(['josh-oc', 'paul'])],
       files: ['63836f3343fc4817b47ec5c6c7d5227c'],
       chronology: [
         {
