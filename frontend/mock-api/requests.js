@@ -1,5 +1,8 @@
+const subDays = require('date-fns/sub_days');
 const random = require('lodash/random');
 const sample = require('lodash/sample');
+
+const today = new Date();
 
 module.exports = () => {
   const requests = [];
@@ -34,7 +37,7 @@ module.exports = () => {
           change_by: 'hodor',
         },
         {
-          timestamp: '2019-07-10T16:46:31.511Z',
+          timestamp: subDays(today, i),
           enteredState: 1,
           change_by: 'hodor',
         },
@@ -50,7 +53,7 @@ module.exports = () => {
       topic: '5cb4c5a1a5762c0035f02a31',
       type: 'export',
       formName: 'dataexport',
-      submittedDate: '2019-04-15T17:56:11.367Z',
+      submittedDate: subDays(today, i),
       projects: ['project_1'],
       data: {
         _id: '5cb4c5a1559ad10013ead3ae',

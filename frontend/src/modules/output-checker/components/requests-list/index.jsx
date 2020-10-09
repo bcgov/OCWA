@@ -12,7 +12,7 @@ function RequestsList({ data, fetchRequests,page, params }) {
     <div className={styles.container}>
       <div>{data.sort((a, b) => {
         return isAfter(a.submittedDate, b.submittedDate);
-      }).map(d => <Card key={d._id} data={d} />)}</div>
+      }).reverse().map(d => <Card key={d._id} data={d} />)}</div>
       {data.length > 0 && data.length % 100 === 0 && (
         <footer className={styles.footer}>
           <Button 

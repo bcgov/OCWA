@@ -27,10 +27,12 @@ function viewState(state = initialViewState, action = {}) {
     case 'requests/get':
       return {
         ...state,
-        page: {
-          ...state.page,
-          [action.payload.state]: action.payload.page,
-        },
+        page: action.payload
+          ? {
+              ...state.page,
+              [action.payload.state]: action.payload.page,
+            }
+          : state.page,
         state: has(action, 'payload.state')
           ? action.payload.state
           : state.state,

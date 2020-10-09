@@ -42,7 +42,7 @@ const mapStateToProps = (state, { params }) => {
       endDate,
       state: params.state,
     },
-    data: sortBy(data, d => last(d.chronology).timestamp).reverse(),
+    data: sortBy(data, [d => last(d.chronology).timestamp]),
     page: page[params.state],
     fetchStatus: get(state, 'data.fetchStatus.dataTypes.requests'),
   };
