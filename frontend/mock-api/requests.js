@@ -2,10 +2,23 @@ const subDays = require('date-fns/sub_days');
 const random = require('lodash/random');
 const sample = require('lodash/sample');
 
+const dataexport = require('./dataexport');
 const today = new Date();
 
 module.exports = () => {
   const requests = [];
+  const defaults = {
+    forms: {
+      internal: [
+        { value: 'data', form: 'dataexport' },
+        { value: 'code', form: 'codeexport' },
+      ],
+      external: [
+        { value: 'data', form: 'dataimport' },
+        { value: 'code', form: 'codeimport' },
+      ],
+    },
+  };
 
   for (let i = 0; i < 1000; i++) {
     requests.push({
@@ -71,5 +84,5 @@ module.exports = () => {
     });
   }
 
-  return { requests };
+  return { defaults, requests };
 };
