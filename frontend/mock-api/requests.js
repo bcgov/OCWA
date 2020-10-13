@@ -23,7 +23,7 @@ module.exports = () => {
   for (let i = 0; i < 1000; i++) {
     requests.push({
       _id: i,
-      state: random(1, 3),
+      state: random(0, 6),
       tags: [],
       supportingFiles: [],
       reviewers: [sample(['josh-oc', 'paul'])],
