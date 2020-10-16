@@ -101,6 +101,11 @@ function NewRequestForm({
                 </SectionMessage>
               </React.Fragment>
             )}
+            {formFetchStatus === 'failed' && (
+              <SectionMessage appearance="warning" title="Form Error">
+                <p>Form could not be loaded</p>
+              </SectionMessage>
+            )}
           </GridColumn>
         </Grid>
       </div>

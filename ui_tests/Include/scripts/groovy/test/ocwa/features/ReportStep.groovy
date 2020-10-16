@@ -61,6 +61,7 @@ class ReportStep extends Step {
 		WebUI.waitForElementNotHasAttribute(linkToRequest, "disabled", Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementVisible(linkToRequest, Constant.DEFAULT_TIMEOUT)
 		WebUI.waitForElementClickable(linkToRequest, Constant.DEFAULT_TIMEOUT)
+		WebUI.delay(Constant.DEFAULT_TIMEOUT)
 		WebUI.click(linkToRequest)
 	}
 
@@ -81,7 +82,7 @@ class ReportStep extends Step {
 		//check that the variable description field is populated
 		TestObject varTextObj = Utils.getTestObjectById(Constant.Reports.REPORTS_VARIABLE_TXT_ID)
 		WebUI.waitForElementPresent(varTextObj, Constant.DEFAULT_TIMEOUT)
-		String varDesc = WebUI.getText(varTextObj)		
+		String varDesc = WebUI.getText(varTextObj)
 		String expectedVariableDesc = Constant.Requester.REQUEST_VARIABLE_TEXT
 		if (!varDesc.equals(expectedVariableDesc )) {
 			WebUI.takeScreenshot()
