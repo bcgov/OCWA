@@ -61,9 +61,9 @@ function RequestCard({ activeId, data, draggable }) {
           {totalCheckers > 0 ? <CheckboxIcon /> : <PresenceUnavailableIcon />}
           {totalCheckers > 0 ? 'Assigned' : 'Unclaimed'}
         </small>
-        <small className="request-list-card-date-text">
+        <small className="request-list-card-date-text" >
           <EditorDateIcon />
-          {updatedAtString}
+          <time datatime={updatedAt}>{updatedAtString}</time>
         </small>
       </div>
     </div>

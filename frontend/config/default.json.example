@@ -6,6 +6,11 @@
   "cookieSecret": "COOKIE_SECRET_HERE",
   "jwtSecret": "JWT_SECRET_HERE",
   "helpURL": "EXTERNAL DOCUMENTATION URL (optional)",
+  "help": {
+    "url": "http://help-url",
+    "onboarding": "onboarding",
+    "main": "documentation"
+  },
   "host": "localhost",
   "forumApiHost": "localhost:3000",
   "forumSocket": "localhost:3001",

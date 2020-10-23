@@ -4,6 +4,7 @@ global.SOCKET_HOST = 'ws://localhost:3000';
 global.REQUEST_SOCKET_HOST = 'ws://localhost:2998';
 global.COMMIT = '98sf9842rse8238ew9r8we9f89';
 global.HELP_URL = 'http://example.com/help';
+global.HELP = {};
 global.ID_FIELD = 'preferred_username';
 global.EXPORTER_GROUP = '/exporter';
 global.OC_GROUP = '/oc';

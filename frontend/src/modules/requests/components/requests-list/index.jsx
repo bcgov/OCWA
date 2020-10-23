@@ -17,6 +17,7 @@ import Pagination from '@src/components/pagination';
 import PersonIcon from '@atlaskit/icon/glyph/person';
 import PeopleGroupIcon from '@atlaskit/icon/glyph/people-group';
 import SearchIcon from '@atlaskit/icon/glyph/search';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 import Title from '@src/components/title';
 import { colors } from '@atlaskit/theme';
 import { limit } from '@src/services/config';
@@ -184,26 +185,30 @@ function RequestsList({
           <GridColumn medium={12}>
             <h1 className={styles.title}>My Requests</h1>
             <nav id="requests-list-filters" className={styles.filters}>
-              <ButtonGroup>
-                {filters.map(d => (
+              <SpotlightTarget name="home-filter-requests">
+                <ButtonGroup>
+                  {filters.map(d => (
+                    <Button
+                      key={d.label}
+                      isSelected={d.filter === filter}
+                      onClick={() => onChangeFilter(d.filter)}
+                    >
+                      {d.label}
+                    </Button>
+                  ))}
+                </ButtonGroup>
+              </SpotlightTarget>
+              <SpotlightTarget name="home-show-my-requests">
+                <ButtonGroup>
                   <Button
-                    key={d.label}
-                    isSelected={d.filter === filter}
-                    onClick={() => onChangeFilter(d.filter)}
+                    appearance={showMyRequestsOnly ? 'primary' : null}
+                    iconBefore={requestsButtonIcon}
+                    onClick={onShowMyRequests}
                   >
-                    {d.label}
+                    {requestsButtonString}
                   </Button>
-                ))}
-              </ButtonGroup>
-              <ButtonGroup>
-                <Button
-                  appearance={showMyRequestsOnly ? 'primary' : null}
-                  iconBefore={requestsButtonIcon}
-                  onClick={onShowMyRequests}
-                >
-                  {requestsButtonString}
-                </Button>
-              </ButtonGroup>
+                </ButtonGroup>
+              </SpotlightTarget>
               <Search />
             </nav>
           </GridColumn>

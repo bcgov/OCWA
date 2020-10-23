@@ -4,6 +4,7 @@ import Button from '@atlaskit/button';
 import AddCircleIcon from '@atlaskit/icon/glyph/add-circle';
 import { Link } from 'react-router-dom';
 import { colors } from '@atlaskit/theme';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 
 function NewRequestLink({ children, className, onMouseEnter, onMouseLeave }) {
   return (
@@ -27,17 +28,19 @@ NewRequestLink.propTypes = {
 
 function NewRequest({ disabled }) {
   return (
-    <Button
-      appearance="primary"
-      component={disabled ? null : NewRequestLink}
-      id="new-request-button"
-      iconBefore={
-        <AddCircleIcon primaryColor="white" secondaryColor={colors.B500} />
-      }
-      isDisabled={disabled}
-    >
-      New Request
-    </Button>
+    <SpotlightTarget name="home-new-request">
+      <Button
+        appearance="primary"
+        component={disabled ? null : NewRequestLink}
+        id="new-request-button"
+        iconBefore={
+          <AddCircleIcon primaryColor="white" secondaryColor={colors.B500} />
+        }
+        isDisabled={disabled}
+      >
+        New Request
+      </Button>
+    </SpotlightTarget>
   );
 }
 

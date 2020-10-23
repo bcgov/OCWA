@@ -6,6 +6,7 @@ import Dropdown, { DropdownItem } from '@atlaskit/dropdown-menu';
 import isEmpty from 'lodash/isEmpty';
 import aboutButton from '@src/modules/app/containers/about-button';
 import reportErrorButton from '@src/modules/app/containers/report-error-button';
+import { helpURL, help } from '@src/services/config';
 
 const AboutDropdownItem = props => (
   <DropdownItem {...props}>About this App</DropdownItem>
@@ -16,7 +17,7 @@ const ReportErrorDropdownItem = props => (
 const AboutButton = aboutButton(AboutDropdownItem);
 const ReportErrorButton = reportErrorButton(ReportErrorDropdownItem);
 
-function AppBarMenu({ children, helpURL, user }) {
+function AppBarMenu({ children, onOpenHelp, onToggleOnboarding, user }) {
   const possibleDisplayNameValues = at(user, [
     'displayName',
     'username',
@@ -34,7 +35,17 @@ function AppBarMenu({ children, helpURL, user }) {
           Signed in as <strong>{displayName}</strong>
         </DropdownItem>
       )}
-      {helpURL && (
+      {!isEmpty(help) && (
+        <React.Fragment>
+          <DropdownItem onClick={onToggleOnboarding}>
+            Show Page Tips
+          </DropdownItem>
+          <DropdownItem onClick={onOpenHelp}>
+            View Help Documentation
+          </DropdownItem>
+        </React.Fragment>
+      )}
+      {isEmpty(help) && helpURL && (
         <DropdownItem href={helpURL} target="_blank">
           View Help Documentation
         </DropdownItem>
@@ -49,7 +60,8 @@ function AppBarMenu({ children, helpURL, user }) {
 
 AppBarMenu.propTypes = {
   children: PropTypes.arrayOf(PropTypes.instanceOf(DropdownItem)),
-  helpURL: PropTypes.string,
+  onOpenHelp: PropTypes.func.isRequired,
+  onToggleOnboarding: PropTypes.func.isRequired,
   user: PropTypes.shape({
     displayName: PropTypes.string.isRequired,
   }).isRequired,
@@ -57,7 +69,6 @@ AppBarMenu.propTypes = {
 
 AppBarMenu.defaultProps = {
   children: null,
-  helpURL: null,
 };
 
 export default AppBarMenu;

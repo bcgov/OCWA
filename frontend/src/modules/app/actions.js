@@ -6,6 +6,10 @@ export const toggleReportError = () => ({
   type: 'app/report-error/toggle',
 });
 
+export const toggleOnboarding = () => ({
+  type: 'app/onboarding/toggle',
+});
+
 export const reportError = (payload, componentStack) => ({
   type: 'user/report-error',
   error: true,

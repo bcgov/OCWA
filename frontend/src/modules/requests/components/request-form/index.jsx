@@ -5,6 +5,7 @@ import isEmpty from 'lodash/isEmpty';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import SectionMessage from '@atlaskit/section-message';
 import Select from '@atlaskit/select';
+import { SpotlightTarget } from '@atlaskit/onboarding';
 import { getZoneString, _e } from '@src/utils';
 
 import Form from '../../containers/form-wrapper';
@@ -44,19 +45,21 @@ function NewRequestForm({
         <Grid>
           <GridColumn medium={12}>
             <div className={styles.exportTypeSelect}>
-              <SectionMessage
-                appearance="info"
-                title={_e('Select {Request} Type')}
-              >
-                <Select
-                  options={data}
-                  isDisabled={formFetchStatus === 'loading'}
-                  placeholder={_e('Choose an {Request} Type')}
-                  id="request-form-exportTypeSelect"
-                  value={exportType}
-                  onChange={value => setExportType(value)}
-                />
-              </SectionMessage>
+              <SpotlightTarget name="new-request-types">
+                <SectionMessage
+                  appearance="info"
+                  title={_e('Select {Request} Type')}
+                >
+                  <Select
+                    options={data}
+                    isDisabled={formFetchStatus === 'loading'}
+                    placeholder={_e('Choose an {Request} Type')}
+                    id="request-form-exportTypeSelect"
+                    value={exportType}
+                    onChange={value => setExportType(value)}
+                  />
+                </SectionMessage>
+              </SpotlightTarget>
             </div>
             {data.reduce(
               (p, d) =>
@@ -97,6 +100,11 @@ function NewRequestForm({
                   </p>
                 </SectionMessage>
               </React.Fragment>
+            )}
+            {formFetchStatus === 'failed' && (
+              <SectionMessage appearance="warning" title="Form Error">
+                <p>Form could not be loaded</p>
+              </SectionMessage>
             )}
           </GridColumn>
         </Grid>
