@@ -22,7 +22,7 @@
     "npmlog": "^4.1.2",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "ws": "^7.1.1"
+    "ws": "^7.4.5"
   },
   "devDependencies": {
     "chai": "^4.2.0",
