@@ -8,30 +8,30 @@ cd /home/travis/build/bcgov/OCWA/microservices/projectApi
 
 BCGOV_BASE="bcgovimages"
 REPO=$1
-QUAYIO_BASE="quay.io/ikethecoder"
+QUAYIO_BASE="quay.io/h3brandon"
 
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
-printf "\nENV GITHASH $TRAVIS_COMMIT\n" >> Dockerfile
+printf "\nENV GITHASH $GITHUB_SHA\n" >> Dockerfile
 
-if [ $TRAVIS_BRANCH == "master" ]; then
+if [ $BRANCH == "master" ]; then
     docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:latest
-    docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:$TRAVIS_COMMIT
+    docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:$GITHUB_SHA
     echo "dockerfile tagged pushing now"
     docker push $BCGOV_BASE/$REPO:latest
-    docker push $BCGOV_BASE/$REPO:$TRAVIS_COMMIT
-    echo "latest and $TRAVIS_COMMIT pushed successfully"
+    docker push $BCGOV_BASE/$REPO:$GITHUB_SHA
+    echo "latest and $GITHUB_SHA pushed successfully"
 fi
 
-if [ $TRAVIS_BRANCH == "develop" ]; then
+if [ $BRANCH == "develop" ]; then
     docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:edge
     echo "dockerfile tagged pushing now"
     docker push $BCGOV_BASE/$REPO:edge
     echo "edge (develop) pushed successfully"
 fi
 
-if [ "$TRAVIS_BRANCH" == "$TRAVIS_TAG" ]; then
-    docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:$TRAVIS_TAG
+if [ "$BRANCH" == "$TRAVIS_TAG" ]; then
+    docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:$BRANCH
     echo "dockerfile tagged pushing now"
     docker push $BCGOV_BASE/$REPO:$TRAVIS_TAG
     echo "$TRAVIS_TAG pushed successfully"

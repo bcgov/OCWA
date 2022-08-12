@@ -56,10 +56,12 @@ jobs:
           echo "post lint"
       - name: quayio_push
         run: |
+          export BRANCH=${GITHUB_REF##*/}
           bash docker_quayio_push ocwa_project_api
       - name: deploy
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
         run: |
+          export BRANCH=${GITHUB_REF##*/}
           bash docker_push ocwa_project_api
   
   request_api:
@@ -92,6 +94,13 @@ jobs:
           cp ../default.json ./config/default.json
           cp ../prompt.txt ./prompt.txt
           npm start < prompt.txt &
+          cd ..
+          git clone https://github.com/bcgov/forum-api.git
+          cd forum-api
+          cp config/default.json.example config/default.json
+          cp config/test.json.example config/test.json
+          npm run serve
+          cd ../requestApi
           npm test
       - name: helm
         run: |
@@ -103,10 +112,12 @@ jobs:
           helm lint ./helm/requestApi
       - name: quayio_push
         run: |
+          export BRANCH=${GITHUB_REF##*/}
           bash docker_quayio_push ocwa_request_api
       - name: deploy
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
         run: |
+          export BRANCH=${GITHUB_REF##*/}
           bash docker_push ocwa_request_api
 
   policy_api:
@@ -138,10 +149,12 @@ jobs:
           helm lint ./helm/policyApi
       - name: quayio_push
         run: |
+          export BRANCH=${GITHUB_REF##*/}
           bash docker_quayio_push ocwa_policy_api
       - name: deploy
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
         run: |
+          export BRANCH=${GITHUB_REF##*/}
           bash docker_push ocwa_policy_api
 
   validation_api:
@@ -170,10 +183,12 @@ jobs:
           helm lint ./helm/validate-api
       - name: quayio_push
         run: |
+          export BRANCH=${GITHUB_REF##*/}
           bash docker_quayio_push ocwa_validation_api
       - name: deploy
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
         run: |
+          export BRANCH=${GITHUB_REF##*/}
           bash docker_push ocwa_validation_api
 
   frontend:
@@ -200,8 +215,10 @@ jobs:
           helm lint ./helm/frontend
       - name: quayio_push
         run: |
+          export BRANCH=${GITHUB_REF##*/}
           bash docker_quayio_push ocwa_frontend
       - name: deploy
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
         run: |
+          export BRANCH=${GITHUB_REF##*/}
           bash docker_push ocwa_frontend
