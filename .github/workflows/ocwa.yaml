@@ -1,0 +1,189 @@
+name: "OCWA"
+on: 
+  push:
+    branches:
+      - '**'
+  pull_request:
+    types:
+      - opened
+  release:
+    types: ['created']
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  QUAYIO_PASSWORD: ${{ secrets.QUAYIO_PASSWORD }}
+  QUAYIO_USERNAME: ${{ secrets.QUAYIO_USERNAME }}
+  MONGODB: 4.1.1
+  HELM_TGZ: helm-v2.4.1-linux-amd64.tar.gz
+  HELM_URL: https://storage.googleapis.com/kubernetes-helm
+  YAMLLINT_VERSION: 1.8.1
+jobs:
+  project_api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: microservices/projectApi
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: npm ci
+      - name: test        
+        run: |
+          cp config/test.json.example config/test.json
+          cp config/default.json.example config/default.json
+          wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+          export PWD=$(pwd)
+          tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+          mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo projectDb --eval 'db.createUser({user:"projectUser", pwd:"projectPass", roles:["readWrite"]});'
+          npm test
+      - name: helm
+        run: |
+          wget -q ${HELM_URL}/${HELM_TGZ}
+          tar xzfv ${HELM_TGZ}
+          PATH=`pwd`/linux-amd64/:$PATH
+          helm init --client-only
+          sudo pip install yamllint=="${YAMLLINT_VERSION}"
+          helm lint ./helm/projectApi
+      - name: quayio_push
+        run: |
+          bash docker_quayio_push ocwa_project_api
+      - name: deploy
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
+        run: |
+          bash docker_push ocwa_project_api
+  
+  request_api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: microservices/requestApi
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: npm ci
+      - name: test        
+        run: |
+          cp config/test.json.example config/test.json
+          cp config/default.json.example config/default.json
+          wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+          export PWD=$(pwd)
+          tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+          mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo projectDb --eval 'db.createUser({user:"projectUser", pwd:"projectPass", roles:["readWrite"]});'
+          npm test
+      - name: helm
+        run: |
+          wget -q ${HELM_URL}/${HELM_TGZ}
+          tar xzfv ${HELM_TGZ}
+          PATH=`pwd`/linux-amd64/:$PATH
+          helm init --client-only
+          sudo pip install yamllint=="${YAMLLINT_VERSION}"
+          helm lint ./helm/requestApi
+      - name: quayio_push
+        run: |
+          bash docker_quayio_push ocwa_request_api
+      - name: deploy
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
+        run: |
+          bash docker_push ocwa_request_api
+
+  policy_api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: microservices/policyApi
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: pip3 install --upgrade pip setuptools
+      - name: test        
+        run: |
+          cp config/default.json.template config/default.json
+          pip3 install --upgrade -r requirements.txt
+          pip3 install -e .
+          coverage run --branch --source=db,v1 -m pytest
+          coverage xml
+      - name: helm
+        run: |
+          wget -q ${HELM_URL}/${HELM_TGZ}
+          tar xzfv ${HELM_TGZ}
+          PATH=`pwd`/linux-amd64/:$PATH
+          helm init --client-only
+          sudo pip install yamllint=="${YAMLLINT_VERSION}"
+          helm lint ./helm/policyApi
+      - name: quayio_push
+        run: |
+          bash docker_quayio_push ocwa_policy_api
+      - name: deploy
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
+        run: |
+          bash docker_push ocwa_policy_api
+
+  validation_api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: microservices/validationApi
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: pip3 install --upgrade pip setuptools
+      - name: test        
+        run: |
+          cp config/default.json.template config/default.json
+          pip3 install --upgrade -r requirements.txt
+          pip3 install -e .
+          coverage run --branch --source=db,v1 -m pytest
+          coverage xml
+      - name: helm
+        run: |
+          wget -q ${HELM_URL}/${HELM_TGZ}
+          tar xzfv ${HELM_TGZ}
+          PATH=`pwd`/linux-amd64/:$PATH
+          helm init --client-only
+          sudo pip install yamllint=="${YAMLLINT_VERSION}"
+          helm lint ./helm/validation
+      - name: quayio_push
+        run: |
+          bash docker_quayio_push ocwa_validation_api
+      - name: deploy
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
+        run: |
+          bash docker_push ocwa_validation_api
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: microservices/requestApi
+    steps:
+      - uses: actions/checkout@v2
+      - name: install dependencies
+        run: npm ci
+      - name: test        
+        run: |
+          cp config/test.json.example config/test.json
+          npm test
+      - name: helm
+        run: |
+          wget -q ${HELM_URL}/${HELM_TGZ}
+          tar xzfv ${HELM_TGZ}
+          PATH=`pwd`/linux-amd64/:$PATH
+          helm init --client-only
+          sudo pip install yamllint=="${YAMLLINT_VERSION}"
+          helm lint ./helm/frontend
+      - name: quayio_push
+        run: |
+          bash docker_quayio_push ocwa_frontend
+      - name: deploy
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
+        run: |
+          bash docker_push ocwa_frontend
