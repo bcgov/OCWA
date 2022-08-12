@@ -15,7 +15,7 @@ env:
   QUAYIO_USERNAME: ${{ secrets.QUAYIO_USERNAME }}
   MONGODB: 4.1.1
   HELM_TGZ: helm-v2.4.1-linux-amd64.tar.gz
-  HELM_URL: https://storage.googleapis.com/kubernetes-helm
+  HELM_URL: https://get.helm.sh
   YAMLLINT_VERSION: 1.8.1
 jobs:
   project_api:
