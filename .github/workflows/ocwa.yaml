@@ -159,6 +159,7 @@ jobs:
           bash docker_push ocwa_validation_api
 
   frontend:
+    needs: ["project_api", "request_api", "policy_api", "validation_api"]
     runs-on: ubuntu-latest
     defaults:
       run:
