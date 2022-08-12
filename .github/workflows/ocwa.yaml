@@ -41,12 +41,19 @@ jobs:
           npm test
       - name: helm
         run: |
+          echo "hi"
           wget -q ${HELM_URL}/${HELM_TGZ}
+          echo "post wget"
           tar xzfv ${HELM_TGZ}
+          echo "post tar"
           PATH=`pwd`/linux-amd64/:$PATH
+          echo "post path"
           helm init --client-only
+          echo "post init"
           sudo pip install yamllint=="${YAMLLINT_VERSION}"
+          echo "post pip"
           helm lint ./helm/projectApi
+          echo "post lint"
       - name: quayio_push
         run: |
           bash docker_quayio_push ocwa_project_api
