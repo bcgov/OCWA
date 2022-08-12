@@ -48,7 +48,7 @@ jobs:
           echo "post tar"
           PATH=`pwd`/linux-amd64/:$PATH
           echo "post path"
-          helm init --client-only
+          
           echo "post init"
           sudo pip install yamllint=="${YAMLLINT_VERSION}"
           echo "post pip"
@@ -98,7 +98,7 @@ jobs:
           wget -q ${HELM_URL}/${HELM_TGZ}
           tar xzfv ${HELM_TGZ}
           PATH=`pwd`/linux-amd64/:$PATH
-          helm init --client-only
+          
           sudo pip install yamllint=="${YAMLLINT_VERSION}"
           helm lint ./helm/requestApi
       - name: quayio_push
@@ -134,7 +134,6 @@ jobs:
           wget -q ${HELM_URL}/${HELM_TGZ}
           tar xzfv ${HELM_TGZ}
           PATH=`pwd`/linux-amd64/:$PATH
-          helm init --client-only
           sudo pip install yamllint=="${YAMLLINT_VERSION}"
           helm lint ./helm/policyApi
       - name: quayio_push
@@ -167,7 +166,6 @@ jobs:
           wget -q ${HELM_URL}/${HELM_TGZ}
           tar xzfv ${HELM_TGZ}
           PATH=`pwd`/linux-amd64/:$PATH
-          helm init --client-only
           sudo pip install yamllint=="${YAMLLINT_VERSION}"
           helm lint ./helm/validate-api
       - name: quayio_push
@@ -198,7 +196,6 @@ jobs:
           wget -q ${HELM_URL}/${HELM_TGZ}
           tar xzfv ${HELM_TGZ}
           PATH=`pwd`/linux-amd64/:$PATH
-          helm init --client-only
           sudo pip install yamllint=="${YAMLLINT_VERSION}"
           helm lint ./helm/frontend
       - name: quayio_push
