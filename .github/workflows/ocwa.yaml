@@ -75,6 +75,17 @@ jobs:
           mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
           ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
           ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo projectDb --eval 'db.createUser({user:"projectUser", pwd:"projectPass", roles:["readWrite"]});'
+          cd /home/travis/build/bcgov/OCWA/microservices/formio
+          mongorestore -u forumUser -p forumPass -d forumDb db
+          cd ../shared/js
+          npm ci
+          cd ../../formio
+          git clone -b v1.90.15 https://github.com/formio/formio.git
+          cd formio
+          npm ci
+          cp ../default.json ./config/default.json
+          cp ../prompt.txt ./prompt.txt
+          npm start < prompt.txt &
           npm test
       - name: helm
         run: |
@@ -105,8 +116,11 @@ jobs:
       - name: test        
         run: |
           cp config/default.json.template config/default.json
+          echo "Default json copied"
           pip3 install --upgrade -r requirements.txt
+          echo "requirements installed"
           pip3 install -e .
+          echo "requirements -e ."
           coverage run --branch --source=db,v1 -m pytest
           coverage xml
       - name: helm
@@ -130,7 +144,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: microservices/validationApi
+        working-directory: microservices/validateApi
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
@@ -149,7 +163,7 @@ jobs:
           PATH=`pwd`/linux-amd64/:$PATH
           helm init --client-only
           sudo pip install yamllint=="${YAMLLINT_VERSION}"
-          helm lint ./helm/validation
+          helm lint ./helm/validate-api
       - name: quayio_push
         run: |
           bash docker_quayio_push ocwa_validation_api
