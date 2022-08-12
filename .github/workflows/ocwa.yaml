@@ -81,9 +81,14 @@ jobs:
           npm ci
           echo "1"
           cd ../../formio
+          echo "1.1"
           mongorestore -u forumUser -p forumPass -d forumDb db
+          echo "1.2"
           git clone -b v1.90.15 https://github.com/formio/formio.git
+          echo "1.3"
           cd formio
+          echo "1.4"
+
           npm ci
           echo "2"
           cp ../default.json ./config/default.json
@@ -133,6 +138,13 @@ jobs:
         run: |
           cp config/default.json.template config/default.json
           echo "Default json copied"
+          wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+          export PWD=$(pwd)
+          tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+          mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo projectDb --eval 'db.createUser({user:"projectUser", pwd:"projectPass", roles:["readWrite"]});'
+          echo "MONGO INNSTALLED"
           pip3 install -r requirements.txt
           echo "requirements installed"
           pip3 install -e .
@@ -169,6 +181,12 @@ jobs:
       - name: test        
         run: |
           cp config/default.json.template config/default.json
+          wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
+          export PWD=$(pwd)
+          tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
+          mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo projectDb --eval 'db.createUser({user:"projectUser", pwd:"projectPass", roles:["readWrite"]});'
           pip3 install --upgrade -r requirements.txt
           pip3 install -e .
           coverage run --branch --source=db,v1 -m pytest
