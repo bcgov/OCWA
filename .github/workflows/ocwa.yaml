@@ -91,6 +91,7 @@ jobs:
           mongorestore -u forumUser -p forumPass -d forumDb db
           git clone -b v1.90.15 https://github.com/formio/formio.git
           cd formio
+          chmod 777 -R .
           npm ci
           cp ../default.json ./config/default.json
           cp ../prompt.txt ./prompt.txt
