@@ -144,7 +144,6 @@ jobs:
           echo "requirements installed"
           pip3 install -e .
           echo "requirements -e ."
-          pip3 install markupsafe==2.0.1
           coverage run --branch --source=db,v1 -m pytest
           coverage xml
       - name: helm
@@ -185,7 +184,6 @@ jobs:
           ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo projectDb --eval 'db.createUser({user:"projectUser", pwd:"projectPass", roles:["readWrite"]});'
           pip3 install --upgrade -r requirements.txt
           pip3 install -e .
-          pip install markupsafe==2.0.1
           coverage run --branch --source=db,v1 -m pytest
           coverage xml
       - name: helm
