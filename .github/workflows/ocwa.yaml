@@ -74,7 +74,8 @@ jobs:
           chmod +x minio
           export MINIO_ACCESS_KEY="accesskey"
           export MINIO_SECRET_KEY="secretkey"
-          ./minio server /tmp &
+          mkdir ./tmp
+          ./minio server ./tmp &
 
           cp config/test.json.example config/test.json
           cp config/default.json.example config/default.json
@@ -91,11 +92,10 @@ jobs:
           mongorestore -u forumUser -p forumPass -d forumDb db
           git clone -b v1.90.15 https://github.com/formio/formio.git
           cd formio
-          chmod 777 -R .
           npm ci
           cp ../default.json ./config/default.json
           cp ../prompt.txt ./prompt.txt
-          npm start < prompt.txt
+          npm start < prompt.txt &
 
           cd ../..
           git clone https://github.com/bcgov/forum-api.git
