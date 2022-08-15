@@ -75,7 +75,7 @@ jobs:
           export MINIO_ACCESS_KEY="accesskey"
           export MINIO_SECRET_KEY="secretkey"
           ./minio server /tmp &
-          
+
           cp config/test.json.example config/test.json
           cp config/default.json.example config/default.json
           wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
@@ -94,7 +94,7 @@ jobs:
           npm ci
           cp ../default.json ./config/default.json
           cp ../prompt.txt ./prompt.txt
-          npm start < prompt.txt &
+          npm start < prompt.txt
 
           cd ../..
           git clone https://github.com/bcgov/forum-api.git
