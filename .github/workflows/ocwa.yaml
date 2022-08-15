@@ -90,20 +90,16 @@ jobs:
           cp ../prompt.txt ./prompt.txt
           npm start < prompt.txt &
 
-          cd ..
+          cd ../..
           git clone https://github.com/bcgov/forum-api.git
           cd forum-api
           cp config/default.json.example config/default.json
           cp config/test.json.example config/test.json
           npm ci
-          npm run serve
+          NODE_ENV=test npm run serve
 
           cd ../requestApi
-          echo "testjson"
-          cat config/test.json
-          echo "defaultjson"
-          cat config/default.json
-          NODE_ENV=test && npm test
+          NODE_ENV=test npm test
       - name: helm
         run: |
           wget -q ${HELM_URL}/${HELM_TGZ}
