@@ -99,7 +99,9 @@ jobs:
           npm run serve
 
           cd ../requestApi
+          echo "testjson"
           cat config/test.json
+          echo "defaultjson"
           cat config/default.json
           NODE_ENV=test && npm test
       - name: helm
