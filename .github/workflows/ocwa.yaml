@@ -99,8 +99,9 @@ jobs:
           npm run serve
 
           cd ../requestApi
-          export NODE_ENV=test
-          npm test
+          cat config/test.json
+          cat config/default.json
+          NODE_ENV=test && npm test
       - name: helm
         run: |
           wget -q ${HELM_URL}/${HELM_TGZ}
