@@ -76,7 +76,7 @@ jobs:
           tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
           mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
           ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
-          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo projectDb --eval 'db.createUser({user:"projectUser", pwd:"projectPass", roles:["readWrite"]});'
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["dbAdmin", "readWrite"]});'
           cd ../shared/js
           npm ci
           echo "1"
