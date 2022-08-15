@@ -70,6 +70,12 @@ jobs:
         run: npm ci
       - name: test        
         run: |
+          wget -q https://dl.minio.io/server/minio/release/linux-amd64/minio
+          chmod +x minio
+          export MINIO_ACCESS_KEY="accesskey"
+          export MINIO_SECRET_KEY="secretkey"
+          ./minio server /tmp &
+          
           cp config/test.json.example config/test.json
           cp config/default.json.example config/default.json
           wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
@@ -130,6 +136,15 @@ jobs:
         run: pip3 install --upgrade pip setuptools==58.0.0
       - name: test        
         run: |
+          cd ..
+          git clone https://github.com/bcgov/forum-api.git
+          cd forum-api
+          cp config/default.json.example config/default.json
+          cp config/test.json.example config/test.json
+          npm ci
+          cd policyApi
+
+          NODE_ENV=test npm run serve &
           cp config/default.json.template config/default.json
           echo "Default json copied"
           wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
@@ -174,6 +189,14 @@ jobs:
         run: pip3 install --upgrade pip setuptools==58.0.0
       - name: test        
         run: |
+          cd ..
+          git clone https://github.com/bcgov/forum-api.git
+          cd forum-api
+          cp config/default.json.example config/default.json
+          cp config/test.json.example config/test.json
+          npm ci
+          cd validateApi
+
           cp config/default.json.template config/default.json
           wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
           export PWD=$(pwd)
