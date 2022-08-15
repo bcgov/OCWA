@@ -96,7 +96,7 @@ jobs:
           cp config/default.json.example config/default.json
           cp config/test.json.example config/test.json
           npm ci
-          NODE_ENV=test npm run serve
+          NODE_ENV=test npm run serve &
 
           cd ../requestApi
           NODE_ENV=test npm test
