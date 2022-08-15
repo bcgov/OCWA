@@ -59,6 +59,7 @@ jobs:
   
   request_api:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     defaults:
       run:
         shell: bash
@@ -79,32 +80,25 @@ jobs:
           ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["dbAdmin", "readWrite"]});'
           cd ../shared/js
           npm ci
-          echo "1"
-          cd ../../formio
-          echo "1.1"
-          mongorestore -u forumUser -p forumPass -d forumDb db
-          echo "1.2"
-          git clone -b v1.90.15 https://github.com/formio/formio.git
-          echo "1.3"
-          cd formio
-          echo "1.4"
 
+          cd ../../formio
+          mongorestore -u forumUser -p forumPass -d forumDb db
+          git clone -b v1.90.15 https://github.com/formio/formio.git
+          cd formio
           npm ci
-          echo "2"
           cp ../default.json ./config/default.json
           cp ../prompt.txt ./prompt.txt
           npm start < prompt.txt &
-          echo "3"
+
           cd ..
           git clone https://github.com/bcgov/forum-api.git
           cd forum-api
           cp config/default.json.example config/default.json
           cp config/test.json.example config/test.json
           npm ci
-          echo "4"
           npm run serve
+
           cd ../requestApi
-          echo "5"
           npm test
       - name: helm
         run: |
@@ -133,7 +127,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
-        run: pip3 install --upgrade pip setuptools
+        run: pip3 install --upgrade pip setuptools==58.0.0
       - name: test        
         run: |
           cp config/default.json.template config/default.json
@@ -177,7 +171,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
-        run: pip3 install --upgrade pip setuptools
+        run: pip3 install --upgrade pip setuptools==58.0.0
       - name: test        
         run: |
           cp config/default.json.template config/default.json
