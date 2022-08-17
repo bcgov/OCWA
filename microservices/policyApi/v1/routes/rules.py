@@ -120,7 +120,6 @@ def write_rules() -> object:
         return jsonify({"error": "rule_set is a required attribute"})
 
     rule_set = body['rule_set']
-    return jsonify({"success": "Written successfully"})
 
     rules = None
     try:
@@ -128,6 +127,7 @@ def write_rules() -> object:
     except Exception as e:
         return jsonify({"error": "%s%s" % (str(e),rule_set)})
 
+    return jsonify({"success": "Written successfully"})
     for ruleName, ruleDef in rules['rule'].items():
         dbRule = db.Rules(
             name=ruleName,
