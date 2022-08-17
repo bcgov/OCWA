@@ -113,7 +113,6 @@ def write_rules() -> object:
     """
 
     db=Db()
-    return jsonify({"success": "Written successfully"})
 
     body = request.get_json()
 
@@ -121,6 +120,7 @@ def write_rules() -> object:
         return jsonify({"error": "rule_set is a required attribute"})
 
     rule_set = body['rule_set']
+    return jsonify({"success": "Written successfully"})
 
     rules = None
     try:
