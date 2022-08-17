@@ -220,12 +220,12 @@ jobs:
       - name: quayio_push
         run: |
           export BRANCH=${GITHUB_REF##*/}
-          bash docker_quayio_push ocwa_validation_api
+          bash docker_quayio_push ocwa_validate_api
       - name: deploy
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
         run: |
           export BRANCH=${GITHUB_REF##*/}
-          bash docker_push ocwa_validation_api
+          bash docker_push ocwa_validate_api
 
   frontend:
     needs: ["project_api", "request_api", "policy_api", "validation_api"]

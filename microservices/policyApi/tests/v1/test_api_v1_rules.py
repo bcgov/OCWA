@@ -128,8 +128,7 @@ def test_v1_rules_replace_rules(client, mockdb):
                        data=json.dumps(request),
                        content_type='application/json',
                        headers=[('Authorization', 'Bearer ' + config.data['testJWT'])])
-    print("Hi")
-    print(response.data)
+    
     assert response.status_code == 200
     resp = json.loads(response.data.decode('utf-8'))
 
