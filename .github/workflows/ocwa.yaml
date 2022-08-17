@@ -191,7 +191,7 @@ jobs:
         run: pip3 install --upgrade pip setuptools==58.0.0
       - name: test        
         run: |
-          cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+          cd ../policyApi
           pip3 install -r requirements.txt
           pip3 install -e .
           cp config/default.json.template config/default.json
