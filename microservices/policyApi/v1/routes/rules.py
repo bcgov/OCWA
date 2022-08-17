@@ -71,6 +71,7 @@ def write_policy() -> object:
     if len(rules) == 0:
         return jsonify({"error": "policy must have atleast one rule"})
 
+    return jsonify({"success": "Written successfully"})
     db.Policies(name=name, rules=rules).save()
 
     return jsonify({"success": "Written successfully"})
