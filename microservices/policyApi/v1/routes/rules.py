@@ -113,6 +113,7 @@ def write_rules() -> object:
     """
 
     db=Db()
+    return jsonify({"success": "Written successfully"})
 
     body = request.get_json()
 
@@ -161,7 +162,6 @@ def write_rule(ruleName: str) -> object:
     pol = body['rule']
 
     rule = None
-    return jsonify({"success": "Written successfully"})
 
     try:
         rule = hcl.loads(pol)

@@ -1,12 +1,12 @@
 ply==3.11
 munch==2.3.2
 boto3==1.9.205
-flask==1.1.4
+flask==2.1.0
 flask-compress==1.4.0
 gevent==1.4.0
 greenlet==0.4.15
 pyyaml==5.1.2
-mongoengine==0.18.2
+mongoengine==0.24.2
 pyhcl==0.3.12
 requests==2.22.0
 mocker==1.1.1

@@ -25,13 +25,10 @@ def mockdb(mocker):
         r.delete()
     for p in db.Policies.objects():
         p.delete()
-    print(1)
     try:
         Rules(name="rule1",source="${file.name}!=badFile",mandatory=False).save()
         Rules(name="rule2",source="${file.size}<500",mandatory=True).save()
     except BaseException as err:
-        print("except")
-        print(err)
         raise err
     
 
