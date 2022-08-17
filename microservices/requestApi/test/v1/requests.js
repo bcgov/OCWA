@@ -419,7 +419,7 @@ describe("Requests", function() {
                     steps: "steps changed",
                     freq: "freq changed",
                     confidentiality: "none changed",
-                    branch: "master",
+                    branch: "main",
                     externalRepository: "http://github.com/bcgov/OCWA",
                     repository: "http://github.com/bcgov/OCWA",
                     codeDescription: "This repository"

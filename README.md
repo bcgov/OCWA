@@ -1,4 +1,4 @@
-# Output Checker Workflow App &middot; [![Build Status](https://travis-ci.org/bcgov/OCWA.svg?branch=master)](https://travis-ci.org/bcgov/OCWA) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+# Output Checker Workflow App &middot; [![Build Status](https://travis-ci.org/bcgov/OCWA.svg?branch=main)](https://travis-ci.org/bcgov/OCWA) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 OCWA (pronounced "aqua") is a microservice application suite that can store, validate, and enforce file export policies for the purpose of output checking.
 

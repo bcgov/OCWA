@@ -11,25 +11,21 @@ echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 echo "logged in, building now";
 printf "\nENV GITHASH $GITHUB_SHA\n" >> Dockerfile
 
-if [ $BRANCH == "master" ]; then
+if [ $BRANCH == "main" ]; then
     docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:latest
     docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:$GITHUB_SHA
     echo "dockerfile tagged pushing now"
     docker push $BCGOV_BASE/$REPO:latest
     docker push $BCGOV_BASE/$REPO:$GITHUB_SHA
     echo "latest and $GITHUB_SHA pushed successfully"
-fi
-
-if [ $BRANCH == "develop" ]; then
+elif [ $BRANCH == "develop" ]; then
     docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:edge
     echo "dockerfile tagged pushing now"
     docker push $BCGOV_BASE/$REPO:edge
     echo "edge (develop) pushed successfully"
-fi
-
-if [ "$BRANCH" == "$TRAVIS_TAG" ]; then
+else
     docker tag $QUAYIO_BASE/$REPO $BCGOV_BASE/$REPO:$BRANCH
     echo "dockerfile tagged pushing now"
-    docker push $BCGOV_BASE/$REPO:$TRAVIS_TAG
-    echo "$TRAVIS_TAG pushed successfully"
+    docker push $BCGOV_BASE/$REPO:$BRANCH
+    echo "$BRANCH pushed successfully"
 fi
