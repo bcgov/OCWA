@@ -150,28 +150,14 @@ jobs:
         run: pip3 install --upgrade pip setuptools==58.0.0
       - name: test        
         run: |
-          cd ..
-          git clone https://github.com/bcgov/forum-api.git
-          cd forum-api
-          cp config/default.json.example config/default.json
-          cp config/test.json.example config/test.json
-          npm ci
-          cd ../policyApi
-
-          NODE_ENV=test npm run serve &
-          cp config/default.json.template config/default.json
-          echo "Default json copied"
           wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
           export PWD=$(pwd)
           tar xzf mongodb-linux-x86_64-${MONGODB}.tgz
           mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
           ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
           ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo projectDb --eval 'db.createUser({user:"projectUser", pwd:"projectPass", roles:["readWrite"]});'
-          echo "MONGO INNSTALLED"
           pip3 install -r requirements.txt
-          echo "requirements installed"
-          pip3 install -e .
-          echo "requirements -e ."
+          pip3 install -e .policyApi
           coverage run --branch --source=db,v1 -m pytest
           coverage xml
       - name: helm
@@ -203,12 +189,11 @@ jobs:
         run: pip3 install --upgrade pip setuptools==58.0.0
       - name: test        
         run: |
-          cd ..
-          git clone https://github.com/bcgov/forum-api.git
-          cd forum-api
-          cp config/default.json.example config/default.json
-          cp config/test.json.example config/test.json
-          npm ci
+          cd /home/travis/build/bcgov/OCWA/microservices/policyApi
+          pip3 install -r requirements.txt
+          pip3 install -e .
+          cp config/default.json.template config/default.json
+          python3 wsgi.py &
           cd ../validateApi
 
           wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
