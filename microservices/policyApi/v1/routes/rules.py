@@ -55,24 +55,29 @@ def write_policy() -> object:
     (Over)write policy
     :return: JSON of success message or error message
     """
-
+    print("post0")
     db=Db()
+    print("post1")
 
     body = request.get_json()
-
+    print("post2")
     if not('name' in body):
         return jsonify({"error": "name is a required attribute"})
 
+    print("post3")
+
     if not('rules' in body):
         return jsonify({"error": "'rules' is a required attribute"})
+    print("post4")
     name = body['name']
+    print("post5")
     rules = body['rules']
-
+    print("post6")
     if len(rules) == 0:
         return jsonify({"error": "policy must have atleast one rule"})
-
+    print("post7")
     db.Policies(name=name, rules=rules).save()
-
+    print("post8")
     return jsonify({"success": "Written successfully"})
 
 @rules.route('/<string:policyName>',
