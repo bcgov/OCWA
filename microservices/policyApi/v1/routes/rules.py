@@ -71,7 +71,6 @@ def write_policy() -> object:
     if len(rules) == 0:
         return jsonify({"error": "policy must have atleast one rule"})
 
-    return jsonify({"success": "Written successfully"})
     db.Policies(name=name, rules=rules).save()
 
     return jsonify({"success": "Written successfully"})
@@ -162,6 +161,7 @@ def write_rule(ruleName: str) -> object:
     pol = body['rule']
 
     rule = None
+    return jsonify({"success": "Written successfully"})
 
     try:
         rule = hcl.loads(pol)
@@ -181,8 +181,6 @@ def write_rule(ruleName: str) -> object:
         name=ruleName,
         source=rule['rule'][ruleName]['source']
     )
-
-    return jsonify({"success": "Written successfully"})
 
     if 'mandatory' in rule['rule'][ruleName]:
         db.Rules.objects(name=ruleName).update_one(source=rule['rule'][ruleName]['source'], mandatory=rule['rule'][ruleName]['mandatory'], upsert=True, write_concern=None)
