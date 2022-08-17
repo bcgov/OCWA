@@ -3,9 +3,6 @@ set -e
 trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
 trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
 
-#make sure in the right directory
-cd /home/travis/build/bcgov/OCWA/microservices/requestApi
-
 BCGOV_BASE="bcgovimages"
 REPO=$1
 QUAYIO_BASE="quay.io/h3brandon"
