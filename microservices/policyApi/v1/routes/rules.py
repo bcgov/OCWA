@@ -55,29 +55,24 @@ def write_policy() -> object:
     (Over)write policy
     :return: JSON of success message or error message
     """
-    print("post0")
+
     db=Db()
-    print("post1")
 
     body = request.get_json()
-    print("post2")
+
     if not('name' in body):
         return jsonify({"error": "name is a required attribute"})
 
-    print("post3")
-
     if not('rules' in body):
         return jsonify({"error": "'rules' is a required attribute"})
-    print("post4")
     name = body['name']
-    print("post5")
     rules = body['rules']
-    print("post6")
+
     if len(rules) == 0:
         return jsonify({"error": "policy must have atleast one rule"})
-    print("post7")
+
     db.Policies(name=name, rules=rules).save()
-    print("post8")
+
     return jsonify({"success": "Written successfully"})
 
 @rules.route('/<string:policyName>',
@@ -155,40 +150,51 @@ def write_rule(ruleName: str) -> object:
     :param ruleName: Rule Name
     :return: JSON of success message or error message
     """
-
+    print("rules0")
     db=Db()
+    print("rules1")
 
     body = request.get_json()
+    print("rules2")
 
     if not('rule' in body):
         return jsonify({"error": "rule is a required attribute"})
-
+    print("rules3")
     pol = body['rule']
+    print("rules4")
 
     rule = None
+    print("rules5")
 
     try:
         rule = hcl.loads(pol)
+        print("rules6")
     except Exception as e:
         return jsonify({"error": str(e)})
 
     if not('rule' in rule):
         return jsonify({"error": "Invalid json"})
+    print("rules7")
 
     if not (ruleName in rule['rule']):
         return jsonify({"error": "rule name mismatch with provided hcl and url"})
+    print("rules8")
 
     if not ('source' in rule['rule'][ruleName]):
         return jsonify({"error": "source is a required attribute"})
+    print("rules9")
 
     dbRule = db.Rules(
         name=ruleName,
         source=rule['rule'][ruleName]['source']
     )
+    print("rules10")
 
     if 'mandatory' in rule['rule'][ruleName]:
         db.Rules.objects(name=ruleName).update_one(source=rule['rule'][ruleName]['source'], mandatory=rule['rule'][ruleName]['mandatory'], upsert=True, write_concern=None)
+        print("rules11")
     else:
         db.Rules.objects(name=ruleName).update_one(source=rule['rule'][ruleName]['source'], upsert=True, write_concern=None)
-
+        print("rules11.1")
+    print("rules12")
     return jsonify({"success": "Written successfully"})
