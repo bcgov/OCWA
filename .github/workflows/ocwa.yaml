@@ -156,7 +156,7 @@ jobs:
           cp config/default.json.example config/default.json
           cp config/test.json.example config/test.json
           npm ci
-          cd policyApi
+          cd ../policyApi
 
           NODE_ENV=test npm run serve &
           cp config/default.json.template config/default.json
@@ -209,7 +209,7 @@ jobs:
           cp config/default.json.example config/default.json
           cp config/test.json.example config/test.json
           npm ci
-          cd validateApi
+          cd ../validateApi
 
           wget -q http://fastdl.mongodb.org/linux/mongodb-linux-x86_64-${MONGODB}.tgz
           export PWD=$(pwd)
