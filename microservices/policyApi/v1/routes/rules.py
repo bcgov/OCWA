@@ -127,6 +127,7 @@ def write_rules() -> object:
     except Exception as e:
         return jsonify({"error": "%s%s" % (str(e),rule_set)})
 
+    return jsonify({"success": "Written successfully"})
     for ruleName, ruleDef in rules['rule'].items():
 
         if 'mandatory' in ruleDef:
