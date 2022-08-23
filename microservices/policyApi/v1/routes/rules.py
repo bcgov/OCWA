@@ -129,13 +129,12 @@ def write_rules() -> object:
 
     for ruleName, ruleDef in rules['rule'].items():
         source = ruleDef['source']
+        filter = {'name': ruleName}
+        newValues = { '$set': { 'source': source} }
         if 'mandatory' in ruleDef:
             mandatory = ruleDef['mandatory']
-            db.Rules.objects(name=ruleName).update_one(source=source, mandatory=mandatory, upsert=True, write_concern=None)
-        else:
-            db.Rules.objects(name=ruleName)
-            return jsonify({"success": "Written successfully"})
-            db.Rules.objects(name=ruleName).update_one(source=source, upsert=True, write_concern=None)
+            newValues['$set']['mandatory'] = mandatory
+        db.Rules.updateOne(filter, newValues, upsert=True, write_concern=None)
 
     return jsonify({"success": "Written successfully"})
 
