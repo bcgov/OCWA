@@ -233,13 +233,14 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: microservices/requestApi
+        working-directory: frontend
     steps:
       - uses: actions/checkout@v2
       - name: install dependencies
         run: npm ci
       - name: test        
         run: |
+          cp config/default.json.example config/default.json
           cp config/test.json.example config/test.json
           npm test
       - name: helm
