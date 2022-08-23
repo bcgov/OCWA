@@ -134,7 +134,7 @@ def write_rules() -> object:
         if 'mandatory' in ruleDef:
             mandatory = ruleDef['mandatory']
             newValues['$set']['mandatory'] = mandatory
-        db.Rules.updateOne(filter, newValues, upsert=True, write_concern=None)
+        db.Rules.update_one(filter, newValues, upsert=True, write_concern=None)
 
     return jsonify({"success": "Written successfully"})
 
