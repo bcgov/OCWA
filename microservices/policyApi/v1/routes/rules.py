@@ -131,9 +131,9 @@ def write_rules() -> object:
         source = ruleDef['source']
         if 'mandatory' in ruleDef:
             mandatory = ruleDef['mandatory']
-            db.Rules.objects(name=ruleName).modify(set__source=source, set__mandatory=mandatory, upsert=True, new=True, write_concern=None)
+            db.Rules.objects(name=ruleName).modify(set__source=source, set__mandatory=mandatory, upsert=True, new=True)
         else:
-            db.Rules.objects(name=ruleName).modify(set__source=source, upsert=True, new=True, write_concern=None)
+            db.Rules.objects(name=ruleName).modify(set__source=source, upsert=True, new=True)
 
     return jsonify({"success": "Written successfully"})
 
