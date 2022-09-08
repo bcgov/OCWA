@@ -26,7 +26,7 @@
     "passport-headerapikey": "^1.1.0",
     "passport-jwt": "^4.0.0",
     "request": "^2.88.0",
-    "ws": "^7.1.1"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "chai": "^4.1.2",
