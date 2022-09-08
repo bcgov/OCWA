@@ -46,7 +46,7 @@
     "json-server": "^0.16.2",
     "mini-css-extract-plugin": "^0.4.4",
     "mock-socket": "^9.0.2",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "nodemon": "^1.18.11",
     "prettier": "^1.18.2",
     "redux-logger": "^3.0.6",
