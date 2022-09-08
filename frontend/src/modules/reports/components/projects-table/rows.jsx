@@ -16,7 +16,7 @@ export default ({ data, onSelectProject }) =>
         },
         {
           key: d.totalRequests,
-          content: d.totalRequests,
+          content: (d.totalRequests == 100) ? '>='+d.totalRequests : d.totalRequests,
         },
       ],
     };

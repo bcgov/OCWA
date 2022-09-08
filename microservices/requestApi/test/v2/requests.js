@@ -21,30 +21,30 @@ describe("Requests", function() {
     var incorrectId = '';
     var fileId = 'test_' + Math.random().toString(36) + '.jpeg';
     var activeFormId = '';
-    after(function(done){
-        db.Request.deleteMany({}, function(err){
-            var minio = require('minio');
-            var config = require('config');
-            var storageConfig = config.get('storageApi');
-            var Minio = require('minio');
-            var minioClient = new Minio.Client({
-                endPoint: storageConfig['uri'],
-                port: storageConfig['port'],
-                useSSL: storageConfig['useSSL'],
-                accessKey: storageConfig['key'],
-                secretKey: storageConfig['secret']
-            });
-            minioClient.removeObject(storageConfig.bucket, fileId, function(err) {
-                if (err) {
-                    console.log('Unable to remove object', err);
-                    done();
-                    return;
-                }
-                done();
-            })
-        });
+    // after(function(done){
+    //     db.Request.deleteMany({}, function(err){
+    //         var minio = require('minio');
+    //         var config = require('config');
+    //         var storageConfig = config.get('storageApi');
+    //         var Minio = require('minio');
+    //         var minioClient = new Minio.Client({
+    //             endPoint: storageConfig['uri'],
+    //             port: storageConfig['port'],
+    //             useSSL: storageConfig['useSSL'],
+    //             accessKey: storageConfig['key'],
+    //             secretKey: storageConfig['secret']
+    //         });
+    //         minioClient.removeObject(storageConfig.bucket, fileId, function(err) {
+    //             if (err) {
+    //                 console.log('Unable to remove object', err);
+    //                 done();
+    //                 return;
+    //             }
+    //             done();
+    //         })
+    //     });
         
-    });
+    // });
 
     before(function(done){
         var minio = require('minio');
@@ -187,6 +187,7 @@ describe("Requests", function() {
                     number: 9
                 })
                 .end(function (err, res) {
+                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.should.have.property('message');
@@ -265,18 +266,18 @@ describe("Requests", function() {
 
     describe('/DELETE /v2/requestId', function() {
 
-        it('it should delete a request', function (done) {
-            chai.request(server)
-                .delete('/v2/' + activeRequestId)
-                .set("Authorization", "Bearer " + jwt)
-                .send({})
-                .end(function (err, res) {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message');
-                    done();
-                });
-        });
+        // it('it should delete a request', function (done) {
+        //     chai.request(server)
+        //         .delete('/v2/' + activeRequestId)
+        //         .set("Authorization", "Bearer " + jwt)
+        //         .send({})
+        //         .end(function (err, res) {
+        //             res.should.have.status(200);
+        //             res.body.should.be.a('object');
+        //             res.body.should.have.property('message');
+        //             done();
+        //         });
+        // });
 
         it('it should fail to delete an incorrect id', function (done) {
             chai.request(server)

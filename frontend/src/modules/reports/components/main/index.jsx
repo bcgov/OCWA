@@ -4,6 +4,8 @@ import { DynamicTableStateless } from '@atlaskit/dynamic-table';
 import format from 'date-fns/format';
 import Page, { Grid, GridColumn } from '@atlaskit/page';
 import { RequestSchema } from '@src/modules/requests/types';
+import Pagination from '@src/components/pagination';
+
 
 import head from './head';
 import makeRows from './rows';
@@ -28,6 +30,7 @@ function ReportsMain({
   sortOrder,
   sortKey,
   startDate,
+  page
 }) {
   const rows = makeRows({
     data,
@@ -86,6 +89,11 @@ function ReportsMain({
         <Grid layout="fluid">
           <GridColumn medium={12}>
             <div id="reports-list-table" className={styles.table}>
+            <Pagination
+                onClick={(newPage) => fetchRequests({startDate: startDate, endDate: endDate, page: newPage})}
+                isLastPage={data.length < 100}
+                page={page}
+              />
               <DynamicTableStateless
                 emptyView={<Empty />}
                 head={head}
@@ -95,6 +103,11 @@ function ReportsMain({
                 sortKey={sortKey}
                 sortOrder={sortOrder}
                 onSort={sortProps => onSort(sortProps)}
+              />
+              <Pagination
+                onClick={(newPage) => fetchRequests({startDate: startDate, endDate: endDate, page: newPage})}
+                isLastPage={data.length < 100}
+                page={page}
               />
             </div>
           </GridColumn>
