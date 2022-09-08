@@ -4,7 +4,7 @@ OCWA (pronounced "aqua") is a microservice application suite that can store, val
 
 ## Table of Contents
 
-- [Output Checker Workflow App &middot; ![Build Status](https://github.com/bcgov/OCWA/actions/workflows/ocwa.yaml) ![License](https://opensource.org/licenses/Apache-2.0)](#output-checker-workflow-app-middot-build-statushttpstravis-ciorgbcgovocwa-licensehttpsopensourceorglicensesapache-20)
+- [Output Checker Workflow App](#output-checker-workflow-app-middot-build-statushttpstravis-ciorgbcgovocwa-licensehttpsopensourceorglicensesapache-20)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
