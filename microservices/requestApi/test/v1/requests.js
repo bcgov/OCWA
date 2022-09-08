@@ -23,30 +23,30 @@ describe("Requests", function() {
     var deniedRequestId = '';
     var cancelledRequestId = '';
     var fileId = 'test_' + Math.random().toString(36) + '.jpeg';
-    after(function(done){
-        db.Request.deleteMany({}, function(err){
-            var minio = require('minio');
-            var config = require('config');
-            var storageConfig = config.get('storageApi');
-            var Minio = require('minio');
-            var minioClient = new Minio.Client({
-                endPoint: storageConfig['uri'],
-                port: storageConfig['port'],
-                useSSL: storageConfig['useSSL'],
-                accessKey: storageConfig['key'],
-                secretKey: storageConfig['secret']
-            });
-            minioClient.removeObject(storageConfig.bucket, fileId, function(err) {
-                if (err) {
-                    console.log('Unable to remove object', err);
-                    done();
-                    return;
-                }
-                done();
-            })
-        });
+    // after(function(done){
+    //     db.Request.deleteMany({}, function(err){
+    //         var minio = require('minio');
+    //         var config = require('config');
+    //         var storageConfig = config.get('storageApi');
+    //         var Minio = require('minio');
+    //         var minioClient = new Minio.Client({
+    //             endPoint: storageConfig['uri'],
+    //             port: storageConfig['port'],
+    //             useSSL: storageConfig['useSSL'],
+    //             accessKey: storageConfig['key'],
+    //             secretKey: storageConfig['secret']
+    //         });
+    //         minioClient.removeObject(storageConfig.bucket, fileId, function(err) {
+    //             if (err) {
+    //                 console.log('Unable to remove object', err);
+    //                 done();
+    //                 return;
+    //             }
+    //             done();
+    //         })
+    //     });
         
-    });
+    // });
 
     before(function(done){
         var minio = require('minio');
@@ -332,48 +332,50 @@ describe("Requests", function() {
 
         
 
-        it('it should delete a request', function (done) {
-            chai.request(server)
-                .delete('/v1/' + activeRequestId)
-                .set("Authorization", "Bearer " + jwt)
-                .send({})
-                .end(function (err, res) {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message');
-                    done();
-                });
-        });
+        // it('it should delete a request', function (done) {
+        //     chai.request(server)
+        //         .delete('/v1/' + activeRequestId)
+        //         .set("Authorization", "Bearer " + jwt)
+        //         .send({})
+        //         .end(function (err, res) {
+        //             res.should.have.status(200);
+        //             res.body.should.be.a('object');
+        //             res.body.should.have.property('message');
+        //             done();
+        //         });
+        // });
     });
 
     describe('/PUT /v1/save/requestId', function() {
 
-        it('it should create a request', function (done) {
-            chai.request(server)
-                .post('/v1/')
-                .set("Authorization", "Bearer " + jwt)
-                .send({
-                    name: "testName2",
-                    tags: ["test"],
-                    purpose: "purpose",
-                    phoneNumber: "555-555-5555",
-                    subPopulation: "sub-population",
-                    variableDescriptions: "variable descriptions",
-                    selectionCriteria: "selection criteria",
-                    steps: "steps",
-                    freq: "freq",
-                    confidentiality: "none"
-                })
-                .end(function (err, res) {
-                    res.should.have.status(200);
-                    res.body.should.be.a('object');
-                    res.body.should.have.property('message');
-                    res.body.should.have.property('result');
-                    res.body.result.should.have.property('_id');
-                    activeRequestId = res.body.result._id;
-                    done();
-                });
-        });
+        for (let i=0; i<1000; i++){
+            it('it should create a request', function (done) {
+                chai.request(server)
+                    .post('/v1/')
+                    .set("Authorization", "Bearer " + jwt)
+                    .send({
+                        name: "testName2",
+                        tags: ["test"],
+                        purpose: "purpose",
+                        phoneNumber: "555-555-5555",
+                        subPopulation: "sub-population",
+                        variableDescriptions: "variable descriptions",
+                        selectionCriteria: "selection criteria",
+                        steps: "steps",
+                        freq: "freq",
+                        confidentiality: "none"
+                    })
+                    .end(function (err, res) {
+                        res.should.have.status(200);
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('message');
+                        res.body.should.have.property('result');
+                        res.body.result.should.have.property('_id');
+                        activeRequestId = res.body.result._id;
+                        done();
+                    });
+            });
+        }
 
         it('it should fail to save a with an invalid id', function (done) {
             chai.request(server)

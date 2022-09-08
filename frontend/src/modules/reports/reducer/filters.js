@@ -10,6 +10,7 @@ const initialState = {
   requestIds: [],
   requester: null,
   project: null,
+  page: 1,
 };
 
 function filters(state = initialState, action = {}) {
@@ -51,6 +52,12 @@ function filters(state = initialState, action = {}) {
       };
 
     case 'reports/filter-state':
+      return {
+        ...state,
+        requestState: action.payload,
+      };
+    
+    case 'reports/filter-page':
       return {
         ...state,
         requestState: action.payload,

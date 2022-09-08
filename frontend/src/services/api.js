@@ -23,6 +23,7 @@ export const get = async (url, options) => {
     const json = await ky
       .get(url, {
         ...options,
+        timeout: 120000,
         headers: {
           Authorization: `Bearer ${token}`,
         },

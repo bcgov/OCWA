@@ -29,6 +29,7 @@ const mapStateToProps = state => {
     sortKey,
     sortOrder,
     startDate,
+    page,
   } = state.reports.filters;
   const entities = get(state, 'data.entities.requests', {});
   const data = requestIds
@@ -89,15 +90,15 @@ const mapStateToProps = state => {
     sortKey,
     sortOrder,
     startDate,
-    page: 1,
+    page,
   };
 };
 
-const makeQuery = (startDate, endDate) =>
-  `/api/v2/requests?page=1&start_date=${format(
+const makeQuery = (startDate, endDate, page=1) =>
+  `/api/v2/requests?page=${page}&start_date=${format(
     startDate,
     'YYYY-M-D'
-  )}&end_date=${format(endDate, 'YYYY-M-D')}&limit=500`;
+  )}&end_date=${format(endDate, 'YYYY-M-D')}&limit=100`;
 
 export default connect(mapStateToProps, {
   initialRequest: params =>
@@ -108,17 +109,19 @@ export default connect(mapStateToProps, {
         schema: requestsListSchema,
       }
     ),
-  fetchRequests: ({ startDate, endDate }) =>
+  fetchRequests: ({ startDate, endDate, page }) =>
     fetchRequests(
       {
         startDate,
         endDate,
+        page
       },
       {
-        url: makeQuery(startDate, endDate),
+        url: makeQuery(startDate, endDate, page),
         schema: requestsListSchema,
       }
-    ),
+    )
+  ,
   onSelectProject: setProject,
   onSort: sortReports,
   onSelectRequester: setRequester,
