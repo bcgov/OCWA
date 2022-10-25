@@ -52,7 +52,7 @@ jobs:
           export BRANCH=${GITHUB_REF##*/}
           bash docker_quayio_push ocwa_project_api
       - name: deploy
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || (github.event_name == 'release' && github.event.action == 'created')
         run: |
           export BRANCH=${GITHUB_REF##*/}
           bash docker_push ocwa_project_api
@@ -133,7 +133,7 @@ jobs:
           export BRANCH=${GITHUB_REF##*/}
           bash docker_quayio_push ocwa_request_api
       - name: deploy
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || (github.event_name == 'release' && github.event.action == 'created')
         run: |
           export BRANCH=${GITHUB_REF##*/}
           bash docker_push ocwa_request_api
@@ -174,7 +174,7 @@ jobs:
           export BRANCH=${GITHUB_REF##*/}
           bash docker_quayio_push ocwa_policy_api
       - name: deploy
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || (github.event_name == 'release' && github.event.action == 'created')
         run: |
           export BRANCH=${GITHUB_REF##*/}
           bash docker_push ocwa_policy_api
@@ -222,7 +222,7 @@ jobs:
           export BRANCH=${GITHUB_REF##*/}
           bash docker_quayio_push ocwa_validate_api
       - name: deploy
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || (github.event_name == 'release' && github.event.action == 'created')
         run: |
           export BRANCH=${GITHUB_REF##*/}
           bash docker_push ocwa_validate_api
@@ -260,7 +260,7 @@ jobs:
           export BRANCH=${GITHUB_REF##*/}
           bash docker_quayio_push ocwa_frontend
       - name: deploy
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || contains(github.ref, 'release')
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/main' || (github.event_name == 'release' && github.event.action == 'created')
         run: |
           export BRANCH=${GITHUB_REF##*/}
           bash docker_push ocwa_frontend
