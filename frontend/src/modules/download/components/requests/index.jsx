@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Button from '@atlaskit/button'
 import Date from '@src/components/date';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
 import head from 'lodash/head';
@@ -13,6 +14,8 @@ import { _e } from '@src/utils';
 import Downloads from '../../containers/downloads';
 import renderEmpty from './empty';
 import * as styles from './styles.css';
+
+
 
 const header = {
   cells: [
@@ -29,7 +32,7 @@ const header = {
   ],
 };
 
-function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
+function Requests({ data, isLoading, onSort, sortKey, sortOrder, page, fetchRequests }) {
   const rows = data.map(d => {
     const format = 'MMM Do, YYYY';
     const submittedOn = head(d.chronology).timestamp;
@@ -68,6 +71,7 @@ function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
 
   return (
     <Page>
+      <div>HELLO This is new</div>
       <Grid>
         <GridColumn medium={12}>
           <header className={styles.header}>
@@ -93,6 +97,18 @@ function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
             sortOrder={sortOrder}
             onSort={sortProps => onSort(sortProps)}
           />
+		  
+			{rows.length > 0 && rows.length % 100 === 0 && (
+				<div>
+				  <Button 
+					id={`load-more-requests`} 
+					onClick={() => fetchRequests({page: ++page})}
+				  >
+					Load More
+				  </Button>
+				</div>
+			  )}
+		  
         </GridColumn>
       </Grid>
     </Page>
