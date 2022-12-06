@@ -39,6 +39,7 @@ function App({ onOpenHelp, onToggleOnboarding, user, zone }) {
         />
       </AppBar>
       <div id="app-content" className={styles.container}>
+        <div>HELLO!</div>
         <Switch>
           <Route exact path="/" component={Requests} />
           <Route path="/requests/:requestId" component={Request} />

@@ -20,15 +20,16 @@ with open('./microservices/requestApi/config/default.json') as json_fp:
     SECRET=CONFIG['storageApi']['secret']
     BUCKET=CONFIG['storageApi']['bucket']
 
+NVM_DIR = 'export NVM_DIR="/home/msimpson/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
 print("KEY="+KEY+" SECRET="+SECRET+" BUCKET="+BUCKET)
 minio = run('export MINIO_ACCESS_KEY="'+KEY+'" && export MINIO_SECRET_KEY="'+SECRET+'" && minio server ./minioTmp')
 tusd = run('export AWS_ACCESS_KEY_ID="'+KEY+'" && export AWS_SECRET_ACCESS_KEY="'+SECRET+'" && export AWS_REGION=us-east-1 && tusd -s3-endpoint http://localhost:9000 -s3-bucket '+BUCKET)
 # forumA = run('cd ./microservices/forumApi && npm i && npm run dev')
-policyA = run('cd ./microservices/policyApi && source venv/bin/activate && pip install -r requirements.txt && python wsgi.py')
-projA = run('cd ./microservices/projectApi && nvm use && npm i && npm run dev')
-reqA = run('cd ./microservices/requestApi && nvm use && npm i && npm run dev')
-validateA = run('cd ./microservices/validateApi && source venv/bin/activate && pip install -r requirements.txt && python wsgi.py')
-frontend = run('cd ./frontend && nvm use && npm i && npm start')
+policyA = run('cd ./microservices/policyApi && source venv/bin/activate && python wsgi.py')
+projA = run(NVM_DIR + ' && cd ./microservices/projectApi && nvm use && npm run dev')
+reqA = run(NVM_DIR + ' && cd ./microservices/requestApi && nvm use && npm run dev')
+validateA = run('cd ./microservices/validateApi && source venv/bin/activate && python wsgi.py')
+frontend = run(NVM_DIR + ' && cd ./frontend && nvm use && npm start')
 
 def signal_handler(sig, frame):
     print("Closing all processes")
