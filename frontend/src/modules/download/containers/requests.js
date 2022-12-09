@@ -43,6 +43,23 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, {
   onSort: sortRequests,
+  fetchRequests: ({ requestTypes, page }) => {
+    const type = getRequestType(requestTypes);
+
+    return fetchRequests(
+      { page: page,
+        state: 4,
+        type: 'export', 
+      },
+      { state: 4,
+        page: page,
+        type: 'export' },
+      {
+        url: `/api/v2/requests?page=${page}&state=4&type=export`,
+        schema: requestsListSchema,
+      }
+    );
+  },
   initialRequest: ({ requestTypes }) => {
     const type = getRequestType(requestTypes);
 

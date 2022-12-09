@@ -25,6 +25,7 @@ function viewState(state = inititalViewState, action = {}) {
       };
 
     case 'downloads/requests/sort':
+      console.log("DOWNLOADS/REQUESTS/SORT", state, action.payload);
       return {
         ...state,
         ...action.payload,

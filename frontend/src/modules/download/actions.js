@@ -9,11 +9,12 @@ export const closeDownloads = () => ({
   type: 'downloads/close',
 });
 
-export const sortRequests = ({ key, sortOrder }) => ({
+export const sortRequests = ({ key, sortOrder, page = 1 }) => ({
   type: 'downloads/requests/sort',
   payload: {
     sortKey: key,
     sortOrder,
+    page
   },
 });
 

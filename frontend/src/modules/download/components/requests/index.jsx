@@ -9,10 +9,13 @@ import Page, { Grid, GridColumn } from '@atlaskit/page';
 import { RequestSchema } from '@src/modules/requests/types';
 import { zone } from '@src/services/config';
 import { _e } from '@src/utils';
+import Button from '@atlaskit/button'
 
 import Downloads from '../../containers/downloads';
 import renderEmpty from './empty';
 import * as styles from './styles.css';
+import ChevronLeftLargeIcon from '@atlaskit/icon/glyph/chevron-left-large';
+import ChevronRightLargeIcon from '@atlaskit/icon/glyph/chevron-right-large';
 
 const header = {
   cells: [
@@ -29,7 +32,7 @@ const header = {
   ],
 };
 
-function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
+function Requests({ data, isLoading, onSort, sortKey, sortOrder, page, fetchRequests }) {
   const rows = data.map(d => {
     const format = 'MMM Do, YYYY';
     const submittedOn = head(d.chronology).timestamp;
@@ -95,6 +98,29 @@ function Requests({ data, isLoading, onSort, sortKey, sortOrder }) {
           />
         </GridColumn>
       </Grid>
+      
+      <nav className={styles.container}>
+          <Button
+              appearance="subtle"
+              iconBefore={<ChevronLeftLargeIcon />}
+              id={`previousPage`} 
+              isDisabled={page <= 1}
+              onClick={() => fetchRequests({ page: (page - 1) }  ) && onSort({key: sortKey, sortOrder: sortOrder, page: (page-1)})}
+            >
+              Previous Page
+          </Button>
+        
+          <Button 
+              appearance="subtle"
+              iconAfter={<ChevronRightLargeIcon />}
+              id={`nextPage`} 
+              isDisabled={( (rows.length <= 0) || (rows.length % 100 !== 0) )}
+              onClick={() => fetchRequests({ page: (page + 1) }  ) && onSort({key: sortKey, sortOrder: sortOrder, page: (page+1)})}
+            >
+              Next Page
+          </Button>
+        </nav>
+      
     </Page>
   );
 }
@@ -105,6 +131,8 @@ Requests.propTypes = {
   onSort: PropTypes.func.isRequired,
   sortKey: PropTypes.string.isRequired,
   sortOrder: PropTypes.string.isRequired,
+  page: PropTypes.number.isRequired,
+  fetchRequests: PropTypes.func.isRequired,
 };
 
 export default Requests;
