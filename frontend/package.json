@@ -112,7 +112,7 @@
     "connect-history-api-fallback": "^1.5.0",
     "cookie-parser": "^1.4.3",
     "core-js": "^2.6.5",
-    "express": "~4.16.0",
+    "express": "~4.17.3",
     "express-manifest-helpers-upgraded": "^0.7.1",
     "express-session": "^1.16.1",
     "faker": "^4.1.0",
