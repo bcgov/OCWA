@@ -19,7 +19,7 @@
     "npmlog": "^4.1.2",
     "passport": "^0.4.0",
     "passport-headerapikey": "^1.1.0",
-    "passport-jwt": "^4.0.0",
+    "passport-jwt": "^4.0.1",
     "request": "^2.88.0"
   },
   "devDependencies": {
