@@ -11,7 +11,7 @@ image:
   pullPolicy: Always
 
 tus:
-  image: h3brandon/tusd_py3
+  image: tosse/tusd_py3
   tag: latest
   bucket: bucket
   region: us-east-1 #likely irrelevant

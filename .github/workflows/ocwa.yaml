@@ -85,11 +85,12 @@ jobs:
           mkdir ${PWD}/mongodb-linux-x86_64-${MONGODB}/data
           ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongod --dbpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/data --logpath ${PWD}/mongodb-linux-x86_64-${MONGODB}/mongodb.log --fork
           ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongo forumDb --eval 'db.createUser({user:"forumUser", pwd:"forumPass", roles:["dbAdmin", "readWrite"]});'
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongorestore -u forumUser -p forumPass -d forumDb db
           cd ../shared/js
           npm ci
 
           cd ../../formio
-          mongorestore -u forumUser -p forumPass -d forumDb db
+    
           git clone -b v1.90.15 https://github.com/formio/formio.git
           cd formio
           npm ci
