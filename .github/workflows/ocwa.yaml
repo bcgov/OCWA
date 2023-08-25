@@ -99,7 +99,9 @@ jobs:
           npm ci
 
           cd ../../formio
-          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongorestore -u forumUser -p forumPass -d forumDb db
+          wget -q https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2204-x86_64-100.8.0.tgz
+          tar xzf mongodb-database-tools-ubuntu2204-x86_64-100.8.0.tgz
+          ./mongodb-database-tools-ubuntu2204-x86_64-100.8.0/bin/mongorestore -u forumUser -p forumPass -d forumDb db
           git clone -b v1.90.15 https://github.com/formio/formio.git
           cd formio
           npm ci
