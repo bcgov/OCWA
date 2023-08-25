@@ -277,7 +277,6 @@ def read_file(file_id, deep_read=False):
 
     file = {}
     try:
-        log.error("Getting Object " + bucket + " " + file_id)
         fileResp = conn.get_object(Bucket=bucket, Key=file_id)
 
         for key, val in fileResp['ResponseMetadata'].items():
