@@ -11,6 +11,7 @@ import { Prompt } from 'react-router-dom';
 import { SpotlightTarget } from '@atlaskit/onboarding';
 import { uid } from 'react-uid';
 import { _e } from '@src/utils';
+import { zone } from '@src/services/config';
 
 import DetailsRow from './details-row';
 import { RequestSchema } from '../../types';
@@ -86,53 +87,57 @@ function RequestDetails({
       )}
       {(data.exportType === 'data' || !data.exportType) && (
         <React.Fragment>
-          <SpotlightTarget name="requests-files">
-            <div id="request-export-files" className={styles.section}>
-              <div className={styles.sectionHeader}>
-                {_e('{Files} Files', data.type)}
-                {isEditing && ' (Drop files here to upload)'}
+          {( (((zone === 'external' && data.type !== 'export') || (zone === 'internal' && data.type !== 'import')) && (data.status === 4)) || data.status !== 4 ) && (
+            <SpotlightTarget name="requests-files">
+              <div id="request-export-files" className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  {_e('{Files} Files', data.type)}
+                  {isEditing && ' (Drop files here to upload)'}
+                </div>
+                <div className={styles.sectionContent}>
+                  {!isEditing && (
+                    <Files
+                      showDownloadButton
+                      id={id}
+                      ids={files}
+                      fileStatus={data.fileStatus}
+                    />
+                  )}
+                  {isEditing && (
+                    <FileUploader
+                      data={uploadData}
+                      filesKey="files"
+                      id={id}
+                      uploadText="Upload files you wish to request for output"
+                    />
+                  )}
+                </div>
               </div>
-              <div className={styles.sectionContent}>
-                {!isEditing && (
-                  <Files
-                    showDownloadButton
-                    id={id}
-                    ids={files}
-                    fileStatus={data.fileStatus}
-                  />
-                )}
-                {isEditing && (
-                  <FileUploader
-                    data={uploadData}
-                    filesKey="files"
-                    id={id}
-                    uploadText="Upload files you wish to request for output"
-                  />
-                )}
+            </SpotlightTarget>
+          )}
+          {( (zone === 'external' && data.type !== 'export') || (zone === 'internal' && data.type !== 'import') ) && (
+            <SpotlightTarget name="requests-support-files">
+              <div id="request-support-files" className={styles.section}>
+                <div className={styles.sectionHeader}>
+                  Support Files
+                  {isEditing && ' (Drop files here to upload)'}
+                </div>
+                <div className={styles.sectionContent}>
+                  {!isEditing && (
+                    <Files showDownloadButton id={id} ids={supportingFiles} />
+                  )}
+                  {isEditing && (
+                    <FileUploader
+                      data={uploadData}
+                      id={id}
+                      filesKey="supportingFiles"
+                      uploadText="Upload any files to help support your request"
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-          </SpotlightTarget>
-          <SpotlightTarget name="requests-support-files">
-            <div id="request-support-files" className={styles.section}>
-              <div className={styles.sectionHeader}>
-                Support Files
-                {isEditing && ' (Drop files here to upload)'}
-              </div>
-              <div className={styles.sectionContent}>
-                {!isEditing && (
-                  <Files showDownloadButton id={id} ids={supportingFiles} />
-                )}
-                {isEditing && (
-                  <FileUploader
-                    data={uploadData}
-                    id={id}
-                    filesKey="supportingFiles"
-                    uploadText="Upload any files to help support your request"
-                  />
-                )}
-              </div>
-            </div>
-          </SpotlightTarget>
+            </SpotlightTarget>
+          )}
         </React.Fragment>
       )}
     </React.Fragment>
