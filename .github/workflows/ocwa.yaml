@@ -99,7 +99,7 @@ jobs:
           npm ci
 
           cd ../../formio
-          mongorestore -u forumUser -p forumPass -d forumDb db
+          ${PWD}/mongodb-linux-x86_64-${MONGODB}/bin/mongorestore -u forumUser -p forumPass -d forumDb db
           git clone -b v1.90.15 https://github.com/formio/formio.git
           cd formio
           npm ci
