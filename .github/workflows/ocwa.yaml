@@ -26,6 +26,11 @@ jobs:
         working-directory: microservices/projectApi
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 11.15.0
+          cache: 'npm'
+          cache-dependency-path: microservices/projectApi/package-lock.json
       - name: install dependencies
         run: npm ci
       - name: test        
@@ -66,6 +71,11 @@ jobs:
         working-directory: microservices/requestApi
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 11.15.0
+          cache: 'npm'
+          cache-dependency-path: microservices/requestApi/package-lock.json
       - name: install dependencies
         run: npm ci
       - name: test        
