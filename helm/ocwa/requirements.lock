@@ -3,8 +3,8 @@ dependencies:
   repository: file://../../frontend/helm/ocwa-frontend
   version: 0.1.0
 - name: forum-api
-  repository: file://../../microservices/forumApi/helm/forum-api
-  version: 0.1.0
+  repository: http://bcgov.github.io/helm-charts/forum-api
+  version: 0.1.1
 - name: policy-api
   repository: file://../../microservices/policyApi/helm/policy-api
   version: 0.1.0
@@ -15,8 +15,8 @@ dependencies:
   repository: file://../../microservices/requestApi/helm/request-api
   version: 0.1.0
 - name: storage-api
-  repository: file://../../microservices/storageApi/helm/storage-api
-  version: 0.1.0
+  repository: http://bcgov.github.io/helm-charts/storage-api
+  version: 0.1.10
 - name: validate-api
   repository: file://../../microservices/validateApi/helm/validate-api
   version: 0.1.0
