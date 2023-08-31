@@ -1,7 +1,7 @@
 {{- if .Values.downloadIngress.enabled -}}
 {{- $fullName := include "ocwaFrontend.fullname" . -}}
 {{- $ingressPath := .Values.downloadIngress.path -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}-download
