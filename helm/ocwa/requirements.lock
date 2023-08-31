@@ -4,7 +4,7 @@ dependencies:
   version: 0.1.0
 - name: forum-api
   repository: http://bcgov.github.io/helm-charts
-  version: 0.1.2
+  version: 0.1.3
 - name: policy-api
   repository: file://../../microservices/policyApi/helm/policy-api
   version: 0.1.0
@@ -16,7 +16,7 @@ dependencies:
   version: 0.1.0
 - name: storage-api
   repository: http://bcgov.github.io/helm-charts
-  version: 0.1.11
+  version: 0.1.12
 - name: validate-api
   repository: file://../../microservices/validateApi/helm/validate-api
   version: 0.1.0
