@@ -4,7 +4,7 @@ dependencies:
     repository: file://../../frontend/helm/ocwa-frontend
 
   - name: forum-api
-    version: 0.1.0
+    version: 0.1.2
     repository: http://bcgov.github.io/helm-charts
 
   - name: formio
@@ -24,7 +24,7 @@ dependencies:
     repository: file://../../microservices/requestApi/helm/request-api
 
   - name: storage-api
-    version: 0.1.10
+    version: 0.1.11
     repository: http://bcgov.github.io/helm-charts
 
   - name: validate-api
