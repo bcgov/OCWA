@@ -102,18 +102,18 @@ var buildDynamic = function(projectConfig, db, notify, util, router){
             for (let i=0; i<requestRes.length; i++){
               if (req.user.zone && req.user.zone == req.user.INTERNAL_ZONE){
                 //remove support files from import
-                if (findRes.type === db.Request.INPUT_TYPE){
-                  findRes.supportingFiles = [];
-                  if (findRes.state !== db.Request.APPROVED_STATE){
-                    findRes.files = [];
+                if (requestRes[i].type === db.Request.INPUT_TYPE){
+                  requestRes[i].supportingFiles = [];
+                  if (requestRes[i].state !== db.Request.APPROVED_STATE){
+                    requestRes[i].files = [];
                   }
                 }
               }else{
                 //external zone so remove support from export
-                if (findRes.type === db.Request.EXPORT_TYPE){
-                  findRes.supportingFiles = [];
-                  if (findRes.state !== db.Request.APPROVED_STATE){
-                    findRes.files = [];
+                if (requestRes[i].type === db.Request.EXPORT_TYPE){
+                  requestRes[i].supportingFiles = [];
+                  if (requestRes[i].state !== db.Request.APPROVED_STATE){
+                    requestRes[i].files = [];
                   }
                 }
               }
