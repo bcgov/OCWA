@@ -5,6 +5,7 @@ import { requestsListSchema } from '@src/modules/requests/schemas';
 import { limit } from '@src/services/config';
 import { fetchRequests } from '@src/modules/requests/actions';
 import { zone } from '@src/services/config';
+import format from 'date-fns/format';
 
 import { sortRequests } from '../actions';
 import Requests from '../components/requests';
@@ -41,6 +42,38 @@ const mapStateToProps = state => {
   };
 };
 
+const makeQuery = (page=1) =>
+   `/api/v2/requests?page=${page}&limit=100&state=4`;
+
+// export default connect(mapStateToProps, {
+//   onSort: sortRequests,
+//   page: page,
+//   initialRequest: ({ requestTypes }) => {
+//     const type = getRequestType(requestTypes);
+
+//     return fetchRequests(
+//       { page: 1 },
+//       { state: 4 },
+//       {
+//         url: `/api/v2/requests?page=1&state=4&type=${type}`,
+//         schema: requestsListSchema,
+//       }
+//     );
+//   },
+//   fetchRequests: ({ page }) =>
+//     fetchRequests(
+//       {
+//         page
+//       },
+//       { state: 4 },
+//       {
+//         url: makeQuery(page),
+//         schema: requestsListSchema,
+//       }
+//     )
+//   ,
+// })(withRequest(Requests));
+
 export default connect(mapStateToProps, {
   onSort: sortRequests,
   fetchRequests: ({ requestTypes, page }) => {
@@ -64,7 +97,7 @@ export default connect(mapStateToProps, {
     const type = getRequestType(requestTypes);
 
     return fetchRequests(
-      { page: 1 },
+      { page },
       { state: 4 },
       {
         url: `/api/v2/requests?page=1&state=4&type=${type}`,
@@ -73,3 +106,5 @@ export default connect(mapStateToProps, {
     );
   },
 })(withRequest(Requests));
+
+

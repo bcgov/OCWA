@@ -1,5 +1,6 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
+import Button from '@atlaskit/button'
 import Date from '@src/components/date';
 import { DynamicTableStateless } from '@atlaskit/dynamic-table';
 import head from 'lodash/head';
@@ -16,6 +17,8 @@ import renderEmpty from './empty';
 import * as styles from './styles.css';
 import ChevronLeftLargeIcon from '@atlaskit/icon/glyph/chevron-left-large';
 import ChevronRightLargeIcon from '@atlaskit/icon/glyph/chevron-right-large';
+
+
 
 const header = {
   cells: [
@@ -71,6 +74,7 @@ function Requests({ data, isLoading, onSort, sortKey, sortOrder, page, fetchRequ
 
   return (
     <Page>
+      <div>HELLO This is new</div>
       <Grid>
         <GridColumn medium={12}>
           <header className={styles.header}>
@@ -96,6 +100,18 @@ function Requests({ data, isLoading, onSort, sortKey, sortOrder, page, fetchRequ
             sortOrder={sortOrder}
             onSort={sortProps => onSort(sortProps)}
           />
+		  
+			{rows.length > 0 && rows.length % 100 === 0 && (
+				<div>
+				  <Button 
+					id={`load-more-requests`} 
+					onClick={() => fetchRequests({page: ++page})}
+				  >
+					Load More
+				  </Button>
+				</div>
+			  )}
+		  
         </GridColumn>
       </Grid>
       

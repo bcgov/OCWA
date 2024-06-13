@@ -5,7 +5,7 @@ import json
 import sys
 
 def run(command):
-    process = subprocess.Popen(command, shell=True, preexec_fn=os.setsid)
+    process = subprocess.Popen(command, shell=True, executable='/bin/bash', preexec_fn=os.setsid)
     return process
 
 
@@ -25,10 +25,10 @@ minio = run('export MINIO_ACCESS_KEY="'+KEY+'" && export MINIO_SECRET_KEY="'+SEC
 tusd = run('export AWS_ACCESS_KEY_ID="'+KEY+'" && export AWS_SECRET_ACCESS_KEY="'+SECRET+'" && export AWS_REGION=us-east-1 && tusd -s3-endpoint http://localhost:9000 -s3-bucket '+BUCKET)
 # forumA = run('cd ./microservices/forumApi && npm i && npm run dev')
 policyA = run('cd ./microservices/policyApi && source venv/bin/activate && pip install -r requirements.txt && python wsgi.py')
-projA = run('cd ./microservices/projectApi && npm i && npm run dev')
-reqA = run('cd ./microservices/requestApi && npm i && npm run dev')
+projA = run('cd ./microservices/projectApi && nvm use && npm i && npm run dev')
+reqA = run('cd ./microservices/requestApi && nvm use && npm i && npm run dev')
 validateA = run('cd ./microservices/validateApi && source venv/bin/activate && pip install -r requirements.txt && python wsgi.py')
-# frontend = run('cd ./frontend && npm i && npm start')
+frontend = run('cd ./frontend && nvm use && npm i && npm start')
 
 def signal_handler(sig, frame):
     print("Closing all processes")
