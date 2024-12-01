@@ -11,7 +11,7 @@
     "test": "NODE_ENV=test nyc --reporter=lcov mocha --exit --timeout 10000"
   },
   "dependencies": {
-    "config": "^3.2.2",
+    "config": "^3.3.8",
     "morgan": "^1.9.1",
     "npmlog": "^4.1.2",
     "request": "^2.88.0"
