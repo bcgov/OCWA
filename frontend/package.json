@@ -150,7 +150,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "sanitize-html": "^1.23.0",
-    "snyk": "^1.161.1",
+    "snyk": "^1.1041.0",
     "styled-components": "^3.4.6",
     "tus-js-client": "^1.7.1"
   },
