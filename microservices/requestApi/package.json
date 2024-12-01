@@ -9,7 +9,7 @@
     "dev": "nodemon --exec npm start"
   },
   "dependencies": {
-    "config": "^3.2.2",
+    "config": "^3.3.8",
     "cookie-parser": "^1.4.4",
     "debug": "^4.1.1",
     "express": "^4.17.1",
