@@ -16,7 +16,7 @@
     "jsonwebtoken": "^8.5.1",
     "minio": "^7.0.32",
     "moment": "^2.24.0",
-    "mongoose": "^5.7.5",
+    "mongoose": "^5.13.15",
     "morgan": "^1.9.1",
     "ms": "^2.1.2",
     "node-cache": "^5.1.0",
